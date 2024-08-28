@@ -7,6 +7,8 @@
 </head>
 <body>
     <h1>[ 기본적으로 클라이언트에서 사용하는 언어를 감지합니다. ]</h1>
-    <span th:text="#{hello}"></span>
+    <span th:text="#{hello}"></span><br>
+    <span th:text="#{hello.name(${name})}"></span><br>
+    <span th:text="#{hello.name.city(${name}, ${city})}"></span>
 </body>
 </html>
