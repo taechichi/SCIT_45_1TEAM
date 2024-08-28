@@ -21,7 +21,7 @@ public class TestController {
         // 국제화 샘플
         model.addAttribute("name", "고니고니");
         model.addAttribute("city", "東京");
-        return "testa";
+        return "test";
     }
 
     @GetMapping("error/{error}")
