@@ -2,20 +2,9 @@
 <html>
 <head>
     <title>Styled Map Example</title>
-    <style>
-        #pac-input {
-            margin-top: 10px;
-            margin-left: 10px;
-            width: 300px;
-            background-color: #fff;
-            padding: 5px;
-            border: 1px solid #ccc;
-        }
-    </style>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo"></script>
-
-
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places"></script>
+    <!-- 추가 할 라이브러리를 api의 libraries 부분 뒤에 추가 places,geometry -->
     <script>
         let lat;  //위도
         let long; //경도
@@ -44,10 +33,10 @@
                 });   //맵 지정 및 맵 옵션 설정
 
 
-                const input = document.getElementById('pac-input');
-                const searchBox = new google.maps.places.SearchBox(input);
+                const input = document.getElementById('search-input');              //search-input 에서 값을 받아 저장
+                const searchBox = new google.maps.places.SearchBox(input);          //places api의 searchbox에 input 데이터 입력
 
-                map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+                map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);     //input을 구글지도 좌상단에 위치하게 하는 코드(라이브러리 추가 필요)
 
                 const marker = new google.maps.Marker({
                     position: myLocation,
@@ -66,7 +55,7 @@
 </head>
 <body>
 <div id="map" style="height: 500px; width: 100%;"></div>
-<input id="pac-input" class="controls" type="text" placeholder="Search Box">
+<input id="search-input" class="controls" type="text" placeholder="Search Box">
 
 </body>
 </html>
