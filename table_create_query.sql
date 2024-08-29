@@ -18,7 +18,7 @@ CREATE TABLE member (
     password VARCHAR(100) NOT NULL,
     nickname VARCHAR(10) NOT NULL,
     email VARCHAR(50) NOT NULL,
-    gender VARCHAR(1) NOT NULL,
+    gender VARCHAR(1),
     phone VARCHAR(20) NOT NULL,
     nationality VARCHAR(20) NOT NULL,
     admin_yn TINYINT(1) NOT NULL DEFAULT 0,
