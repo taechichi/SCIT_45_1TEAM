@@ -114,19 +114,23 @@ CREATE TABLE guidebook_board
 
 CREATE TABLE comment_tag
 (
+    comment_tag_id INTEGER NOT NULL AUTO_INCREMENT,
     comment_num INTEGER NOT NULL,
     tag_id      Integer NOT NULL,
+    PRIMARY KEY (comment_tag_id),
     FOREIGN KEY (comment_num) REFERENCES realtime_comment (comment_num),
     FOREIGN KEY (tag_id) REFERENCES tag_category (tag_id)
 );
 
 CREATE TABLE board_picture
 (
+    file_id      INTEGER       NOT NULL AUTO_INCREMENT,
     board_id     INTEGER NULL,
     guidebook_id INTEGER NULL,
     path         VARCHAR(5000) NOT NULL,
     ori_filename VARCHAR(30)   NOT NULL,
     new_filename VARCHAR(30)   NOT NULL,
+    PRIMARY KEY (file_id),
     FOREIGN KEY (board_id) REFERENCES marker_board (board_id),
     FOREIGN KEY (guidebook_id) REFERENCES guidebook_board (guidebook_id)
 );
@@ -154,23 +158,26 @@ CREATE TABLE alarm
 
 CREATE TABLE friend_member
 (
+    relation_id INTEGER     NOT NULL AUTO_INCREMENT,
     member_id   VARCHAR(50) NOT NULL,
     friend_id   VARCHAR(50) NOT NULL,
     friend_yn   TINYINT(1) NOT NULL DEFAULT 0,
     favorite_yn TINYINT(1) NOT NULL DEFAULT 0,
     request_dt  TIMESTAMP NULL,
     accept_dt   TIMESTAMP NULL,
-    PRIMARY KEY (member_id, friend_id),
+    PRIMARY KEY (relation_id),
     FOREIGN KEY (member_id) REFERENCES member (member_id),
     FOREIGN KEY (friend_id) REFERENCES member (member_id)
 );
 
 CREATE TABLE marker_favorites
 (
+    favorite_id INTEGER     NOT NULL AUTO_INCREMENT,
     member_id   VARCHAR(10) NOT NULL,
     hospital_id Integer NULL,
     shelter_id  Integer NULL,
     nickname    VARCHAR(20) NULL,
+    PRIMARY KEY (favorite_id),
     FOREIGN KEY (member_id) REFERENCES member (member_id),
     FOREIGN KEY (hospital_id) REFERENCES hospital (hospital_id),
     FOREIGN KEY (shelter_id) REFERENCES shelter (shelter_id)
