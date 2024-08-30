@@ -6,6 +6,7 @@ import lombok.*;
 
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "member")
@@ -47,10 +48,10 @@ public class MemberEntity {
     private Boolean withdraw;
 
     @Column(name = "last_login_dt")
-    private Timestamp lastLoginDt;
+    private LocalDateTime lastLoginDt;
 
     @Column(name = "last_st_update_dt")
-    private Timestamp lastStUpdateDt;
+    private LocalDateTime lastStUpdateDt;
 
     @Column(name = "file_name", nullable = false, length = 50)
     private String fileName;
@@ -59,7 +60,7 @@ public class MemberEntity {
     private String stMessage;
 
     @Column(name = "end_time")
-    private Timestamp endTime;
+    private LocalDateTime endTime;
 
     @ManyToOne
     @JoinColumn(name = "status_id", insertable = false, updatable = false)
