@@ -1,0 +1,68 @@
+package com.scit.proj.scitsainanguide.domain.entity;
+
+import jakarta.persistence.*;
+import jakarta.transaction.Status;
+import lombok.*;
+
+
+import java.sql.Timestamp;
+
+@Entity
+@Table(name = "member")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class MemberEntity {
+
+    @Id
+    @Column(name = "member_id", nullable = false, length = 30)
+    private String memberId;
+
+    @Column(name = "status_id", nullable = false)
+    private Integer statusId;
+
+    @Column(name = "password", nullable = false, length = 100)
+    private String password;
+
+    @Column(name = "nickname", nullable = false, length = 10)
+    private String nickname;
+
+    @Column(name = "email", nullable = false, length = 50)
+    private String email;
+
+    @Column(name = "gender", length = 1)
+    private String gender;
+
+    @Column(name = "phone", nullable = false, length = 20)
+    private String phone;
+
+    @Column(name = "nationality", nullable = false, length = 20)
+    private String nationality;
+
+    @Column(name = "admin_yn", nullable = false)
+    private Boolean adminYn;
+
+    @Column(name = "withdraw", nullable = false)
+    private Boolean withdraw;
+
+    @Column(name = "last_login_dt")
+    private Timestamp lastLoginDt;
+
+    @Column(name = "last_st_update_dt")
+    private Timestamp lastStUpdateDt;
+
+    @Column(name = "file_name", nullable = false, length = 50)
+    private String fileName;
+
+    @Column(name = "st_message", length = 50)
+    private String stMessage;
+
+    @Column(name = "end_time")
+    private Timestamp endTime;
+
+    @ManyToOne
+    @JoinColumn(name = "status_id", insertable = false, updatable = false)
+    private StatusEntity status;
+}
+
