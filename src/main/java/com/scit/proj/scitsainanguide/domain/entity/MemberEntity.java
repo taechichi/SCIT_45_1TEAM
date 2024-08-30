@@ -20,9 +20,6 @@ public class MemberEntity {
     @Column(name = "member_id", nullable = false, length = 30)
     private String memberId;
 
-    @Column(name = "status_id", nullable = false)
-    private Integer statusId;
-
     @Column(name = "password", nullable = false, length = 100)
     private String password;
 

@@ -2,7 +2,6 @@ package com.scit.proj.scitsainanguide.domain.dto;
 
 import lombok.*;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Data
@@ -26,5 +25,8 @@ public class MemberDTO {
     private String fileName;
     private String stMessage;
     private LocalDateTime endTime;
+
+    // Status 명을 직접 구해서 넣을 경우
+    private String statusName;
 }
 
