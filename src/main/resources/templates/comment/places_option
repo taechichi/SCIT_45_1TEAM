@@ -12,3 +12,5 @@ place.website: 장소의 웹사이트 URL.
 place.price_level: 장소의 가격 수준 (0~4).
 place.user_ratings_total: 장소에 대한 총 사용자 평가 수.
 place.utc_offset_minutes: 장소의 시간대 오프셋(UTC 기준, 분 단위)
+place.geometry: 장소의 지리적 위치와 관련된 정보(viewport, location)
+(location : 위도, 경도)(viewport : LatLng 객체 남서쪽 경계, 북동쪽 경계 의 좌표를 사용해 사각형 정의)

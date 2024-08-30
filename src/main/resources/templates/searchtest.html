@@ -9,6 +9,8 @@
         let lat;  //위도
         let long; //경도
         var map;  //맵
+        let marker;
+        let markers = []; //마커배열
 
         function initMap() {
 
@@ -19,8 +21,6 @@
             navigator.geolocation.getCurrentPosition((position) => {
                 lat = position.coords.latitude;
                 long = position.coords.longitude;
-
-                let myLocation = { lat: lat, lng: long};  //장소
 
                 map = new google.maps.Map(document.getElementById('map'), {
                     center: { lat: lat, lng: long},
@@ -37,11 +37,6 @@
 
                 map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);     //input을 구글지도 좌상단에 위치하게 하는 코드(라이브러리 추가 필요)
 
-                const marker = new google.maps.Marker({
-                    position: myLocation,
-                    map: map,
-                });   //마커 설정 및 마커맵 지정
-
                 //검색 상자에서 places_changed를 통해 실행되는 이벤트 리스너
                 searchBox.addListener('places_changed', () => {     //places_changed는 검색창에 엔터나 목록에서 장소 선택시 이벤트 발생
                     const places = searchBox.getPlaces();       //places에는 검색장소 목록이 배열로 저장됨
@@ -56,13 +51,14 @@
                     // alert("검색된 장소들: " + placeNames);                             //place는 배열의 장소객체 name은 장소객체의 속성 반환값은 장소의이름, 으로 배열반환
 
                     //기존 마커 제거
-                    marker.setMap(null);
+                    markers.forEach(marker => marker.setMap(null));    //markers배열에서 가져온 기존마커 null로 맵에서 삭제
+                    markers = [];   //마커 배열 초기화
 
                     // 지도의 경계를 받아 마커표시 시 지도 바깥이면 숨김
                     // const bounds = map.getBounds(); // 현재 지도 경계 가져오기
                     //
                     // markers.forEach(marker => {
-                    //     if (bounds.contains(marker.getPosition())) {
+                    //     if (bounds.contains(marker.getPosition())) {     //마커가 현재 경계 안에 있는지 확인
                     //         marker.setMap(map); // 경계 내에 있으면 표시
                     //     } else {
                     //         marker.setMap(null); // 경계 밖에 있으면 숨김
@@ -70,36 +66,33 @@
                     // });
 
                     // 지도 중심과 마커를 새 장소로 이동
-                    const bounds = new google.maps.LatLngBounds();              //LatLngBounds는 지도의 경계를 얻는 객체
-                    places.forEach((place) => {
-                        if (!place.geometry || !place.geometry.location) {
+                    const bounds = new google.maps.LatLngBounds();              //LatLngBounds는 지도의 경계를 얻는 객체 bounds 초기화
+                    places.forEach((place) => {                                 //places배열을 place로
+                        if (!place.geometry || !place.geometry.location) {      //만약 장소관련 정보가 없으면 return
                             console.log("Returned place contains no geometry");
                             return;
                         }
 
-
                         // 새 마커를 생성하고 지도에 추가
-                        const newMarker = new google.maps.Marker({
+                        marker = new google.maps.Marker({
                             map: map,
                             title: place.name,
                             position: place.geometry.location
-                        });
+                        }); //마커의 옵션들은 comment의 marker_option 참조
 
-                        if (place.geometry.viewport) {
-                            bounds.union(place.geometry.viewport);
+                        markers.push(marker);   //배열에 마커추가
+
+                        if (place.geometry.viewport) {              //해당장소가 viewport정보를 가지고 있을 시 (넓은 지역을 차지하는 곳)
+                            bounds.union(place.geometry.viewport);  //bounds와 검색된 viewport값을 합쳐 합쳐진 지도 경계설정
                         } else {
-                            bounds.extend(place.geometry.location);
+                            bounds.extend(place.geometry.location); //위도 경도값을 받아 bounds값 설정
                         }
                     });
 
-                    map.fitBounds(bounds);
+                    map.fitBounds(bounds);  //위의 each문에서 place의 bounds값을 모두 포함하여 경계 안에 있는 모든장소들이 보이게함
                 });
-
             });
-
         }
-
-
 
         google.maps.event.addDomListener(window, 'load', initMap);      //domlistener initmap을 실행
     </script>
