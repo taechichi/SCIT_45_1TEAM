@@ -141,11 +141,13 @@ CREATE TABLE alarm_category
 
 CREATE TABLE alarm
 (
+    alarm_id    INTEGER      NOT NULL AUTO_INCREMENT,
     category_id INTEGER      NOT NULL,
     member_id   VARCHAR(30)  NOT NULL,
     contents    VARCHAR(100) NOT NULL,
     alarm_dt    TIMESTAMP    NOT NULL DEFAULT NOW(),
     read_yn     TINYINT(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (alarm_id),
     FOREIGN KEY (category_id) REFERENCES alarm_category (category_id),
     FOREIGN KEY (member_id) REFERENCES member (member_id)
 );
