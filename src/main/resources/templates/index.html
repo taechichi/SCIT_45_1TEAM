@@ -11,6 +11,11 @@
 
     <title>SB Admin 2 - Dashboard</title>
 
+    <!-- google map script -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places"></script>
+    <!-- 추가 할 라이브러리를 api의 libraries 부분 뒤에 추가 places,geometry -->
+    <script th:src="@{/js/search_marker.js}"></script>
+
     <!-- Custom fonts for this template-->
     <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
     <link
@@ -160,11 +165,11 @@
                     </button>
 
                     <!-- Topbar Search -->
-                    <form
+                    <form id ="search_form"
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
+                                aria-label="Search" aria-describedby="basic-addon2" id="search-input">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="button">
                                     <i class="fas fa-search fa-sm"></i>
@@ -356,7 +361,8 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-
+                <div id="map" style="height: 95%; width: 100%;"></div>
+                <input id="search-input" class="controls" type="text" placeholder="Search Box">
             </div>
             <!-- End of Main Content -->
 
