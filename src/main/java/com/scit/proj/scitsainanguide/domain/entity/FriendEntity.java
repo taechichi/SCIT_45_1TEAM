@@ -17,10 +17,13 @@ import java.time.LocalDateTime;
 public class FriendEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "relation_id", nullable = false)
+    private Integer relation_id;
+
     @Column(name = "member_id", length = 50, nullable = false)
     private String memberId;
 
-    @Id
     @Column(name = "friend_id", length = 50, nullable = false)
     private String friendId;
 
