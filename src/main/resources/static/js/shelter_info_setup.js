@@ -14,6 +14,7 @@ function startProgress() {
             updateProgressBar(progress);
         } else {
             progress = 0;
+            updateProgressBar(progress);
         }
     }, 1000); // 1초마다 업데이트
 }
