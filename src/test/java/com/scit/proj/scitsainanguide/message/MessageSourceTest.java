@@ -18,7 +18,7 @@ public class MessageSourceTest {
     MessageSource ms;
 
     @Test
-    void helloMessage() {
+    void 국제화가_잘됐는지_테스트() {
         String result = ms.getMessage("hello", null, null);
         assertThat(result).isEqualTo("안녕");
     }

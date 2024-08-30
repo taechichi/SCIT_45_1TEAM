@@ -18,7 +18,7 @@ CREATE TABLE member (
     password VARCHAR(100) NOT NULL,
     nickname VARCHAR(10) NOT NULL,
     email VARCHAR(50) NOT NULL,
-    gender VARCHAR(1) NOT NULL,
+    gender VARCHAR(1),
     phone VARCHAR(20) NOT NULL,
     nationality VARCHAR(20) NOT NULL,
     admin_yn TINYINT(1) NOT NULL DEFAULT 0,
@@ -55,6 +55,7 @@ CREATE TABLE shelter (
     hightide_yn TINYINT(1) NOT NULL DEFAULT 0,
     fire_yn TINYINT(1) NOT NULL DEFAULT 0,
     inland_flooding_yn TINYINT(1) NOT NULL DEFAULT 0,
+    tsunami_yn TINYINT(1) NOT NULL DEFAULT 0,
     volcano_yn TINYINT(1) NOT NULL DEFAULT 0,
     lang_cd VARCHAR(2) NOT NULL,
     PRIMARY KEY (shelter_id)
