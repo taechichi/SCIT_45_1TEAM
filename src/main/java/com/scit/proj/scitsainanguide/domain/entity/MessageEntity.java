@@ -31,7 +31,7 @@ public class MessageEntity {
     private LocalDateTime createDt;
 
     @Column(name = "delete_yn", nullable = false)
-    private Boolean deleteYn = false;
+    private Boolean deleteYn;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", insertable = false, updatable = false)

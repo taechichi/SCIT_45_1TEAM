@@ -28,10 +28,10 @@ public class FriendEntity {
     private String friendId;
 
     @Column(name = "friend_yn", nullable = false)
-    private Boolean friendYn = false;
+    private Boolean friendYn;
 
     @Column(name = "favorite_yn", nullable = false)
-    private Boolean favoriteYn = false;
+    private Boolean favoriteYn;
 
     @Column(name = "request_dt")
     private LocalDateTime requestDt;
