@@ -76,10 +76,26 @@
                 marker = new google.maps.Marker({
                     map: map,
                     title: place.name,
-                    position: place.geometry.location
+                    position: place.geometry.location,
+                    placeId: place.place_id                         //place의 장소번호 저장
                 }); //마커의 옵션들은 comment의 marker_option 참조
 
+                google.maps.event.addListener(marker, 'click', function() {
+                    const placeId = marker.get("placeId");
+                    // alert(marker.position);
+
+                    // 1. 기본 장소 정보 표시
+                    const placeName = marker.getTitle();
+                    const placeInfo = `<h3>${placeName}</h3>
+                                                <p>추가입력예정</p>`;
+                    let infoPanel = document.getElementById("info-panel");
+                    infoPanel.innerHTML = placeInfo;
+                    infoPanel.style.display = 'block';
+                });
+
                 markers.push(marker);   //배열에 마커추가
+
+
 
                 if (place.geometry.viewport) {              //해당장소가 viewport정보를 가지고 있을 시 (넓은 지역을 차지하는 곳)
                     bounds.union(place.geometry.viewport);  //bounds와 검색된 viewport값을 합쳐 합쳐진 지도 경계설정

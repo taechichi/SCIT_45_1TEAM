@@ -1,0 +1,156 @@
+[
+    {
+        "name": "미래의료재단 리드림의원",
+        "address": "513 Teheran-ro, Gangnam District",
+        "latitude": 37.5079253,
+        "longitude": 127.0589676,
+        "place_id": "ChIJe5LLHxWkfDUR_naUKoYYR6k"
+    },
+    {
+        "name": "연세유앤김신경정신과의원삼성점",
+        "address": "945-2 Daechi-dong, Gangnam District",
+        "latitude": 37.5079414,
+        "longitude": 127.061582,
+        "place_id": "ChIJeWjD_T-kfDUR_v7W056o9kw"
+    },
+    {
+        "name": "Guangdong Oriental Hospital 廣東韓方病院",
+        "address": "161 Samseong-dong, Gangnam District",
+        "latitude": 37.5142423,
+        "longitude": 127.0621332,
+        "place_id": "ChIJH7XtcUKkfDURXq0ekIeiuEU"
+    },
+    {
+        "name": "Samsung chaum geonjin Center Branch",
+        "address": "2층, 엔씨타워I, 509 Teheran-ro, Gangnam District",
+        "latitude": 37.5077966,
+        "longitude": 127.0581917,
+        "place_id": "ChIJJymv-hSkfDURbTqMcASVLUg"
+    },
+    {
+        "name": "Yeon & Nature OBGYN",
+        "address": "521 Hakdong-ro, Gangnam District",
+        "latitude": 37.51998799999999,
+        "longitude": 127.0557439,
+        "place_id": "ChIJYWzH3mWkfDUR1D9mQnpQWlc"
+    },
+    {
+        "name": "Seoul Medical Center Gangnam Branch",
+        "address": "South Korea",
+        "latitude": 37.512292,
+        "longitude": 127.0663245,
+        "place_id": "ChIJkafYjUOkfDURX13VacSJfSM"
+    },
+    {
+        "name": "오크우드봄의원",
+        "address": "1층, 오크우드호텔 지하, 46 Teheran-ro 87-gil, Gangnam District",
+        "latitude": 37.5109658,
+        "longitude": 127.0580497,
+        "place_id": "ChIJ-xyUyM6lfDURvzcXVvEbvlo"
+    },
+    {
+        "name": "휴고든정형외과의원",
+        "address": "21 Teheran-ro 87-gil, Gangnam District",
+        "latitude": 37.5090497,
+        "longitude": 127.058244,
+        "place_id": "ChIJfQX6cAClfDURutTtc36TLxU"
+    },
+    {
+        "name": "그대안에산부인과 삼성점",
+        "address": "테헤란로87길 13 5층, Gangnam District",
+        "latitude": 37.5085694,
+        "longitude": 127.0585755,
+        "place_id": "ChIJyzk-2RSkfDURfBFIJ2Yx4ug"
+    },
+    {
+        "name": "서울뉴젠비뇨기과의원",
+        "address": "514 Teheran-ro, 대치2동, Gangnam District",
+        "latitude": 37.507476,
+        "longitude": 127.059755,
+        "place_id": "ChIJbRY5ERWkfDURCJFQ6lNgXLI"
+    },
+    {
+        "name": "Retmus Plastic Surgery",
+        "address": "13층, 슈페리어타워, 528 Daechi-dong, Teheran-ro, Gangnam District",
+        "latitude": 37.5080697,
+        "longitude": 127.0620588,
+        "place_id": "ChIJ_QFciaylfDURKbPL1CS0_9g"
+    },
+    {
+        "name": "닥터밸리의원",
+        "address": "우리빌딩 B1, 동, Gangnam District",
+        "latitude": 37.5070473,
+        "longitude": 127.0598818,
+        "place_id": "ChIJV3oI3MelfDURTN2XSXL3wCE"
+    },
+    {
+        "name": "삼성마음숲 정신건강의학과의원",
+        "address": "7 Yeongdong-daero 85-gil, Daechi-dong, Gangnam District",
+        "latitude": 37.50707300000001,
+        "longitude": 127.0630926,
+        "place_id": "ChIJz8-kLFGlfDURbBeJLbGX7WE"
+    },
+    {
+        "name": "광혜병원",
+        "address": "South Korea",
+        "latitude": 37.5081412,
+        "longitude": 127.064734,
+        "place_id": "ChIJW3-9jUCkfDURxKcKjrSrVYs"
+    },
+    {
+        "name": "솔빛드림안과",
+        "address": "Samseong-dong, Gangnam District",
+        "latitude": 37.5123487,
+        "longitude": 127.051823,
+        "place_id": "ChIJn2rXsbulfDURRQBYzudqZ8M"
+    },
+    {
+        "name": "피부전문 미라클",
+        "address": "37 Samseong-ro 95-gil, Samseong-dong, Gangnam District",
+        "latitude": 37.5069677,
+        "longitude": 127.0528285,
+        "place_id": "ChIJ8XDB9bqlfDUROt_HRP7yt3o"
+    },
+    {
+        "name": "연세엘재활의학과의원",
+        "address": "651 Samseong-ro, Gangnam District",
+        "latitude": 37.5048009,
+        "longitude": 127.0577817,
+        "place_id": "ChIJbRiIeHClfDUR4O0HtkURR7E"
+    },
+    {
+        "name": "신라의원",
+        "address": "4 층, 999-6 Daechi-dong, Gangnam District",
+        "latitude": 37.5077492,
+        "longitude": 127.066439,
+        "place_id": "ChIJB3HAyUCkfDUR56WNqNzqdSY"
+    },
+    {
+        "name": "Heart Scan Hospital",
+        "address": "동일타워 지하 1층, 38 Teheran-ro 114-gil, Gangnam District",
+        "latitude": 37.5071423,
+        "longitude": 127.066996,
+        "place_id": "ChIJRW0TgRSkfDURMYsyPzYzhG0"
+    },
+    {
+        "name": "청담모네의원",
+        "address": "6층, 648 Yeongdong-daero, Gangnam District",
+        "latitude": 37.5199859,
+        "longitude": 127.0577213,
+        "place_id": "ChIJ61nYmwylfDURdP0st9zr3qk"
+    },
+    {
+        "name": "청담해리슨병원",
+        "address": "646 Samseong-ro, Gangnam District",
+        "latitude": 37.5177039,
+        "longitude": 127.0512128,
+        "place_id": "ChIJYc3WygqlfDUR8D7XDMO-AOQ"
+    },
+    {
+        "name": "안티안의원",
+        "address": "72-7 Cheongdam-dong, Gangnam District",
+        "latitude": 37.5201597,
+        "longitude": 127.0563773,
+        "place_id": "ChIJfUXqcQClfDURbwbgfSxa2oQ"
+    }
+]
