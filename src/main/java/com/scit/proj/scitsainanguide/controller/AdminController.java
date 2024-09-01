@@ -33,7 +33,7 @@ public class AdminController {
      * @param searchWord 검색어
      * @return 회원 목록 페이지 html
      */
-    @GetMapping("member/list")
+    @GetMapping("member")
     public String selectMemberList(Model model
             , @RequestParam(defaultValue = "1") int page
             , @RequestParam(defaultValue = "") String filter
@@ -55,11 +55,11 @@ public class AdminController {
 
     /**
      * 회원 수정 (관리자 여부만)
-     * @param member_id 수정하려는 회원의 아이디
+     * @param memberId 수정하려는 회원의 아이디
      */
     @ResponseBody
-    @PatchMapping("member/{member_id}")
-    public void updateMember(@PathVariable("member_id") String member_id) {
-        adminService.updateMember(member_id);
+    @PatchMapping("member/{memberId}")
+    public void updateMember(@PathVariable("memberId") String memberId) {
+        adminService.updateMember(memberId);
     }
 }
