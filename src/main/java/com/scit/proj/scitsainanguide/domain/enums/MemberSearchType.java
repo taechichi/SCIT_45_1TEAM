@@ -1,4 +1,4 @@
-package com.scit.proj.scitsainanguide.domain;
+package com.scit.proj.scitsainanguide.domain.enums;
 
 import lombok.Getter;
 

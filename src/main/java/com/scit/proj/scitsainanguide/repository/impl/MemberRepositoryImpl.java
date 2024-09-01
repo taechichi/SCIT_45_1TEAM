@@ -2,8 +2,8 @@ package com.scit.proj.scitsainanguide.repository.impl;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.scit.proj.scitsainanguide.domain.MemberFilter;
-import com.scit.proj.scitsainanguide.domain.MemberSearchType;
+import com.scit.proj.scitsainanguide.domain.enums.MemberFilter;
+import com.scit.proj.scitsainanguide.domain.enums.MemberSearchType;
 import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.entity.MemberEntity;
 import com.scit.proj.scitsainanguide.domain.entity.QMemberEntity;
@@ -34,9 +34,10 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Page<MemberDTO> selectMemberList(int page, int pageSize, String filterStr, String filterWord, String searchTypeStr, String searchWord) {
+    public Page<MemberDTO> selectMemberList(int page, int pageSize
+            , String filterStr, String filterWord, String searchTypeStr, String searchWord) {
 
-        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.Direction.ASC, "memberId");
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
         MemberSearchType searchType = MemberSearchType.fromValue(searchTypeStr);
         MemberFilter filter = MemberFilter.fromValue(filterStr);
 
@@ -53,14 +54,14 @@ public class MemberRepositoryImpl implements MemberRepository {
             case NICKNAME -> whereClause.and(member.nickname.contains(searchWord));
             case EMAIL -> whereClause.and(member.email.contains(searchWord));
         }
-        // 2. 필터
+        // 2. 필터 (회원 탈퇴여부는 초기 whereClause 설정시 구현)
         switch (filter) {
             case GENDER -> whereClause.and(member.gender.eq(filterWord));
             case NATIONALITY -> whereClause.and(member.nationality.eq(filterWord));
         }
 
         // 쿼리 실행
-        List<MemberEntity> memberEntities = queryFactory.selectFrom(member)
+        List<MemberEntity> memberEntityList = queryFactory.selectFrom(member)
                 .where(whereClause)
                 .orderBy(member.memberId.asc())
                 .offset(pageable.getOffset())
@@ -73,14 +74,13 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .fetchCount();
 
         // Entity -> DTO 변환 및 Page 반환
-        List<MemberDTO> memberDTOList = memberEntities.stream()
+        List<MemberDTO> memberDTOList = memberEntityList.stream()
                 .map(this::convertToMemberDTO)
                 .toList();
 
         return new PageImpl<>(memberDTOList, pageable, total);
     }
 
-    @Transactional
     public void updateMember(String memberId) {
         QMemberEntity qMember = QMemberEntity.memberEntity;
 

@@ -27,6 +27,8 @@ public class AdminController {
      * 회원 목록 페이지 이동
      * @param model 모델 객체
      * @param page 페이지 수
+     * @param filter 목록 필터
+     * @param filterWord 필터 내용
      * @param searchType 검색 조건
      * @param searchWord 검색어
      * @return 회원 목록 페이지 html
@@ -51,6 +53,10 @@ public class AdminController {
         return "admin/memberList";
     }
 
+    /**
+     * 회원 수정 (관리자 여부만)
+     * @param member_id 수정하려는 회원의 아이디
+     */
     @ResponseBody
     @PatchMapping("member/{member_id}")
     public void updateMember(@PathVariable("member_id") String member_id) {
