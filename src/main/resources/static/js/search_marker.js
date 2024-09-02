@@ -96,6 +96,9 @@
                         let infoPanel = document.getElementById("info-panel");
                         infoPanel.innerHTML = placeInfo;
                         infoPanel.style.display = 'block';
+                    setTimeout(() => {
+                        infoPanel.classList.add('visible'); // 슬라이드 애니메이션 시작
+                    }, 10); // 약간의 지연을 주어 애니메이션을 부드럽게 함
                         isPanelVisible = true;
                 });
 
@@ -103,7 +106,10 @@
                 google.maps.event.addListener(map,'click',function(){
                     if(isPanelVisible){
                         let infoPanel = document.getElementById("info-panel");
-                        infoPanel.style.display = "none";
+                        infoPanel.classList.remove('visible'); // 패널이 슬라이드로 사라지게 함
+                        setTimeout(() => {
+                            infoPanel.style.display = 'none'; // 애니메이션이 끝난 후 패널을 숨김
+                        }, 500); // 슬라이드 애니메이션 시간과 동일하게 맞춤
                         isPanelVisible = false;
                     }
                 });
