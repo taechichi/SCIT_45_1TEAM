@@ -2,7 +2,7 @@ CREATE TABLE status
 (
     status_id   INTEGER     NOT NULL AUTO_INCREMENT,
     status_name VARCHAR(10) NOT NULL,
-    lang_cd     VARCHAR(2)  NOT NULL,
+    status_name_ja VARCHAR(10) NOT NULL,
     PRIMARY KEY (status_id)
 );
 
