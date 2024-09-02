@@ -4,6 +4,7 @@
     var map;  //맵
     let markers = []; //마커배열
     let mylocation;
+    let isPanelVisible = false;     //패널 상태 false
 
     function initMap() {
 
@@ -81,21 +82,30 @@
                     placePhoto: place.photos
                 }); //마커의 옵션들은 comment의 marker_option 참조
 
+                //마커 클릭 이벤트 (패널 정보 block)
                 google.maps.event.addListener(marker, 'click', function() {
-                    const placeId = marker.get("placeId");
-                    // alert(marker.position);
-
-                    // 1. 기본 장소 정보 표시
-                    let placeName = marker.title;
-                    let photoUrl = "";
-                    photoUrl = place.photos[0].getUrl();    //place의 첫사진을 url을 받아 저장
-                    let placeInfo = `<h3>${placeName}</h3>
-                                              <div style="width: 100px;height: 100px">
+                        const placeId = marker.get("placeId");
+                        // 1. 기본 장소 정보 표시
+                        let placeName = marker.title;
+                        let photoUrl = "";
+                        photoUrl = place.photos[0].getUrl();    //place의 첫사진을 url을 받아 저장
+                        let placeInfo = `<h3>${placeName}</h3>                  <!--- infopanel에 넣을 값 ---!>  
+                                              <div style="width: 100%;height: 200px">
                                               <img src="${photoUrl}" style="width: 100%; height: 100%;"></div>
                                               <p>추가입력예정</p>`;
-                    let infoPanel = document.getElementById("info-panel");
-                    infoPanel.innerHTML = placeInfo;
-                    infoPanel.style.display = 'block';
+                        let infoPanel = document.getElementById("info-panel");
+                        infoPanel.innerHTML = placeInfo;
+                        infoPanel.style.display = 'block';
+                        isPanelVisible = true;
+                });
+
+                //맵 클릭 이벤트 (패널정보 none)
+                google.maps.event.addListener(map,'click',function(){
+                    if(isPanelVisible){
+                        let infoPanel = document.getElementById("info-panel");
+                        infoPanel.style.display = "none";
+                        isPanelVisible = false;
+                    }
                 });
 
                 markers.push(marker);   //배열에 마커추가
