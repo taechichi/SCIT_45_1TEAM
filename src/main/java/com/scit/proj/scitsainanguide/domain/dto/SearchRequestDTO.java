@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 
 @Data
 @NoArgsConstructor
@@ -12,6 +13,9 @@ import lombok.NoArgsConstructor;
 public class SearchRequestDTO {
     @Builder.Default
     private int page = 1;
+
+    @Value("${board.pageSize}")
+    private int pageSize;
 
     @Builder.Default
     private String filter = "";

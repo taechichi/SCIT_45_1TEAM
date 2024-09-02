@@ -19,8 +19,6 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    @Value("${board.pageSize}")
-    private int pageSize;
     @Value("${board.linkSize}")
     private int linkSize;
 
@@ -33,8 +31,7 @@ public class AdminController {
     @GetMapping("member")
     public String selectMemberList(Model model, @ModelAttribute SearchRequestDTO dto) {
         Page<MemberDTO> memberList =
-                adminService.selectMemberList(dto.getPage(), pageSize, dto.getFilter(), dto.getFilterWord()
-                        , dto.getSearchType(), dto.getSearchWord());
+                adminService.selectMemberList(dto);
         model.addAttribute("memberList", memberList);
         model.addAttribute("page", dto.getPage());
         model.addAttribute("linkSize", linkSize);
