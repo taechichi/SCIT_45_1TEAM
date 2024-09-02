@@ -22,6 +22,6 @@ public class StatusEntity {
     @Column(name="status_name", nullable = false, length = 10)
     private String statusName;
 
-    @Column(name =  "lang_cd", nullable = false, length = 2)
-    private String langCd;
+    @Column(name =  "status_name_ja", nullable = false, length = 10)
+    private String statusNameJa;
 }

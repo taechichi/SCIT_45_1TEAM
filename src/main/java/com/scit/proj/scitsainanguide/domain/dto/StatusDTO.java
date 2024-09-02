@@ -13,5 +13,5 @@ public class StatusDTO {
 
     private Integer statusId;
     private String statusName;
-    private String langCd;
+    private String statusNameJa;
 }
