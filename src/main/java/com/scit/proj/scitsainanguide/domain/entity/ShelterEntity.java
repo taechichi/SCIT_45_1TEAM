@@ -16,6 +16,7 @@ public class ShelterEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "shelter_id")
     private Integer shelterId;
 
     @Column(name = "shelter_name" , nullable = false)

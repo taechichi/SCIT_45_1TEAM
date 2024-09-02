@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 public class MyFriendController {
 
     private final MyFriendService myFriendService;
+
+    @Value("${board.pageSize}")
+    private int pageSize;
     @Value("${board.linkSize}")
     private int linkSize;
 
@@ -30,6 +33,9 @@ public class MyFriendController {
      */
     @GetMapping
     public String selectMyFriendList(Model model, @RequestParam String memberId, @ModelAttribute SearchRequestDTO dto) {
+        // dto 에 pageSize 셋팅
+        dto.setPageSize(pageSize);
+
         Page<FriendDTO> myFriendList = myFriendService.selectMyFriendList(dto, memberId);
         model.addAttribute("friendList", myFriendList);
         model.addAttribute("page", dto.getPage());
@@ -48,6 +54,9 @@ public class MyFriendController {
      */
     @GetMapping("request")
     public String selectMyFriendRequestList(Model model, @RequestParam String memberId, @ModelAttribute SearchRequestDTO dto) {
+        // dto 에 pageSize 셋팅
+        dto.setPageSize(pageSize);
+
         Page<FriendDTO> myFriendRequestList = myFriendService.selectMyFriendRequestList(dto, memberId);
         model.addAttribute("friendRequestList", myFriendRequestList);
         model.addAttribute("page", dto.getPage());

@@ -19,6 +19,8 @@ public class AdminController {
 
     private final AdminService adminService;
 
+    @Value("${board.pageSize}")
+    private int pageSize;
     @Value("${board.linkSize}")
     private int linkSize;
 
@@ -30,6 +32,9 @@ public class AdminController {
      */
     @GetMapping("member")
     public String selectMemberList(Model model, @ModelAttribute SearchRequestDTO dto) {
+        // dto 에 pageSize 셋팅
+        dto.setPageSize(pageSize);
+        
         Page<MemberDTO> memberList =
                 adminService.selectMemberList(dto);
         model.addAttribute("memberList", memberList);

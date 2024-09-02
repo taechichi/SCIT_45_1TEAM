@@ -14,9 +14,6 @@ public class SearchRequestDTO {
     @Builder.Default
     private int page = 1;
 
-    @Value("${board.pageSize}")
-    private int pageSize;
-
     @Builder.Default
     private String filter = "";
 
@@ -28,4 +25,7 @@ public class SearchRequestDTO {
 
     @Builder.Default
     private String searchWord = "";
+
+    // 따로 셋팅해주어야하는 값
+    private int pageSize;
 }
