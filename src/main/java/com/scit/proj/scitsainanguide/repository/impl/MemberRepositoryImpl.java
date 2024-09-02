@@ -2,6 +2,7 @@ package com.scit.proj.scitsainanguide.repository.impl;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.domain.enums.MemberFilter;
 import com.scit.proj.scitsainanguide.domain.enums.MemberSearchType;
 import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
@@ -27,6 +28,8 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     private final JPAQueryFactory queryFactory;
 
+    private QMemberEntity member = QMemberEntity.memberEntity;
+
     @Autowired
     public MemberRepositoryImpl(EntityManager em) {
         this.em = em;
@@ -34,30 +37,26 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Page<MemberDTO> selectMemberList(int page, int pageSize
-            , String filterStr, String filterWord, String searchTypeStr, String searchWord) {
-
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
-        MemberSearchType searchType = MemberSearchType.fromValue(searchTypeStr);
-        MemberFilter filter = MemberFilter.fromValue(filterStr);
-
-        QMemberEntity member = QMemberEntity.memberEntity;
+    public Page<MemberDTO> selectMemberList(SearchRequestDTO dto) {
+        Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPageSize());
+        MemberSearchType searchType = MemberSearchType.fromValue(dto.getSearchType());
+        MemberFilter filter = MemberFilter.fromValue(dto.getFilter());
 
         BooleanBuilder whereClause = new BooleanBuilder();
-        whereClause.and(member.withdraw.eq("true".equals(filterWord)))
+        whereClause.and(member.withdraw.eq("true".equals(dto.getFilterWord())))
                 .and(member.adminYn.eq(false));
 
         // 동적 조건 추가
         // 1. 검색조건
         switch (searchType) {
-            case MEMBER_ID -> whereClause.and(member.memberId.contains(searchWord));
-            case NICKNAME -> whereClause.and(member.nickname.contains(searchWord));
-            case EMAIL -> whereClause.and(member.email.contains(searchWord));
+            case MEMBER_ID -> whereClause.and(member.memberId.contains(dto.getSearchWord()));
+            case NICKNAME -> whereClause.and(member.nickname.contains(dto.getSearchWord()));
+            case EMAIL -> whereClause.and(member.email.contains(dto.getSearchWord()));
         }
         // 2. 필터 (회원 탈퇴여부는 초기 whereClause 설정시 구현)
         switch (filter) {
-            case GENDER -> whereClause.and(member.gender.eq(filterWord));
-            case NATIONALITY -> whereClause.and(member.nationality.eq(filterWord));
+            case GENDER -> whereClause.and(member.gender.eq(dto.getFilterWord()));
+            case NATIONALITY -> whereClause.and(member.nationality.eq(dto.getFilterWord()));
         }
 
         // 쿼리 실행
@@ -83,8 +82,6 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public void updateMember(String memberId) {
-        QMemberEntity member = QMemberEntity.memberEntity;
-
         // MemberEntity 조회
         MemberEntity memberEntity = queryFactory.selectFrom(member)
                 .where(member.memberId.eq(memberId))

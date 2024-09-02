@@ -4,9 +4,9 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
+import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.domain.entity.FriendEntity;
 import com.scit.proj.scitsainanguide.domain.entity.QFriendEntity;
-import com.scit.proj.scitsainanguide.domain.entity.QMemberEntity;
 import com.scit.proj.scitsainanguide.domain.enums.FriendSearchType;
 import com.scit.proj.scitsainanguide.repository.MyFriendRepository;
 import jakarta.persistence.EntityManager;
@@ -45,10 +45,9 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
     }
 
     @Override
-    public Page<FriendDTO> selectMyFirendList(int page, int pageSize
-            , String searchTypeStr, String searchWord, String memberId) {
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
-        FriendSearchType searchType = FriendSearchType.fromValue(searchTypeStr);
+    public Page<FriendDTO> selectMyFirendList(SearchRequestDTO dto, String memberId) {
+        Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPageSize());
+        FriendSearchType searchType = FriendSearchType.fromValue(dto.getSearchType());
 
         BooleanBuilder whereClause = new BooleanBuilder();
         whereClause.and(friend.memberId.eq(memberId))
@@ -59,8 +58,8 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
         // 동적 조건 추가
         // 1. 검색조건
         switch (searchType) {
-            case MEMBER_ID -> whereClause.and(friend.friendId.contains(searchWord));
-            case NICKNAME -> whereClause.and(friend.member.nickname.contains(searchWord));
+            case MEMBER_ID -> whereClause.and(friend.friendId.contains(dto.getSearchWord()));
+            case NICKNAME -> whereClause.and(friend.member.nickname.contains(dto.getSearchWord()));
         }
 
         // 쿼리 실행
@@ -90,8 +89,8 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
     }
 
     @Override
-    public Page<FriendDTO> selectMyFriendRequestList(int page, int pageSize, String memberId) {
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
+    public Page<FriendDTO> selectMyFriendRequestList(SearchRequestDTO dto, String memberId) {
+        Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPageSize());
 
         BooleanBuilder whereClause = new BooleanBuilder();
         whereClause.and(friend.memberId.eq(memberId))

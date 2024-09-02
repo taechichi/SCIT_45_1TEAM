@@ -1,6 +1,7 @@
 package com.scit.proj.scitsainanguide.service;
 
 import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
+import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.repository.MyFriendRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,12 +15,12 @@ public class MyFriendService {
 
     private final MyFriendRepository myFriendRepository;
 
-    public Page<FriendDTO> selectMyFriendList(int page, int pageSize, String searchType, String searchWord, String memberId) {
-        return myFriendRepository.selectMyFirendList(page, pageSize, searchType, searchWord, memberId);
+    public Page<FriendDTO> selectMyFriendList(SearchRequestDTO dto, String memberId) {
+        return myFriendRepository.selectMyFirendList(dto, memberId);
     }
 
-    public Page<FriendDTO> selectMyFriendRequestList(int page, int pageSize, String memberId) {
-        return myFriendRepository.selectMyFriendRequestList(page, pageSize, memberId);
+    public Page<FriendDTO> selectMyFriendRequestList(SearchRequestDTO dto, String memberId) {
+        return myFriendRepository.selectMyFriendRequestList(dto, memberId);
     }
 
     public void updateFriend(Integer relationId) {

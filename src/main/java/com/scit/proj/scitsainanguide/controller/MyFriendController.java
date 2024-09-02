@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
-@RequestMapping("my")
+@RequestMapping("my/friend")
 @RequiredArgsConstructor
 public class MyFriendController {
 
@@ -31,10 +31,12 @@ public class MyFriendController {
      * @param dto 검색 요청 객체
      * @return 내 친구 목록 페이지 html
      */
-    @GetMapping("friend")
+    @GetMapping
     public String selectMyFriendList(Model model, @RequestParam String memberId, @ModelAttribute SearchRequestDTO dto) {
-        Page<FriendDTO> myFriendList = myFriendService.selectMyFriendList(dto.getPage(), pageSize
-                , dto.getSearchType(), dto.getSearchWord(), memberId);
+        // dto 에 pageSize 셋팅
+        dto.setPageSize(pageSize);
+
+        Page<FriendDTO> myFriendList = myFriendService.selectMyFriendList(dto, memberId);
         model.addAttribute("friendList", myFriendList);
         model.addAttribute("page", dto.getPage());
         model.addAttribute("linkSize", linkSize);
@@ -43,9 +45,19 @@ public class MyFriendController {
         return "myPage/myFriend";
     }
 
-    @GetMapping("friend/request")
+    /**
+     * 내 친구 신청 목록 페이지 이동
+     * @param model 모델 객체
+     * @param memberId 로그인한 회원
+     * @param dto 검색 요청 객체
+     * @return 내 친구 신청 목록 페이지 html
+     */
+    @GetMapping("request")
     public String selectMyFriendRequestList(Model model, @RequestParam String memberId, @ModelAttribute SearchRequestDTO dto) {
-        Page<FriendDTO> myFriendRequestList = myFriendService.selectMyFriendRequestList(dto.getPage(), pageSize, memberId);
+        // dto 에 pageSize 셋팅
+        dto.setPageSize(pageSize);
+
+        Page<FriendDTO> myFriendRequestList = myFriendService.selectMyFriendRequestList(dto, memberId);
         model.addAttribute("friendRequestList", myFriendRequestList);
         model.addAttribute("page", dto.getPage());
         model.addAttribute("linkSize", linkSize);
@@ -58,7 +70,7 @@ public class MyFriendController {
      * @param friendId 친구추가 대상회원
      */
     @ResponseBody
-    @PostMapping("friend")
+    @PostMapping
     public void insertFriend(@RequestParam String memberId, @RequestParam String friendId) {
         myFriendService.insertFriend(memberId, friendId);
     }
@@ -68,7 +80,7 @@ public class MyFriendController {
      * @param relationId 친구관계 아이디
      */
     @ResponseBody
-    @PatchMapping("friend/{relationId}")
+    @PatchMapping("{relationId}")
     public void updateFriend(@PathVariable Integer relationId) {
         myFriendService.updateFriend(relationId);
     }
@@ -79,7 +91,7 @@ public class MyFriendController {
      * @param friendId 친구삭제 대상회원
      */
     @ResponseBody
-    @DeleteMapping("friend")
+    @DeleteMapping
     public void deleteFriend(@RequestParam String memberId, @RequestParam String friendId) {
         myFriendService.deleteFriend(memberId, friendId);
     }
@@ -90,7 +102,7 @@ public class MyFriendController {
      * @param relationId 친구관계 아이디
      */
     @ResponseBody
-    @PostMapping("friend/accept/{relationId}")
+    @PostMapping("accept/{relationId}")
     public void acceptFriend(@RequestParam String memberId, @PathVariable Integer relationId) {
         myFriendService.acceptFriend(memberId, relationId);
     }
@@ -101,7 +113,7 @@ public class MyFriendController {
      * @param relationId 친구관계 아이디
      */
     @ResponseBody
-    @PostMapping("friend/reject/{relationId}")
+    @PostMapping("reject/{relationId}")
     public void rejectFriend(@RequestParam String memberId, @PathVariable Integer relationId) {
         myFriendService.rejectFriend(memberId, relationId);
     }

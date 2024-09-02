@@ -1,13 +1,14 @@
 package com.scit.proj.scitsainanguide.repository;
 
 import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
+import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import org.springframework.data.domain.Page;
 
 public interface MyFriendRepository {
 
-    Page<FriendDTO> selectMyFirendList(int page, int pageSize, String searchType, String searchWord, String memberId);
+    Page<FriendDTO> selectMyFirendList(SearchRequestDTO dto, String memberId);
 
-    Page<FriendDTO> selectMyFriendRequestList(int page, int pageSize, String memberId);
+    Page<FriendDTO> selectMyFriendRequestList(SearchRequestDTO dto, String memberId);
 
     void updateFriend(Integer relationId);
 
