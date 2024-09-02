@@ -7,7 +7,13 @@ public interface MyFriendRepository {
 
     Page<FriendDTO> selectMyFirendList(int page, int pageSize, String searchType, String searchWord, String memberId);
 
-    void updateFriend(String memberId, String friendId);
+    void updateFriend(Integer relationId);
 
     void deleteFriend(String memberId, String friendId);
+
+    void insertFriend(String memberId, String friendId, boolean friendYn);
+
+    void acceptFriend(String memberId, Integer relationId);
+
+    void rejectFriend(String memberId, Integer relationId);
 }

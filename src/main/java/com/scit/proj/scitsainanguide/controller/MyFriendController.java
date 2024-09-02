@@ -43,15 +43,58 @@ public class MyFriendController {
         return "myPage/myFriend";
     }
 
+    /**
+     * 친구 관계 추가 (친구 신청시)
+     * @param memberId 친구추가 신청회원
+     * @param friendId 친구추가 대상회원
+     */
     @ResponseBody
-    @PatchMapping("friend/{friendId}")
-    public void updateFriend(@RequestParam String memberId, @PathVariable String friendId) {
-        myFriendService.updateFriend(memberId, friendId);
+    @PostMapping("friend")
+    public void insertFriend(@RequestParam String memberId, @RequestParam String friendId) {
+        myFriendService.insertFriend(memberId, friendId);
     }
 
+    /**
+     * 친구 즐겨찾기
+     * @param relationId 친구관계 아이디
+     */
     @ResponseBody
-    @DeleteMapping("friend/{friendId}")
-    public void deleteFriend(@RequestParam String memberId, @PathVariable String friendId) {
+    @PatchMapping("friend/{relationId}")
+    public void updateFriend(@PathVariable Integer relationId) {
+        myFriendService.updateFriend(relationId);
+    }
+
+    /**
+     * 친구 관계 삭제
+     * @param memberId 친구삭제 신청회원
+     * @param friendId 친구삭제 대상회원
+     */
+    @ResponseBody
+    @DeleteMapping("friend")
+    public void deleteFriend(@RequestParam String memberId, @RequestParam String friendId) {
         myFriendService.deleteFriend(memberId, friendId);
     }
+
+    /**
+     * 친구 신청 수락
+     * @param memberId 친구신청 수락회원
+     * @param relationId 친구관계 아이디
+     */
+    @ResponseBody
+    @PostMapping("friend/accept/{relationId}")
+    public void acceptFriend(@RequestParam String memberId, @PathVariable Integer relationId) {
+        myFriendService.acceptFriend(memberId, relationId);
+    }
+
+    /**
+     * 친구 신청 거절
+     * @param memberId 친구신청 거절회원
+     * @param relationId 친구관계 아이디
+     */
+    @ResponseBody
+    @PostMapping("friend/reject/{relationId}")
+    public void rejectFriend(@RequestParam String memberId, @PathVariable Integer relationId) {
+        myFriendService.rejectFriend(memberId, relationId);
+    }
+
 }
