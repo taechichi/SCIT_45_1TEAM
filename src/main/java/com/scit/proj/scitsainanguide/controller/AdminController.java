@@ -1,6 +1,7 @@
 package com.scit.proj.scitsainanguide.controller;
 
 import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
+import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,29 +27,21 @@ public class AdminController {
     /**
      * 회원 목록 페이지 이동
      * @param model 모델 객체
-     * @param page 페이지 수
-     * @param filter 목록 필터
-     * @param filterWord 필터 내용
-     * @param searchType 검색 조건
-     * @param searchWord 검색어
+     * @param dto 검색 요청 객체
      * @return 회원 목록 페이지 html
      */
     @GetMapping("member")
-    public String selectMemberList(Model model
-            , @RequestParam(defaultValue = "1") int page
-            , @RequestParam(defaultValue = "") String filter
-            , @RequestParam(defaultValue = "") String filterWord
-            , @RequestParam(defaultValue = "") String searchType
-            , @RequestParam(defaultValue = "") String searchWord) {
+    public String selectMemberList(Model model, @ModelAttribute SearchRequestDTO dto) {
         Page<MemberDTO> memberList =
-                adminService.selectMemberList(page, pageSize, filter, filterWord, searchType, searchWord);
+                adminService.selectMemberList(dto.getPage(), pageSize, dto.getFilter(), dto.getFilterWord()
+                        , dto.getSearchType(), dto.getSearchWord());
         model.addAttribute("memberList", memberList);
-        model.addAttribute("page", page);
+        model.addAttribute("page", dto.getPage());
         model.addAttribute("linkSize", linkSize);
-        model.addAttribute("filter", filter);
-        model.addAttribute("filterWord", filterWord);
-        model.addAttribute("searchType", searchType);
-        model.addAttribute("searchWord", searchWord);
+        model.addAttribute("filter", dto.getFilter());
+        model.addAttribute("filterWord", dto.getFilterWord());
+        model.addAttribute("searchType", dto.getSearchType());
+        model.addAttribute("searchWord", dto.getSearchWord());
 
         return "admin/memberList";
     }

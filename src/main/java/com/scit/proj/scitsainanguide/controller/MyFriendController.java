@@ -1,6 +1,7 @@
 package com.scit.proj.scitsainanguide.controller;
 
 import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
+import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.service.MyFriendService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,23 +28,18 @@ public class MyFriendController {
      * 내 친구 목록 페이지 이동
      * @param model 모델 객체
      * @param memberId 로그인한 회원
-     * @param page 페이지 수
-     * @param searchType 검색 조건
-     * @param searchWord 검색어
+     * @param dto 검색 요청 객체
      * @return 내 친구 목록 페이지 html
      */
     @GetMapping("friend")
-    public String selectMyFriendList(Model model
-            , @RequestParam String memberId
-            , @RequestParam(defaultValue = "1") int page
-            , @RequestParam(defaultValue = "") String searchType
-            , @RequestParam(defaultValue = "") String searchWord) {
-        Page<FriendDTO> myFriendList = myFriendService.selectMyFriendList(page, pageSize, searchType, searchWord, memberId);
+    public String selectMyFriendList(Model model, @RequestParam String memberId, @ModelAttribute SearchRequestDTO dto) {
+        Page<FriendDTO> myFriendList = myFriendService.selectMyFriendList(dto.getPage(), pageSize
+                , dto.getSearchType(), dto.getSearchWord(), memberId);
         model.addAttribute("friendList", myFriendList);
-        model.addAttribute("page", page);
+        model.addAttribute("page", dto.getPage());
         model.addAttribute("linkSize", linkSize);
-        model.addAttribute("searchType", searchType);
-        model.addAttribute("searchWord", searchWord);
+        model.addAttribute("searchType", dto.getSearchType());
+        model.addAttribute("searchWord", dto.getSearchWord());
         return "myPage/myFriend";
     }
 
