@@ -187,7 +187,8 @@ CREATE TABLE message
 (
     message_id INTEGER      NOT NULL AUTO_INCREMENT,
     sender_id     VARCHAR(30)  NOT NULL,
-    receiver_id   VARCHAR(500) NOT NULL,
+    receiver_id   VARCHAR(30)  NOT NULL,
+    content       VARCHAR(500) NOT NULL,
     create_dt  TIMESTAMP    NOT NULL DEFAULT NOW(),
     delete_yn  TINYINT(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (message_id),
