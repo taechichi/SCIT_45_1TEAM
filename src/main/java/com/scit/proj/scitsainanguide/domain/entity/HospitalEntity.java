@@ -21,7 +21,7 @@ public class HospitalEntity {
     @Column(name = "category_id", nullable = false)
     private Integer categoryId;
 
-    @Column(name = "hospital_name", nullable = false, length = 100)  // 최대 길이 설정
+    @Column(name = "hospital_name", nullable = false, length = 100)
     private String hospitalName;
 
     @Column(name = "longitude", nullable = false, length = 50)

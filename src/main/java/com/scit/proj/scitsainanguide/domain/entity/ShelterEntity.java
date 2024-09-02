@@ -16,6 +16,7 @@ public class ShelterEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "shelter_id")
     private Integer shelterId;
 
     @Column(name = "shelter_name" , nullable = false)
@@ -27,35 +28,35 @@ public class ShelterEntity {
     @Column(name = "longitude" , nullable = false)
     private String longitude;
 
-    @Column(name = "flood_yn" , nullable = false)
+    @Column(name = "flood_yn")
     @Builder.Default
     private boolean floodYn = false;
 
-    @Column(name = "earthquake_yn" , nullable = false)
+    @Column(name = "earthquake_yn")
     @Builder.Default
     private boolean earthquakeYn = false;
 
-    @Column(name = "earth_yn" , nullable = false)
+    @Column(name = "earth_yn")
     @Builder.Default
     private boolean earthYn = false;
 
-    @Column(name = "hightide_yn" , nullable = false)
+    @Column(name = "hightide_yn")
     @Builder.Default
     private boolean highTideYn = false;
 
-    @Column(name = "inland_flooding_yn" , nullable = false)
+    @Column(name = "inland_flooding_yn")
     @Builder.Default
     private boolean inlandFloodingYn = false;
 
-    @Column(name = "tsunami_yn " , nullable = false)
+    @Column(name = "tsunami_yn")
     @Builder.Default
     private boolean tsunamiYn  = false;
 
-    @Column(name = "fire_yn " , nullable = false)
+    @Column(name = "fire_yn")
     @Builder.Default
     private boolean fireYn  = false;
 
-    @Column(name = "volcano_yn" , nullable = false)
+    @Column(name = "volcano_yn")
     @Builder.Default
     private boolean volcanoYn = false;
 
