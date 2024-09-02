@@ -8,4 +8,6 @@ public interface MyFriendRepository {
     Page<FriendDTO> selectMyFirendList(int page, int pageSize, String searchType, String searchWord, String memberId);
 
     void updateFriend(String memberId, String friendId);
+
+    void deleteFriend(String memberId, String friendId);
 }

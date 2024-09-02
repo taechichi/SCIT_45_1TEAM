@@ -48,4 +48,10 @@ public class MyFriendController {
     public void updateFriend(@RequestParam String memberId, @PathVariable String friendId) {
         myFriendService.updateFriend(memberId, friendId);
     }
+
+    @ResponseBody
+    @DeleteMapping("friend/{friendId}")
+    public void deleteFriend(@RequestParam String memberId, @PathVariable String friendId) {
+        myFriendService.deleteFriend(memberId, friendId);
+    }
 }

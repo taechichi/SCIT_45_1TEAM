@@ -21,4 +21,10 @@ public class MyFriendService {
     public void updateFriend(String memberId, String friendId) {
         myFriendRepository.updateFriend(memberId, friendId);
     }
+
+    public void deleteFriend(String memberId, String friendId) {
+        // 양방향 관계를 모두 삭제해야하기 때문에 memberId, friendId 를 바꿔서 한 번더 삭제 로직을 실행한다.
+        myFriendRepository.deleteFriend(memberId, friendId);
+        myFriendRepository.deleteFriend(friendId, memberId);
+    }
 }

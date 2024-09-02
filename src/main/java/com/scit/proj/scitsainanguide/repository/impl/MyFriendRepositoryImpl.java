@@ -103,13 +103,35 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                 .fetchOne();
 
         if (friendEntity == null) {
-            throw new EntityNotFoundException("해당하는 회원을 찾을 수 없습니다.");
+            throw new EntityNotFoundException("해당하는 친구 관계를 찾을 수 없습니다.");
         }
 
-        // 관리자 여부 업데이트
+        // 즐겨찾기 업데이트
         queryFactory.update(friend)
                 .set(friend.favoriteYn, true)
-                .where(friend.friendId.eq(friendId))
+                .where(whereClause)
+                .execute();
+    }
+
+    @Override
+    public void deleteFriend(String memberId, String friendId) {
+        QFriendEntity friend = QFriendEntity.friendEntity;
+
+        BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(friend.friendId.eq(friendId))
+                .and(friend.memberId.eq(memberId));
+
+        // FriendEntity 조회
+        FriendEntity friendEntity = queryFactory.selectFrom(friend)
+                .where(whereClause)
+                .fetchOne();
+
+        if (friendEntity == null) {
+            throw new EntityNotFoundException("해당하는 친구 관계를 찾을 수 없습니다.");
+        }
+
+        queryFactory.delete(friend)
+                .where(whereClause)
                 .execute();
     }
 }
