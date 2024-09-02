@@ -2,8 +2,8 @@
     let lat;  //위도
     let long; //경도
     var map;  //맵
-    let marker;
     let markers = []; //마커배열
+    let mylocation;
 
     function initMap() {
 
@@ -73,11 +73,12 @@
                 }
 
                 // 새 마커를 생성하고 지도에 추가
-                marker = new google.maps.Marker({
+                let marker = new google.maps.Marker({
                     map: map,
                     title: place.name,
                     position: place.geometry.location,
-                    placeId: place.place_id                         //place의 장소번호 저장
+                    placeId: place.place_id,                        //place의 장소번호 저장
+                    placePhoto: place.photos
                 }); //마커의 옵션들은 comment의 marker_option 참조
 
                 google.maps.event.addListener(marker, 'click', function() {
@@ -85,9 +86,13 @@
                     // alert(marker.position);
 
                     // 1. 기본 장소 정보 표시
-                    const placeName = marker.getTitle();
-                    const placeInfo = `<h3>${placeName}</h3>
-                                                <p>추가입력예정</p>`;
+                    let placeName = marker.title;
+                    let photoUrl = "";
+                    photoUrl = place.photos[0].getUrl();    //place의 첫사진을 url을 받아 저장
+                    let placeInfo = `<h3>${placeName}</h3>
+                                              <div style="width: 100px;height: 100px">
+                                              <img src="${photoUrl}" style="width: 100%; height: 100%;"></div>
+                                              <p>추가입력예정</p>`;
                     let infoPanel = document.getElementById("info-panel");
                     infoPanel.innerHTML = placeInfo;
                     infoPanel.style.display = 'block';
