@@ -1,11 +1,8 @@
 package com.scit.proj.scitsainanguide.domain.entity;
 
 import jakarta.persistence.*;
-import jakarta.transaction.Status;
 import lombok.*;
 
-
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -59,8 +56,7 @@ public class MemberEntity {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
-    @ManyToOne
-    @JoinColumn(name = "status_id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status_id", updatable = false)
     private StatusEntity status;
 }
-
