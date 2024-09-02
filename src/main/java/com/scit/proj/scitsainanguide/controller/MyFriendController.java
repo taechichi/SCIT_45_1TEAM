@@ -1,0 +1,51 @@
+package com.scit.proj.scitsainanguide.controller;
+
+import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
+import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
+import com.scit.proj.scitsainanguide.service.MyFriendService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Slf4j
+@Controller
+@RequestMapping("my")
+@RequiredArgsConstructor
+public class MyFriendController {
+
+    private final MyFriendService myFriendService;
+
+    @Value("${board.pageSize}")
+    private int pageSize;
+    @Value("${board.linkSize}")
+    private int linkSize;
+
+    /**
+     * 내 친구 목록 페이지 이동
+     * @param model 모델 객체
+     * @param memberId 로그인한 회원
+     * @param dto 검색 요청 객체
+     * @return 내 친구 목록 페이지 html
+     */
+    @GetMapping("friend")
+    public String selectMyFriendList(Model model, @RequestParam String memberId, @ModelAttribute SearchRequestDTO dto) {
+        Page<FriendDTO> myFriendList = myFriendService.selectMyFriendList(dto.getPage(), pageSize
+                , dto.getSearchType(), dto.getSearchWord(), memberId);
+        model.addAttribute("friendList", myFriendList);
+        model.addAttribute("page", dto.getPage());
+        model.addAttribute("linkSize", linkSize);
+        model.addAttribute("searchType", dto.getSearchType());
+        model.addAttribute("searchWord", dto.getSearchWord());
+        return "myPage/myFriend";
+    }
+
+    @ResponseBody
+    @PatchMapping("friend/{friendId}")
+    public void updateFriend(@RequestParam String memberId, @PathVariable String friendId) {
+        myFriendService.updateFriend(memberId, friendId);
+    }
+}
