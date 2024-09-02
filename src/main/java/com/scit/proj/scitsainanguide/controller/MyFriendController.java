@@ -43,6 +43,15 @@ public class MyFriendController {
         return "myPage/myFriend";
     }
 
+    @GetMapping("friend/request")
+    public String selectMyFriendRequestList(Model model, @RequestParam String memberId, @ModelAttribute SearchRequestDTO dto) {
+        Page<FriendDTO> myFriendRequestList = myFriendService.selectMyFriendRequestList(dto.getPage(), pageSize, memberId);
+        model.addAttribute("friendRequestList", myFriendRequestList);
+        model.addAttribute("page", dto.getPage());
+        model.addAttribute("linkSize", linkSize);
+        return "myPage/myFriendRequest";
+    }
+
     /**
      * 친구 관계 추가 (친구 신청시)
      * @param memberId 친구추가 신청회원

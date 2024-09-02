@@ -90,6 +90,41 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
     }
 
     @Override
+    public Page<FriendDTO> selectMyFriendRequestList(int page, int pageSize, String memberId) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+
+        BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(friend.memberId.eq(memberId))
+                .and(friend.friendYn.eq(false))
+                .and(friend.friend.withdraw.eq(false))
+                .and(friend.friend.adminYn.eq(false));
+
+        // 쿼리 실행
+        List<FriendDTO> friendRequestDTOList = queryFactory.select(
+                        Projections.constructor(FriendDTO.class,
+                                friend.friendId,
+                                friend.friend.nickname,
+                                friend.friend.nationality,
+                                friend.requestDt
+                        )
+                ).from(friend)
+                .where(whereClause)
+                .orderBy(
+                        friend.requestDt.desc()
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        // 전체 카운트 쿼리 (페이징을 위한 total count)
+        long total = queryFactory.selectFrom(friend)
+                .where(whereClause)
+                .fetchCount();
+
+        return new PageImpl<>(friendRequestDTOList, pageable, total);
+    }
+
+    @Override
     public void updateFriend(Integer relationId) {
         BooleanBuilder whereClause = new BooleanBuilder();
         whereClause.and(friend.relationId.eq(relationId));

@@ -18,6 +18,10 @@ public class MyFriendService {
         return myFriendRepository.selectMyFirendList(page, pageSize, searchType, searchWord, memberId);
     }
 
+    public Page<FriendDTO> selectMyFriendRequestList(int page, int pageSize, String memberId) {
+        return myFriendRepository.selectMyFriendRequestList(page, pageSize, memberId);
+    }
+
     public void updateFriend(Integer relationId) {
         myFriendRepository.updateFriend(relationId);
     }
