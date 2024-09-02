@@ -27,7 +27,6 @@ import java.util.List;
 
 @Slf4j
 @Repository
-@RequiredArgsConstructor
 @Transactional
 public class MyFriendRepositoryImpl implements MyFriendRepository {
 

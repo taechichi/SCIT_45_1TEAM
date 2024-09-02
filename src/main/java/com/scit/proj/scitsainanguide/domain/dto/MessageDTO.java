@@ -14,8 +14,9 @@ import java.time.LocalDateTime;
 public class MessageDTO {
 
     private Integer messageId;
-    private String memberId;
-    private String contents;
+    private String senderId;
+    private String receiverId;
+    private String content;
     private LocalDateTime createDt;
     private Boolean deleteYn;
 }
