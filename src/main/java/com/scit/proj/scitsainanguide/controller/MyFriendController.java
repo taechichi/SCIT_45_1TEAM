@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
@@ -34,8 +32,8 @@ public class MyFriendController {
      * @param searchWord 검색어
      * @return 내 친구 목록 페이지 html
      */
-    @GetMapping("friend/list")
-    public String myFriendPage(Model model
+    @GetMapping("friend")
+    public String selectMyFriendList(Model model
             , @RequestParam String memberId
             , @RequestParam(defaultValue = "1") int page
             , @RequestParam(defaultValue = "") String searchType
@@ -47,5 +45,11 @@ public class MyFriendController {
         model.addAttribute("searchType", searchType);
         model.addAttribute("searchWord", searchWord);
         return "myPage/myFriend";
+    }
+
+    @ResponseBody
+    @PatchMapping("friend/{friendId}")
+    public void updateFriend(@RequestParam String memberId, @PathVariable String friendId) {
+        myFriendService.updateFriend(memberId, friendId);
     }
 }

@@ -4,11 +4,13 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
+import com.scit.proj.scitsainanguide.domain.entity.FriendEntity;
 import com.scit.proj.scitsainanguide.domain.entity.QFriendEntity;
 import com.scit.proj.scitsainanguide.domain.entity.QMemberEntity;
 import com.scit.proj.scitsainanguide.domain.enums.FriendSearchType;
 import com.scit.proj.scitsainanguide.repository.MyFriendRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -85,5 +87,29 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                 .fetchCount();
 
         return new PageImpl<>(friendDTOList, pageable, total);
+    }
+
+    @Override
+    public void updateFriend(String memberId, String friendId) {
+        QFriendEntity friend = QFriendEntity.friendEntity;
+
+        BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(friend.friendId.eq(friendId))
+                .and(friend.memberId.eq(memberId));
+
+        // FriendEntity 조회
+        FriendEntity friendEntity = queryFactory.selectFrom(friend)
+                .where(whereClause)
+                .fetchOne();
+
+        if (friendEntity == null) {
+            throw new EntityNotFoundException("해당하는 회원을 찾을 수 없습니다.");
+        }
+
+        // 관리자 여부 업데이트
+        queryFactory.update(friend)
+                .set(friend.favoriteYn, true)
+                .where(friend.friendId.eq(friendId))
+                .execute();
     }
 }

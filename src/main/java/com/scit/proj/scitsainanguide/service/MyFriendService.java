@@ -17,4 +17,8 @@ public class MyFriendService {
     public Page<FriendDTO> selectMyFriendList(int page, int pageSize, String searchType, String searchWord, String memberId) {
         return myFriendRepository.selectMyFirendList(page, pageSize, searchType, searchWord, memberId);
     }
+
+    public void updateFriend(String memberId, String friendId) {
+        myFriendRepository.updateFriend(memberId, friendId);
+    }
 }

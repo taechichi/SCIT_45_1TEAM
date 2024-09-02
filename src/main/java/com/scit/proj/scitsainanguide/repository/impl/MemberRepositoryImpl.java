@@ -81,12 +81,13 @@ public class MemberRepositoryImpl implements MemberRepository {
         return new PageImpl<>(memberDTOList, pageable, total);
     }
 
+    @Override
     public void updateMember(String memberId) {
-        QMemberEntity qMember = QMemberEntity.memberEntity;
+        QMemberEntity member = QMemberEntity.memberEntity;
 
         // MemberEntity 조회
-        MemberEntity memberEntity = queryFactory.selectFrom(qMember)
-                .where(qMember.memberId.eq(memberId))
+        MemberEntity memberEntity = queryFactory.selectFrom(member)
+                .where(member.memberId.eq(memberId))
                 .fetchOne();
 
         if (memberEntity == null) {
@@ -94,9 +95,9 @@ public class MemberRepositoryImpl implements MemberRepository {
         }
 
         // 관리자 여부 업데이트
-        queryFactory.update(qMember)
-                .set(qMember.adminYn, true)
-                .where(qMember.memberId.eq(memberId))
+        queryFactory.update(member)
+                .set(member.adminYn, true)
+                .where(member.memberId.eq(memberId))
                 .execute();
     }
 
