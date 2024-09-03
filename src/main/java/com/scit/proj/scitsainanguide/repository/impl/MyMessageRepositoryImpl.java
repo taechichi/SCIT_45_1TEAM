@@ -6,6 +6,7 @@ import com.scit.proj.scitsainanguide.domain.dto.MessageDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.domain.entity.MessageEntity;
 import com.scit.proj.scitsainanguide.domain.entity.QMessageEntity;
+import com.scit.proj.scitsainanguide.domain.enums.MessageSearchType;
 import com.scit.proj.scitsainanguide.repository.MyMessageRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -41,11 +42,20 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
     @Override
     public Page<MessageDTO> selectMyMessageList(SearchRequestDTO dto, String memberId) {
         Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPageSize());
+        MessageSearchType searchType = MessageSearchType.fromValue(dto.getSearchType());
 
         BooleanBuilder whereClause = new BooleanBuilder();
         whereClause.and(message.receiver_id.eq(memberId)
                 .and(message.deleteYn.eq(false)));
 
+        // 동적 조건 추가
+        // 1. 검색조건
+        switch (searchType) {
+            case SENDER_ID -> whereClause.and(message.sender_id.contains(dto.getSearchWord()));
+            case CONTENT -> whereClause.and(message.content.contains(dto.getSearchWord()));
+        }
+
+        // 쿼리 실행
         List<MessageEntity> messageEntityList = queryFactory.selectFrom(message)
                 .where(whereClause)
                 .orderBy(message.createDt.desc())
@@ -67,7 +77,7 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
     }
 
     /**
-     * 다중 삭제
+     * 내 쪽지 다중 삭제
      */
     @Override
     public void deleteMyMessage(String memberId, List<Integer> messageIdList) {
@@ -79,7 +89,7 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
     }
 
     /**
-     * 단건 삭제
+     * 내 쪽지 단건 삭제
      */
     @Override
     public void deleteMyMessage(String memberId, Integer messageId) {

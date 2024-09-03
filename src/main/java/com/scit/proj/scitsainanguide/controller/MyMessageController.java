@@ -42,8 +42,6 @@ public class MyMessageController {
         model.addAttribute("messageList", messageList);
         model.addAttribute("page", dto.getPage());
         model.addAttribute("linkSize", linkSize);
-        model.addAttribute("filter", dto.getFilter());
-        model.addAttribute("filterWord", dto.getFilterWord());
         model.addAttribute("searchType", dto.getSearchType());
         model.addAttribute("searchWord", dto.getSearchWord());
         return "myPage/myMessage";
