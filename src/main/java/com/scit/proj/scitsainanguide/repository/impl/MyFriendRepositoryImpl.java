@@ -4,9 +4,11 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
+import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.domain.entity.FriendEntity;
 import com.scit.proj.scitsainanguide.domain.entity.QFriendEntity;
+import com.scit.proj.scitsainanguide.domain.entity.QMemberEntity;
 import com.scit.proj.scitsainanguide.domain.enums.FriendSearchType;
 import com.scit.proj.scitsainanguide.repository.MyFriendRepository;
 import jakarta.persistence.EntityManager;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Repository
@@ -36,6 +39,7 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
     private final JPAQueryFactory queryFactory;
 
     private QFriendEntity friend = QFriendEntity.friendEntity;
+    private QMemberEntity member = QMemberEntity.memberEntity;
 
     @Autowired
     public MyFriendRepositoryImpl(EntityManager em) {
@@ -211,6 +215,23 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
 
         // 친구 관계를 삭제
         executeDeleteFriendQuery(whereClause);
+    }
+
+    @Override
+    public Optional<MemberDTO> selectMyFriend(String memberId) {
+        return Optional.ofNullable(
+                queryFactory.select(
+                        Projections.constructor(MemberDTO.class,
+                                member.memberId,
+                                member.nickname,
+                                member.lastStUpdateDt,
+                                member.status.statusName
+                        )
+                )
+                .from(member)
+                .where(member.memberId.eq(memberId))
+                .fetchOne()
+        );
     }
 
     private long getTotalCount(BooleanBuilder whereClause) {

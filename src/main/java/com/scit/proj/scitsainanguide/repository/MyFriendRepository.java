@@ -1,8 +1,11 @@
 package com.scit.proj.scitsainanguide.repository;
 
 import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
+import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import org.springframework.data.domain.Page;
+
+import java.util.Optional;
 
 public interface MyFriendRepository {
 
@@ -19,4 +22,6 @@ public interface MyFriendRepository {
     void acceptFriend(String memberId, Integer relationId);
 
     void rejectFriend(String memberId, Integer relationId);
+
+    Optional<MemberDTO> selectMyFriend(String memberId);
 }

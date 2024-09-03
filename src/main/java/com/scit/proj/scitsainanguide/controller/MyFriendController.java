@@ -1,6 +1,7 @@
 package com.scit.proj.scitsainanguide.controller;
 
 import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
+import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.service.MyFriendService;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,18 @@ public class MyFriendController {
         model.addAttribute("searchType", dto.getSearchType());
         model.addAttribute("searchWord", dto.getSearchWord());
         return "myPage/myFriend";
+    }
+
+    /**
+     * 친구 상세정보 조회
+     * @param memberId 조회대상 친구의 아이디
+     * @return 친구의 회원 정보 객체
+     */
+    @ResponseBody
+    @GetMapping("{memberId}")
+    public MemberDTO selectMyFriend(@PathVariable String memberId) {
+        // TODO 국제화 기능 마무리되면 statusName 도 언어 설정에 따라 다르게 조회되어야함
+        return myFriendService.selectMyFriend(memberId);
     }
 
     /**

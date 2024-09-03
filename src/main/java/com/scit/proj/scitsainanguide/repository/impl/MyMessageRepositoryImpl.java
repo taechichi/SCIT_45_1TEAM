@@ -136,7 +136,7 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
                 )
                 .from(message)
                 .where(message.messageId.eq(messageId))
-                .fetchFirst()
+                .fetchOne()
         );
     }
 
