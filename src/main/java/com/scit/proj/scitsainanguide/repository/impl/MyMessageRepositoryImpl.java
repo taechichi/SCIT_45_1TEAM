@@ -1,11 +1,13 @@
 package com.scit.proj.scitsainanguide.repository.impl;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.scit.proj.scitsainanguide.domain.dto.MessageDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.domain.entity.MessageEntity;
 import com.scit.proj.scitsainanguide.domain.entity.QMessageEntity;
+import com.scit.proj.scitsainanguide.domain.enums.MessageSearchType;
 import com.scit.proj.scitsainanguide.repository.MyMessageRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Repository
@@ -41,12 +44,30 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
     @Override
     public Page<MessageDTO> selectMyMessageList(SearchRequestDTO dto, String memberId) {
         Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPageSize());
+        MessageSearchType searchType = MessageSearchType.fromValue(dto.getSearchType());
 
         BooleanBuilder whereClause = new BooleanBuilder();
-        whereClause.and(message.receiver_id.eq(memberId)
+        whereClause.and(message.receiverId.eq(memberId)
                 .and(message.deleteYn.eq(false)));
 
-        List<MessageEntity> messageEntityList = queryFactory.selectFrom(message)
+        // 동적 조건 추가
+        // 1. 검색조건
+        switch (searchType) {
+            case SENDER_ID -> whereClause.and(message.senderId.contains(dto.getSearchWord()));
+            case CONTENT -> whereClause.and(message.content.contains(dto.getSearchWord()));
+        }
+
+        // 쿼리 실행
+        List<MessageDTO> messageDTOList = queryFactory.select(
+                        Projections.constructor(MessageDTO.class,
+                                message.messageId,
+                                message.senderId,
+                                message.content,
+                                message.createDt,
+                                message.sender.fileName
+                        )
+                )
+                .from(message)
                 .where(whereClause)
                 .orderBy(message.createDt.desc())
                 .offset(pageable.getOffset())
@@ -58,36 +79,65 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
                 .where(whereClause)
                 .fetchCount();
 
-        // Entity -> DTO 변환 및 Page 반환
-        List<MessageDTO> messageDTOList = messageEntityList.stream()
-                .map(this::convertToMessageDTO)
-                .toList();
-
         return new PageImpl<>(messageDTOList, pageable, total);
     }
 
     /**
-     * 다중 삭제
+     * 내 쪽지 다중 삭제
      */
     @Override
     public void deleteMyMessage(String memberId, List<Integer> messageIdList) {
         BooleanBuilder whereClause = new BooleanBuilder();
-        whereClause.and(message.receiver_id.eq(memberId))
+        whereClause.and(message.receiverId.eq(memberId))
                 .and(message.messageId.in(messageIdList));
 
         executeDeleteMessageQuery(whereClause);
     }
 
     /**
-     * 단건 삭제
+     * 내 쪽지 단건 삭제
      */
     @Override
     public void deleteMyMessage(String memberId, Integer messageId) {
         BooleanBuilder whereClause = new BooleanBuilder();
-        whereClause.and(message.receiver_id.eq(memberId))
+        whereClause.and(message.receiverId.eq(memberId))
                 .and(message.messageId.eq(messageId));
 
         executeDeleteMessageQuery(whereClause);
+    }
+
+    @Override
+    public void insertMyMessage(MessageDTO dto) {
+        // message entity 를 생성
+        MessageEntity messageEntity = MessageEntity.builder()
+                .senderId(dto.getSenderId())
+                .receiverId(dto.getReceiverId())
+                .content(dto.getContent())
+                .deleteYn(false)
+                .build();
+
+        // 엔티티 매니저를 통해 엔티티를 저장.
+        em.persist(messageEntity);
+    }
+
+    @Override
+    public Optional<MessageDTO> selectMyMessage(Integer messageId) {
+        return Optional.ofNullable(
+                queryFactory.select(
+                        Projections.constructor(MessageDTO.class,
+                                message.messageId,
+                                message.senderId,
+                                message.receiverId,
+                                message.content,
+                                message.createDt,
+                                message.deleteYn,
+                                message.sender.fileName
+                        )
+                )
+                .from(message)
+                .where(message.messageId.eq(messageId))
+                .fetchOne()
+        );
     }
 
     private void executeDeleteMessageQuery(BooleanBuilder whereClause) {
@@ -101,8 +151,8 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
     private MessageDTO convertToMessageDTO(MessageEntity messageEntity) {
         return MessageDTO.builder()
                 .messageId(messageEntity.getMessageId())
-                .senderId(messageEntity.getSender_id())
-                .receiverId(messageEntity.getReceiver_id())
+                .senderId(messageEntity.getSenderId())
+                .receiverId(messageEntity.getReceiverId())
                 .content(messageEntity.getContent())
                 .createDt(messageEntity.getCreateDt())
                 .deleteYn(messageEntity.getDeleteYn())

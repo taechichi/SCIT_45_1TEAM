@@ -25,10 +25,10 @@ public class MessageEntity {
     private Integer messageId;
 
     @Column(name = "sender_id", length = 30, nullable = false)
-    private String sender_id;
+    private String senderId;
 
     @Column(name = "receiver_id", length = 30, nullable = false)
-    private String receiver_id;
+    private String receiverId;
 
     @Column(name = "content", length = 500, nullable = false)
     private String content;

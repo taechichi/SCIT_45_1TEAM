@@ -4,9 +4,11 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
+import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.domain.entity.FriendEntity;
 import com.scit.proj.scitsainanguide.domain.entity.QFriendEntity;
+import com.scit.proj.scitsainanguide.domain.entity.QMemberEntity;
 import com.scit.proj.scitsainanguide.domain.enums.FriendSearchType;
 import com.scit.proj.scitsainanguide.repository.MyFriendRepository;
 import jakarta.persistence.EntityManager;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Repository
@@ -36,6 +39,7 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
     private final JPAQueryFactory queryFactory;
 
     private QFriendEntity friend = QFriendEntity.friendEntity;
+    private QMemberEntity member = QMemberEntity.memberEntity;
 
     @Autowired
     public MyFriendRepositoryImpl(EntityManager em) {
@@ -156,11 +160,12 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
     @Override
     public void insertFriend(String memberId, String friendId, boolean friendYn) {
         // friend_member entity 를 생성
-        FriendEntity friendEntity = new FriendEntity();
-        friendEntity.setMemberId(memberId);
-        friendEntity.setFriendId(friendId);
-        friendEntity.setFavoriteYn(false);
-        friendEntity.setFriendYn(friendYn);
+        FriendEntity friendEntity = FriendEntity.builder()
+                .memberId(memberId)
+                .friendId(friendId)
+                .favoriteYn(false)
+                .friendYn(friendYn)
+                .build();
 
         // 친구 신청을 수락하면서 친구 관계를 추가하는 경우 수락일시를 추가한다.
         if (friendYn) {
@@ -210,6 +215,23 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
 
         // 친구 관계를 삭제
         executeDeleteFriendQuery(whereClause);
+    }
+
+    @Override
+    public Optional<MemberDTO> selectMyFriend(String memberId) {
+        return Optional.ofNullable(
+                queryFactory.select(
+                        Projections.constructor(MemberDTO.class,
+                                member.memberId,
+                                member.nickname,
+                                member.lastStUpdateDt,
+                                member.status.statusName
+                        )
+                )
+                .from(member)
+                .where(member.memberId.eq(memberId))
+                .fetchOne()
+        );
     }
 
     private long getTotalCount(BooleanBuilder whereClause) {

@@ -1,8 +1,10 @@
 package com.scit.proj.scitsainanguide.service;
 
 import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
+import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.repository.MyFriendRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -43,5 +45,10 @@ public class MyFriendService {
 
     public void rejectFriend(String memberId, Integer relationId) {
         myFriendRepository.rejectFriend(memberId, relationId);
+    }
+
+    public MemberDTO selectMyFriend(String memberId) {
+        return myFriendRepository.selectMyFriend(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("해당하는 회원을 찾을 수 없습니다."));
     }
 }

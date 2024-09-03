@@ -28,5 +28,12 @@ public class MemberDTO {
 
     // Status 명을 직접 구해서 넣을 경우
     private String statusName;
+
+    public MemberDTO(String memberId, String nickname, LocalDateTime lastStUpdateDt, String statusName) {
+        this.memberId = memberId;
+        this.nickname = nickname;
+        this.lastStUpdateDt = lastStUpdateDt;
+        this.statusName = statusName;
+    }
 }
 
