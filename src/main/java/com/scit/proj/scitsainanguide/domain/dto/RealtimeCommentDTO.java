@@ -8,15 +8,15 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class MessageDTO {
-
-    private Integer messageId;
-    private String senderId;
-    private String receiverId;
-    private String content;
+public class RealtimeCommentDTO {
+    private Integer commentNum;
+    private Integer replyNum;
+    private String nickname;
+    private String location;
+    private String contents;
     private LocalDateTime createDt;
-    private Boolean deleteYn;
+
 }

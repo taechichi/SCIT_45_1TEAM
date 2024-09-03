@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 
 @Data
 @NoArgsConstructor
@@ -24,4 +25,7 @@ public class SearchRequestDTO {
 
     @Builder.Default
     private String searchWord = "";
+
+    // 따로 셋팅해주어야하는 값
+    private int pageSize;
 }

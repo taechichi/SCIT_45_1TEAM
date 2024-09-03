@@ -26,6 +26,7 @@ public class TestController {
 
     @GetMapping("error/{error}")
     public String error(@PathVariable String error) {
+
         if ("true".equals(error)) {
             throw new EntityNotFoundException("존재하지 않는 엔티티입니다.");
         }

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Import Shelter Data</title>
+    <link rel="stylesheet" th:href="@{/css/shelter_info_setup/shelter_info_setup.css}">
+    <style>
+        #progress-container {
+            width: 100%;
+            background-color: #f3f3f3;
+            border: 1px solid #ccc;
+            padding: 3px;
+            margin: 20px 0;
+        }
+        #progress-bar {
+            width: 0%;
+            height: 25px;
+            background-color: #4caf50;
+            text-align: center;
+            color: white;
+            line-height: 25px;
+        }
+        #status-message {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+    <script th:src="@{/js/shelter_info_setup.js}"></script>
+</head>
+<body>
+    <h1>JSON Shelter 데이터 12만개만 가져오기</h1>
+    <input type="file" id="fileInput">
+    <button onclick="uploadFile()">Import Data</button>
+
+    <div id="progress-container">
+        <div id="progress-bar">0%</div>
+    </div>
+    <div id="status-message">DB 정보 입력중 ...</div>
+    <br>
+    <div>1. 진행상황에 따라 진행률이 초기화되거나 달라질 수 있습니다.</div>
+    <div>2. "데이터가 성공적으로 추가되었습니다." 메시지가 나올 때까지 컴퓨터를 끄거나 SpringBoot 프로그램을 끄지 마세요.</div>
+    <div>3. 약 12만개의 데이터가 들어가는데 소요되는 시간은 약 2시간입니다. (컴퓨터환경마다 다를 수 있음)</div>
+</body>
+</html>

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class MessageEntity {
 
     @Id
@@ -21,12 +24,16 @@ public class MessageEntity {
     @Column(name = "message_id", nullable = false)
     private Integer messageId;
 
-    @Column(name = "member_id", length = 30, nullable = false)
-    private String memberId;
+    @Column(name = "sender_id", length = 30, nullable = false)
+    private String sender_id;
 
-    @Column(name = "contents", length = 500, nullable = false)
-    private String contents;
+    @Column(name = "receiver_id", length = 30, nullable = false)
+    private String receiver_id;
 
+    @Column(name = "content", length = 500, nullable = false)
+    private String content;
+
+    @CreatedDate
     @Column(name = "create_dt", nullable = false)
     private LocalDateTime createDt;
 
@@ -34,6 +41,10 @@ public class MessageEntity {
     private Boolean deleteYn;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", insertable = false, updatable = false)
-    private MemberEntity member;
+    @JoinColumn(name = "sender_id", insertable = false, updatable = false)
+    private MemberEntity sender;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receiver_id", insertable = false, updatable = false)
+    private MemberEntity receiver;
 }
