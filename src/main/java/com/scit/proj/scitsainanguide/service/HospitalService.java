@@ -2,8 +2,8 @@ package com.scit.proj.scitsainanguide.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.scit.proj.scitsainanguide.domain.entity.ShelterEntity;
-import com.scit.proj.scitsainanguide.repository.ShelterRepository;
+import com.scit.proj.scitsainanguide.domain.entity.HospitalEntity;
+import com.scit.proj.scitsainanguide.repository.HospitalRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,16 +14,15 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 @Transactional
-public class ShelterService {
+@RequiredArgsConstructor
+public class HospitalService {
 
-    private final ShelterRepository shelterRepository;
+    private final HospitalRepository hospitalRepository;
     private final ObjectMapper objectMapper;
 
     public void importDataFromJsonFile(MultipartFile file) throws IOException {
-
         // 업로드된 파일의 InputStream을 사용하여 JSON 데이터를 읽음
         InputStream inputStream = file.getInputStream();
         JsonNode rootNode = objectMapper.readTree(inputStream);
@@ -43,8 +42,9 @@ public class ShelterService {
             // 키의 값을 로그로 출력
             //log.debug("name: {}", node.path("設・場所名").asText());
 
-            ShelterEntity shelter = ShelterEntity.builder()
-                    .shelterName(node.path("設・場所名").asText())
+            HospitalEntity hospitalEntity = HospitalEntity.builder()
+                    // 유성상이 수정해야할 곳~ :)
+                    /*.shelterName(node.path("設・場所名").asText())
                     .latitude(node.path("緯度").asText())
                     .longitude(node.path("経度").asText())
                     .floodYn("1".equals(node.path("洪水").asText(""))) // "1"일 때 true, 아니면 false
@@ -55,10 +55,10 @@ public class ShelterService {
                     .fireYn("1".equals(node.path("大規模な火事").asText("")))
                     .inlandFloodingYn("1".equals(node.path("内水氾濫").asText("")))
                     .volcanoYn("1".equals(node.path("火山現象").asText("")))
-                    .lang_cd("ja") // 고정 값
+                    .lang_cd("ja") // 고정 값*/
                     .build();
             // DB에 저장
-            shelterRepository.save(shelter);
+            hospitalRepository.save(hospitalEntity);
         }
     }
 }
