@@ -1,6 +1,7 @@
 package com.scit.proj.scitsainanguide.repository.impl;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.scit.proj.scitsainanguide.domain.dto.MessageDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
@@ -56,7 +57,16 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
         }
 
         // 쿼리 실행
-        List<MessageEntity> messageEntityList = queryFactory.selectFrom(message)
+        List<MessageDTO> messageDTOList = queryFactory.select(
+                        Projections.constructor(MessageDTO.class,
+                                message.messageId,
+                                message.sender_id,
+                                message.content,
+                                message.createDt,
+                                message.sender.fileName
+                        )
+                )
+                .from(message)
                 .where(whereClause)
                 .orderBy(message.createDt.desc())
                 .offset(pageable.getOffset())
@@ -67,11 +77,6 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
         long total = queryFactory.selectFrom(message)
                 .where(whereClause)
                 .fetchCount();
-
-        // Entity -> DTO 변환 및 Page 반환
-        List<MessageDTO> messageDTOList = messageEntityList.stream()
-                .map(this::convertToMessageDTO)
-                .toList();
 
         return new PageImpl<>(messageDTOList, pageable, total);
     }
