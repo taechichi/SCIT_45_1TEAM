@@ -47,7 +47,8 @@
           });
 
           google.maps.event.addListener(marker, 'click', function() {
-            alert(location);
+            geocodeLatLng(geocoder, marker.position); // 좌표를 주소로 변환
+
           });
         }
 
@@ -58,7 +59,6 @@
           // console.log("Longitude: " + event.latLng.lng());
           // console.log("test: " + event.latLng);
           addMarker(event.latLng);
-          geocodeLatLng(geocoder, location); // 좌표를 주소로 변환
         });
 
       });
@@ -68,7 +68,15 @@
     //좌표를 주소로 전환
     function geocodeLatLng(geocoder, location){
       geocoder.geocode({ 'location': location }, function (results, status){
-
+        if (status === 'OK') {
+          if (results[0]) {
+            alert("Address: " + results[0].formatted_address);
+          } else {
+            alert('No results found');
+          }
+        } else {
+          alert('Geocoder failed due to: ' + status);
+        }
       });
     }
 
