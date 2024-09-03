@@ -80,11 +80,7 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                 .fetch();
 
         // 전체 카운트 쿼리 (페이징을 위한 total count)
-        long total = queryFactory.selectFrom(friend)
-                .where(whereClause)
-                .fetchCount();
-
-        return new PageImpl<>(friendDTOList, pageable, total);
+        return new PageImpl<>(friendDTOList, pageable, getTotalCount(whereClause));
     }
 
     @Override
@@ -115,11 +111,7 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                 .fetch();
 
         // 전체 카운트 쿼리 (페이징을 위한 total count)
-        long total = queryFactory.selectFrom(friend)
-                .where(whereClause)
-                .fetchCount();
-
-        return new PageImpl<>(friendRequestDTOList, pageable, total);
+        return new PageImpl<>(friendRequestDTOList, pageable, getTotalCount(whereClause));
     }
 
     @Override
@@ -158,9 +150,7 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
             throw new EntityNotFoundException("해당하는 친구 관계를 찾을 수 없습니다.");
         }
 
-        queryFactory.delete(friend)
-                .where(whereClause)
-                .execute();
+        executeDeleteFriendQuery(whereClause);
     }
 
     @Override
@@ -219,6 +209,16 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
         }
 
         // 친구 관계를 삭제
+        executeDeleteFriendQuery(whereClause);
+    }
+
+    private long getTotalCount(BooleanBuilder whereClause) {
+        return queryFactory.selectFrom(friend)
+                .where(whereClause)
+                .fetchCount();
+    }
+
+    private void executeDeleteFriendQuery(BooleanBuilder whereClause) {
         queryFactory.delete(friend)
                 .where(whereClause)
                 .execute();

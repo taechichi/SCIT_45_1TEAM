@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -17,5 +19,13 @@ public class MyMessageService {
 
     public Page<MessageDTO> selectMyMessageList(SearchRequestDTO dto, String memberId) {
         return myMessageRepository.selectMyMessageList(dto, memberId);
+    }
+
+    public void deleteMyMessageList(String memberId, List<Integer> messageIdList) {
+        myMessageRepository.deleteMyMessage(memberId, messageIdList);
+    }
+
+    public void deleteMyMessage(String memberId, Integer messageId) {
+        myMessageRepository.deleteMyMessage(memberId, messageId);
     }
 }

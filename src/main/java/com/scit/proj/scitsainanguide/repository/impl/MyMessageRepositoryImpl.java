@@ -66,6 +66,38 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
         return new PageImpl<>(messageDTOList, pageable, total);
     }
 
+    /**
+     * 다중 삭제
+     */
+    @Override
+    public void deleteMyMessage(String memberId, List<Integer> messageIdList) {
+        BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(message.receiver_id.eq(memberId))
+                .and(message.messageId.in(messageIdList));
+
+        executeDeleteMessageQuery(whereClause);
+    }
+
+    /**
+     * 단건 삭제
+     */
+    @Override
+    public void deleteMyMessage(String memberId, Integer messageId) {
+        BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(message.receiver_id.eq(memberId))
+                .and(message.messageId.eq(messageId));
+
+        executeDeleteMessageQuery(whereClause);
+    }
+
+    private void executeDeleteMessageQuery(BooleanBuilder whereClause) {
+        // 삭제시 해당 메세지의 삭제여부 컬럼의 값만 true 로 변경
+        queryFactory.update(message)
+                .set(message.deleteYn, true)
+                .where(whereClause)
+                .execute();
+    }
+
     private MessageDTO convertToMessageDTO(MessageEntity messageEntity) {
         return MessageDTO.builder()
                 .messageId(messageEntity.getMessageId())

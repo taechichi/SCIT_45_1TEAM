@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,6 +26,13 @@ public class MyMessageController {
     @Value("${board.linkSize}")
     private int linkSize;
 
+    /**
+     * 내 쪽지 목록 조회 페이지 이동
+     * @param model 모델 객체
+     * @param memberId 로그인 한 아이디
+     * @param dto 검색 객체
+     * @return 내 쪽지 목록 조회 페이지 html
+     */
     @GetMapping
     public String selectMyMessageList(Model model, @RequestParam String memberId, @ModelAttribute SearchRequestDTO dto) {
         // pageSize 세팅
@@ -43,5 +47,27 @@ public class MyMessageController {
         model.addAttribute("searchType", dto.getSearchType());
         model.addAttribute("searchWord", dto.getSearchWord());
         return "myPage/myMessage";
+    }
+
+    /**
+     * 내 쪽지 다중 삭제
+     * @param memberId 로그인 한 아이디
+     * @param messageIdList 삭제대상 쪽지 아이디 목록
+     */
+    @ResponseBody
+    @DeleteMapping("list")
+    public void deleteMyMessageList(@RequestParam String memberId, @RequestParam List<Integer> messageIdList) {
+        myMessageService.deleteMyMessageList(memberId, messageIdList);
+    }
+
+    /**
+     * 내 쪽지 삭제
+     * @param memberId 로그인 한 아이디
+     * @param messageId 삭제대상 쪽지 아이디
+     */
+    @ResponseBody
+    @DeleteMapping
+    public void deleteMyMessage(@RequestParam String memberId, @RequestParam Integer messageId) {
+        myMessageService.deleteMyMessage(memberId, messageId);
     }
 }
