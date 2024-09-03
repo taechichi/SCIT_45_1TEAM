@@ -59,6 +59,8 @@ public class ShelterService {
                     .build();
             // DB에 저장
             shelterRepository.save(shelter);
+
+            hospital
         }
     }
 }
