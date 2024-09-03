@@ -8,4 +8,5 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Slf4j
 public class MarkerFavoritesService {
+
 }
