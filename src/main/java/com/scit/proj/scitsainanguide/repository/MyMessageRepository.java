@@ -13,4 +13,6 @@ public interface MyMessageRepository {
     void deleteMyMessage(String memberId, List<Integer> messageIdList);
 
     void deleteMyMessage(String memberId, Integer messageId);
+
+    void insertMyMessage(MessageDTO dto);
 }

@@ -156,11 +156,12 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
     @Override
     public void insertFriend(String memberId, String friendId, boolean friendYn) {
         // friend_member entity 를 생성
-        FriendEntity friendEntity = new FriendEntity();
-        friendEntity.setMemberId(memberId);
-        friendEntity.setFriendId(friendId);
-        friendEntity.setFavoriteYn(false);
-        friendEntity.setFriendYn(friendYn);
+        FriendEntity friendEntity = FriendEntity.builder()
+                .memberId(memberId)
+                .friendId(friendId)
+                .favoriteYn(false)
+                .friendYn(friendYn)
+                .build();
 
         // 친구 신청을 수락하면서 친구 관계를 추가하는 경우 수락일시를 추가한다.
         if (friendYn) {

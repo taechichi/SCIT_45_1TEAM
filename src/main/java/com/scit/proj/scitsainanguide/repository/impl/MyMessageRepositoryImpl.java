@@ -46,13 +46,13 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
         MessageSearchType searchType = MessageSearchType.fromValue(dto.getSearchType());
 
         BooleanBuilder whereClause = new BooleanBuilder();
-        whereClause.and(message.receiver_id.eq(memberId)
+        whereClause.and(message.receiverId.eq(memberId)
                 .and(message.deleteYn.eq(false)));
 
         // 동적 조건 추가
         // 1. 검색조건
         switch (searchType) {
-            case SENDER_ID -> whereClause.and(message.sender_id.contains(dto.getSearchWord()));
+            case SENDER_ID -> whereClause.and(message.senderId.contains(dto.getSearchWord()));
             case CONTENT -> whereClause.and(message.content.contains(dto.getSearchWord()));
         }
 
@@ -60,7 +60,7 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
         List<MessageDTO> messageDTOList = queryFactory.select(
                         Projections.constructor(MessageDTO.class,
                                 message.messageId,
-                                message.sender_id,
+                                message.senderId,
                                 message.content,
                                 message.createDt,
                                 message.sender.fileName
@@ -87,7 +87,7 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
     @Override
     public void deleteMyMessage(String memberId, List<Integer> messageIdList) {
         BooleanBuilder whereClause = new BooleanBuilder();
-        whereClause.and(message.receiver_id.eq(memberId))
+        whereClause.and(message.receiverId.eq(memberId))
                 .and(message.messageId.in(messageIdList));
 
         executeDeleteMessageQuery(whereClause);
@@ -99,10 +99,24 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
     @Override
     public void deleteMyMessage(String memberId, Integer messageId) {
         BooleanBuilder whereClause = new BooleanBuilder();
-        whereClause.and(message.receiver_id.eq(memberId))
+        whereClause.and(message.receiverId.eq(memberId))
                 .and(message.messageId.eq(messageId));
 
         executeDeleteMessageQuery(whereClause);
+    }
+
+    @Override
+    public void insertMyMessage(MessageDTO dto) {
+        // message entity 를 생성
+        MessageEntity messageEntity = MessageEntity.builder()
+                .senderId(dto.getSenderId())
+                .receiverId(dto.getReceiverId())
+                .content(dto.getContent())
+                .deleteYn(false)
+                .build();
+
+        // 엔티티 매니저를 통해 엔티티를 저장.
+        em.persist(messageEntity);
     }
 
     private void executeDeleteMessageQuery(BooleanBuilder whereClause) {
@@ -116,8 +130,8 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
     private MessageDTO convertToMessageDTO(MessageEntity messageEntity) {
         return MessageDTO.builder()
                 .messageId(messageEntity.getMessageId())
-                .senderId(messageEntity.getSender_id())
-                .receiverId(messageEntity.getReceiver_id())
+                .senderId(messageEntity.getSenderId())
+                .receiverId(messageEntity.getReceiverId())
                 .content(messageEntity.getContent())
                 .createDt(messageEntity.getCreateDt())
                 .deleteYn(messageEntity.getDeleteYn())

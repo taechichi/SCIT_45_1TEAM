@@ -68,4 +68,15 @@ public class MyMessageController {
     public void deleteMyMessage(@RequestParam String memberId, @RequestParam Integer messageId) {
         myMessageService.deleteMyMessage(memberId, messageId);
     }
+
+    /**
+     * 쪽지 작성
+     * @param dto 쪽지 정보 객체
+     * @return redirect 하여 내 쪽지 목록으로 이동
+     */
+    @PostMapping
+    public String insertMyMessage(@ModelAttribute MessageDTO dto) {
+        myMessageService.insertMyMessage(dto);
+        return "redirect:/my/message/list";
+    }
 }

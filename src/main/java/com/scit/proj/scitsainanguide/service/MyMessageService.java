@@ -28,4 +28,8 @@ public class MyMessageService {
     public void deleteMyMessage(String memberId, Integer messageId) {
         myMessageRepository.deleteMyMessage(memberId, messageId);
     }
+
+    public void insertMyMessage(MessageDTO dto) {
+        myMessageRepository.insertMyMessage(dto);
+    }
 }
