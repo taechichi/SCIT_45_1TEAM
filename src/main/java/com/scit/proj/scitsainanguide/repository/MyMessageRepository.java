@@ -5,6 +5,7 @@ import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MyMessageRepository {
 
@@ -15,4 +16,6 @@ public interface MyMessageRepository {
     void deleteMyMessage(String memberId, Integer messageId);
 
     void insertMyMessage(MessageDTO dto);
+
+    Optional<MessageDTO> selectMyMessage(Integer messageId);
 }

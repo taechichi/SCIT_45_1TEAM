@@ -64,8 +64,8 @@ public class MyMessageController {
      * @param messageId 삭제대상 쪽지 아이디
      */
     @ResponseBody
-    @DeleteMapping
-    public void deleteMyMessage(@RequestParam String memberId, @RequestParam Integer messageId) {
+    @DeleteMapping("{messageId}")
+    public void deleteMyMessage(@RequestParam String memberId, @PathVariable Integer messageId) {
         myMessageService.deleteMyMessage(memberId, messageId);
     }
 
@@ -78,5 +78,17 @@ public class MyMessageController {
     public String insertMyMessage(@ModelAttribute MessageDTO dto) {
         myMessageService.insertMyMessage(dto);
         return "redirect:/my/message/list";
+    }
+
+    /**
+     * 내 쪽지 단건 조회 페이지 이동
+     * @param model 모델 객체
+     * @param messageId 조회대상 쪽지 아이디
+     */
+    @GetMapping("{messageId}")
+    public String selectMyMessage(Model model, @PathVariable Integer messageId) {
+        MessageDTO message = myMessageService.selectMyMessage(messageId);
+        model.addAttribute("message", message);
+        return "myPage/messageDetail";
     }
 }

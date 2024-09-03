@@ -3,6 +3,7 @@ package com.scit.proj.scitsainanguide.service;
 import com.scit.proj.scitsainanguide.domain.dto.MessageDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.repository.MyMessageRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,5 +32,10 @@ public class MyMessageService {
 
     public void insertMyMessage(MessageDTO dto) {
         myMessageRepository.insertMyMessage(dto);
+    }
+
+    public MessageDTO selectMyMessage(Integer messageId) {
+        return myMessageRepository.selectMyMessage(messageId)
+                .orElseThrow(() -> new EntityNotFoundException("해당하는 쪽지를 찾을 수 없습니다."));
     }
 }

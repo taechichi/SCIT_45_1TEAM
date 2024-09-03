@@ -21,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Repository
@@ -117,6 +118,26 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
 
         // 엔티티 매니저를 통해 엔티티를 저장.
         em.persist(messageEntity);
+    }
+
+    @Override
+    public Optional<MessageDTO> selectMyMessage(Integer messageId) {
+        return Optional.ofNullable(
+                queryFactory.select(
+                        Projections.constructor(MessageDTO.class,
+                                message.messageId,
+                                message.senderId,
+                                message.receiverId,
+                                message.content,
+                                message.createDt,
+                                message.deleteYn,
+                                message.sender.fileName
+                        )
+                )
+                .from(message)
+                .where(message.messageId.eq(messageId))
+                .fetchFirst()
+        );
     }
 
     private void executeDeleteMessageQuery(BooleanBuilder whereClause) {
