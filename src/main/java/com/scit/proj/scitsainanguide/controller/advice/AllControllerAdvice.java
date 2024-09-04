@@ -26,6 +26,13 @@ public class AllControllerAdvice {
         log.error("[EntityNotFoundException Handler] ", e);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalStateException.class)
+    public void illegalStateExHandle(IllegalStateException e) {
+        // TODO 추후 에러처리 방안이 생긴다면 아래의 코드를 수정해야함. 일단은 메세지만 출력하는 것으로 작성
+        log.error("[IllegalStateException Handler] ", e);
+    }
+
 
     // ===== Shelter_Entity db 삽입 관련 예외처리입니다. ==============================================
     // JsonParseException 처리

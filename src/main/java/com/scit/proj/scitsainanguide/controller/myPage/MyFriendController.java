@@ -1,9 +1,9 @@
-package com.scit.proj.scitsainanguide.controller;
+package com.scit.proj.scitsainanguide.controller.myPage;
 
 import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
 import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
-import com.scit.proj.scitsainanguide.service.MyFriendService;
+import com.scit.proj.scitsainanguide.service.myPage.MyFriendService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -44,6 +46,17 @@ public class MyFriendController {
         model.addAttribute("searchType", dto.getSearchType());
         model.addAttribute("searchWord", dto.getSearchWord());
         return "myPage/myFriend";
+    }
+
+    /**
+     * 내 즐겨찾기한 친구 목록
+     * @param memberId 로그인한 아이디
+     * @return 친구 정보 객체
+     */
+    @ResponseBody
+    @GetMapping("favorite")
+    public List<MemberDTO> selectMyFavoriteList(@RequestParam String memberId) {
+        return myFriendService.selectMyFavoriteList(memberId);
     }
 
     /**
@@ -94,8 +107,8 @@ public class MyFriendController {
      */
     @ResponseBody
     @PatchMapping("{relationId}")
-    public void updateFriend(@PathVariable Integer relationId) {
-        myFriendService.updateFriend(relationId);
+    public void updateFriend(@PathVariable Integer relationId, @RequestParam String memberId) {
+        myFriendService.updateFriend(relationId, memberId);
     }
 
     /**

@@ -1,8 +1,8 @@
-package com.scit.proj.scitsainanguide.controller;
+package com.scit.proj.scitsainanguide.controller.myPage;
 
 import com.scit.proj.scitsainanguide.domain.dto.MessageDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
-import com.scit.proj.scitsainanguide.service.MyMessageService;
+import com.scit.proj.scitsainanguide.service.myPage.MyMessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

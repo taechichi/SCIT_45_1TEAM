@@ -14,7 +14,6 @@ import com.scit.proj.scitsainanguide.repository.MyFriendRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Repository
@@ -119,8 +119,13 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
     }
 
     @Override
-    public void updateFriend(Integer relationId) {
+    public void updateFriend(Integer relationId, String memberId) {
+        // 친구 즐겨찾기는 최대 5명까지 가능하기 때문에 유효성검사를 먼저 한다.
         BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(friend.memberId.eq(memberId));
+        if(getTotalCount(whereClause) == 5L) {
+            throw new IllegalStateException("친구 즐겨찾기는 최대 5명까지만 가능합니다.");
+        }
         whereClause.and(friend.relationId.eq(relationId));
 
         // FriendEntity 조회
@@ -232,6 +237,33 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                 .where(member.memberId.eq(memberId))
                 .fetchOne()
         );
+    }
+
+    @Override
+    public List<MemberDTO> selectMyFavoriteList(String memberId) {
+        // 로그인한 회원의 즐겨찾기한 친구 목록 조회
+        List<FriendEntity> friendEntityList = queryFactory.selectFrom(friend)
+                .where(friend.memberId.eq(memberId)
+                    .and(friend.favoriteYn.eq(true))
+                )
+                .fetch();
+
+        // 친구 Entity 에서 id 를 추출해서 List 로 만든다.
+        List<String> friendIdList = friendEntityList.stream()
+                .map(FriendEntity::getFriendId)
+                .toList();
+
+        // 해당 친구들의 정보 조회
+        return queryFactory.select(
+                Projections.constructor(MemberDTO.class,
+                        member.nickname,
+                        member.fileName,
+                        member.status.statusName
+                )
+        )
+        .from(member)
+        .where(member.memberId.in(friendIdList))
+        .fetch();
     }
 
     private long getTotalCount(BooleanBuilder whereClause) {

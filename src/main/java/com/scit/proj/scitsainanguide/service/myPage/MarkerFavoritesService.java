@@ -1,4 +1,4 @@
-package com.scit.proj.scitsainanguide.service;
+package com.scit.proj.scitsainanguide.service.myPage;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;

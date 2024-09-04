@@ -35,5 +35,11 @@ public class MemberDTO {
         this.lastStUpdateDt = lastStUpdateDt;
         this.statusName = statusName;
     }
+
+    public MemberDTO(String memberId, String nickname, String statusName) {
+        this.memberId = memberId;
+        this.nickname = nickname;
+        this.statusName = statusName;
+    }
 }
 

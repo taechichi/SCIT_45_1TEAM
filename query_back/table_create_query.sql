@@ -6,14 +6,6 @@ CREATE TABLE status
     PRIMARY KEY (status_id)
 );
 
-CREATE TABLE hp_category
-(
-    category_id   INTEGER     NOT NULL AUTO_INCREMENT,
-    category_name VARCHAR(20) NOT NULL,
-    lang_cd       VARCHAR(2)  NOT NULL,
-    PRIMARY KEY (category_id)
-);
-
 CREATE TABLE member
 (
     member_id         VARCHAR(30)  NOT NULL,
@@ -38,14 +30,12 @@ CREATE TABLE member
 CREATE TABLE hospital
 (
     hospital_id    INTEGER     NOT NULL AUTO_INCREMENT,
-    category_id    INTEGER     NOT NULL,
     hospital_name  VARCHAR(50) NOT NULL,
     longitude      VARCHAR(20) NOT NULL,
     latitude       VARCHAR(20) NOT NULL,
     lang_cd        VARCHAR(2)  NOT NULL,
     business_hours VARCHAR(30) NULL,
-    PRIMARY KEY (hospital_id),
-    FOREIGN KEY (category_id) REFERENCES hp_category (category_id)
+    PRIMARY KEY (hospital_id)
 );
 
 CREATE TABLE shelter
