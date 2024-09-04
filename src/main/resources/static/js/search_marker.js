@@ -94,7 +94,8 @@
                                               <img src="${photoUrl}" style="width: 100%; height: 100%;"></div>
                                               <p>추가입력예정</p>`;
                         let infoPanel = document.getElementById("info-panel");
-                        infoPanel.innerHTML = placeInfo;
+                        let infoPart = document.getElementById("info_part");
+                    infoPart.innerHTML = placeInfo;
                         infoPanel.style.display = 'block';
                         isPanelVisible = true;
                 });
@@ -106,6 +107,11 @@
                         infoPanel.style.display = 'none';
                         isPanelVisible = false;
                     }
+                });
+
+                let btn = document.getElementById("shareBtn");
+                btn.addEventListener('click', function (){
+                        alert("aa");
                 });
 
                 markers.push(marker);   //배열에 마커추가

@@ -21,6 +21,8 @@
         lat = position.coords.latitude;
         long = position.coords.longitude;
 
+        let myposition = {lat: lat,lng: long};
+
 
         map = new google.maps.Map(document.getElementById('map'), {
           center: { lat: lat, lng: long},
@@ -34,6 +36,10 @@
 
         geocoder = new google.maps.Geocoder();    //geocoder 초기화
 
+        let test  = new google.maps.Marker({
+          map : map,
+          position: myposition
+        });
 
         function addMarker(location){
 
@@ -70,7 +76,8 @@
       geocoder.geocode({ 'location': location }, function (results, status){
         if (status === 'OK') {
           if (results[0]) {
-            alert("Address: " + results[0].formatted_address);
+            let localAddress = results[0].formatted_address
+            alert(localAddress);
           } else {
             alert('No results found');
           }
