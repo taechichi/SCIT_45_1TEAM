@@ -2,9 +2,11 @@
     let lat;  //위도
     let long; //경도
     var map;  //맵
-    let markers = []; //마커배열
+    let markers = [];                  //마커배열(places 검색을 통해 나온 마커들의 배열)
     let mylocation;
     let isPanelVisible = false;     //패널 상태 false
+    let shareUrl;                           //공유 Url
+
 
     function initMap() {
 
@@ -95,9 +97,17 @@
                                               <p>추가입력예정</p>`;
                         let infoPanel = document.getElementById("info-panel");
                         let infoPart = document.getElementById("info_part");
-                    infoPart.innerHTML = placeInfo;
+                        infoPart.innerHTML = placeInfo;
                         infoPanel.style.display = 'block';
                         isPanelVisible = true;
+
+                        //공유 버튼 클릭 시  shareUrl에 url생성 해당 url애눈 좌표값을 포함
+                        let btn = document.getElementById("shareBtn");
+                         btn.addEventListener('click', function() {
+                             shareUrl = `${window.location.origin}/map/${marker.getPosition().lat()}/${marker.getPosition().lng()}`;
+                            // $window.location.origin은 현재 도메인주소를 반환, map/는 임의경로,
+                            alert(shareUrl);  // URL을 확인하려면 알림으로 표시
+                        });
                 });
 
                 //맵 클릭 이벤트 (패널정보 none)
@@ -109,10 +119,6 @@
                     }
                 });
 
-                let btn = document.getElementById("shareBtn");
-                btn.addEventListener('click', function (){
-                        alert("aa");
-                });
 
                 markers.push(marker);   //배열에 마커추가
 
