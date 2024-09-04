@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AdminService {
+public class AdminMemberService {
 
     private final MemberRepository memberRepository;
 
