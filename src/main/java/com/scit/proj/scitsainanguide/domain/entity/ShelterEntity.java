@@ -62,5 +62,5 @@ public class ShelterEntity {
 
     @Column(name = "lang_cd", nullable = false)
     @Builder.Default
-    private String lang_cd = "ja";
+    private String langCd = "ja";
 }

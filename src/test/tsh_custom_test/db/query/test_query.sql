@@ -1,5 +1,14 @@
 
 
+ALTER TABLE member MODIFY COLUMN file_name VARCHAR(200);
+ALTER TABLE marker_board
+    ADD COLUMN delete_reason VARCHAR(50) NULL,
+    ADD COLUMN delete_dt TIMESTAMP NULL;
+
+
+
+
+
 select * from shelter;
 
 ALTER TABLE scit.status ADD status_name_ja varchar(10) NOT NULL;

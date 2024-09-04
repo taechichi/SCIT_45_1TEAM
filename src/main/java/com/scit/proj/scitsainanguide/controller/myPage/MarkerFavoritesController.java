@@ -1,12 +1,12 @@
 package com.scit.proj.scitsainanguide.controller.myPage;
 
 
+import com.scit.proj.scitsainanguide.service.myPage.MarkerFavoritesService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import com.scit.proj.scitsainanguide.domain.dto.MarkerFavoritesDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
-import com.scit.proj.scitsainanguide.service.MarkerFavoritesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;

@@ -55,7 +55,7 @@ public class ShelterService {
                     .fireYn("1".equals(node.path("大規模な火事").asText("")))
                     .inlandFloodingYn("1".equals(node.path("内水氾濫").asText("")))
                     .volcanoYn("1".equals(node.path("火山現象").asText("")))
-                    .lang_cd("ja") // 고정 값
+                    .langCd("ja") // 고정 값
                     .build();
             // DB에 저장
             shelterRepository.save(shelter);
