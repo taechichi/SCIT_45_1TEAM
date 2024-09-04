@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Styled Map Example</title>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo"></script>
+
+  <script>
+    let lat;  //위도
+    let long; //경도
+    var map;  //맵
+    let marker;
+    let geocoder;
+
+    function initMap() {
+
+      //getCurrentPosition에서 값을 받으면 position으로 값이 들어간다.
+      //position에는 coords.을 통해 latitude, longitude등의 정보를 담고있다.
+      //geolocation은 비동기함수 이므로 아래의 맵을 함께 포함시키지 않으면 좌표가 없는 상태로 실행된다.
+      //비동기는 다른 함수와 동시에 실행될 수 있도록 하는 함수 따라서 비동기로 되어있기에 좌표구하는 함수가 실행중에 다른 함수도 실행이 실행된다.
+      navigator.geolocation.getCurrentPosition((position) => {
+        lat = position.coords.latitude;
+        long = position.coords.longitude;
+
+        let myposition = {lat: lat,lng: long};
+
+
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: { lat: lat, lng: long},
+          zoom: 18,
+          scaleControl:true,
+          zoomControl: true,
+          mapId:'d506da1b6acddc31',
+          minZoom:4,
+          maxZoom:14,
+        });   //맵 지정 및 맵 옵션 설정
+
+        geocoder = new google.maps.Geocoder();    //geocoder 초기화
+
+        let test  = new google.maps.Marker({
+          map : map,
+          position: myposition
+        });
+
+        function addMarker(location){
+
+          if(marker){
+            marker.setMap(null);
+          }
+
+          marker  = new google.maps.Marker({
+            position: location,
+            map: map
+          });
+
+          google.maps.event.addListener(marker, 'click', function() {
+            geocodeLatLng(geocoder, marker.position); // 좌표를 주소로 변환
+
+          });
+        }
+
+        //클릭 이벤트 addMarker 실행(클릭 시 좌표 검색)
+        google.maps.event.addListener(map, 'click', function(event) {
+          // console.log(event); // event 객체 전체 출력
+          // console.log("Latitude: " + event.latLng.lat()); //latlng는 구글 event객체
+          // console.log("Longitude: " + event.latLng.lng());
+          // console.log("test: " + event.latLng);
+          addMarker(event.latLng);
+        });
+
+      });
+
+    }
+
+    //좌표를 주소로 전환
+    function geocodeLatLng(geocoder, location){
+      geocoder.geocode({ 'location': location }, function (results, status){
+        if (status === 'OK') {
+          if (results[0]) {
+            let localAddress = results[0].formatted_address
+            alert(localAddress);
+          } else {
+            alert('No results found');
+          }
+        } else {
+          alert('Geocoder failed due to: ' + status);
+        }
+      });
+    }
+
+    google.maps.event.addDomListener(window, 'load', initMap);
+  </script>
+
+</head>
+<body>
+<div id="map" style="height: 500px; width: 100%;"></div>
+</body>
+</html>

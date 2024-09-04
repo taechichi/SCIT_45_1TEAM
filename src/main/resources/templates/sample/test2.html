@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+  <script>
+    navigator.geolocation.getCurrentPosition((aa) => {
+        let latitude = aa.coords.latitude;
+      let longitude  = aa.coords.longitude;
+      console.log(aa);
+      alert("현재위치"+latitude+","+longitude);
+    });
+  </script>
+
+</body>
+</html>

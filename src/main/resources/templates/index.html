@@ -10,12 +10,18 @@
 
     <title>SB Admin 2 - Dashboard</title>
     <link rel="icon" type="image/x-icon" th:href="@{/img/hk.png}">
+
+    <!-- google map script -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=APIKEY&libraries=places"></script>
+    <!-- 추가 할 라이브러리를 api의 libraries 부분 뒤에 추가 places,geometry -->
+    <script th:src="@{/js/search_marker.js}"></script>
     <!-- Custom fonts for this template-->
     <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
     <!-- Custom styles for this template-->
+    <link rel="stylesheet" th:href="@{/css/map/mapcss.css}">
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
 </head>
 
@@ -157,7 +163,15 @@
 
         </ul>
         <!-- End of Sidebar -->
+        <ul id="info-panel">
+            <div id = "info_part">
 
+            </div>
+            <div>
+                <button id="shareBtn">공유</button>
+            </div>
+
+        </ul>
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
@@ -173,11 +187,11 @@
                     </button>
 
                     <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                    <form id ="search_form"
+                          class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
+                                   aria-label="Search" aria-describedby="basic-addon2" id="search-input">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="button">
                                     <i class="fas fa-search fa-sm"></i>
@@ -369,7 +383,7 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-
+                <div id="map" style="height: 95%; width: 100%;"></div>
             </div>
             <!-- End of Main Content -->
 
