@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+            xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>File translation</title>
+    <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+    <script th:src="@{/js/translateUploadedFile.js}"></script>
+    <!-- Custom fonts for this template-->
+    <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link rel="stylesheet" th:href="@{/css/translate/translateUploadedFile.css}">
+</head>
+<body>
+    <h2 th:text="#{fileTranslate}"></h2>
+    <input type="file" id="audioFile" accept="audio/*">
+    <label for="selectLan" th:text="#{selectLan}">언어 선택:</label>
+    <select id="selectLan">
+        <option value="en-US" th:text="#{en}">영어</option>
+        <option value="ja-JP" th:text="#{ja}" selected>일본어</option>
+        <option value="ko-KR" th:text="#{ko}">한국어</option>
+    </select>
+    <button onclick="upload()" th:text="#{fileTranslate}"></button>
+    <hr>
+    <p id="texted">텍스트: </p>
+    <p id="translated">변역: </p>
+</body>
+</html>
