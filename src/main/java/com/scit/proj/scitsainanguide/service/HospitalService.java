@@ -43,9 +43,9 @@ public class HospitalService {
             //log.debug("name: {}", node.path("設・場所名").asText());
 
             HospitalEntity hospitalEntity = HospitalEntity.builder()
-                    .hospitalName(node.path("設・場所名").asText())
-                    .latitude(node.path("緯度").asText())
-                    .longitude(node.path("経度").asText())
+                    .hospitalName(node.path("name").asText())
+                    .latitude(node.path("latitude").asText())
+                    .longitude(node.path("longitude").asText())
                     .langCd("ja") // 고정 값*/
                     .build();
             // DB에 저장
