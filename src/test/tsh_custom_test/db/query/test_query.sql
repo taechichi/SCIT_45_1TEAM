@@ -84,3 +84,14 @@ CREATE TABLE message
     FOREIGN KEY (sender_id) REFERENCES member (member_id),
     FOREIGN KEY (receiver_id) REFERENCES member (member_id)
 );
+
+
+
+-- -----------------------------
+
+
+/*ALTER TABLE hospital
+    DROP FOREIGN KEY hospital_ibfk_1;
+ALTER TABLE hospital
+    DROP COLUMN category_id;
+DROP TABLE hp_category;*/
