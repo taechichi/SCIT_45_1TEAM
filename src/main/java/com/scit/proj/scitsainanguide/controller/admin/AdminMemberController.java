@@ -2,7 +2,7 @@ package com.scit.proj.scitsainanguide.controller.admin;
 
 import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
-import com.scit.proj.scitsainanguide.service.admin.AdminService;
+import com.scit.proj.scitsainanguide.service.admin.AdminMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
-@RequestMapping("admin")
+@RequestMapping("admin/member")
 @RequiredArgsConstructor
-public class AdminController {
+public class AdminMemberController {
 
-    private final AdminService adminService;
+    private final AdminMemberService adminMemberService;
 
     @Value("${board.pageSize}")
     private int pageSize;
@@ -30,13 +30,13 @@ public class AdminController {
      * @param dto 검색 요청 객체
      * @return 회원 목록 페이지 html
      */
-    @GetMapping("member")
+    @GetMapping
     public String selectMemberList(Model model, @ModelAttribute SearchRequestDTO dto) {
         // dto 에 pageSize 셋팅
         dto.setPageSize(pageSize);
         
         Page<MemberDTO> memberList =
-                adminService.selectMemberList(dto);
+                adminMemberService.selectMemberList(dto);
         model.addAttribute("memberList", memberList);
         model.addAttribute("page", dto.getPage());
         model.addAttribute("linkSize", linkSize);
@@ -53,8 +53,8 @@ public class AdminController {
      * @param memberId 수정하려는 회원의 아이디
      */
     @ResponseBody
-    @PatchMapping("member/{memberId}")
+    @PatchMapping("{memberId}")
     public void updateMember(@PathVariable("memberId") String memberId) {
-        adminService.updateMember(memberId);
+        adminMemberService.updateMember(memberId);
     }
 }
