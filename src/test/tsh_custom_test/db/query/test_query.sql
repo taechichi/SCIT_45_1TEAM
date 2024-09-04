@@ -6,7 +6,8 @@ ALTER TABLE marker_board
     ADD COLUMN delete_dt TIMESTAMP NULL;
 
 
-
+ALTER TABLE hospital MODIFY COLUMN hospital_name VARCHAR(255);
+ALTER TABLE hospital MODIFY COLUMN hospital_name VARCHAR(200);
 
 
 select * from shelter;
