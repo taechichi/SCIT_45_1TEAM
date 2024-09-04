@@ -39,6 +39,12 @@ public class MarkerBoardEntity {
     @Column(name = "create_dt", nullable = false)
     private LocalDateTime createDt;
 
+    @Column(name = "delete_reason", length = 50)
+    private String deleteReason;
+
+    @Column(name = "delete_dt")
+    private LocalDateTime deleteDt;
+
     @Column(name = "delete_yn", nullable = false)
     private Boolean deleteYn;
 }
