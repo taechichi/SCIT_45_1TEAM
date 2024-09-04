@@ -1,4 +1,4 @@
-package com.scit.proj.scitsainanguide.service;
+package com.scit.proj.scitsainanguide.service.myPage;
 
 import com.scit.proj.scitsainanguide.domain.dto.MarkerFavoritesDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;

@@ -5,6 +5,7 @@ import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface MyFriendRepository {
@@ -13,7 +14,7 @@ public interface MyFriendRepository {
 
     Page<FriendDTO> selectMyFriendRequestList(SearchRequestDTO dto, String memberId);
 
-    void updateFriend(Integer relationId);
+    void updateFriend(Integer relationId, String memberId);
 
     void deleteFriend(String memberId, String friendId);
 
@@ -24,4 +25,6 @@ public interface MyFriendRepository {
     void rejectFriend(String memberId, Integer relationId);
 
     Optional<MemberDTO> selectMyFriend(String memberId);
+
+    List<MemberDTO> selectMyFavoriteList(String memberId);
 }
