@@ -1,4 +1,4 @@
-package com.scit.proj.scitsainanguide.service;
+package com.scit.proj.scitsainanguide.service.admin;
 
 import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;

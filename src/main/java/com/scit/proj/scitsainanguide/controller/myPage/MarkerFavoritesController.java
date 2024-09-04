@@ -1,9 +1,8 @@
-package com.scit.proj.scitsainanguide.controller;
+package com.scit.proj.scitsainanguide.controller.myPage;
 
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @Slf4j

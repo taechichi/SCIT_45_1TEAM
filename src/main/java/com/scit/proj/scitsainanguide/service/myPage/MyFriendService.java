@@ -1,4 +1,4 @@
-package com.scit.proj.scitsainanguide.service;
+package com.scit.proj.scitsainanguide.service.myPage;
 
 import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
 import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -25,8 +27,8 @@ public class MyFriendService {
         return myFriendRepository.selectMyFriendRequestList(dto, memberId);
     }
 
-    public void updateFriend(Integer relationId) {
-        myFriendRepository.updateFriend(relationId);
+    public void updateFriend(Integer relationId, String memberId) {
+        myFriendRepository.updateFriend(relationId, memberId);
     }
 
     public void deleteFriend(String memberId, String friendId) {
@@ -50,5 +52,9 @@ public class MyFriendService {
     public MemberDTO selectMyFriend(String memberId) {
         return myFriendRepository.selectMyFriend(memberId)
                 .orElseThrow(() -> new EntityNotFoundException("해당하는 회원을 찾을 수 없습니다."));
+    }
+
+    public List<MemberDTO> selectMyFavoriteList(String memberId) {
+        return myFriendRepository.selectMyFavoriteList(memberId);
     }
 }

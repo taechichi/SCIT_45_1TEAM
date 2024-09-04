@@ -1,8 +1,8 @@
-package com.scit.proj.scitsainanguide.controller;
+package com.scit.proj.scitsainanguide.controller.admin;
 
 import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
-import com.scit.proj.scitsainanguide.service.AdminService;
+import com.scit.proj.scitsainanguide.service.admin.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
