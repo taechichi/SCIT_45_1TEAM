@@ -20,9 +20,6 @@ public class HospitalEntity {
     @Column(name = "hospital_id")
     private Integer hospitalId;
 
-    @Column(name = "category_id", nullable = false)
-    private Integer categoryId;
-
     @Column(name = "hospital_name", nullable = false, length = 100)
     private String hospitalName;
 
