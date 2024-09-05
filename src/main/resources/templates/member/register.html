@@ -3,158 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>회원가입</title>
-    <link rel="icon" type="image/x-icon" th:href="@{/img/hk.png}">
+    <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
     <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
-
-    <style>
-        .error {
-            color: red;
-            font-size: 0.9em;
-        }
-        .valid {
-            color: green;
-            font-size: 0.9em;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 15px;
-            position: relative;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 2px solid #7FFF00; /* 테두리 색상 */
-        }
-        #checkDuplicateId {
-            width: 100px;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            background-color: #ACE1AF; /* 배경 색상 */
-            color: black;
-        }
-        #togglePassword {
-            width: 130px;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            background-color: #ACE1AF; /* 배경 색상 */
-            color: black;
-        }
-        .form-group button:hover {
-            background-color: #8BC34A;
-        }
-        #submitBtn {
-            background-color: transparent;
-            border: 2px solid #006400; /* 테두리 색상 */
-            color: #006400;
-        }
-        #submitBtn:hover {
-            background-color: #006400;
-            color: white;
-        }
-        .btn-inline {
-            display: inline-block;
-            margin-left: 10px;
-        }
-    </style>
-    <script>
-        $(document).ready(function() {
-            // 비밀번호 표시/숨기기 토글 기능
-            $('#togglePassword').click(function() {
-                let passwordField = $('#password');
-                let type = passwordField.attr('type') === 'password' ? 'text' : 'password';
-                passwordField.attr('type', type);
-                $(this).text(type === 'password' ? '비밀번호 표시' : '비밀번호 숨기기');
-            });
-
-            // 비밀번호 유효성 검사
-            $('#joinForm').on('submit', function(event) {
-                let password = $('#password').val();
-                let errorMessage = '';
-
-                // 비밀번호 길이와 특수문자 검사
-                if (password.length < 8 || password.length >= 20) {
-                    errorMessage = '비밀번호는 8자 이상 20자 미만이어야 합니다.';
-                } else {
-                    let regex = /[!@#$%^&*(),.?":{}|<>]/; // 허용하는 특수문자
-                    if (!regex.test(password)) {
-                        errorMessage = '비밀번호는 특수문자를 포함해야 합니다.';
-                    }
-                }
-
-                // 유효성 검사 결과에 따라 메시지 표시
-                if (errorMessage) {
-                    $('#error-message').text(errorMessage).addClass('error').removeClass('valid');
-                    event.preventDefault(); // 폼 제출 방지
-                } else {
-                    $('#error-message').text('').removeClass('error').addClass('valid');
-                }
-            });
-
-            // 프로필 사진 용량 제한 체크
-            $('#profileImage').change(function() {
-                let file = this.files[0];
-                if (file) {
-                    let maxSize = 5 * 1024 * 1024; // 5MB
-                    if (file.size > maxSize) {
-                        $('#error-message').text('프로필 사진은 5MB를 초과할 수 없습니다.').addClass('error').removeClass('valid');
-                        $(this).val(''); // 파일 입력 초기화
-                    } else {
-                        $('#error-message').text('').removeClass('error').addClass('valid');
-                    }
-                }
-            });
-
-            // ID 중복 확인 버튼 클릭 시 새 창 열기
-            $('#checkDuplicateId').click(function() {
-                window.open('idCheck', 'idwin', 'left=500,top=300,width=400,height=300,location=no,titlebar=no');
-            });
-        });
-    </script>
+    <link rel="stylesheet" th:href="@{/css/register/register.css}" />
+    <script th:src="@{/js/register.js}"></script>
 </head>
 <body>
 <div class="container">
     <h1>회원가입</h1>
-    <form id="joinForm" action="#" th:action="@{/member/register}" th:object="${member}" method="post" enctype="multipart/form-data">
+    <!-- 프로필 사진 미리보기 -->
+    <img id="profilePreview" src="#" alt="프로필 사진 미리보기" class="profile-preview" style="display: none;"/>
+
+    <form id="joinForm" th:action="@{/member/register}" th:object="${memberDTO}" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <span>회원 ID</span>
             <span><button id="checkDuplicateId" type="button" class="btn-inline">ID 중복 확인</button></span>
-            <input type="text" id="memberId" th:field="*{memberId}" placeholder="ID를 중복확인 하세요" readonly="readonly" required />
-
+            <input type="text" id="memberId" th:field="*{memberId}" placeholder="ID를 중복확인 하세요" readonly required />
         </div>
 
-        <div class="form-group">
+        <div class="form-group password-container">
             <span>비밀번호</span>
-            <span><button type="button" id="togglePassword" class="btn-inline">비밀번호 표시</button></span>
             <input type="password" id="password" th:field="*{password}" required />
+            <!-- 아이콘을 비밀번호 입력창 오른쪽에 추가 -->
+            <img src="/img/hide_eye.ico" alt="비밀번호 표시" class="password-toggle-icon" />
 
             <br>
-
             <!-- 유효성 검사 메시지 -->
             <div id="error-message"></div>
         </div>
@@ -185,22 +58,23 @@
 
         <div class="form-group">
             <label for="nationality">국적</label>
-            <input type="text" id="nationality" th:field="*{nationality}" required />
+            <select id="nationality" th:field="*{nationality}" required>
+                <option value="">선택하세요</option>
+                <option value="KR">대한민국</option>
+                <option value="JP">일본</option>
+            </select>
         </div>
 
         <div class="form-group">
-            <label for="fileName">프로필 사진</label>
-            <input type="file" id="fileName" th:field="*{fileName}" />
+            <label for="file">프로필 사진</label>
+            <input type="file" id="file" name="file" accept=".jpg,.jpeg,.png" />
+            <small id="fileError" class="error" style="display: none;">허용된 파일 형식이 아닙니다. (.jpg, .jpeg, .png)</small>
         </div>
 
         <div class="form-group">
             <button id="submitBtn" type="submit">회원가입</button>
         </div>
-
-        <input type="hidden" id="statusId" th:field="*{status}" value="1" />
-
     </form>
 </div>
-
 </body>
 </html>

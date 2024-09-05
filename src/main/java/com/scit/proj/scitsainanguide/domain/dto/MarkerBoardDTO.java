@@ -16,5 +16,7 @@ public class MarkerBoardDTO {
     private Integer hospitalId;
     private String contents;
     private LocalDateTime createDt;
+    private String deleteReason;
     private Boolean deleteYn;
+    private LocalDateTime deleteDt;
 }
