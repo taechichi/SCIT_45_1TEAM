@@ -24,4 +24,8 @@ public class AdminBoardService {
         return boardRepository.selectDeletedBoard(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("해당하는 게시글을 찾을 수 없습니다."));
     }
+
+    public void updateDeletedBoard(Integer boardId) {
+        boardRepository.updateDeletedBoard(boardId);
+    }
 }

@@ -58,4 +58,14 @@ public class AdminBoardController {
         model.addAttribute("deletedBoard", deletedBaord);
         return "admin/boardDetail";
     }
+
+    /**
+     * 관리자 > 삭제된 게시글 업데이트 (현재는 삭제 여부 수정만 가능)
+     * @param boardId 게시글 아이디
+     */
+    @ResponseBody
+    @PatchMapping("{boardId}")
+    public void updateDeletedBoard(@PathVariable Integer boardId) {
+        adminBoardService.updateDeletedBoard(boardId);
+    }
 }

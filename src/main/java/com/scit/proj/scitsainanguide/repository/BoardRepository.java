@@ -11,4 +11,6 @@ public interface BoardRepository {
     Page<MarkerBoardDTO> selectDeletedBoardList(SearchRequestDTO dto);
 
     Optional<MarkerBoardDTO> selectDeletedBoard(Integer boardId);
+
+    void updateDeletedBoard(Integer boardId);
 }

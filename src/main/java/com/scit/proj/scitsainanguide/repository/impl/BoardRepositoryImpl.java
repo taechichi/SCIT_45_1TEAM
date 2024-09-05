@@ -89,6 +89,15 @@ public class BoardRepositoryImpl implements BoardRepository {
         return Optional.ofNullable(convertToMarkerBoardDTO(markerBoardEntity));
     }
 
+    @Override
+    public void updateDeletedBoard(Integer boardId) {
+        // 해당 게시글의 삭제여부를 다시 false 로 변경
+        queryFactory.update(markerBoard)
+                .set(markerBoard.deleteYn, false)
+                .where(markerBoard.boardId.eq(boardId))
+                .execute();
+    }
+
     private MarkerBoardDTO convertToMarkerBoardDTO(MarkerBoardEntity markerBoardEntity) {
         HospitalEntity hospital = markerBoardEntity.getHospital();
         ShelterEntity shelter = markerBoardEntity.getShelter();
