@@ -1,0 +1,9 @@
+
+.error {
+    color: red;
+    font-size: 0.9em;
+}
+.valid {
+    color: green;
+    font-size: 0.9em;
+}
