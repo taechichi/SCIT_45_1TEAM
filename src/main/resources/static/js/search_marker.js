@@ -1,31 +1,122 @@
 
-    let lat;  //위도
-    let long; //경도
+    let mylat;  //위도
+    let mylng; //경도
     var map;  //맵
     let markers = [];                  //마커배열(places 검색을 통해 나온 마커들의 배열)
     let mylocation;
     let isPanelVisible = false;     //패널 상태 false
-    let shareUrl;                           //공유 Url
+    let currentMarker;
+    let shareUrl;
+
+    
+    //url에서 쿼리부분의 데이터를 파싱하는 함수
+    function getLatLngFromUrl() {
+        const params = new URLSearchParams(window.location.search);     //window.location.search는 url의 쿼리부분 파싱
+        const placeId = params.get('id');
+
+        if (id) {                           //lat lng에 num값이 있으면 lat lng return
+            return placeId;
+        }
+        return null;                                                //위도 경도가 없으면 null
+    }
+
+    function searchPlaceByPlaceId(placeId) {
+        const request = {
+            placeId: placeId,
+            fields: ['name', 'geometry', 'photo'] // 원하는 필드
+        };
+
+        const service = new google.maps.places.PlacesService(map);
+
+        service.getDetails(request, (place, status) => {                    //getDetailis메소드에서 데이터를 요청해 place에 저장
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                // 장소의 정보 표시
+                const marker = new google.maps.Marker({
+                    map: map,
+                    position: place.geometry.location,
+                    title: place.name
+                });
+
+                // infopanel에 정보 표시
+                let placeName = place.name;
+                let photoUrl = place.photos[0].getUrl();
+                let placeInfo = `<h3>${placeName}</h3>
+                             <div style="width: 100%;height: 200px">
+                             <img src="${photoUrl}" style="width: 100%; height: 100%;"></div>`;
+
+                let infoPanel = document.getElementById("info-panel");
+                let infoPart = document.getElementById("info_part");
+                infoPart.innerHTML = placeInfo;
+                infoPanel.style.display = 'block';
+
+                // 공유 URL 설정
+                shareUrl = `${window.location.origin}?placeId=${placeId}`;
+            } else {
+                console.error('Place details request failed');
+            }
+        });
+    }
+    
+    //마커생성 함수
+    function createMarker(map, lat, lng, placename="장소 이름", photoUrl=""){
+        let marker = new google.maps.Marker({
+           map: map,
+           position : {lat:lat, lng:lng},
+            title: placename,
+            placePhoto: photoUrl
+        });
+
+        //마커 클릭 이벤트
+        google.maps.event.addListener(marker, 'click', function (){
+            // 1. 기본 장소 정보 표시
+            let placeName = marker.title;
+            let photoUrl = marker.placePhoto;    //place의 첫사진을 url을 받아 저장
+            let placeInfo = `<h3>${placeName}</h3>                  <!--- infopanel에 넣을 값 ---!>  
+                                              <div style="width: 100%;height: 200px">
+                                              <img src="${photoUrl}" style="width: 100%; height: 100%;"></div>
+                                              <p>추가입력예정</p>`;
+            let infoPanel = document.getElementById("info-panel");
+            let infoPart = document.getElementById("info_part");
+            infoPart.innerHTML = placeInfo;
+            infoPanel.style.display = 'block';
+            isPanelVisible = true;
+
+            currentMarker = marker;             //현재 선택마커를 currentMarker에 저장
+        });
+        return marker;
+    }
 
 
     function initMap() {
 
+        const shareLocation = getLatLngFromUrl();
     //getCurrentPosition에서 값을 받으면 position으로 값이 들어간다.
     //position에는 coords.을 통해 latitude, longitude등의 정보를 담고있다.
     //geolocation은 비동기함수 이므로 아래의 맵을 함께 포함시키지 않으면 좌표가 없는 상태로 실행된다.
     //비동기는 다른 함수와 동시에 실행될 수 있도록 하는 함수 따라서 비동기로 되어있기에 좌표구하는 함수가 실행중에 다른 함수도 실행이 실행된다.
     navigator.geolocation.getCurrentPosition((position) => {
-        lat = position.coords.latitude;
-        long = position.coords.longitude;
+        mylat = position.coords.latitude;
+        mylng = position.coords.longitude;
+        let centerPosition = {lat: mylat, lng: mylng};
+
+        if(shareLocation){
+            centerPosition = {lat : shareLocation.lat, lng: shareLocation.lng};
+            createMarker(map, shareLocation.lat, shareLocation.lng, )
+        }
 
         map = new google.maps.Map(document.getElementById('map'), {
-            center: { lat: lat, lng: long},
+            center: centerPosition,
             zoom: 18,
             scaleControl:true,
             zoomControl: true,
             mapId:'d506da1b6acddc31',
             // minZoom:15,                 //지도 200m까지 축소
         });   //맵 지정 및 맵 옵션 설정
+
+        const myMarker = new google.maps.Marker({
+            map: map,
+            position : {lat: mylat, lng: mylng}
+        });
 
 
         const input = document.getElementById('search-input');              //search-input 에서 값을 받아 저장
@@ -84,6 +175,7 @@
                     placePhoto: place.photos
                 }); //마커의 옵션들은 comment의 marker_option 참조
 
+
                 //마커 클릭 이벤트 (패널 정보 block)
                 google.maps.event.addListener(marker, 'click', function() {
                         const placeId = marker.get("placeId");
@@ -101,13 +193,11 @@
                         infoPanel.style.display = 'block';
                         isPanelVisible = true;
 
-                        //공유 버튼 클릭 시  shareUrl에 url생성 해당 url애눈 좌표값을 포함
+                        currentMarker = marker;             //현재 선택마커를 currentMarker에 저장
+
                         let btn = document.getElementById("shareBtn");
-                         btn.addEventListener('click', function() {
-                             shareUrl = `${window.location.origin}/map/${marker.getPosition().lat()}/${marker.getPosition().lng()}`;
-                            // $window.location.origin은 현재 도메인주소를 반환, map/는 임의경로,
-                            alert(shareUrl);  // URL을 확인하려면 알림으로 표시
-                        });
+
+
                 });
 
                 //맵 클릭 이벤트 (패널정보 none)
@@ -134,5 +224,14 @@
             map.fitBounds(bounds);  //위의 each문에서 place의 bounds값을 모두 포함하여 경계 안에 있는 모든장소들이 보이게함
         });
     });
+
+        document.getElementById("shareBtn").addEventListener('click', function() {
+            if (currentMarker) {
+                shareUrl = `${window.location.origin}?id=${currentMarker.placeId}`;
+                alert(shareUrl);
+            } else {
+                alert("No marker selected!");
+            }
+        });
 }
     google.maps.event.addDomListener(window, 'load', initMap);      //domlistener initmap을 실행
