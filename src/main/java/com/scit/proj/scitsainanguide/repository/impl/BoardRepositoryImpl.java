@@ -3,15 +3,12 @@ package com.scit.proj.scitsainanguide.repository.impl;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.scit.proj.scitsainanguide.domain.dto.MarkerBoardDTO;
-import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
-import com.scit.proj.scitsainanguide.domain.entity.HospitalEntity;
-import com.scit.proj.scitsainanguide.domain.entity.MarkerBoardEntity;
-import com.scit.proj.scitsainanguide.domain.entity.QMarkerBoardEntity;
-import com.scit.proj.scitsainanguide.domain.entity.ShelterEntity;
+import com.scit.proj.scitsainanguide.domain.entity.*;
 import com.scit.proj.scitsainanguide.domain.enums.BoardSearchType;
 import com.scit.proj.scitsainanguide.repository.BoardRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Repository
@@ -75,6 +73,20 @@ public class BoardRepositoryImpl implements BoardRepository {
                 .toList();
 
         return new PageImpl<>(markerBoardDTOList, pageable, total);
+    }
+
+    @Override
+    public Optional<MarkerBoardDTO> selectDeletedBoard(Integer boardId) {
+        MarkerBoardEntity markerBoardEntity = queryFactory.selectFrom(markerBoard)
+                .from(markerBoard)
+                .where(markerBoard.boardId.eq(boardId))
+                .fetchOne();
+
+        if (markerBoardEntity == null) {
+            throw new EntityNotFoundException("해당하는 게시글을 찾을 수 없습니다.");
+        }
+
+        return Optional.ofNullable(convertToMarkerBoardDTO(markerBoardEntity));
     }
 
     private MarkerBoardDTO convertToMarkerBoardDTO(MarkerBoardEntity markerBoardEntity) {

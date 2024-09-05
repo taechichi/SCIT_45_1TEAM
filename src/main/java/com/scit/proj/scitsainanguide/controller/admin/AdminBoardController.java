@@ -26,6 +26,12 @@ public class AdminBoardController {
     @Value("${board.linkSize}")
     private int linkSize;
 
+    /**
+     * 관리자 > 삭제된 게시글 목록 조회 페이지 이동
+     * @param model 모델 객체
+     * @param dto 게시글 정보 객체
+     * @return 삭제된 게시글 목록 조회 페이지 html
+     */
     @GetMapping
     public String selectDeletedBoardList(Model model, @ModelAttribute SearchRequestDTO dto) {
         // dto 에 pageSize 셋팅
@@ -38,5 +44,18 @@ public class AdminBoardController {
         model.addAttribute("searchType", dto.getSearchType());
         model.addAttribute("searchWord", dto.getSearchWord());
         return "admin/boardList";
+    }
+
+    /**
+     * 관리자 > 삭제된 게시글 상세 조회(단건 조회)
+     * @param boardId 게시글 아이디
+     * @param model 모델 객체
+     * @return 삭제된 게시글 상세 조회 페이지 html
+     */
+    @GetMapping("{boardId}")
+    public String selectBoard(@PathVariable Integer boardId, Model model) {
+        MarkerBoardDTO deletedBaord = adminBoardService.selectDeletedBoard(boardId);
+        model.addAttribute("deletedBoard", deletedBaord);
+        return "admin/boardDetail";
     }
 }
