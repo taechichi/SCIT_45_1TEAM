@@ -67,9 +67,11 @@
         // 1. 기본 장소 정보 표시
         let placeName = marker.title;
         let photoUrl = marker.placePhoto;    //place의 첫사진을 url을 받아 저장
+        let palceID = marker.placeId;
         let placeInfo = `<h3>${placeName}</h3>                  <!--- infopanel에 넣을 값 ---!>  
                                               <div style="width: 100%;height: 200px">
                                               <img src="${photoUrl}" style="width: 100%; height: 100%;"></div>
+                                              <p>${palceID}</p>
                                               <p>추가입력예정</p>`;
         let infoPanel = document.getElementById("info-panel");
         let infoPart = document.getElementById("info_part");
@@ -102,6 +104,7 @@
 
         const shareId = getLatLngFromUrl();
         if(shareId){
+            alert(shareId);
             searchPlaceByPlaceId(shareId);
         }
 
@@ -171,8 +174,6 @@
                 let marker = createMarker(map,place, false);
                 markers.push(marker);   //배열에 마커추가
 
-                currentMarker = marker;
-
                 if (place.geometry.viewport) {              //해당장소가 viewport정보를 가지고 있을 시 (넓은 지역을 차지하는 곳)
                     bounds.union(place.geometry.viewport);  //bounds와 검색된 viewport값을 합쳐 합쳐진 지도 경계설정
                 } else {
@@ -186,10 +187,13 @@
 
         document.getElementById("shareBtn").addEventListener('click', function() {
             if (currentMarker) {
+
+                console.log("markerid:",currentMarker.placeId);
                 //hash 기반 url 생성 encode로 placeid를 인코딩하고 id를 #으로 변환
                 shareUrl = `${window.location.origin}/#${encodeURIComponent(currentMarker.placeId)}`;
-                navigator.clipboard.writeText(shareUrl);
                 alert(shareUrl);
+                navigator.clipboard.writeText(shareUrl);
+
             } else {
                 alert("No marker selected!");
             }
