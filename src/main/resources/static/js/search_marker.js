@@ -79,6 +79,7 @@
     }
 
 
+    //맵 생성
     function initMap() {
     //getCurrentPosition에서 값을 받으면 position으로 값이 들어간다.
     //position에는 coords.을 통해 latitude, longitude등의 정보를 담고있다.
