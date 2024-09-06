@@ -25,6 +25,7 @@ public class MarkerFavoritesService {
     private final MarkerFavoritesRepository markerFavoritesRepository;
     private final MarkerFavoritesJPARepository markerFavoritesJPARepository;
 
+    // tsh0828의 마커 냅다 가져오는 코드
     public Page<MarkerFavoritesDTO> viewAllFavoritesMarkerTest(SearchRequestDTO dto) {
         return markerFavoritesRepository.selectMarkerFavoritesList(dto, "tsh0828");
     }
@@ -32,13 +33,20 @@ public class MarkerFavoritesService {
     public List<MarkerFavoritesDTO> viewAllFavoritesMarkerTest_NoPaging() {
         return markerFavoritesRepository.selectAllMarkerFavoritesDTO_NoPaging("tsh0828");
     }
+    
+    // 마커 주인하고 맞나 비교하는 코드
+    public boolean isMarkerOwner(Object myFavoriteId, String memberId) {
+        return false;
+    }
 
-    /*public Page<MarkerFavoritesDTO> viewAllFavoritesMarker(SearchRequestDTO dto, String memberId) {
-        // === test 용 현재 로그인이 구현안되었기 때문 ===
-        MemberDTO tempMember_forTest = new MemberDTO();
-        //markerFavoritesRepository.selectMarkerFavoritesList()
-    }*/
+    public boolean deleteMarker(Object myFavoriteId, String memberId) {
+        return false;
+    }
+    
+    
 
+
+    // ==== TEST CODE ===============================================================
     /*public Page<MarkerFavoritesDTO> getList(int page, int pageSize)*/
     public Page<MarkerFavoritesDTO> getList(int page, int pageSize) {
         Pageable p = PageRequest.of(page - 1, pageSize, Sort.Direction.DESC, "favoriteId");
@@ -57,5 +65,5 @@ public class MarkerFavoritesService {
                 .nickname(entity.getNickname() != null ? entity.getNickname() : null)
                 .build();
     }
-
+    // ==============================================================================
 }
