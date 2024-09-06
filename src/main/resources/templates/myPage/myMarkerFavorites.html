@@ -16,7 +16,7 @@
     <h3> [ myFavoriteMarker.html ] </h3>
     <hr>
     <!-- 구현해야하는 것들
-        1. 즐겨찾기한 마커의 목록을 조회한다. (장소 이름(별칭이 있을 시 별칭 출력) / 분류(대피소 / 병원 ...) )
+        1. 즐겨찾기한 마커의 목록을 조회한다. (장소 이름(별칭이 있을 시 별칭 출력) / 분류(대피소 / 병원 ...) ) (0)
         2. 즐겨찾기한 마커를 삭제한다.
         3. 마커 별칭을 지어줄 수 있다.
         4. 마커 별칭을 수정할 수 있다.
@@ -28,8 +28,6 @@
     <div>
         <h3>즐겨찾기 마커의 목록을 조회</h3>
         <h3>계정에 따른 리스트업은 아직 미구현</h3>
-
-        
     </div>
 
     <div>
@@ -37,9 +35,78 @@
 
     </div>
 
-    <div>
-        <!-- list 출력 -->
 
+    <!--<div>
+        &lt;!&ndash; list 출력 id가 'tsh0828' 인경우를 한정해서 했습니다. &ndash;&gt;
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Member ID</th>
+                <th>Hospital ID</th>
+                <th>Shelter ID</th>
+                <th>Nickname</th>
+            </tr>
+            <tr th:each="marker : ${markerFavoritesDTOList}">
+                <td th:text="${marker.getFavoriteId()}"></td>
+                <td th:text="${marker.getMemberId()}"></td>
+                <td th:text="${marker.getHospitalId()}"></td>
+                <td th:text="${marker.getShelterId()}"></td>
+                <td th:text="${marker.getNickname()}"></td>
+            </tr>
+        </table>
+    </div>-->
+
+    <div>
+        <!-- list 출력 id는 'tsh0828'인 경우로 한정해서 작성했습니다. (test용)-->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Member ID</th>
+                    <th>Hospital ID</th>
+                    <th>Shelter ID</th>
+                    <th>Nickname</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="marker : ${markerFavoritesDTOPage.content}">
+                    <td th:text="${marker.favoriteId}">ID</td>
+                    <td th:text="${marker.memberId}">Member ID</td>
+                    <td th:text="${marker.hospitalId}">Hospital ID</td>
+                    <td th:text="${marker.shelterId}">Shelter ID</td>
+                    <td th:text="${marker.nickname}">Nickname</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 이전 페이지 링크 -->
+        <span th:if="${markerFavoritesDTOPage.hasPrevious()}">
+            <a th:href="@{/my/myMarkerFavorites(page=${markerFavoritesDTOPage.number}, pageSize=${markerFavoritesDTOPage.size})}">이전</a>
+        </span>
+
+        <!-- 각 페이지 번호 링크 -->
+        <span th:each="i : ${#numbers.sequence(1, markerFavoritesDTOPage.totalPages)}">
+            <a th:href="@{/my/myMarkerFavorites(page=${i}, pageSize=${markerFavoritesDTOPage.size})}"
+               th:text="${i}" th:classappend="${i == markerFavoritesDTOPage.number + 1} ? 'active'"></a>
+        </span>
+
+        <!-- 다음 페이지 링크 -->
+        <span th:if="${markerFavoritesDTOPage.hasNext()}">
+            <a th:href="@{/my/myMarkerFavorites(page=${markerFavoritesDTOPage.number + 2}, pageSize=${markerFavoritesDTOPage.size})}">다음</a>
+        </span>
+
+        <!--<div>
+            <span th:if="${markerFavoritesDTOPage.hasPrevious()}">
+                <a th:href="@{/my/myMarkerFavorites(page=${markerFavoritesDTOPage.number - 1}, pageSize=${markerFavoritesDTOPage.size})}">이전</a>
+            </span>
+                    <span th:each="i : ${#numbers.sequence(1, markerFavoritesDTOPage.totalPages)}">
+                <a th:href="@{/my/myMarkerFavorites(page=${i}, pageSize=${markerFavoritesDTOPage.size})}"
+                   th:text="${i}" th:classappend="${i == markerFavoritesDTOPage.number + 1} ? 'active'"></a>
+            </span>
+                    <span th:if="${markerFavoritesDTOPage.hasNext()}">
+                <a th:href="@{/my/myMarkerFavorites(page=${markerFavoritesDTOPage.number + 2}, pageSize=${markerFavoritesDTOPage.size})}">다음</a>
+            </span>
+        </div>-->
     </div>
 
 </body>
