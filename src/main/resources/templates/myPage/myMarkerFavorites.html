@@ -53,7 +53,7 @@
             <tbody>
                 <tr th:each="marker : ${markerFavoritesDTOPage.content}">
                     <td th:text="${marker.favoriteId}">ID</td>
-                    <td> Name
+                    <td>
                         <span th:if="${marker.nickname != ''}"><a th:text="${marker.nickname}"></a></span>
                         <span th:if="${marker.nickname == ''}"><a th:text="${marker.name}"></a></span>
                     </td>

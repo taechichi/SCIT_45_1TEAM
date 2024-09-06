@@ -1,13 +1,23 @@
 
-    let mylat;  //위도
-    let mylng; //경도
+    let myLat;  // 내 위치 위도
+    let myLong; // 내 위치 경도
     var map;  //맵
+    let myMarker;   // 내 위치 마커
+
     let markers = [];                  //마커배열(places 검색을 통해 나온 마커들의 배열)
-    let mylocation;
     let isPanelVisible = false;     //패널 상태 false
     let currentMarker;
     let shareUrl;
 
+    let arrivalLat;     // 도착치 마커
+    let arrivalLong;
+    let arrivalMarker;
+
+    let departLat;      // 출발지 마커
+    let departLong;
+    let departmentMarker;
+
+    //??     let currentMarker;
 
     //해시 부분을 받아 placeId를 추출
     function getLatLngFromUrl() {
@@ -36,8 +46,10 @@
                 console.error('Place details request failed');
             }
         });
+        // 현위치 바운스 애니메이션 설정
+        myMarker.setAnimation(google.maps.Animation.BOUNCE);
     }
-    
+
     //마커생성 함수
     function createMarker(map, place, visible=false){
         let marker = new google.maps.Marker({
@@ -88,11 +100,13 @@
     //geolocation은 비동기함수 이므로 아래의 맵을 함께 포함시키지 않으면 좌표가 없는 상태로 실행된다.
     //비동기는 다른 함수와 동시에 실행될 수 있도록 하는 함수 따라서 비동기로 되어있기에 좌표구하는 함수가 실행중에 다른 함수도 실행이 실행된다.
     navigator.geolocation.getCurrentPosition((position) => {
-        mylat = position.coords.latitude;
-        mylng = position.coords.longitude;
+        // 현재 위치로부터 위도 경도 추출
+        myLat = position.coords.latitude;
+        myLong = position.coords.longitude;
 
-        let centerPosition = {lat: mylat, lng: mylng};
+        let centerPosition = {lat: myLat, lng: myLong};
 
+        // id가 map인 html 요소에 새로운 map 객체 생성
         map = new google.maps.Map(document.getElementById('map'), {
             center: centerPosition,
             zoom: 18,
@@ -107,14 +121,26 @@
             searchPlaceByPlaceId(shareId);
         }
 
-        const myMarker = new google.maps.Marker({
+        myMarker = new google.maps.Marker({
             map: map,
-            position : {lat: mylat, lng: mylng}
+            title: "myLocation",
+            position : {lat: myLat, lng: myLong},
+            icon: {
+                url: '/img/myMarker.png', // 사용자 정의 아이콘 URL
+                scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
+                origin: new google.maps.Point(0, 0), // 아이콘의 원점
+                anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
+            }
         });
+        // 현위치 바운스 애니메이션 설정
+        myMarker.setAnimation(google.maps.Animation.BOUNCE);
 
+        // 검색창 search-input 에서 사용자가 입력한 값을 받아 저장
         const input = document.getElementById('search-input');              //search-input 에서 값을 받아 저장
+        // places api의 searchbox에 사용자가 입력한 input 데이터 입력(엔터나 검색버튼을 누르지 않아도 자동으로 뜨는 항목들)
         const searchBox = new google.maps.places.SearchBox(input);          //places api의 searchbox에 input 데이터 입력
 
+        // 엔터를 누르는 등 폼을 제출하는 이벤트가 발생했을 시
         document.querySelector('#search_form').addEventListener('submit', function(event) {
             event.preventDefault(); // 폼 제출 시 페이지 새로고침 방지
             // 여기에서 검색 작업 수행
@@ -163,12 +189,78 @@
                 } else {
                     bounds.extend(place.geometry.location); //위도 경도값을 받아 bounds값 설정
                 }
+
+                // 출발버튼 클릭 시, 출발지 마커 생성
+                let dpB = document.getElementById("departureB");
+                dpB.addEventListener('click', function(){
+                    // 출발 마커 생성
+                    if (departmentMarker) {
+                        departmentMarker.setMap(null); // 기존 출발 마커 제거
+                    }
+
+                    // 출발마커를 생성하고 지도에 추가
+                    departmentMarker = new google.maps.Marker({
+                        map: map,
+                        title: "출발지: "+place.name,
+                        position: place.geometry.location,
+                        placeId: place.place_id,                        //place의 장소번호 저장
+                        placePhoto: place.photos,
+                        icon: {
+                            url: '/img/departureMarker.png', // 사용자 정의 아이콘 URL
+                            scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
+                            origin: new google.maps.Point(0, 0), // 아이콘의 원점(기본값, 아이콘 좌상단)
+                            anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
+                        }
+                    });
+
+                    // 출발마커의 위도경도를 변수에 담음 - 경로 표시 위해
+                    departLat = departmentMarker.getPosition().lat();
+                    departLong = departmentMarker.getPosition().lng();
+                    console.log("departureLat: " + departLat);
+                    console.log("departureLong: " + departLong);
+
+                    // 출발 마커 생성 후, 경로 생성해 화면 출력 요청 함수 호출
+                    calculateRoutes();
+                })
+
+                // 도착버튼 클릭 시, 도착지 마커 생성
+                let arB = document.getElementById("arrivalB");
+                arB.addEventListener('click', function(){
+                    // 도착 마커 생성
+                    if (arrivalMarker) {
+                        arrivalMarker.setMap(null); // 기존 도착 마커 제거
+                    }
+
+                    // 도착마커를 생성하고 지도에 추가
+                    arrivalMarker = new google.maps.Marker({
+                        map: map,
+                        title: "도착지: "+place.name,
+                        position: place.geometry.location,
+                        placeId: place.place_id,                        //place의 장소번호 저장
+                        placePhoto: place.photos,
+                        icon: {
+                            url: '/img/arrivalMarker.png', // 사용자 정의 아이콘 URL
+                            scaledSize: new google.maps.Size(60, 60), // 아이콘의 크기 조정
+                            origin: new google.maps.Point(0, 0), // 아이콘의 원점(기본값, 아이콘 좌상단)
+                            anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
+                        }
+                    });
+
+                    arrivalLat = arrivalMarker.getPosition().lat();
+                    arrivalLong = arrivalMarker.getPosition().lng();
+                    console.log("arrivalLat: " + arrivalLat);
+                    console.log("arrivalLong: " + arrivalLong);
+
+                    calculateRoutes(); // 경로 계산 호출
+
+                })
             });
 
             map.fitBounds(bounds);  //위의 each문에서 place의 bounds값을 모두 포함하여 경계 안에 있는 모든장소들이 보이게함
         });
     });
 
+        // 공유버튼 클릭 시
         document.getElementById("shareBtn").addEventListener('click', function() {
             if (currentMarker) {
 
@@ -182,5 +274,124 @@
                 alert("No marker selected!");
             }
         });
-}
+    }
     google.maps.event.addDomListener(window, 'load', initMap);      //domlistener initmap을 실행
+
+    // 경로 요청 및 표시 함수 (도보와 자전거 2가지 경로 + 구글맵에 한국 지리가 잘 반영 안 되어 있어서, 확인용 대중교통 경로 추가)
+    function calculateRoutes() {
+        // 출발지나 도착지가 설정되지 않은 경우 경고 메시지 출력 후 종료
+        if (!arrivalLat || !arrivalLong || !departLat || !departLong) {
+            console.error("출발지 또는 도착지의 좌표가 올바르지 않습니다.");
+            return;
+        }
+
+        // 경로 생성 시 사용할 위도 경도
+        let lat;
+        let long;
+
+        // Directions Service와 Directions Renderer를 각각 도보와 자전거 경로용으로 설정
+        const walkingService = new google.maps.DirectionsService();
+        const bicyclingService = new google.maps.DirectionsService();
+
+        // 도보 경로를 위한 Renderer 설정
+        const walkingRenderer = new google.maps.DirectionsRenderer({
+            polylineOptions: { strokeColor: 'green' } // 도보 경로의 색상 설정
+        });
+        walkingRenderer.setMap(map); // 도보 경로 표시할 지도
+
+        // 자전거 경로를 위한 Renderer 설정
+        const bicyclingRenderer = new google.maps.DirectionsRenderer({
+            polylineOptions: { strokeColor: 'blue' } // 자전거 경로의 색상 설정
+        });
+        bicyclingRenderer.setMap(map); // 자전거 경로 표시할 지도
+
+        // 출발지 마커를 따로 설정하지 않았을 때 - 사용자 현재위치를 기준으로 도착지까지의 경로 출력
+        if (!departmentMarker) {
+            lat = myLat;
+            long = myLong;
+        }
+        else{   // 출발지 마커가 설정되어 있으면 출발지 위도 경도를 기준으로 경로 출력
+            lat = departLat;
+            long = departLong;
+        }
+
+        // 도보 경로 요청
+        const walkingRequest = {
+            origin: {lat: lat, lng: long}, // 출발 위치
+            destination: {lat: arrivalLat, lng: arrivalLong}, // 도착 위치
+            travelMode: google.maps.TravelMode.WALKING // 도보
+        };
+
+        walkingService.route(walkingRequest, function(result, status) {
+            if (status === google.maps.DirectionsStatus.OK) {
+                walkingRenderer.setDirections(result); // 도보 경로를 지도에 표시
+
+                // 도보 경로 시작점에 아이콘 추가
+                const startLocation = result.routes[0].legs[0].start_location;
+                const walkingMarker = new google.maps.Marker({
+                    position: startLocation,
+                    map: map,
+                    icon: {
+                        url: '/img/walking.png', // 사용자 정의 아이콘 URL
+                        scaledSize: new google.maps.Size(60, 60) // 아이콘 크기 설정
+                    },
+                    title: '도보 경로 시작점'
+                });
+                // 도보 경로의 거리와 소요 시간 출력
+                const walkingLeg = result.routes[0].legs[0];
+                const walkingInfoWindow = new google.maps.InfoWindow({
+                    content: `
+                    <div>
+                        <h4>도보 경로 정보</h4>
+                        <p>거리: ${walkingLeg.distance.text}</p>
+                        <p>소요 시간: ${walkingLeg.duration.text}</p>
+                    </div>
+                `
+                });
+                walkingInfoWindow.open(map, walkingMarker);
+            } else {
+                console.error('도보 경로를 찾을 수 없습니다.', status);
+            }
+        });
+
+        // 자전거 경로 요청
+        const bicyclingRequest = {
+            origin: {lat: lat, lng: long}, // 출발 위치
+            destination: {lat: arrivalLat, lng: arrivalLong}, // 도착 위치
+            travelMode: google.maps.TravelMode.BICYCLING // 자전거
+        };
+
+        bicyclingService.route(bicyclingRequest, function(result, status) {
+            if (status === google.maps.DirectionsStatus.OK) {
+                bicyclingRenderer.setDirections(result); // 자전거 경로를 지도에 표시
+
+                // 자전거 경로 시작점에 아이콘 추가
+                const startLocation = result.routes[0].legs[0].start_location;
+                const bicyclingMarker = new google.maps.Marker({
+                    position: startLocation,
+                    map: map,
+                    icon: {
+                        url: '/img/bicycle.png', // 사용자 정의 아이콘 URL
+                        scaledSize: new google.maps.Size(60, 60) // 아이콘 크기 설정
+                    },
+                    title: '자전거 경로 시작점'
+                });
+
+                // 자전거 경로의 거리와 소요 시간 출력
+                const bicyclingLeg = result.routes[0].legs[0];
+                const bicyclingInfoWindow = new google.maps.InfoWindow({
+                    content: `
+                    <div>
+                        <h4>자전거 경로 정보</h4>
+                        <p>거리: ${bicyclingLeg.distance.text}</p>
+                        <p>소요 시간: ${bicyclingLeg.duration.text}</p>
+                    </div>
+                `
+                });
+                bicyclingInfoWindow.open(map, bicyclingMarker);
+            } else {
+                console.error('자전거 경로를 찾을 수 없습니다.', status);
+            }
+        });
+
+    }
