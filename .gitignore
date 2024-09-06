@@ -38,4 +38,4 @@ out/
 
 
 ### 작업할 때 혼자 쓰려는 개인적인 파일 목록 ###
-.tsh_custom_test/
+/src/test/tsh_custom_test/

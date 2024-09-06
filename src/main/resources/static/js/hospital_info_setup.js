@@ -1,6 +1,8 @@
 let progressInterval;
+//console.log("hospital_info_setup.js enter");
 
 function updateProgressBar(percentage) {
+    console.log("updatePercentage run.");
     let progressBar = document.getElementById('progress-bar');
     progressBar.style.width = percentage + '%';
     progressBar.textContent = percentage + '%';
@@ -20,6 +22,7 @@ function startProgress() {
 }
 
 function uploadFile() {
+    //alert("uploadFile run.");
     let formData = new FormData();
     let fileInput = document.querySelector('input[type="file"]');
     let file = fileInput.files[0];
@@ -27,7 +30,7 @@ function uploadFile() {
 
     startProgress();
 
-    fetch('http://localhost:8888/api/hospital/import-file', {
+    fetch('http://localhost:8888/Data/hospital/import-file', {
         method: 'POST',
         body: formData
     })

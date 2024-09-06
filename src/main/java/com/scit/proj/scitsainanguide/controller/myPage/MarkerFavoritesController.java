@@ -1,12 +1,13 @@
 package com.scit.proj.scitsainanguide.controller.myPage;
 
 
+import com.scit.proj.scitsainanguide.service.myPage.MarkerFavoritesService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import com.scit.proj.scitsainanguide.domain.dto.MarkerFavoritesDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
-import com.scit.proj.scitsainanguide.service.myPage.MarkerFavoritesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
@@ -14,15 +15,47 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("my")
+@RequestMapping("my/myMarkerFavorites")
 public class MarkerFavoritesController {
 
     // ============== 초기화 목록 ==============
     private final MarkerFavoritesService markerFavoritesService;
+
+    @Value("20")
+    private int pageSize;
+    @Value("1")
+    private int page;
     // =======================================
+
+    @GetMapping("")
+    public String enterMarkerFavorites(
+            /*@RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,*/
+            @ModelAttribute SearchRequestDTO dto,
+            Model model
+    ) {
+        if (dto.getPage() == 0) {
+            dto.setPage(1);
+        }
+        if (dto.getPageSize() == 0) {
+            dto.setPageSize(20);
+        }
+
+        Page<MarkerFavoritesDTO> markerFavoritesDTOPage = markerFavoritesService.viewAllFavoritesMarkerTest(dto);
+
+        log.debug("markerFavoritesDTOPage: {}", markerFavoritesDTOPage);
+        model.addAttribute("markerFavoritesDTOPage", markerFavoritesDTOPage);
+        model.addAttribute("page", dto.getPage());
+
+        return "myPage/myMarkerFavorites";
+    }
+
+
 
     // ====================================================
     // =============== MY FAVORITES MARKERS ===============
@@ -30,20 +63,50 @@ public class MarkerFavoritesController {
     // ====================================================
 
     // ==== Initial Page ====
-    @GetMapping("/myMarkerFavorites")
+    /*@GetMapping("")
     public String MarkerFavoritesPageEnter(
             @ModelAttribute SearchRequestDTO dto,
             Model model
-            ) {
+    ) {
+
+        if(dto.getPage() < 1) {
+            dto.setPage(1);
+        }
+        dto.setPage(dto.getPage() - 1);
+
+        if(dto.getPageSize() <= 0 ) {
+            dto.setPageSize(pageSize);
+        }
+
+        // ==== View all favorites marker ====
+        dto.setPage(page);
+        dto.setPageSize(pageSize);
+        Page<MarkerFavoritesDTO> markerFavoritesDTOPage = markerFavoritesService.viewAllFavoritesMarkerTest(dto);
+
+        log.debug("markerFavoritesDTOPage: {}", markerFavoritesDTOPage);
+        model.addAttribute("markerFavoritesDTOPage", markerFavoritesDTOPage);
+        // =======================================
+        return "/myPage/myMarkerFavorites";
+    }*/
+
+    // pracController
+
+    // test
+    /*@GetMapping("/myMarkerFavorites")
+    public String MarkerFavoritesPageEnter(
+            Model model
+    ) {
 
         // ==== View all favorites marker ====
         // ==== 모든 즐겨찾기 마커 보기 ====
         // ==== 계정에 따른 리스트업은 아직 미구현 ====
-        dto.setPageSize(20);
-        Page<MarkerFavoritesDTO> markerFavoritesDTOPage = markerFavoritesService.viewAllFavoritesMarkerTest(dto);
-        model.addAttribute("markerFavoritesDTOPage", markerFavoritesDTOPage);
+        List<MarkerFavoritesDTO> markerFavoritesDTOList = markerFavoritesService.viewAllFavoritesMarkerTest_NoPaging();
+
+        log.debug("markerFavoritesDTOList: {}", markerFavoritesDTOList);
+        model.addAttribute("markerFavoritesDTOList", markerFavoritesDTOList);
         // =======================================
         return "/myPage/myMarkerFavorites";
-    }
+    }*/
     // ======================
+
 }

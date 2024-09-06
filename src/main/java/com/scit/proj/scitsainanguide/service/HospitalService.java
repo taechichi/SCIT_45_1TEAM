@@ -46,7 +46,7 @@ public class HospitalService {
                     .hospitalName(node.path("name").asText())
                     .latitude(node.path("latitude").asText())
                     .longitude(node.path("longitude").asText())
-                    .langCd("ja") // 고정 값*/
+                    .langCd("ja") // 고정 값
                     .build();
             // DB에 저장
             hospitalRepository.save(hospitalEntity);

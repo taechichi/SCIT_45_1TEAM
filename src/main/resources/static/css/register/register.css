@@ -1,0 +1,96 @@
+
+.error {
+    color: red;
+    font-size: 0.9em;
+}
+.valid {
+    color: green;
+    font-size: 0.9em;
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+h1 {
+    text-align: center;
+}
+.form-group {
+    margin-bottom: 15px;
+    position: relative;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 2px solid #7FFF00;
+}
+#checkDuplicateId {
+    width: 100px;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #ACE1AF;
+    color: black;
+    margin-bottom: 10px;
+}
+.form-group button:hover {
+    background-color: #8BC34A;
+}
+#submitBtn {
+    width: 100%;
+    background-color: transparent;
+    border: 2px solid #006400;
+    color: #006400;
+}
+#submitBtn:hover {
+    background-color: #006400;
+    color: white;
+}
+.btn-inline {
+    display: inline-block;
+    margin-left: 10px;
+}
+.password-container {
+    position: relative;
+}
+.password-container input {
+    padding-right: 40px; /* 아이콘 공간 확보 */
+}
+.password-toggle-icon {
+    position: absolute;
+    right: 10px;
+    top: 88%;
+    transform: translateY(-88%);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+}
+/* 프로필 사진 미리보기 스타일 */
+.profile-preview {
+    position: absolute;
+    top: 70%;
+    left: -250px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #7FFF00;
+    background-color: #eaeaea;
+}

@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class MarkerFavoritesDTO {
-
     private Integer favoriteId;
     private String memberId;
     private Integer hospitalId;

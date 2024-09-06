@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="utf-8">
@@ -112,8 +113,8 @@
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="login.html">Login</a>
-                        <a class="collapse-item" href="/register">Register</a>
+                        <a class="collapse-item" href="/member/login">다른기능</a>     <!--다른 기능을 넣어주세요-->
+                        <a class="collapse-item" href="/member/register">다른기능</a> <!--다른 기능을 넣어주세요-->
                         <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Other Pages:</h6>
@@ -201,7 +202,7 @@
                     </form>
 
                     <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
+                    <ul sec:authorize="isAuthenticated()" class="navbar-nav ml-auto">
 
                         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                         <li class="nav-item dropdown no-arrow d-sm-none">
@@ -228,6 +229,7 @@
                         </li>
 
                         <!-- 오른쪽 상단 네비게이션 - 알림 -->
+
                         <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -294,8 +296,7 @@
                                 </h6>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" th:src="@{img/undraw_profile.svg}"
-                                            alt="...">
+                                        <img class="rounded-circle" th:src="|member/download?memberId=${#authentication.name}|" alt="Profile Picture" />
                                         <div class="status-indicator bg-success"></div>
                                     </div>
                                     <div class="font-weight-bold">
@@ -306,8 +307,7 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" th:src="@{img/undraw_profile.svg}"
-                                            alt="...">
+                                        <img class="rounded-circle" th:src="|member/download?memberId=${#authentication.name}|" alt="Profile Picture" />
                                         <div class="status-indicator"></div>
                                     </div>
                                     <div>
@@ -318,8 +318,7 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" th:src="@{img/undraw_profile.svg}"
-                                            alt="...">
+                                        <img class="rounded-circle" th:src="|member/download?memberId=${#authentication.name}|" alt="Profile Picture" />
                                         <div class="status-indicator bg-warning"></div>
                                     </div>
                                     <div>
@@ -330,8 +329,7 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" th:src="@{img/undraw_profile.svg}"
-                                            alt="...">
+                                        <img class="rounded-circle" th:src="|member/download?memberId=${#authentication.name}|" alt="Profile Picture" />
                                         <div class="status-indicator bg-success"></div>
                                     </div>
                                     <div>
@@ -350,9 +348,9 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${member.nickname}"></span>
                                 <img class="img-profile rounded-circle"
-                                    th:src="@{img/undraw_profile.svg}">
+                                     th:src="|member/download?memberId=${#authentication.name}|" alt="Profile Picture" />
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -376,14 +374,19 @@
                                 </a>
                             </div>
                         </li>
-
                     </ul>
-
+                    <!-- 로그인이 되어 있지 않은 경우 버튼을 표시 -->
+                    <th:block sec:authorize="not isAuthenticated()">
+                        <a href="/member/login">
+                            <button type="button">로그인</button>
+                        </a>
+                    </th:block>
                 </nav>
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
                 <div id="map" style="height: 95%; width: 100%;"></div>
+
             </div>
             <!-- End of Main Content -->
 
@@ -422,7 +425,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" th:href="@{/member/logout}">Logout</a>
                 </div>
             </div>
         </div>
