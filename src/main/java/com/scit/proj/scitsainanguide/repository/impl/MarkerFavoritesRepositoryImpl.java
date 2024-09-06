@@ -53,7 +53,7 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
     // ===== with paging list =====
     public Page<MarkerFavoritesDTO> selectMarkerFavoritesList(SearchRequestDTO dto, String memberId) {
         // PageRequest 객체를 생성하여 페이지 번호와 페이지 크기 설정
-        Pageable pageable = PageRequest.of(dto.getPage(), dto.getPageSize());
+        Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPageSize());
 
         // QueryDSL의 동적 쿼리 생성을 위한 조건 빌더
         BooleanBuilder whereClause = new BooleanBuilder();
@@ -61,7 +61,7 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
 
         // 리스트업
         List<MarkerFavoritesEntity> markerFavoritesEntityList = queryFactory.selectFrom(markerFavoritesEntity)
-                //.where(whereClause)
+                .where(whereClause)
                 .orderBy(markerFavoritesEntity.favoriteId.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -69,7 +69,7 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
 
         // 전체 카운트 쿼리 ( 페이지을 위한 total count) -> 길이가 나와야 인수로 던져줄 수 있기 때문
         long total = queryFactory.selectFrom(markerFavoritesEntity)
-                //.where(whereClause)
+                .where(whereClause)
                 .fetchCount();
 
         // Entity -> DTO 변환 및 Page 변환

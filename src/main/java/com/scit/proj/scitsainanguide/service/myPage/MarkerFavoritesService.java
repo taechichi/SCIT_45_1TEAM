@@ -39,8 +39,9 @@ public class MarkerFavoritesService {
         //markerFavoritesRepository.selectMarkerFavoritesList()
     }*/
 
+    /*public Page<MarkerFavoritesDTO> getList(int page, int pageSize)*/
     public Page<MarkerFavoritesDTO> getList(int page, int pageSize) {
-        Pageable p = PageRequest.of(page - 1, pageSize, Sort.Direction.DESC, "favoritesId");
+        Pageable p = PageRequest.of(page - 1, pageSize, Sort.Direction.DESC, "favoriteId");
 
         Page<MarkerFavoritesEntity> entities = markerFavoritesJPARepository.findAll(p);
 

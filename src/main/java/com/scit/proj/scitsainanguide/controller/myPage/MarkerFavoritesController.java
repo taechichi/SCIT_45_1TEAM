@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -33,8 +34,24 @@ public class MarkerFavoritesController {
 
     @GetMapping("")
     public String enterMarkerFavorites(
+            /*@RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,*/
+            @ModelAttribute SearchRequestDTO dto,
             Model model
     ) {
+        if (dto.getPage() == 0) {
+            dto.setPage(1);
+        }
+        if (dto.getPageSize() == 0) {
+            dto.setPageSize(20);
+        }
+
+        Page<MarkerFavoritesDTO> markerFavoritesDTOPage = markerFavoritesService.viewAllFavoritesMarkerTest(dto);
+
+        log.debug("markerFavoritesDTOPage: {}", markerFavoritesDTOPage);
+        model.addAttribute("markerFavoritesDTOPage", markerFavoritesDTOPage);
+        model.addAttribute("page", dto.getPage());
+
         return "myPage/myMarkerFavorites";
     }
 

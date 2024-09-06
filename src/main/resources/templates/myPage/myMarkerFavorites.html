@@ -79,6 +79,22 @@
             </tbody>
         </table>
 
+        <!-- 이전 페이지 링크 -->
+        <span th:if="${markerFavoritesDTOPage.hasPrevious()}">
+            <a th:href="@{/my/myMarkerFavorites(page=${markerFavoritesDTOPage.number}, pageSize=${markerFavoritesDTOPage.size})}">이전</a>
+        </span>
+
+        <!-- 각 페이지 번호 링크 -->
+        <span th:each="i : ${#numbers.sequence(1, markerFavoritesDTOPage.totalPages)}">
+            <a th:href="@{/my/myMarkerFavorites(page=${i}, pageSize=${markerFavoritesDTOPage.size})}"
+               th:text="${i}" th:classappend="${i == markerFavoritesDTOPage.number + 1} ? 'active'"></a>
+        </span>
+
+        <!-- 다음 페이지 링크 -->
+        <span th:if="${markerFavoritesDTOPage.hasNext()}">
+            <a th:href="@{/my/myMarkerFavorites(page=${markerFavoritesDTOPage.number + 2}, pageSize=${markerFavoritesDTOPage.size})}">다음</a>
+        </span>
+
         <!--<div>
             <span th:if="${markerFavoritesDTOPage.hasPrevious()}">
                 <a th:href="@{/my/myMarkerFavorites(page=${markerFavoritesDTOPage.number - 1}, pageSize=${markerFavoritesDTOPage.size})}">이전</a>
