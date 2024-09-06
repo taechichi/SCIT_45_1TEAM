@@ -189,3 +189,19 @@ CREATE TABLE message
 );
 
 ALTER TABLE hospital MODIFY COLUMN hospital_name VARCHAR(200);
+
+alter table marker_board drop foreign key marker_board_ibfk_3;
+alter table marker_favorites drop foreign key marker_favorites_ibfk_2;
+alter table hospital modify column hospital_id varchar(500) NOT null;
+alter table marker_board modify column hospital_id varchar(500) null;
+alter table marker_favorites modify column hospital_id varchar(500) null;
+
+ALTER TABLE marker_board
+    ADD CONSTRAINT marker_board_ibfk_3
+        FOREIGN KEY (hospital_id)
+            REFERENCES hospital(hospital_id);
+
+ALTER TABLE marker_favorites
+    ADD CONSTRAINT marker_favorites_ibfk_2
+        FOREIGN KEY (hospital_id)
+            REFERENCES hospital(hospital_id);
