@@ -87,6 +87,7 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
                 .hospitalId(markerFavoritesEntity.getHospital() != null ? markerFavoritesEntity.getHospital().getHospitalId() : null)
                 .shelterId(markerFavoritesEntity.getShelter() != null ? markerFavoritesEntity.getShelter().getShelterId() : null)
                 .nickname(markerFavoritesEntity.getNickname())
+                .name(markerFavoritesEntity.getHospital() != null ? markerFavoritesEntity.getHospital().getHospitalName() : markerFavoritesEntity.getShelter().getShelterName())
                 .build();
     }
 }

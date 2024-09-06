@@ -11,9 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class MarkerFavoritesDTO {
+    // Variables associated with entitiy
     private Integer favoriteId;
     private String memberId;
     private String hospitalId;
     private Integer shelterId;
     private String nickname;
+
+    // etc
+    private String name;
 }

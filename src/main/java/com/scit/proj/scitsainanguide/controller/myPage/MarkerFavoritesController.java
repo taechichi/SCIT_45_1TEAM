@@ -5,15 +5,12 @@ import com.scit.proj.scitsainanguide.service.myPage.MarkerFavoritesService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.*;
 import com.scit.proj.scitsainanguide.domain.dto.MarkerFavoritesDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -39,13 +36,7 @@ public class MarkerFavoritesController {
             @ModelAttribute SearchRequestDTO dto,
             Model model
     ) {
-        if (dto.getPage() == 0) {
-            dto.setPage(1);
-        }
-        if (dto.getPageSize() == 0) {
-            dto.setPageSize(20);
-        }
-
+        dto.setPageSize(pageSize);
         Page<MarkerFavoritesDTO> markerFavoritesDTOPage = markerFavoritesService.viewAllFavoritesMarkerTest(dto);
 
         log.debug("markerFavoritesDTOPage: {}", markerFavoritesDTOPage);
@@ -53,6 +44,16 @@ public class MarkerFavoritesController {
         model.addAttribute("page", dto.getPage());
 
         return "myPage/myMarkerFavorites";
+    }
+
+    @PostMapping("/delete")
+    public String deleteMarkerFavorites(
+            @RequestParam(name = "favoriteId") Integer myFavoriteId
+    ) {
+        // 임시 계정
+        String currentUserId = "tsh0828";
+        markerFavoritesService.deleteMarker(myFavoriteId, currentUserId);
+        return "redirect:/my/myMarkerFavorites";
     }
 
 
