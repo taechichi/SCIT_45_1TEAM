@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class HospitalDTO {
 
-    private Integer hospitalId;
+    private String hospitalId;
     private Integer categoryId;
     private String hospitalName;
     private String longitude;
