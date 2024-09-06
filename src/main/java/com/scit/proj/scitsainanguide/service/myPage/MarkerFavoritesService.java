@@ -5,6 +5,7 @@ import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.domain.entity.MarkerFavoritesEntity;
 import com.scit.proj.scitsainanguide.repository.MarkerFavoritesJPARepository;
 import com.scit.proj.scitsainanguide.repository.MarkerFavoritesRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,16 +36,24 @@ public class MarkerFavoritesService {
     }
     
     // 마커 주인하고 맞나 비교하는 코드
-    public boolean isMarkerOwner(Object myFavoriteId, String memberId) {
+    public boolean isMarkerOwner(Integer myFavoriteId, String memberId) {
+        MarkerFavoritesEntity markerFavoritesEntity = markerFavoritesJPARepository.findById(myFavoriteId ).orElseThrow(() -> new EntityNotFoundException(memberId));
+
+        if(markerFavoritesEntity.getMember().getMemberId() == memberId) {
+            return true;
+        }
         return false;
     }
 
-    public boolean deleteMarker(Object myFavoriteId, String memberId) {
-        return false;
+    public boolean deleteMarker(Integer myFavoriteId, String memberId) {
+        if(isMarkerOwner(myFavoriteId, memberId)) {
+            // delete
+            return true;
+        } else {
+            // 걍 냅둠
+            return false;
+        }
     }
-    
-    
-
 
     // ==== TEST CODE ===============================================================
     /*public Page<MarkerFavoritesDTO> getList(int page, int pageSize)*/

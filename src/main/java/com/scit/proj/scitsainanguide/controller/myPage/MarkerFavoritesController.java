@@ -36,13 +36,7 @@ public class MarkerFavoritesController {
             @ModelAttribute SearchRequestDTO dto,
             Model model
     ) {
-        if (dto.getPage() == 0) {
-            dto.setPage(1);
-        }
-        if (dto.getPageSize() == 0) {
-            dto.setPageSize(20);
-        }
-
+        dto.setPageSize(pageSize);
         Page<MarkerFavoritesDTO> markerFavoritesDTOPage = markerFavoritesService.viewAllFavoritesMarkerTest(dto);
 
         log.debug("markerFavoritesDTOPage: {}", markerFavoritesDTOPage);
@@ -54,13 +48,11 @@ public class MarkerFavoritesController {
 
     @PostMapping("/delete")
     public String deleteMarkerFavorites(
-            @RequestParam(name = "favoriteId") Object myFavoriteId
+            @RequestParam(name = "favoriteId") Integer myFavoriteId
     ) {
         // 임시 계정
         String currentUserId = "tsh0828";
-
         markerFavoritesService.deleteMarker(myFavoriteId, currentUserId);
-
         return "redirect:/my/myMarkerFavorites";
     }
 
