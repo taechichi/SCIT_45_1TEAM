@@ -131,9 +131,24 @@
             }
             alert("result"+places[0].name)              //검색장소의 첫번째로 나오는 장소 알림
 
+            // // 전체 장소 이름을 알림으로 띄우기
+            // let placeNames = places.map(place => place.name).join(", ");     //map메서드는 기존배열을 변경하지 않고 변환 값들로 이루어진 새배열을 반환
+            // alert("검색된 장소들: " + placeNames);                             //place는 배열의 장소객체 name은 장소객체의 속성 반환값은 장소의이름, 으로 배열반환
+
             //기존 마커 제거
             markers.forEach(marker => marker.setMap(null));    //markers배열에서 가져온 기존마커 null로 맵에서 삭제
             markers = [];   //마커 배열 초기화
+
+            // 지도의 경계를 받아 마커표시 시 지도 바깥이면 숨김
+            // const bounds = map.getBounds(); // 현재 지도 경계 가져오기
+            //
+            // markers.forEach(marker => {
+            //     if (bounds.contains(marker.getPosition())) {     //마커가 현재 경계 안에 있는지 확인
+            //         marker.setMap(map); // 경계 내에 있으면 표시
+            //     } else {
+            //         marker.setMap(null); // 경계 밖에 있으면 숨김
+            //     }
+            // });
 
             // 지도 중심과 마커를 새 장소로 이동
             const bounds = new google.maps.LatLngBounds();              //LatLngBounds는 지도의 경계를 얻는 객체 bounds 초기화
@@ -144,8 +159,7 @@
                 }
 
                 //검색된 장소 하나씩 마커생성
-                let marker = createMarker(map,place, false);
-                markers.push(marker);   //배열에 마커추가 나중에 배열마커를 삭제하기위함
+                createMarker(map, place, false);
 
                 //맵 클릭 이벤트 (패널정보 none)
                 google.maps.event.addListener(map,'click',function(){
@@ -156,7 +170,8 @@
                     }
                 });
 
-
+                let marker = createMarker(map,place, false);
+                markers.push(marker);   //배열에 마커추가
 
                 if (place.geometry.viewport) {              //해당장소가 viewport정보를 가지고 있을 시 (넓은 지역을 차지하는 곳)
                     bounds.union(place.geometry.viewport);  //bounds와 검색된 viewport값을 합쳐 합쳐진 지도 경계설정
