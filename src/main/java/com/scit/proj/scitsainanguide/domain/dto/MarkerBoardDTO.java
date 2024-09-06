@@ -13,7 +13,7 @@ public class MarkerBoardDTO {
     private Integer boardId;
     private String memberId;
     private Integer shelterId;
-    private Integer hospitalId;
+    private String hospitalId;
     private String contents;
     private LocalDateTime createDt;
     private String deleteReason;

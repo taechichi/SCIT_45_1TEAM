@@ -43,6 +43,7 @@ public class HospitalService {
             //log.debug("name: {}", node.path("設・場所名").asText());
 
             HospitalEntity hospitalEntity = HospitalEntity.builder()
+                    .hospitalId(node.path("place_id").asText())
                     .hospitalName(node.path("name").asText())
                     .latitude(node.path("latitude").asText())
                     .longitude(node.path("longitude").asText())

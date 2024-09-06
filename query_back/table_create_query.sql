@@ -29,12 +29,12 @@ CREATE TABLE member
 
 CREATE TABLE hospital
 (
-    hospital_id    INTEGER     NOT NULL AUTO_INCREMENT,
-    hospital_name  VARCHAR(50) NOT NULL,
-    longitude      VARCHAR(20) NOT NULL,
-    latitude       VARCHAR(20) NOT NULL,
-    lang_cd        VARCHAR(2)  NOT NULL,
-    business_hours VARCHAR(30) NULL,
+    hospital_id    VARCHAR(500) NOT NULL,
+    hospital_name  VARCHAR(50)  NOT NULL,
+    longitude      VARCHAR(20)  NOT NULL,
+    latitude       VARCHAR(20)  NOT NULL,
+    lang_cd        VARCHAR(2)   NOT NULL,
+    business_hours VARCHAR(30)  NULL,
     PRIMARY KEY (hospital_id)
 );
 
@@ -81,7 +81,7 @@ CREATE TABLE marker_board
     board_id    INTEGER     NOT NULL AUTO_INCREMENT,
     member_id   VARCHAR(50) NOT NULL,
     shelter_id  Integer NULL,
-    hospital_id Integer NULL,
+    hospital_id VARCHAR(500) NULL,
     contents    VARCHAR(500) NULL,
     create_dt   TIMESTAMP   NOT NULL DEFAULT NOW(),
     delete_reason VARCHAR(50) NULL,
@@ -164,11 +164,11 @@ CREATE TABLE friend_member
 
 CREATE TABLE marker_favorites
 (
-    favorite_id INTEGER     NOT NULL AUTO_INCREMENT,
-    member_id   VARCHAR(10) NOT NULL,
-    hospital_id Integer NULL,
+    favorite_id INTEGER         NOT NULL AUTO_INCREMENT,
+    member_id   VARCHAR(10)     NOT NULL,
+    hospital_id VARCHAR(500)    NULL,
     shelter_id  Integer NULL,
-    nickname    VARCHAR(20) NULL,
+    nickname    VARCHAR(20)     NULL,
     PRIMARY KEY (favorite_id),
     FOREIGN KEY (member_id) REFERENCES member (member_id),
     FOREIGN KEY (hospital_id) REFERENCES hospital (hospital_id),
