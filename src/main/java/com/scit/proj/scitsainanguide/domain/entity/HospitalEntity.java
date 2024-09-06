@@ -16,22 +16,21 @@ import lombok.NoArgsConstructor;
 public class HospitalEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "hospital_id")
+    @Column(name = "hospital_id", nullable = false, length = 500)
     private String hospitalId;
 
-    @Column(name = "hospital_name", nullable = false, length = 100)
+    @Column(name = "hospital_name", nullable = false, length = 200)
     private String hospitalName;
 
-    @Column(name = "longitude", nullable = false, length = 50)
+    @Column(name = "longitude", nullable = false, length = 20)
     private String longitude;
 
-    @Column(name = "latitude", nullable = false, length = 50)
+    @Column(name = "latitude", nullable = false, length = 20)
     private String latitude;
 
-    @Column(name = "lang_cd", nullable = false, length = 10)
+    @Column(name = "lang_cd", nullable = false, length = 2)
     private String langCd;
 
-    @Column(name = "business_hours", length = 100)
+    @Column(name = "business_hours", length = 30)
     private String businessHours;
 }
