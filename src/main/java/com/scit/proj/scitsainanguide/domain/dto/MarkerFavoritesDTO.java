@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class MarkerFavoritesDTO {
     private Integer favoriteId;
     private String memberId;
-    private Integer hospitalId;
+    private String hospitalId;
     private Integer shelterId;
     private String nickname;
 }
