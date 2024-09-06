@@ -8,49 +8,30 @@
     let currentMarker;
     let shareUrl;
 
-    
-    //url에서 쿼리부분의 데이터를 파싱하는 함수
-    function getLatLngFromUrl() {
-        const params = new URLSearchParams(window.location.search);     //window.location.search는 url의 쿼리부분 파싱
-        const placeId = params.get('id');
 
-        if (id) {                           //lat lng에 num값이 있으면 lat lng return
-            return placeId;
+    //해시 부분을 받아 placeId를 추출
+    function getLatLngFromUrl() {
+        const hash = window.location.hash; //#~~~ 처럼 해시 부분 추출
+        if (hash) {
+            return decodeURIComponent(hash.substring(1)); // '#' 이후의 값을 추출 및 디코딩
         }
-        return null;                                                //위도 경도가 없으면 null
+        return null;
     }
 
+    //placeId를 받아 재검색 하여 place 객체에 필드값을 저장하는 함수
     function searchPlaceByPlaceId(placeId) {
         const request = {
             placeId: placeId,
-            fields: ['name', 'geometry', 'photo'] // 원하는 필드
+            fields: ['name', 'geometry', 'photo', 'place_id', 'formatted_address', 'rating']// 원하는 필드
         };
-
         const service = new google.maps.places.PlacesService(map);
 
-        service.getDetails(request, (place, status) => {                    //getDetailis메소드에서 데이터를 요청해 place에 저장
+        service.getDetails(request, (place, status) => {
+            //getdetails 메소드 실행
+            //콜백 함수로 status 요청성공이면 createMarker
             if (status === google.maps.places.PlacesServiceStatus.OK) {
-                // 장소의 정보 표시
-                const marker = new google.maps.Marker({
-                    map: map,
-                    position: place.geometry.location,
-                    title: place.name
-                });
-
-                // infopanel에 정보 표시
-                let placeName = place.name;
-                let photoUrl = place.photos[0].getUrl();
-                let placeInfo = `<h3>${placeName}</h3>
-                             <div style="width: 100%;height: 200px">
-                             <img src="${photoUrl}" style="width: 100%; height: 100%;"></div>`;
-
-                let infoPanel = document.getElementById("info-panel");
-                let infoPart = document.getElementById("info_part");
-                infoPart.innerHTML = placeInfo;
-                infoPanel.style.display = 'block';
-
-                // 공유 URL 설정
-                shareUrl = `${window.location.origin}?placeId=${placeId}`;
+                //url 접속시 마커생성
+                createMarker(map, place, true);
             } else {
                 console.error('Place details request failed');
             }
@@ -58,38 +39,47 @@
     }
     
     //마커생성 함수
-    function createMarker(map, lat, lng, placename="장소 이름", photoUrl=""){
+    function createMarker(map, place, visible=false){
         let marker = new google.maps.Marker({
-           map: map,
-           position : {lat:lat, lng:lng},
-            title: placename,
-            placePhoto: photoUrl
+            placeId: place.place_id,
+            map: map,
+            position : place.geometry.location,
+            title: place.name,
+            placePhoto: place.photos ? place.photos[0].getUrl() : ""
         });
 
         //마커 클릭 이벤트
         google.maps.event.addListener(marker, 'click', function (){
-            // 1. 기본 장소 정보 표시
-            let placeName = marker.title;
-            let photoUrl = marker.placePhoto;    //place의 첫사진을 url을 받아 저장
-            let placeInfo = `<h3>${placeName}</h3>                  <!--- infopanel에 넣을 값 ---!>  
+            showInfoPanel(marker);
+            currentMarker = marker;             //현재 선택마커를 currentMarker에 저장
+        });
+        //visible = true 정보패널 표시
+        if(visible){
+            showInfoPanel(marker);
+        }
+
+        map.setCenter(place.geometry.location);
+        return marker;
+    }
+
+    //정보 패널을 보여주는 함수
+    function showInfoPanel(marker){
+        // 1. 기본 장소 정보 표시
+        let placeName = marker.title;
+        let photoUrl = marker.placePhoto;    //place의 첫사진을 url을 받아 저장
+        let placeInfo = `<h3>${placeName}</h3>                  <!--- infopanel에 넣을 값 ---!>  
                                               <div style="width: 100%;height: 200px">
                                               <img src="${photoUrl}" style="width: 100%; height: 100%;"></div>
                                               <p>추가입력예정</p>`;
-            let infoPanel = document.getElementById("info-panel");
-            let infoPart = document.getElementById("info_part");
-            infoPart.innerHTML = placeInfo;
-            infoPanel.style.display = 'block';
-            isPanelVisible = true;
-
-            currentMarker = marker;             //현재 선택마커를 currentMarker에 저장
-        });
-        return marker;
+        let infoPanel = document.getElementById("info-panel");
+        let infoPart = document.getElementById("info_part");
+        infoPart.innerHTML = placeInfo;
+        infoPanel.style.display = 'block';
+        isPanelVisible = true;
     }
 
 
     function initMap() {
-
-        const shareLocation = getLatLngFromUrl();
     //getCurrentPosition에서 값을 받으면 position으로 값이 들어간다.
     //position에는 coords.을 통해 latitude, longitude등의 정보를 담고있다.
     //geolocation은 비동기함수 이므로 아래의 맵을 함께 포함시키지 않으면 좌표가 없는 상태로 실행된다.
@@ -97,12 +87,8 @@
     navigator.geolocation.getCurrentPosition((position) => {
         mylat = position.coords.latitude;
         mylng = position.coords.longitude;
-        let centerPosition = {lat: mylat, lng: mylng};
 
-        if(shareLocation){
-            centerPosition = {lat : shareLocation.lat, lng: shareLocation.lng};
-            createMarker(map, shareLocation.lat, shareLocation.lng, )
-        }
+        let centerPosition = {lat: mylat, lng: mylng};
 
         map = new google.maps.Map(document.getElementById('map'), {
             center: centerPosition,
@@ -113,11 +99,15 @@
             // minZoom:15,                 //지도 200m까지 축소
         });   //맵 지정 및 맵 옵션 설정
 
+        const shareId = getLatLngFromUrl();
+        if(shareId){
+            searchPlaceByPlaceId(shareId);
+        }
+
         const myMarker = new google.maps.Marker({
             map: map,
             position : {lat: mylat, lng: mylng}
         });
-
 
         const input = document.getElementById('search-input');              //search-input 에서 값을 받아 저장
         const searchBox = new google.maps.places.SearchBox(input);          //places api의 searchbox에 input 데이터 입력
@@ -126,8 +116,7 @@
             event.preventDefault(); // 폼 제출 시 페이지 새로고침 방지
             // 여기에서 검색 작업 수행
             google.maps.event.trigger(searchBox, 'places_changed'); // 검색 트리거 아래의 listener(places_changed)를 호출
-        });         //
-
+        });
 
         //검색 상자에서 places_changed를 통해 실행되는 이벤트 리스너
         searchBox.addListener('places_changed', () => {
@@ -160,45 +149,14 @@
 
             // 지도 중심과 마커를 새 장소로 이동
             const bounds = new google.maps.LatLngBounds();              //LatLngBounds는 지도의 경계를 얻는 객체 bounds 초기화
-            places.forEach((place) => {                                 //places배열을 place로
-                if (!place.geometry || !place.geometry.location) {      //만약 장소관련 정보가 없으면 return
+            places.forEach((place) => {                                                 //places배열을 place로
+                if (!place.geometry || !place.geometry.location) {                            //만약 장소관련 정보가 없으면 return
                     console.log("Returned place contains no geometry");
                     return;
                 }
 
-                // 새 마커를 생성하고 지도에 추가
-                let marker = new google.maps.Marker({
-                    map: map,
-                    title: place.name,
-                    position: place.geometry.location,
-                    placeId: place.place_id,                        //place의 장소번호 저장
-                    placePhoto: place.photos
-                }); //마커의 옵션들은 comment의 marker_option 참조
-
-
-                //마커 클릭 이벤트 (패널 정보 block)
-                google.maps.event.addListener(marker, 'click', function() {
-                        const placeId = marker.get("placeId");
-                        // 1. 기본 장소 정보 표시
-                        let placeName = marker.title;
-                        let photoUrl = "";
-                        photoUrl = place.photos[0].getUrl();    //place의 첫사진을 url을 받아 저장
-                        let placeInfo = `<h3>${placeName}</h3>                  <!--- infopanel에 넣을 값 ---!>  
-                                              <div style="width: 100%;height: 200px">
-                                              <img src="${photoUrl}" style="width: 100%; height: 100%;"></div>
-                                              <p>추가입력예정</p>`;
-                        let infoPanel = document.getElementById("info-panel");
-                        let infoPart = document.getElementById("info_part");
-                        infoPart.innerHTML = placeInfo;
-                        infoPanel.style.display = 'block';
-                        isPanelVisible = true;
-
-                        currentMarker = marker;             //현재 선택마커를 currentMarker에 저장
-
-                        let btn = document.getElementById("shareBtn");
-
-
-                });
+                //검색된 장소 하나씩 마커생성
+                createMarker(map, place, false);
 
                 //맵 클릭 이벤트 (패널정보 none)
                 google.maps.event.addListener(map,'click',function(){
@@ -209,10 +167,10 @@
                     }
                 });
 
-
+                let marker = createMarker(map,place, false);
                 markers.push(marker);   //배열에 마커추가
 
-
+                currentMarker = marker;
 
                 if (place.geometry.viewport) {              //해당장소가 viewport정보를 가지고 있을 시 (넓은 지역을 차지하는 곳)
                     bounds.union(place.geometry.viewport);  //bounds와 검색된 viewport값을 합쳐 합쳐진 지도 경계설정
@@ -227,7 +185,9 @@
 
         document.getElementById("shareBtn").addEventListener('click', function() {
             if (currentMarker) {
-                shareUrl = `${window.location.origin}?id=${currentMarker.placeId}`;
+                //hash 기반 url 생성 encode로 placeid를 인코딩하고 id를 #으로 변환
+                shareUrl = `${window.location.origin}/#${encodeURIComponent(currentMarker.placeId)}`;
+                navigator.clipboard.writeText(shareUrl);
                 alert(shareUrl);
             } else {
                 alert("No marker selected!");
