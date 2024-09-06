@@ -187,3 +187,5 @@ CREATE TABLE message
     FOREIGN KEY (sender_id) REFERENCES member (member_id),
     FOREIGN KEY (receiver_id) REFERENCES member (member_id)
 );
+
+ALTER TABLE hospital MODIFY COLUMN hospital_name VARCHAR(200);
