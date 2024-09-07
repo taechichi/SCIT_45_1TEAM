@@ -26,6 +26,9 @@ public class SearchRequestDTO {
     @Builder.Default
     private String searchWord = "";
 
+    @Builder.Default
+    private String sortBy = "";
+
     // 따로 셋팅해주어야하는 값
     private int pageSize;
 }

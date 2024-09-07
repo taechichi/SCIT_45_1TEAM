@@ -30,7 +30,7 @@ CREATE TABLE member
 CREATE TABLE hospital
 (
     hospital_id    VARCHAR(500) NOT NULL,
-    hospital_name  VARCHAR(50)  NOT NULL,
+    hospital_name  VARCHAR(200)  NOT NULL,
     longitude      VARCHAR(20)  NOT NULL,
     latitude       VARCHAR(20)  NOT NULL,
     lang_cd        VARCHAR(2)   NOT NULL,

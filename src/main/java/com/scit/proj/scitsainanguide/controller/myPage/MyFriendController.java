@@ -3,11 +3,13 @@ package com.scit.proj.scitsainanguide.controller.myPage;
 import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
 import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
+import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.myPage.MyFriendService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,16 +32,16 @@ public class MyFriendController {
     /**
      * 내 친구 목록 페이지 이동
      * @param model 모델 객체
-     * @param memberId 로그인한 회원
+     * @param user 로그인한 회원 객체
      * @param dto 검색 요청 객체
      * @return 내 친구 목록 페이지 html
      */
     @GetMapping
-    public String selectMyFriendList(Model model, @RequestParam String memberId, @ModelAttribute SearchRequestDTO dto) {
+    public String selectMyFriendList(Model model, @AuthenticationPrincipal AuthenticatedUser user, @ModelAttribute SearchRequestDTO dto) {
         // dto 에 pageSize 셋팅
         dto.setPageSize(pageSize);
 
-        Page<FriendDTO> myFriendList = myFriendService.selectMyFriendList(dto, memberId);
+        Page<FriendDTO> myFriendList = myFriendService.selectMyFriendList(dto, user.getId());
         model.addAttribute("friendList", myFriendList);
         model.addAttribute("page", dto.getPage());
         model.addAttribute("linkSize", linkSize);
@@ -50,13 +52,13 @@ public class MyFriendController {
 
     /**
      * 내 즐겨찾기한 친구 목록
-     * @param memberId 로그인한 아이디
+     * @param user 로그인한 회원 객체
      * @return 친구 정보 객체
      */
     @ResponseBody
     @GetMapping("favorite")
-    public List<MemberDTO> selectMyFavoriteList(@RequestParam String memberId) {
-        return myFriendService.selectMyFavoriteList(memberId);
+    public List<MemberDTO> selectMyFavoriteList(@AuthenticationPrincipal AuthenticatedUser user) {
+        return myFriendService.selectMyFavoriteList(user.getId());
     }
 
     /**
@@ -74,16 +76,16 @@ public class MyFriendController {
     /**
      * 내 친구 신청 목록 페이지 이동
      * @param model 모델 객체
-     * @param memberId 로그인한 회원
+     * @param user 로그인한 회원 객체
      * @param dto 검색 요청 객체
      * @return 내 친구 신청 목록 페이지 html
      */
     @GetMapping("request")
-    public String selectMyFriendRequestList(Model model, @RequestParam String memberId, @ModelAttribute SearchRequestDTO dto) {
+    public String selectMyFriendRequestList(Model model, @AuthenticationPrincipal AuthenticatedUser user, @ModelAttribute SearchRequestDTO dto) {
         // dto 에 pageSize 셋팅
         dto.setPageSize(pageSize);
 
-        Page<FriendDTO> myFriendRequestList = myFriendService.selectMyFriendRequestList(dto, memberId);
+        Page<FriendDTO> myFriendRequestList = myFriendService.selectMyFriendRequestList(dto, user.getId());
         model.addAttribute("friendRequestList", myFriendRequestList);
         model.addAttribute("page", dto.getPage());
         model.addAttribute("linkSize", linkSize);
@@ -92,13 +94,13 @@ public class MyFriendController {
 
     /**
      * 친구 관계 추가 (친구 신청시)
-     * @param memberId 친구추가 신청회원
+     * @param user 로그인한 회원 객체
      * @param friendId 친구추가 대상회원
      */
     @ResponseBody
-    @PostMapping
-    public void insertFriend(@RequestParam String memberId, @RequestParam String friendId) {
-        myFriendService.insertFriend(memberId, friendId);
+    @PostMapping("{friendId}")
+    public void insertFriend(@AuthenticationPrincipal AuthenticatedUser user, @PathVariable String friendId) {
+        myFriendService.insertFriend(user.getId(), friendId);
     }
 
     /**
