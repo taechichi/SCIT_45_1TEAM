@@ -1,10 +1,8 @@
 package com.scit.proj.scitsainanguide.controller.admin;
 
 import com.scit.proj.scitsainanguide.domain.dto.MarkerBoardDTO;
-import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.service.admin.AdminBoardService;
-import com.scit.proj.scitsainanguide.service.admin.AdminMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,7 +41,7 @@ public class AdminBoardController {
         model.addAttribute("linkSize", linkSize);
         model.addAttribute("searchType", dto.getSearchType());
         model.addAttribute("searchWord", dto.getSearchWord());
-        return "admin/boardList";
+        return "admin/board/boardList";
     }
 
     /**
@@ -56,7 +54,7 @@ public class AdminBoardController {
     public String selectBoard(@PathVariable Integer boardId, Model model) {
         MarkerBoardDTO deletedBaord = adminBoardService.selectDeletedBoard(boardId);
         model.addAttribute("deletedBoard", deletedBaord);
-        return "admin/boardDetail";
+        return "admin/board/boardDetail";
     }
 
     /**
