@@ -19,13 +19,13 @@
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable">
                     <thead>
-                    <tr>
-                        <th th:text="#{admin.board.column.memberId}"></th>
-                        <th th:text="#{admin.board.column.markerNm}"></th>
-                        <th th:text="#{admin.board.column.createDt}"></th>
-                        <th th:text="#{admin.board.column.deleteReason}"></th>
-                        <th th:text="#{admin.board.column.deleteDt}"></th>
-                    </tr>
+                        <tr>
+                            <th th:text="#{admin.board.column.memberId}"></th>
+                            <th th:text="#{admin.board.column.markerNm}"></th>
+                            <th th:text="#{admin.board.column.createDt}"></th>
+                            <th th:text="#{admin.board.column.deleteReason}"></th>
+                            <th th:text="#{admin.board.column.deleteDt}"></th>
+                        </tr>
                     </thead>
                     <tbody th:each="deletedBoard : ${deletedBoardList}" th:object="${deletedBoard}">
                         <tr>
@@ -54,7 +54,7 @@
                     <a th:if="${deletedBoardList.hasNext()}" th:href="|javascript:pagingFormSubmit(${deletedBoardList.getNumber()}+2)|"> ▶</a>
                     <!-- 검색 폼 -->
                     <div class="searchForm-container">
-                        <form id="pagingForm" th:action="@{/admin/board}" method="get">
+                        <form id="pagingForm" th:action="@{/templates/admin/board}" method="get">
                             <input type="hidden" name="page" id="page" />
                             <select id="type" name="searchType">
                                 <option value="memberId" th:text="#{admin.board.searchType.memberId}"
