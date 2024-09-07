@@ -72,6 +72,9 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
         return new PageImpl<>(tempMarkerFavoritesDTOList, pageable, total);
     }
 
+    // 5. 마커 목록 검색 (장소 이름 / 분류 / 별칭)
+    // 7. 마커 목록을 정렬한다. (기본: 거리 오름차순)
+    // 8. 마커 목록 정렬 기준을 선택해, 해당 마커를 출력한다. (등록 날짜 내림차순, 거리 오름차순, 이름 오름차순)
 
 
 
