@@ -39,18 +39,10 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
-    // ===== Without paging list ======
-    public List<MarkerFavoritesDTO> selectAllMarkerFavoritesDTO_NoPaging(String memberId) {
-        // 리스트업
-        List<MarkerFavoritesEntity> markerFavoritesEntityList = queryFactory.selectFrom(markerFavoritesEntity)
-                .fetch();
 
-        return markerFavoritesEntityList.stream()
-                .map(this::convertToMarkerFavoritesDTO)
-                .toList();
-    }
 
     // ===== with paging list =====
+    // ===== View All list =====
     public Page<MarkerFavoritesDTO> selectMarkerFavoritesList(SearchRequestDTO dto, String memberId) {
         // PageRequest 객체를 생성하여 페이지 번호와 페이지 크기 설정
         Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPageSize());
@@ -78,6 +70,24 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
                 .toList();
 
         return new PageImpl<>(tempMarkerFavoritesDTOList, pageable, total);
+    }
+
+
+
+
+
+
+
+
+    // ===== Without paging list ======
+    public List<MarkerFavoritesDTO> selectAllMarkerFavoritesDTO_NoPaging(String memberId) {
+        // 리스트업
+        List<MarkerFavoritesEntity> markerFavoritesEntityList = queryFactory.selectFrom(markerFavoritesEntity)
+                .fetch();
+
+        return markerFavoritesEntityList.stream()
+                .map(this::convertToMarkerFavoritesDTO)
+                .toList();
     }
 
     private MarkerFavoritesDTO convertToMarkerFavoritesDTO(MarkerFavoritesEntity markerFavoritesEntity) {
