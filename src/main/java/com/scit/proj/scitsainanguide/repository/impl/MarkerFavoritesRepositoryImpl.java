@@ -2,6 +2,9 @@ package com.scit.proj.scitsainanguide.repository.impl;
 
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.sql.SQLExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.scit.proj.scitsainanguide.domain.dto.MarkerFavoritesDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
@@ -73,7 +76,6 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
     }
 
     // 장소 이름, 별칭 검색창에 누를때마다 호출해서 가져오도록
-    //
     public Page<MarkerFavoritesDTO> selectMarkerFavoriteBySearchAndFilter(SearchRequestDTO dto, String memberId) {
         boolean isHospital = dto.getFilter().equals("hospital");
         boolean isShelter = dto.getFilter().equals("shelter");
@@ -82,16 +84,23 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
 
         // QueryDSL의 동적 쿼리 생성을 위한 조건 빌더
         BooleanBuilder whereClause = new BooleanBuilder();
+        BooleanBuilder orderByClause = new BooleanBuilder();
+
         whereClause.and(markerFavoritesEntity.member.memberId.eq(memberId));
 
+
+        // hospital 필터(filter) 눌렀을 때,
         if(isHospital){
             whereClause.and(markerFavoritesEntity.hospital.hospitalId.isNotEmpty());
         }
 
+        // shelter 필터(filter)눌렀을 때,
         if(isShelter){
             whereClause.and(markerFavoritesEntity.shelter.shelterId.isNotNull());
         }
 
+
+        // 이름(searchWord)
         if(!Objects.equals(dto.getSearchWord(), "")) {
             if(isHospital) {
                 whereClause.and(markerFavoritesEntity.hospital.hospitalName.contains(dto.getSearchWord()))
@@ -107,7 +116,18 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
         // 리스트 업
         List<MarkerFavoritesEntity> markerFavoritesEntityList = queryFactory.selectFrom(markerFavoritesEntity)
                 .where(whereClause)
-                .orderBy(markerFavoritesEntity.favoriteId.desc())
+                // default 거리 기준으로 정렬, 이름 오름차순
+                .orderBy(
+                        new CaseBuilder()
+                                .when(markerFavoritesEntity.nickname.isNotEmpty())
+                                .then(markerFavoritesEntity.nickname)
+                                .otherwise(
+                                        // 아래 표현은
+                                        // COALESCE(hospital_name, shelter_name) 이라는 쿼리를 생성함!
+                                        Expressions.stringTemplate("COALESCE({0}, {1})",
+                                                markerFavoritesEntity.hospital.hospitalName,
+                                                markerFavoritesEntity.shelter.shelterName)
+                                ).asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

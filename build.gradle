@@ -40,14 +40,20 @@ dependencies {
     //Querydsl 추가
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
-    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+    /*annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"*/
+
+    // Querydsl SQL 추가 (코어 SQL 기능만 추가)
+    implementation 'com.querydsl:querydsl-sql:5.0.0'
+    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
 
     // speechToText
     implementation platform('com.google.cloud:libraries-bom:26.1.1')
     implementation 'com.google.cloud:google-cloud-speech'
     // 번역
     implementation 'com.google.cloud:google-cloud-translate:2.0.0'
+
 }
 
 tasks.named('test') {
