@@ -2,11 +2,13 @@ package com.scit.proj.scitsainanguide.controller.myPage;
 
 import com.scit.proj.scitsainanguide.domain.dto.MessageDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
+import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.myPage.MyMessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,16 +31,16 @@ public class MyMessageController {
     /**
      * 내 쪽지 목록 조회 페이지 이동
      * @param model 모델 객체
-     * @param memberId 로그인 한 아이디
+     * @param user 로그인한 회원 객체
      * @param dto 검색 객체
      * @return 내 쪽지 목록 조회 페이지 html
      */
     @GetMapping
-    public String selectMyMessageList(Model model, @RequestParam String memberId, @ModelAttribute SearchRequestDTO dto) {
+    public String selectMyMessageList(Model model, @AuthenticationPrincipal AuthenticatedUser user, @ModelAttribute SearchRequestDTO dto) {
         // pageSize 세팅
         dto.setPageSize(pageSize);
 
-        Page<MessageDTO> messageList = myMessageService.selectMyMessageList(dto, memberId);
+        Page<MessageDTO> messageList = myMessageService.selectMyMessageList(dto, user.getId());
         model.addAttribute("messageList", messageList);
         model.addAttribute("page", dto.getPage());
         model.addAttribute("linkSize", linkSize);
@@ -49,24 +51,24 @@ public class MyMessageController {
 
     /**
      * 내 쪽지 다중 삭제
-     * @param memberId 로그인 한 아이디
+     * @param user 로그인한 회원 객체
      * @param messageIdList 삭제대상 쪽지 아이디 목록
      */
     @ResponseBody
     @DeleteMapping("list")
-    public void deleteMyMessageList(@RequestParam String memberId, @RequestParam List<Integer> messageIdList) {
-        myMessageService.deleteMyMessageList(memberId, messageIdList);
+    public void deleteMyMessageList(@AuthenticationPrincipal AuthenticatedUser user, @RequestParam List<Integer> messageIdList) {
+        myMessageService.deleteMyMessageList(user.getId(), messageIdList);
     }
 
     /**
      * 내 쪽지 삭제
-     * @param memberId 로그인 한 아이디
+     * @param user 로그인한 회원 객체
      * @param messageId 삭제대상 쪽지 아이디
      */
     @ResponseBody
     @DeleteMapping("{messageId}")
-    public void deleteMyMessage(@RequestParam String memberId, @PathVariable Integer messageId) {
-        myMessageService.deleteMyMessage(memberId, messageId);
+    public void deleteMyMessage(@AuthenticationPrincipal AuthenticatedUser user, @PathVariable Integer messageId) {
+        myMessageService.deleteMyMessage(user.getId(), messageId);
     }
 
     /**
