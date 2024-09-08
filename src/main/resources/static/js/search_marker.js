@@ -92,6 +92,33 @@
         isPanelVisible = true;
     }
 
+    // API로부터 병원 데이터를 가져오는 함수
+    function fetchHospitalData() {
+        fetch('/api/hospitals') // 병원 정보를 가져오는 API로 GET 요청
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    data.forEach(hospital => {
+                        // 병원 데이터를 기반으로 마커 생성
+                        let place = {
+                            place_id: hospital.hospitalId,
+                            geometry: {
+                                location: { lat: parseFloat(hospital.latitude), lng: parseFloat(hospital.longitude) }
+                            },
+                            name: hospital.hospitalName,
+                            photos: null // 병원 이미지가 없을 경우 null로 설정
+                        };
+                        createMarker(map, place);  // 기존 createMarker 함수를 사용하여 마커 생성
+                    });
+                } else {
+                    console.error('No hospital data found');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching hospital data:', error);
+            });
+    }
+
 
     //맵 생성
     function initMap() {
@@ -105,8 +132,6 @@
         myLong = position.coords.longitude;
 
         let centerPosition = {lat: myLat, lng: myLong};
-
-        // id가 map인 html 요소에 새로운 map 객체 생성
         map = new google.maps.Map(document.getElementById('map'), {
             center: centerPosition,
             zoom: 18,
@@ -143,7 +168,6 @@
         // 엔터를 누르는 등 폼을 제출하는 이벤트가 발생했을 시
         document.querySelector('#search_form').addEventListener('submit', function(event) {
             event.preventDefault(); // 폼 제출 시 페이지 새로고침 방지
-            // 여기에서 검색 작업 수행
             google.maps.event.trigger(searchBox, 'places_changed'); // 검색 트리거 아래의 listener(places_changed)를 호출
         });
 
@@ -151,7 +175,6 @@
         searchBox.addListener('places_changed', () => {
             //places_changed는 검색창에 엔터나 목록에서 장소 선택시 이벤트 발생
             const places = searchBox.getPlaces();       //places에는 검색장소 목록이 배열로 저장됨
-
             if (places.length == 0) {                   //places.length는 검색결과로 반환된 장소의 수
                 return;                                 //검색장소가 0개 일 경우 return을 통해 아래 함수는 실행이 안된다.
             }

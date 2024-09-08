@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -44,7 +45,7 @@ public class HospitalService {
 
             HospitalEntity hospitalEntity = HospitalEntity.builder()
                     .hospitalId(node.path("place_id").asText())
-                    .hospitalName(node.path("name").asText())
+                    .hospitalName(node.path("hospital_name").asText())
                     .latitude(node.path("latitude").asText())
                     .longitude(node.path("longitude").asText())
                     .langCd("ja") // 고정 값
@@ -53,4 +54,10 @@ public class HospitalService {
             hospitalRepository.save(hospitalEntity);
         }
     }
+
+    public List<HospitalEntity> getAllHospitals() {
+
+        return hospitalRepository.findAll();
+    }
+
 }
