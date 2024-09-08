@@ -28,6 +28,10 @@
                         <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
                     </tr>
                     <tr>
+                        <th th:text="#{admin.board.column.content}"></th>
+                        <td th:text="*{contents}"></td>
+                    </tr>
+                    <tr>
                         <th th:text="#{admin.board.column.deleteReason}"></th>
                         <td th:text="*{deleteReason}"></td>
                     </tr>
