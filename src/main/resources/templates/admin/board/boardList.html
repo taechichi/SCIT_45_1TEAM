@@ -44,8 +44,12 @@
                             <tbody th:each="deletedBoard : ${deletedBoardList}" th:object="${deletedBoard}">
                             <tr>
                                 <td th:text="*{memberId}"></td>
-                                <td th:if="*{hospitalName != null}" th:text="*{hospitalName}"></td>
-                                <td th:if="*{shelterName != null}" th:text="*{shelterName}"></td>
+                                <td th:if="*{hospitalName != null}">
+                                    <a th:href="@{/admin/board/{boardId}(boardId=*{boardId})}" th:text="*{hospitalName}"></a>
+                                </td>
+                                <td th:if="*{shelterName != null}">
+                                    <a th:href="@{/admin/board/{boardId}(boardId=*{boardId})}" th:text="*{shelterName}"></a>
+                                </td>
                                 <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
                                 <td th:text="*{deleteReason}"></td>
                                 <td th:text="*{#temporals.format(deleteDt, 'yyyy.MM.dd HH:mm')}"></td>

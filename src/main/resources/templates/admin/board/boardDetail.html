@@ -39,10 +39,18 @@
                         <th th:text="#{admin.board.column.deleteDt}"></th>
                         <td th:text="*{#temporals.format(deleteDt, 'yyyy.MM.dd HH:mm')}"></td>
                     </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button type="button" id="updateBoardBtn" th:data-id="*{boardId}" th:text="#{admin.board.button.undoDelete}"></button>
+                            <button type="button" id="viewBoardListBtn" th:text="#{board.button.toList}"></button>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 </body>
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/js/admin/boardDetail.js}"></script>
 </html>
