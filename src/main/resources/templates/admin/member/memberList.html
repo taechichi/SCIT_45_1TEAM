@@ -34,53 +34,50 @@
                         <table class="table table-bordered" id="dataTable">
                             <thead>
                             <tr>
-                                <th th:text="#{admin.board.column.memberId}"></th>
-                                <th th:text="#{admin.board.column.markerNm}"></th>
-                                <th th:text="#{admin.board.column.createDt}"></th>
-                                <th th:text="#{admin.board.column.deleteReason}"></th>
-                                <th th:text="#{admin.board.column.deleteDt}"></th>
+                                <th th:text="#{admin.member.column.memberId}"></th>
+                                <th th:text="#{admin.member.column.nickname}"></th>
+                                <th th:text="#{admin.member.column.email}"></th>
+                                <th th:text="#{admin.member.column.gender}"></th>
+                                <th th:text="#{admin.member.column.nationality}"></th>
                             </tr>
                             </thead>
-                            <tbody th:each="deletedBoard : ${deletedBoardList}" th:object="${deletedBoard}">
+                            <tbody th:each="member : ${memberList}" th:object="${member}">
                             <tr>
                                 <td th:text="*{memberId}"></td>
-                                <td th:if="*{hospitalName != null}">
-                                    <a th:href="@{/admin/board/{boardId}(boardId=*{boardId})}" th:text="*{hospitalName}"></a>
-                                </td>
-                                <td th:if="*{shelterName != null}">
-                                    <a th:href="@{/admin/board/{boardId}(boardId=*{boardId})}" th:text="*{shelterName}"></a>
-                                </td>
-                                <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
-                                <td th:text="*{deleteReason}"></td>
-                                <td th:text="*{#temporals.format(deleteDt, 'yyyy.MM.dd HH:mm')}"></td>
+                                <td th:text="*{nickname}"></td>
+                                <td th:text="*{email}"></td>
+                                <td th:text="*{gender}"></td>
+                                <td th:text="*{nationality}"></td>
                             </tr>
                             </tbody>
                         </table>
                         <div id="navigator">
                             <!-- 페이지 번호 navigator -->
-                            <a th:if="${deletedBoardList.hasPrevious()}"
-                               th:href="|javascript:pagingFormSubmit(${deletedBoardList.getNumber()})|">◀ </a>
-                            <span th:if="${deletedBoardList.getTotalPages() > 0}"
+                            <a th:if="${memberList.hasPrevious()}"
+                               th:href="|javascript:pagingFormSubmit(${memberList.getNumber()})|">◀ </a>
+                            <span th:if="${memberList.getTotalPages() > 0}"
                                   th:each="counter : ${#numbers.sequence((page - 2 < 1 ? 1
-                                                    : (page + 2 > deletedBoardList.getTotalPages() ? deletedBoardList.getTotalPages() - 4
+                                                    : (page + 2 > memberList.getTotalPages() ? memberList.getTotalPages() - 4
                                                     : page - 2)),
-                                                    (page + 2 > deletedBoardList.getTotalPages() ? deletedBoardList.getTotalPages()
+                                                    (page + 2 > memberList.getTotalPages() ? memberList.getTotalPages()
                                                     : (page - 2 < 1 ? 5 : page + 2)))}">
                         <th:block th:if="${counter == page}"><b></th:block>
                             <a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
                         <th:block th:if="${counter == page}"></b></th:block>
                     </span>
-                            <a th:if="${deletedBoardList.hasNext()}"
-                               th:href="|javascript:pagingFormSubmit(${deletedBoardList.getNumber()}+2)|"> ▶</a>
+                            <a th:if="${memberList.hasNext()}"
+                               th:href="|javascript:pagingFormSubmit(${memberList.getNumber()}+2)|"> ▶</a>
                             <!-- 검색 폼 -->
                             <div class="searchForm-container">
-                                <form id="pagingForm" th:action="@{/admin/board}" method="get">
+                                <form id="pagingForm" th:action="@{/admin/member}" method="get">
                                     <input type="hidden" name="page" id="page"/>
                                     <select id="type" name="searchType">
-                                        <option value="memberId" th:text="#{admin.board.searchType.memberId}"
+                                        <option value="memberId" th:text="#{admin.member.searchType.memberId}"
                                                 th:selected="${searchType == 'memberId'}">/option>
-                                        <option value="deleteReason" th:text="#{admin.board.searchType.deleteReason}"
-                                                th:selected="${searchType == 'deleteReason'}"></option>
+                                        <option value="nickname" th:text="#{admin.member.searchType.nickname}"
+                                                th:selected="${searchType == 'nickname'}"></option>
+                                        <option value="email" th:text="#{admin.member.searchType.email}"
+                                                th:selected="${searchType == 'email'}"></option>
                                     </select>
                                     <input type="text" name="searchWord" th:value="${searchWord}"/>
                                     <input type="submit" onclick="pagingFormSubmit(1)" value="검색"/>
@@ -96,7 +93,6 @@
     </div>
 
 </div>
-<!-- End of Page Wrapper -->
 </body>
 <!-- 게시판 페이지에 필요한 script 모음 -->
 <!-- Bootstrap core JavaScript-->
