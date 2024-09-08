@@ -38,6 +38,8 @@ CREATE TABLE hospital
     PRIMARY KEY (hospital_id)
 );
 
+drop table hospital;
+
 CREATE TABLE shelter
 (
     shelter_id         INTEGER     NOT NULL AUTO_INCREMENT,

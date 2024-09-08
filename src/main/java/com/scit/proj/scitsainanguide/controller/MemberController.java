@@ -1,11 +1,13 @@
 package com.scit.proj.scitsainanguide.controller;
 
 import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
+import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -62,15 +64,15 @@ public class MemberController {
 
     /**
      *
-     * @param memberId 로그인 한 사용자 아이디
+     * @param user 로그인 한 사용자 아이디
      * @param response  응답객체
      * @throws IOException
      */
 
     @GetMapping("download")
-    public void download(@RequestParam("memberId") String memberId
+    public void download(@AuthenticationPrincipal AuthenticatedUser user
             , HttpServletResponse response) throws IOException {
-        memberService.download(memberId, uploadPath, response);
+        memberService.download(user.getId(), uploadPath, response);
     }
 
 
