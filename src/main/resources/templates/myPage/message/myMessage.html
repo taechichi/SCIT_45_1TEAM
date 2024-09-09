@@ -42,7 +42,9 @@
                             <tbody th:each="message : ${messageList}" th:object="${message}">
                             <tr>
                                 <td th:text="*{senderId}"></td>
-                                <td th:text="*{content}"></td>
+                                <td>
+                                    <a th:href="@{/my/message/{messageId}(messageId=*{messageId})}" th:text="*{content}"></a>
+                                </td>
                                 <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
                             </tr>
                             </tbody>

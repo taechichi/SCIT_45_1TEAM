@@ -46,7 +46,7 @@ public class MyMessageController {
         model.addAttribute("linkSize", linkSize);
         model.addAttribute("searchType", dto.getSearchType());
         model.addAttribute("searchWord", dto.getSearchWord());
-        return "myPage/myMessage";
+        return "myPage/message/myMessage";
     }
 
     /**
@@ -91,6 +91,6 @@ public class MyMessageController {
     public String selectMyMessage(Model model, @PathVariable Integer messageId) {
         MessageDTO message = myMessageService.selectMyMessage(messageId);
         model.addAttribute("message", message);
-        return "myPage/messageDetail";
+        return "myPage/message/messageDetail";
     }
 }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">테이블 이름을 여기에</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable">
+                <tbody th:object="${message}">
+                <tr>
+                    <th th:text="#{board.column.memberId}"></th>
+                    <td th:text="*{senderId}"></td>
+                </tr>
+                <tr>
+                    <th th:text="#{board.column.createDt}"></th>
+                    <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
+                </tr>
+                <tr>
+                    <th th:text="#{admin.board.column.content}"></th>
+                    <td th:text="*{content}"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button type="button" id="viewMessageListBtn" th:text="#{board.button.toList}"></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/js/myPage/messageDetail.js}"></script>
+</html>
