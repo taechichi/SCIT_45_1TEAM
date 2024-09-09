@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>회원 목록</title>
+    <title>Title</title>
     <!-- 게시판 페이지에 필요한 link 태그 모음 -->
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
     <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
@@ -33,57 +33,57 @@
                     <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable">
                             <thead>
-                            <tr>
-                                <th th:text="#{board.column.memberId}"></th>
-                                <th th:text="#{admin.board.column.markerNm}"></th>
-                                <th th:text="#{board.column.createDt}"></th>
-                                <th th:text="#{admin.board.column.deleteReason}"></th>
-                                <th th:text="#{admin.board.column.deleteDt}"></th>
-                            </tr>
+                                <tr>
+                                    <th th:text="#{board.column.memberId}"></th>
+                                    <th th:text="#{my.message.column.content}"></th>
+                                    <th th:text="#{board.column.createDt}"></th>
+                                    <th>
+                                        <input type="checkbox" id="selectAll">
+                                    </th>
+                                </tr>
                             </thead>
-                            <tbody th:each="deletedBoard : ${deletedBoardList}" th:object="${deletedBoard}">
-                            <tr>
-                                <td th:text="*{memberId}"></td>
-                                <td th:if="*{hospitalName != null}">
-                                    <a th:href="@{/admin/board/{boardId}(boardId=*{boardId})}" th:text="*{hospitalName}"></a>
-                                </td>
-                                <td th:if="*{shelterName != null}">
-                                    <a th:href="@{/admin/board/{boardId}(boardId=*{boardId})}" th:text="*{shelterName}"></a>
-                                </td>
-                                <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
-                                <td th:text="*{deleteReason}"></td>
-                                <td th:text="*{#temporals.format(deleteDt, 'yyyy.MM.dd HH:mm')}"></td>
-                            </tr>
+                            <tbody th:each="message : ${messageList}" th:object="${message}">
+                                <tr>
+                                    <td th:text="*{senderId}"></td>
+                                    <td>
+                                        <a th:href="@{/my/message/{messageId}(messageId=*{messageId})}" th:text="*{content}"></a>
+                                    </td>
+                                    <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
+                                    <td>
+                                        <input type="checkbox" class="messageCheckbox" name="messageIdList" th:value="*{messageId}">
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                         <div id="navigator">
                             <!-- 페이지 번호 navigator -->
-                            <a th:if="${deletedBoardList.hasPrevious()}"
-                               th:href="|javascript:pagingFormSubmit(${deletedBoardList.getNumber()})|">◀ </a>
-                            <span th:if="${deletedBoardList.getTotalPages() > 0}"
+                            <a th:if="${messageList.hasPrevious()}"
+                               th:href="|javascript:pagingFormSubmit(${messageList.getNumber()})|">◀ </a>
+                            <span th:if="${messageList.getTotalPages() > 0}"
                                   th:each="counter : ${#numbers.sequence((page - 2 < 1 ? 1
-                                                    : (page + 2 > deletedBoardList.getTotalPages() ? deletedBoardList.getTotalPages() - 4
+                                                    : (page + 2 > messageList.getTotalPages() ? messageList.getTotalPages() - 4
                                                     : page - 2)),
-                                                    (page + 2 > deletedBoardList.getTotalPages() ? deletedBoardList.getTotalPages()
+                                                    (page + 2 > messageList.getTotalPages() ? messageList.getTotalPages()
                                                     : (page - 2 < 1 ? 5 : page + 2)))}">
                         <th:block th:if="${counter == page}"><b></th:block>
                             <a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
                         <th:block th:if="${counter == page}"></b></th:block>
                     </span>
-                            <a th:if="${deletedBoardList.hasNext()}"
-                               th:href="|javascript:pagingFormSubmit(${deletedBoardList.getNumber()}+2)|"> ▶</a>
+                            <a th:if="${messageList.hasNext()}"
+                               th:href="|javascript:pagingFormSubmit(${messageList.getNumber()}+2)|"> ▶</a>
                             <!-- 검색 폼 -->
                             <div class="searchForm-container">
-                                <form id="pagingForm" th:action="@{/admin/board}" method="get">
+                                <form id="pagingForm" th:action="@{/my/message}" method="get">
                                     <input type="hidden" name="page" id="page"/>
                                     <select id="type" name="searchType">
-                                        <option value="memberId" th:text="#{board.searchType.memberId}"
-                                                th:selected="${searchType == 'memberId'}"></option>
-                                        <option value="deleteReason" th:text="#{admin.board.searchType.deleteReason}"
-                                                th:selected="${searchType == 'deleteReason'}"></option>
+                                        <option value="senderId" th:text="#{board.searchType.memberId}"
+                                                th:selected="${searchType == 'senderId'}">/option>
+                                        <option value="content" th:text="#{my.message.searchType.content}"
+                                                th:selected="${searchType == 'content'}"></option>
                                     </select>
                                     <input type="text" name="searchWord" th:value="${searchWord}"/>
                                     <input type="submit" onclick="pagingFormSubmit(1)" th:value="#{board.button.search}"/>
+                                    <input type="button" id="deleteMessageBtn" th:value="#{board.button.delete}">
                                 </form>
                             </div>
                         </div>
@@ -111,4 +111,8 @@ z
 
 <!-- 페이징 기능을 위한 js -->
 <script th:src="@{/js/paging.js}"></script>
+
+<!-- Custom js -->
+<script th:src="@{/js/myPage/myMessage.js}"></script>
+</body>
 </html>

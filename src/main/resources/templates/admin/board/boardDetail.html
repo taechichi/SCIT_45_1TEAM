@@ -15,7 +15,7 @@
             <table class="table table-bordered" id="dataTable">
                 <tbody th:object="${deletedBoard}">
                     <tr>
-                        <th th:text="#{admin.board.column.memberId}"></th>
+                        <th th:text="#{board.column.memberId}"></th>
                         <td th:text="*{memberId}"></td>
                     </tr>
                     <tr>
@@ -24,7 +24,7 @@
                         <td th:if="*{shelterName != null}" th:text="*{shelterName}"></td>
                     </tr>
                     <tr>
-                        <th th:text="#{admin.board.column.createDt}"></th>
+                        <th th:text="#{board.column.createDt}"></th>
                         <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
                     </tr>
                     <tr>
