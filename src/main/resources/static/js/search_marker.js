@@ -17,7 +17,7 @@
     let departLong;
     let departmentMarker;
 
-    //??     let currentMarker;
+    let currentMarker;
 
     //해시 부분을 받아 placeId를 추출
     function getLatLngFromUrl() {
@@ -46,13 +46,11 @@
                 console.error('Place details request failed');
             }
         });
-        // 현위치 바운스 애니메이션 설정
-        myMarker.setAnimation(google.maps.Animation.BOUNCE);
     }
 
 
     //마커생성 함수
-    function createMarker(map, place, visible=false){
+    function createMarker(map, place, visible=false, type = "place"){
         let marker = new google.maps.Marker({
             placeId: place.place_id,
             map: map,
@@ -60,6 +58,7 @@
             title: place.name,
             placePhoto: place.photos ? place.photos[0].getUrl() : ""
         });
+
 
         //마커 클릭 이벤트
         google.maps.event.addListener(marker, 'click', function (){
@@ -119,7 +118,7 @@
 
         const shareId = getLatLngFromUrl();
         if(shareId){
-            alert(shareId);
+            //alert(shareId);
             searchPlaceByPlaceId(shareId);
         }
 
@@ -158,10 +157,6 @@
                 return;                                 //검색장소가 0개 일 경우 return을 통해 아래 함수는 실행이 안된다.
             }
             alert("result"+places[0].name)              //검색장소의 첫번째로 나오는 장소 알림
-
-            // // 전체 장소 이름을 알림으로 띄우기
-            // let placeNames = places.map(place => place.name).join(", ");     //map메서드는 기존배열을 변경하지 않고 변환 값들로 이루어진 새배열을 반환
-            // alert("검색된 장소들: " + placeNames);                             //place는 배열의 장소객체 name은 장소객체의 속성 반환값은 장소의이름, 으로 배열반환
 
             //기존 마커 제거
             markers.forEach(marker => marker.setMap(null));    //markers배열에서 가져온 기존마커 null로 맵에서 삭제
@@ -360,9 +355,9 @@
                 const walkingInfoWindow = new google.maps.InfoWindow({
                     content: `
                     <div>
-                        <h4>도보 경로 정보</h4>
-                        <p>거리: ${walkingLeg.distance.text}</p>
-                        <p>소요 시간: ${walkingLeg.duration.text}</p>
+                        <h4 th:text="#{walkingRoot}">도보 경로 정보</h4>
+                        <p th:text="#{distance}">거리: ${walkingLeg.distance.text}</p>
+                        <p th:text="#{duration}">소요 시간: ${walkingLeg.duration.text}</p>
                     </div>
                 `
                 });
@@ -400,9 +395,9 @@
                 const bicyclingInfoWindow = new google.maps.InfoWindow({
                     content: `
                     <div>
-                        <h4>자전거 경로 정보</h4>
-                        <p>거리: ${bicyclingLeg.distance.text}</p>
-                        <p>소요 시간: ${bicyclingLeg.duration.text}</p>
+                        <h4 th:text="#{bicycleRoot}">자전거 경로 정보</h4>
+                        <p th:text="#{distance}">거리: ${bicyclingLeg.distance.text}</p>
+                        <p th:text="#{duration}">소요 시간: ${bicyclingLeg.duration.text}</p>
                     </div>
                 `
                 });

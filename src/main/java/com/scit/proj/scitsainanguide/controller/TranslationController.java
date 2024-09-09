@@ -1,5 +1,6 @@
 package com.scit.proj.scitsainanguide.controller;
 
+import com.google.cloud.vision.v1.*;
 import com.google.protobuf.ByteString;
 import com.scit.proj.scitsainanguide.service.TranslationService;
 import lombok.Data;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +46,15 @@ public class TranslationController {
     @GetMapping("streamingToTranslate")
     public String streamingTrans(){
         return "translate/translateStreaming";
+    }
+
+    /**
+     * 홈화면에서 좌측 탭 메뉴 > TranaslateImage 버튼을 클릭하면 이동
+     * @return
+     */
+    @GetMapping("imageTranslate")
+    public String imageTranslate(){
+        return "translate/translateImage";
     }
 
     // 사용할 서비스 메서드
@@ -168,4 +179,39 @@ public class TranslationController {
         return translation.getTranslatedText();
     }
 
+    // 이미지 파일을 받아 텍스트를 추출하는 엔드포인트
+    @PostMapping("/uploadImage")
+    public List<String> handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
+        // 파일을 바이트 배열로 변환
+        ByteString imgBytes = ByteString.readFrom(file.getInputStream());
+
+        // Vision API 클라이언트 사용
+        try (ImageAnnotatorClient vision = ImageAnnotatorClient.create()) {
+
+            // Vision API에 전달할 이미지 객체 생성
+            Image img = Image.newBuilder().setContent(imgBytes).build();
+
+            // 텍스트 감지를 위한 요청 생성
+            Feature feat = Feature.newBuilder().setType(Feature.Type.TEXT_DETECTION).build();
+            AnnotateImageRequest request = AnnotateImageRequest.newBuilder()
+                    .addFeatures(feat)
+                    .setImage(img)
+                    .build();
+
+            // 요청을 Vision API로 전송하여 응답을 받음
+            AnnotateImageResponse response = vision.batchAnnotateImages(List.of(request)).getResponses(0);
+
+            // 텍스트 정보가 포함된 목록 생성
+            List<String> textList = new ArrayList<>();
+            response.getTextAnnotationsList().forEach(annotation -> textList.add(annotation.getDescription()));
+
+            // 오류가 있는 경우 예외 처리
+            if (response.hasError()) {
+                throw new IOException(
+                        String.format("Error: %s\n자세한 오류 정보는 다음을 참고하세요: https://cloud.google.com/apis/design/errors", response.getError().getMessage()));
+            }
+
+            return textList; // 추출된 텍스트 리스트 반환
+        }
+    }
 }

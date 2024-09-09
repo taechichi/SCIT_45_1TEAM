@@ -146,6 +146,13 @@
                     <span>StreamingToTranslate</span></a>
             </li>
 
+            <!-- Nav Item - Charts -->
+            <li class="nav-item">
+                <a class="nav-link" href="imageTranslate">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>TranslateImage</span></a>
+            </li>
+
 
             <!-- Nav Item - Tables -->
             <li class="nav-item">
@@ -171,13 +178,13 @@
 
         </div>
         <div>
-            <button id="shareBtn">공유</button>
+            <button id="shareBtn" th:text="#{share}">공유</button>
         </div>
         <!-- 출발 버튼 - 클릭 시 출발마커로 지정하는 함수 호출 -->
         <div id="departureB" class="col-lg-6 mb-4" style="display: inline-block; text-align: center; width: 150px; height: 20px;">
             <div class="card bg-primary text-white shadow">
                 <div class="card-body">
-                    <p>출발</p>
+                    <p th:text="#{departure}">출발</p>
                 </div>
             </div>
         </div>
@@ -185,7 +192,7 @@
         <div id="arrivalB" class="col-lg-6 mb-4" style="display: inline-block; text-align: center; width: 150px; height: 20px;">
             <div class="card bg-primary text-white shadow">
                 <div class="card-body">
-                    <p>도착</p>
+                    <p th:text="#{arrival}">도착</p>
                 </div>
             </div>
         </div>
