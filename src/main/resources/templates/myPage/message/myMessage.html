@@ -7,7 +7,7 @@
     <!-- 게시판 페이지에 필요한 link 태그 모음 -->
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
     <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
-    <!-- Custom styles for this template-->
+    <!-- Custom styles for this template -->
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
 </head>
 <body>
@@ -34,7 +34,7 @@
                         <table class="table table-bordered" id="dataTable">
                             <thead>
                                 <tr>
-                                    <th th:text="#{board.column.memberId}"></th>
+                                    <th colspan="2" th:text="#{board.column.memberId}"></th>
                                     <th th:text="#{my.message.column.content}"></th>
                                     <th th:text="#{board.column.createDt}"></th>
                                     <th>
@@ -44,6 +44,10 @@
                             </thead>
                             <tbody th:each="message : ${messageList}" th:object="${message}">
                                 <tr>
+                                    <td>
+                                        <img class="rounded-circle" alt="Profile Picture"
+                                             th:src="@{/member/download/{senderId}(senderId=*{senderId})}"/>
+                                    </td>
                                     <td th:text="*{senderId}"></td>
                                     <td>
                                         <a th:href="@{/my/message/{messageId}(messageId=*{messageId})}" th:text="*{content}"></a>
@@ -65,9 +69,9 @@
                                                     : page - 2)),
                                                     (page + 2 > messageList.getTotalPages() ? messageList.getTotalPages()
                                                     : (page - 2 < 1 ? 5 : page + 2)))}">
-                        <th:block th:if="${counter == page}"></th:block>
-                            <b><a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a></b>
-                        <th:block th:if="${counter == page}"></th:block>
+                        <th:block th:if="${counter == page}"><b></th:block>
+                            <a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
+                        <th:block th:if="${counter == page}"></b></th:block>
                     </span>
                             <a th:if="${messageList.hasNext()}"
                                th:href="|javascript:pagingFormSubmit(${messageList.getNumber()}+2)|"> ▶</a>
@@ -83,6 +87,7 @@
                                     </select>
                                     <input type="text" name="searchWord" th:value="${searchWord}"/>
                                     <input type="submit" onclick="pagingFormSubmit(1)" th:value="#{board.button.search}"/>
+                                    <input type="button" id="writeMessageBtn" th:value="#{my.message.button.write}">
                                     <input type="button" id="deleteMessageBtn" th:value="#{board.button.delete}">
                                 </form>
                             </div>
