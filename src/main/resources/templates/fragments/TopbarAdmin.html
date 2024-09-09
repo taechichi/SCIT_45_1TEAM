@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 <div th:fragment="TopbarAdmin">
   <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -118,7 +119,7 @@
           </h6>
           <a class="dropdown-item d-flex align-items-center" href="#">
             <div class="dropdown-list-image mr-3">
-              <img class="rounded-circle" th:src="|member/download?memberId=${#authentication.name}|" alt="Profile Picture" />
+              <img class="rounded-circle" th:src="@{/member/download}" alt="Profile Picture" />
               <div class="status-indicator bg-success"></div>
             </div>
             <div class="font-weight-bold">
@@ -129,7 +130,7 @@
           </a>
           <a class="dropdown-item d-flex align-items-center" href="#">
             <div class="dropdown-list-image mr-3">
-              <img class="rounded-circle" th:src="|member/download?memberId=${#authentication.name}|" alt="Profile Picture" />
+              <img class="rounded-circle" th:src="@{/member/download}" alt="Profile Picture" />
               <div class="status-indicator"></div>
             </div>
             <div>
@@ -140,7 +141,7 @@
           </a>
           <a class="dropdown-item d-flex align-items-center" href="#">
             <div class="dropdown-list-image mr-3">
-              <img class="rounded-circle" th:src="|member/download?memberId=${#authentication.name}|" alt="Profile Picture" />
+              <img class="rounded-circle" th:src="@{/member/download}" alt="Profile Picture" />
               <div class="status-indicator bg-warning"></div>
             </div>
             <div>
@@ -151,7 +152,7 @@
           </a>
           <a class="dropdown-item d-flex align-items-center" href="#">
             <div class="dropdown-list-image mr-3">
-              <img class="rounded-circle" th:src="|member/download?memberId=${#authentication.name}|" alt="Profile Picture" />
+              <img class="rounded-circle" th:src="@{/member/download}" alt="Profile Picture" />
               <div class="status-indicator bg-success"></div>
             </div>
             <div>
@@ -170,9 +171,9 @@
       <li class="nav-item dropdown no-arrow">
         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${member.nickname}"></span>
+          <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${#authentication.principal.nickname}"></span>
           <img class="img-profile rounded-circle"
-               th:src="|member/download?memberId=${#authentication.name}|" alt="Profile Picture" />
+               th:src="@{/member/download}" alt="Profile Picture" />
         </a>
         <!-- Dropdown - User Information -->
         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
