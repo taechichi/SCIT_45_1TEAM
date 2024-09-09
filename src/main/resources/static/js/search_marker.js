@@ -6,8 +6,8 @@
 
     let markers = [];                  //마커배열(places 검색을 통해 나온 마커들의 배열)
     let isPanelVisible = false;     //패널 상태 false
-    let currentMarker;
-    let shareUrl;
+
+    let shareUrl;   // 공유 Url
 
     let arrivalLat;     // 도착치 마커
     let arrivalLong;
@@ -17,7 +17,7 @@
     let departLong;
     let departmentMarker;
 
-    //??     let currentMarker;
+    let currentMarker;
 
     //해시 부분을 받아 placeId를 추출
     function getLatLngFromUrl() {
@@ -46,12 +46,11 @@
                 console.error('Place details request failed');
             }
         });
-        // 현위치 바운스 애니메이션 설정
-        myMarker.setAnimation(google.maps.Animation.BOUNCE);
     }
 
+
     //마커생성 함수
-    function createMarker(map, place, visible=false){
+    function createMarker(map, place, visible=false, type = "place"){
         let marker = new google.maps.Marker({
             placeId: place.place_id,
             map: map,
@@ -59,6 +58,7 @@
             title: place.name,
             placePhoto: place.photos ? place.photos[0].getUrl() : ""
         });
+
 
         //마커 클릭 이벤트
         google.maps.event.addListener(marker, 'click', function (){
@@ -92,33 +92,6 @@
         isPanelVisible = true;
     }
 
-    // API로부터 병원 데이터를 가져오는 함수
-    function fetchHospitalData() {
-        fetch('/api/hospitals') // 병원 정보를 가져오는 API로 GET 요청
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.length > 0) {
-                    data.forEach(hospital => {
-                        // 병원 데이터를 기반으로 마커 생성
-                        let place = {
-                            place_id: hospital.hospitalId,
-                            geometry: {
-                                location: { lat: parseFloat(hospital.latitude), lng: parseFloat(hospital.longitude) }
-                            },
-                            name: hospital.hospitalName,
-                            photos: null // 병원 이미지가 없을 경우 null로 설정
-                        };
-                        createMarker(map, place);  // 기존 createMarker 함수를 사용하여 마커 생성
-                    });
-                } else {
-                    console.error('No hospital data found');
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching hospital data:', error);
-            });
-    }
-
 
     //맵 생성
     function initMap() {
@@ -132,6 +105,8 @@
         myLong = position.coords.longitude;
 
         let centerPosition = {lat: myLat, lng: myLong};
+
+        // id가 map인 html 요소에 새로운 map 객체 생성
         map = new google.maps.Map(document.getElementById('map'), {
             center: centerPosition,
             zoom: 18,
@@ -143,6 +118,7 @@
 
         const shareId = getLatLngFromUrl();
         if(shareId){
+            //alert(shareId);
             searchPlaceByPlaceId(shareId);
         }
 
@@ -168,6 +144,7 @@
         // 엔터를 누르는 등 폼을 제출하는 이벤트가 발생했을 시
         document.querySelector('#search_form').addEventListener('submit', function(event) {
             event.preventDefault(); // 폼 제출 시 페이지 새로고침 방지
+            // 여기에서 검색 작업 수행
             google.maps.event.trigger(searchBox, 'places_changed'); // 검색 트리거 아래의 listener(places_changed)를 호출
         });
 
@@ -175,6 +152,7 @@
         searchBox.addListener('places_changed', () => {
             //places_changed는 검색창에 엔터나 목록에서 장소 선택시 이벤트 발생
             const places = searchBox.getPlaces();       //places에는 검색장소 목록이 배열로 저장됨
+
             if (places.length == 0) {                   //places.length는 검색결과로 반환된 장소의 수
                 return;                                 //검색장소가 0개 일 경우 return을 통해 아래 함수는 실행이 안된다.
             }
@@ -183,6 +161,17 @@
             //기존 마커 제거
             markers.forEach(marker => marker.setMap(null));    //markers배열에서 가져온 기존마커 null로 맵에서 삭제
             markers = [];   //마커 배열 초기화
+
+            // 지도의 경계를 받아 마커표시 시 지도 바깥이면 숨김
+            // const bounds = map.getBounds(); // 현재 지도 경계 가져오기
+            //
+            // markers.forEach(marker => {
+            //     if (bounds.contains(marker.getPosition())) {     //마커가 현재 경계 안에 있는지 확인
+            //         marker.setMap(map); // 경계 내에 있으면 표시
+            //     } else {
+            //         marker.setMap(null); // 경계 밖에 있으면 숨김
+            //     }
+            // });
 
             // 지도 중심과 마커를 새 장소로 이동
             const bounds = new google.maps.LatLngBounds();              //LatLngBounds는 지도의 경계를 얻는 객체 bounds 초기화
@@ -193,8 +182,7 @@
                 }
 
                 //검색된 장소 하나씩 마커생성
-                let marker = createMarker(map,place, false);
-                markers.push(marker);   //배열에 마커추가 나중에 배열마커를 삭제하기위함
+                createMarker(map, place, false);
 
                 //맵 클릭 이벤트 (패널정보 none)
                 google.maps.event.addListener(map,'click',function(){
@@ -205,7 +193,9 @@
                     }
                 });
 
-
+                // 새 마커를 생성하고 지도에 추가
+                let marker = createMarker(map,place, false);
+                markers.push(marker);   //배열에 마커추가
 
                 if (place.geometry.viewport) {              //해당장소가 viewport정보를 가지고 있을 시 (넓은 지역을 차지하는 곳)
                     bounds.union(place.geometry.viewport);  //bounds와 검색된 viewport값을 합쳐 합쳐진 지도 경계설정
@@ -365,9 +355,9 @@
                 const walkingInfoWindow = new google.maps.InfoWindow({
                     content: `
                     <div>
-                        <h4>도보 경로 정보</h4>
-                        <p>거리: ${walkingLeg.distance.text}</p>
-                        <p>소요 시간: ${walkingLeg.duration.text}</p>
+                        <h4 th:text="#{walkingRoot}">도보 경로 정보</h4>
+                        <p th:text="#{distance}">거리: ${walkingLeg.distance.text}</p>
+                        <p th:text="#{duration}">소요 시간: ${walkingLeg.duration.text}</p>
                     </div>
                 `
                 });
@@ -405,9 +395,9 @@
                 const bicyclingInfoWindow = new google.maps.InfoWindow({
                     content: `
                     <div>
-                        <h4>자전거 경로 정보</h4>
-                        <p>거리: ${bicyclingLeg.distance.text}</p>
-                        <p>소요 시간: ${bicyclingLeg.duration.text}</p>
+                        <h4 th:text="#{bicycleRoot}">자전거 경로 정보</h4>
+                        <p th:text="#{distance}">거리: ${bicyclingLeg.distance.text}</p>
+                        <p th:text="#{duration}">소요 시간: ${bicyclingLeg.duration.text}</p>
                     </div>
                 `
                 });

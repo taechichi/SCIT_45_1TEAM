@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 목록</title>
+</head>
+<body>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">테이블 이름을 여기에</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable">
+                <tbody th:object="${deletedBoard}">
+                    <tr>
+                        <th th:text="#{admin.board.column.memberId}"></th>
+                        <td th:text="*{memberId}"></td>
+                    </tr>
+                    <tr>
+                        <th th:text="#{admin.board.column.markerNm}"></th>
+                        <td th:if="*{hospitalName != null}" th:text="*{hospitalName}"></td>
+                        <td th:if="*{shelterName != null}" th:text="*{shelterName}"></td>
+                    </tr>
+                    <tr>
+                        <th th:text="#{admin.board.column.createDt}"></th>
+                        <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
+                    </tr>
+                    <tr>
+                        <th th:text="#{admin.board.column.content}"></th>
+                        <td th:text="*{contents}"></td>
+                    </tr>
+                    <tr>
+                        <th th:text="#{admin.board.column.deleteReason}"></th>
+                        <td th:text="*{deleteReason}"></td>
+                    </tr>
+                    <tr>
+                        <th th:text="#{admin.board.column.deleteDt}"></th>
+                        <td th:text="*{#temporals.format(deleteDt, 'yyyy.MM.dd HH:mm')}"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button type="button" id="updateBoardBtn" th:data-id="*{boardId}" th:text="#{admin.board.button.undoDelete}"></button>
+                            <button type="button" id="viewBoardListBtn" th:text="#{board.button.toList}"></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/js/admin/boardDetail.js}"></script>
+</html>

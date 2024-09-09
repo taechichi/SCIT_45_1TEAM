@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 목록</title>
+    <!-- 게시판 페이지에 필요한 link 태그 모음 -->
+    <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
+    <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
+    <!-- Custom styles for this template-->
+    <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
+</head>
+<body>
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <div th:insert="fragments/menuAdmin :: menuAdmin" id="menuAdmin"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div th:insert="fragments/TopbarAdmin :: TopbarAdmin" id="TopbarAdmin"></div>
+                    <h6 class="m-0 font-weight-bold text-primary">테이블 이름을 여기에</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable">
+                            <thead>
+                            <tr>
+                                <th th:text="#{admin.board.column.memberId}"></th>
+                                <th th:text="#{admin.board.column.markerNm}"></th>
+                                <th th:text="#{admin.board.column.createDt}"></th>
+                                <th th:text="#{admin.board.column.deleteReason}"></th>
+                                <th th:text="#{admin.board.column.deleteDt}"></th>
+                            </tr>
+                            </thead>
+                            <tbody th:each="deletedBoard : ${deletedBoardList}" th:object="${deletedBoard}">
+                            <tr>
+                                <td th:text="*{memberId}"></td>
+                                <td th:if="*{hospitalName != null}">
+                                    <a th:href="@{/admin/board/{boardId}(boardId=*{boardId})}" th:text="*{hospitalName}"></a>
+                                </td>
+                                <td th:if="*{shelterName != null}">
+                                    <a th:href="@{/admin/board/{boardId}(boardId=*{boardId})}" th:text="*{shelterName}"></a>
+                                </td>
+                                <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
+                                <td th:text="*{deleteReason}"></td>
+                                <td th:text="*{#temporals.format(deleteDt, 'yyyy.MM.dd HH:mm')}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div id="navigator">
+                            <!-- 페이지 번호 navigator -->
+                            <a th:if="${deletedBoardList.hasPrevious()}"
+                               th:href="|javascript:pagingFormSubmit(${deletedBoardList.getNumber()})|">◀ </a>
+                            <span th:if="${deletedBoardList.getTotalPages() > 0}"
+                                  th:each="counter : ${#numbers.sequence((page - 2 < 1 ? 1
+                                                    : (page + 2 > deletedBoardList.getTotalPages() ? deletedBoardList.getTotalPages() - 4
+                                                    : page - 2)),
+                                                    (page + 2 > deletedBoardList.getTotalPages() ? deletedBoardList.getTotalPages()
+                                                    : (page - 2 < 1 ? 5 : page + 2)))}">
+                        <th:block th:if="${counter == page}"><b></th:block>
+                            <a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
+                        <th:block th:if="${counter == page}"></b></th:block>
+                    </span>
+                            <a th:if="${deletedBoardList.hasNext()}"
+                               th:href="|javascript:pagingFormSubmit(${deletedBoardList.getNumber()}+2)|"> ▶</a>
+                            <!-- 검색 폼 -->
+                            <div class="searchForm-container">
+                                <form id="pagingForm" th:action="@{/admin/board}" method="get">
+                                    <input type="hidden" name="page" id="page"/>
+                                    <select id="type" name="searchType">
+                                        <option value="memberId" th:text="#{admin.board.searchType.memberId}"
+                                                th:selected="${searchType == 'memberId'}">/option>
+                                        <option value="deleteReason" th:text="#{admin.board.searchType.deleteReason}"
+                                                th:selected="${searchType == 'deleteReason'}"></option>
+                                    </select>
+                                    <input type="text" name="searchWord" th:value="${searchWord}"/>
+                                    <input type="submit" onclick="pagingFormSubmit(1)" value="검색"/>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End of Main Content -->
+        </div>
+        <!-- End of Content Wrapper -->
+    </div>
+
+</div>
+<!-- End of Page Wrapper -->
+</body>
+<!-- 게시판 페이지에 필요한 script 모음 -->
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.js}"></script>
+z
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.js}"></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/js/sb-admin-2.js}"></script>
+
+<!-- 페이징 기능을 위한 js -->
+<script th:src="@{/js/paging.js}"></script>
+</html>
