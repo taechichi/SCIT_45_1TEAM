@@ -56,7 +56,7 @@ public class MyMessageController {
      */
     @ResponseBody
     @DeleteMapping("list")
-    public void deleteMyMessageList(@AuthenticationPrincipal AuthenticatedUser user, @RequestParam List<Integer> messageIdList) {
+    public void deleteMyMessageList(@AuthenticationPrincipal AuthenticatedUser user, @RequestBody List<Integer> messageIdList) {
         myMessageService.deleteMyMessageList(user.getId(), messageIdList);
     }
 

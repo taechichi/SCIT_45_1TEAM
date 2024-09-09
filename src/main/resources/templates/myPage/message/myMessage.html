@@ -33,20 +33,26 @@
                     <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable">
                             <thead>
-                            <tr>
-                                <th th:text="#{board.column.memberId}"></th>
-                                <th th:text="#{my.message.column.content}"></th>
-                                <th th:text="#{board.column.createDt}"></th>
-                            </tr>
+                                <tr>
+                                    <th th:text="#{board.column.memberId}"></th>
+                                    <th th:text="#{my.message.column.content}"></th>
+                                    <th th:text="#{board.column.createDt}"></th>
+                                    <th>
+                                        <input type="checkbox" id="selectAll">
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody th:each="message : ${messageList}" th:object="${message}">
-                            <tr>
-                                <td th:text="*{senderId}"></td>
-                                <td>
-                                    <a th:href="@{/my/message/{messageId}(messageId=*{messageId})}" th:text="*{content}"></a>
-                                </td>
-                                <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
-                            </tr>
+                                <tr>
+                                    <td th:text="*{senderId}"></td>
+                                    <td>
+                                        <a th:href="@{/my/message/{messageId}(messageId=*{messageId})}" th:text="*{content}"></a>
+                                    </td>
+                                    <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
+                                    <td>
+                                        <input type="checkbox" class="messageCheckbox" name="messageIdList" th:value="*{messageId}">
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                         <div id="navigator">
@@ -76,7 +82,8 @@
                                                 th:selected="${searchType == 'content'}"></option>
                                     </select>
                                     <input type="text" name="searchWord" th:value="${searchWord}"/>
-                                    <input type="submit" onclick="pagingFormSubmit(1)" value="검색"/>
+                                    <input type="submit" onclick="pagingFormSubmit(1)" th:value="#{board.button.search}"/>
+                                    <input type="button" id="deleteMessageBtn" th:value="#{board.button.delete}">
                                 </form>
                             </div>
                         </div>
@@ -104,5 +111,8 @@ z
 
 <!-- 페이징 기능을 위한 js -->
 <script th:src="@{/js/paging.js}"></script>
+
+<!-- Custom js -->
+<script th:src="@{/js/myPage/myMessage.js}"></script>
 </body>
 </html>
