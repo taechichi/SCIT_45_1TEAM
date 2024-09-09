@@ -65,21 +65,4 @@ public class CommonControllerAdvice {
         // TODO 추후 에러처리 방안이 생긴다면 아래의 코드를 수정해야함. 일단은 메세지만 출력하는 것으로 작성
         log.error("[Exception Handler] ", e);
     }
-
-    // ===== TranslationController 관련 예외처리입니다. ==============================================
-    // 경우에 따른 IOException 처리
-    @ExceptionHandler(IOException.class)
-    public ResponseEntity<Map<String, String>> handleIOException(IOException e) {
-        Map<String, String> response = new HashMap<>();
-
-        // 예외 메시지에 따라 상태 코드와 에러 메시지를 설정
-        if (e.getMessage().contains("Unsupported format")) {
-            response.put("error", "Unsupported format: " + e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        } else {
-            response.put("error", "Internal server error: " + e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    // ============================================================================================
 }
