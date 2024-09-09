@@ -43,25 +43,27 @@
         <div>
             <button id="shareBtn">공유</button>
         </div>
-        <!-- 출발 버튼 - 클릭 시 출발마커로 지정하는 함수 호출 -->
-        <div id="departureB" class="col-lg-6 mb-4" style="display: inline-block; text-align: center; width: 150px; height: 20px;">
-            <div class="card bg-primary text-white shadow">
-                <div class="card-body">
-                    <p>출발</p>
-                </div>
-            </div>
-        </div>
-        <!-- 도착 버튼 - 클릭 시 도착마커로 지정하는 함수 호출 -->
-        <div id="arrivalB" class="col-lg-6 mb-4" style="display: inline-block; text-align: center; width: 150px; height: 20px;">
-            <div class="card bg-primary text-white shadow">
-                <div class="card-body">
-                    <p>도착</p>
-                </div>
-            </div>
-        </div>
-        <!-- 추 -->
         <div>
-
+            <!-- 출발 버튼 - 클릭 시 출발마커로 지정하는 함수 호출 -->
+            <div id="departureB" class="col-lg-6 mb-4" style="display: inline-block; text-align: center; width: 150px; height: 20px;">
+                <div class="card bg-primary text-white shadow">
+                    <div class="card-body">
+                        <p>출발</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 도착 버튼 - 클릭 시 도착마커로 지정하는 함수 호출 -->
+            <div id="arrivalB" class="col-lg-6 mb-4" style="display: inline-block; text-align: center; width: 150px; height: 20px;">
+                <div class="card bg-primary text-white shadow">
+                    <div class="card-body">
+                        <p>도착</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 글목록 -->
+        <div>
+            <a  th:href="@{/board/write}">글쓰기</a>
 
         </div>
     </ul>

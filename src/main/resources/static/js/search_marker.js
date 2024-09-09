@@ -203,70 +203,6 @@
                     bounds.extend(place.geometry.location); //위도 경도값을 받아 bounds값 설정
                 }
 
-                // 출발버튼 클릭 시, 출발지 마커 생성
-                let dpB = document.getElementById("departureB");
-                dpB.addEventListener('click', function(){
-                    // 출발 마커 생성
-                    if (departmentMarker) {
-                        departmentMarker.setMap(null); // 기존 출발 마커 제거
-                    }
-
-                    // 출발마커를 생성하고 지도에 추가
-                    departmentMarker = new google.maps.Marker({
-                        map: map,
-                        title: "출발지: "+place.name,
-                        position: place.geometry.location,
-                        placeId: place.place_id,                        //place의 장소번호 저장
-                        placePhoto: place.photos,
-                        icon: {
-                            url: '/img/departureMarker.png', // 사용자 정의 아이콘 URL
-                            scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
-                            origin: new google.maps.Point(0, 0), // 아이콘의 원점(기본값, 아이콘 좌상단)
-                            anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
-                        }
-                    });
-
-                    // 출발마커의 위도경도를 변수에 담음 - 경로 표시 위해
-                    departLat = departmentMarker.getPosition().lat();
-                    departLong = departmentMarker.getPosition().lng();
-                    console.log("departureLat: " + departLat);
-                    console.log("departureLong: " + departLong);
-
-                    // 출발 마커 생성 후, 경로 생성해 화면 출력 요청 함수 호출
-                    calculateRoutes();
-                })
-
-                // 도착버튼 클릭 시, 도착지 마커 생성
-                let arB = document.getElementById("arrivalB");
-                arB.addEventListener('click', function(){
-                    // 도착 마커 생성
-                    if (arrivalMarker) {
-                        arrivalMarker.setMap(null); // 기존 도착 마커 제거
-                    }
-
-                    // 도착마커를 생성하고 지도에 추가
-                    arrivalMarker = new google.maps.Marker({
-                        map: map,
-                        title: "도착지: "+place.name,
-                        position: place.geometry.location,
-                        placeId: place.place_id,                        //place의 장소번호 저장
-                        placePhoto: place.photos,
-                        icon: {
-                            url: '/img/arrivalMarker.png', // 사용자 정의 아이콘 URL
-                            scaledSize: new google.maps.Size(60, 60), // 아이콘의 크기 조정
-                            origin: new google.maps.Point(0, 0), // 아이콘의 원점(기본값, 아이콘 좌상단)
-                            anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
-                        }
-                    });
-
-                    arrivalLat = arrivalMarker.getPosition().lat();
-                    arrivalLong = arrivalMarker.getPosition().lng();
-                    console.log("arrivalLat: " + arrivalLat);
-                    console.log("arrivalLong: " + arrivalLong);
-
-                    calculateRoutes(); // 경로 계산 호출
-
-                })
             });
 
             map.fitBounds(bounds);  //위의 each문에서 place의 bounds값을 모두 포함하여 경계 안에 있는 모든장소들이 보이게함
@@ -286,6 +222,64 @@
             } else {
                 alert("No marker selected!");
             }
+        });
+        // 출발버튼 클릭 시, 출발지 마커 생성
+        document.getElementById("departureB").addEventListener('click', function(){
+            // 출발 마커 생성
+            if (departmentMarker) {
+                departmentMarker.setMap(null); // 기존 출발 마커 제거
+            }
+
+            // 출발마커를 생성하고 지도에 추가
+            departmentMarker = new google.maps.Marker({
+                map: map,
+                title: "출발지: "+currentMarker.title,
+                position: currentMarker.position,
+                placeId: currentMarker.placeId,                        //place의 장소번호 저장
+                placePhoto: currentMarker.placePhoto,
+                icon: {
+                    url: '/img/departureMarker.png', // 사용자 정의 아이콘 URL
+                    scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
+                    origin: new google.maps.Point(0, 0), // 아이콘의 원점(기본값, 아이콘 좌상단)
+                    anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
+                }
+            });
+            // 출발마커의 위도경도를 변수에 담음 - 경로 표시 위해
+            departLat = departmentMarker.getPosition().lat();
+            departLong = departmentMarker.getPosition().lng();
+            console.log("departureLat: " + departLat);
+            console.log("departureLong: " + departLong);
+
+            // 출발 마커 생성 후, 경로 생성해 화면 출력 요청 함수 호출
+            calculateRoutes();
+        });
+        // 도착버튼 클릭 시, 도착지 마커 생성
+        document.getElementById("arrivalB").addEventListener('click', function(){
+            // 도착 마커 생성
+            if (arrivalMarker) {
+                arrivalMarker.setMap(null); // 기존 도착 마커 제거
+            }
+
+            // 도착마커를 생성하고 지도에 추가
+            arrivalMarker = new google.maps.Marker({
+                map: map,
+                title: "도착지: "+currentMarker.title,
+                position: currentMarker.position,
+                placeId: currentMarker.placeId,                        //place의 장소번호 저장
+                placePhoto: currentMarker.placePhoto,
+                icon: {
+                    url: '/img/arrivalMarker.png', // 사용자 정의 아이콘 URL
+                    scaledSize: new google.maps.Size(60, 60), // 아이콘의 크기 조정
+                    origin: new google.maps.Point(0, 0), // 아이콘의 원점(기본값, 아이콘 좌상단)
+                    anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
+                }
+            });
+            arrivalLat = arrivalMarker.getPosition().lat();
+            arrivalLong = arrivalMarker.getPosition().lng();
+            console.log("arrivalLat: " + arrivalLat);
+            console.log("arrivalLong: " + arrivalLong);
+
+            calculateRoutes(); // 경로 계산 호출
         });
     }
     google.maps.event.addDomListener(window, 'load', initMap);      //domlistener initmap을 실행
