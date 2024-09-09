@@ -37,7 +37,7 @@ public class AuthenticatedUserDetailsService implements UserDetailsService {
 		AuthenticatedUser user = AuthenticatedUser.builder()
 				.id(entity.getMemberId())
 				.password(entity.getPassword())
-				.name(entity.getNickname())
+				.nickname(entity.getNickname())
 				.authorities(authorities) // 설정된 권한
 				.enabled(!entity.getWithdraw()) // Withdraw가 true일 때 비활성화 처리
 				.build();
