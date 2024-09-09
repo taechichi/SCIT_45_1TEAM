@@ -65,9 +65,9 @@
                                                     : page - 2)),
                                                     (page + 2 > messageList.getTotalPages() ? messageList.getTotalPages()
                                                     : (page - 2 < 1 ? 5 : page + 2)))}">
-                        <th:block th:if="${counter == page}"><b></th:block>
-                            <a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
-                        <th:block th:if="${counter == page}"></b></th:block>
+                        <th:block th:if="${counter == page}"></th:block>
+                            <b><a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a></b>
+                        <th:block th:if="${counter == page}"></th:block>
                     </span>
                             <a th:if="${messageList.hasNext()}"
                                th:href="|javascript:pagingFormSubmit(${messageList.getNumber()}+2)|"> ▶</a>
