@@ -1,0 +1,14 @@
+.profile-picture-container {
+    position: relative;
+}
+
+.status-indicator {
+    background-color: #eaecf4;
+    height: 0.75rem;
+    width: 0.75rem;
+    border-radius: 100%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border: 0.125rem solid #fff;
+}
