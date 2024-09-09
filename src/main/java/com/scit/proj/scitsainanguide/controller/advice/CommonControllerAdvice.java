@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -14,7 +13,7 @@ import java.io.IOException;
 
 @Slf4j
 @ControllerAdvice
-public class AllControllerAdvice {
+public class CommonControllerAdvice {
 
     // ** RUNTIME ERROR 는 throws 할 필요없습니다.
     // ** COMPILE ERROR 에서만 throws 해주세요.

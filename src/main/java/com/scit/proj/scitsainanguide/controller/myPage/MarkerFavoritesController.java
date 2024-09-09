@@ -11,6 +11,7 @@ import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class MarkerFavoritesController {
     private int page;
     // =======================================
 
+    // ============ 처음에 들어오면 모든 정보 출력 ============
     @GetMapping("")
     public String enterMarkerFavorites(
             /*@RequestParam(value = "page", defaultValue = "1") int page,
@@ -45,16 +47,35 @@ public class MarkerFavoritesController {
 
         return "myPage/myMarkerFavorites";
     }
+    // ===================================================
 
+
+
+    // ============ 삭제 기능 ============
     @PostMapping("/delete")
     public String deleteMarkerFavorites(
-            @RequestParam(name = "favoriteId") Integer myFavoriteId
+            @RequestParam(name = "favoriteId", required = false) List<Integer> favoriteIdsForDelete,
+            RedirectAttributes redirectAttributes
     ) {
         // 임시 계정
         String currentUserId = "tsh0828";
-        markerFavoritesService.deleteMarker(myFavoriteId, currentUserId);
+
+        // favoriteIds가 비어있거나 null인 경우 처리
+        if (favoriteIdsForDelete == null || favoriteIdsForDelete.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "삭제할 마커를 선택하세요.");
+            return "redirect:/my/myMarkerFavorites";  // 선택된 항목이 없을 때
+        }
+
+        // 비효율적이라 나중에 수정 예정
+        for(Integer favoriteId : favoriteIdsForDelete) {
+            markerFavoritesService.deleteMarker(favoriteId, currentUserId);
+        }
+
+        redirectAttributes.addFlashAttribute("successMessage", "선택된 마커가 삭제되었습니다.");
         return "redirect:/my/myMarkerFavorites";
     }
+    // ==================================
+
 
 
 

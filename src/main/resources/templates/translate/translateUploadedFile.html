@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
-            xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>File translation</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
+    <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
     <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
     <script th:src="@{/js/translateUploadedFile.js}"></script>
     <!-- Custom fonts for this template-->
@@ -16,17 +18,39 @@
     <link rel="stylesheet" th:href="@{/css/translate/translateUploadedFile.css}">
 </head>
 <body>
-    <h2 th:text="#{fileTranslate}"></h2>
-    <input type="file" id="audioFile" accept="audio/*">
-    <label for="selectLan" th:text="#{selectLan}">언어 선택:</label>
-    <select id="selectLan">
-        <option value="en-US" th:text="#{en}">영어</option>
-        <option value="ja-JP" th:text="#{ja}" selected>일본어</option>
-        <option value="ko-KR" th:text="#{ko}">한국어</option>
-    </select>
-    <button onclick="upload()" th:text="#{fileTranslate}"></button>
-    <hr>
-    <p id="texted" th:text="#{toText}">텍스트화: </p>
-    <p id="translated" th:text="#{translate}">변역: </p>
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <div th:insert="fragments/menuTranslate :: menuTranslate" id="menuTranslate"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <div th:insert="fragments/Topbar :: Topbar" id="Topbar"></div>
+            <!-- End of Topbar -->
+
+            <h2 th:text="#{fileTranslate}"></h2>
+            <input type="file" id="audioFile" accept="audio/*">
+            <label for="selectLan" th:text="#{selectLan}">언어 선택:</label>
+            <select id="selectLan">
+                <option value="en-US" th:text="#{en}">영어</option>
+                <option value="ja-JP" th:text="#{ja}" selected>일본어</option>
+                <option value="ko-KR" th:text="#{ko}">한국어</option>
+            </select>
+            <button onclick="upload()" th:text="#{fileTranslate}"></button>
+            <hr>
+            <p id="texted">텍스트: </p>
+            <p id="translated">변역: </p>
+        </div>
+        <!-- End of Main Content -->
+    </div>
+    <!-- End of Content Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
 </body>
 </html>

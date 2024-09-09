@@ -2,6 +2,9 @@ package com.scit.proj.scitsainanguide.repository.impl;
 
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.sql.SQLExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.scit.proj.scitsainanguide.domain.dto.MarkerFavoritesDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
@@ -20,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Repository
@@ -39,18 +43,8 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
-    // ===== Without paging list ======
-    public List<MarkerFavoritesDTO> selectAllMarkerFavoritesDTO_NoPaging(String memberId) {
-        // 리스트업
-        List<MarkerFavoritesEntity> markerFavoritesEntityList = queryFactory.selectFrom(markerFavoritesEntity)
-                .fetch();
-
-        return markerFavoritesEntityList.stream()
-                .map(this::convertToMarkerFavoritesDTO)
-                .toList();
-    }
-
     // ===== with paging list =====
+    // ===== View All list =====
     public Page<MarkerFavoritesDTO> selectMarkerFavoritesList(SearchRequestDTO dto, String memberId) {
         // PageRequest 객체를 생성하여 페이지 번호와 페이지 크기 설정
         Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPageSize());
@@ -62,6 +56,7 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
         // 리스트업
         List<MarkerFavoritesEntity> markerFavoritesEntityList = queryFactory.selectFrom(markerFavoritesEntity)
                 .where(whereClause)
+                // 이거 거리순으로 정렬하는거 해야함.
                 .orderBy(markerFavoritesEntity.favoriteId.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -80,6 +75,78 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
         return new PageImpl<>(tempMarkerFavoritesDTOList, pageable, total);
     }
 
+    // 장소 이름, 별칭 검색창에 누를때마다 호출해서 가져오도록
+    public Page<MarkerFavoritesDTO> selectMarkerFavoriteBySearchAndFilter(SearchRequestDTO dto, String memberId) {
+        boolean isHospital = dto.getFilter().equals("hospital");
+        boolean isShelter = dto.getFilter().equals("shelter");
+
+        Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPageSize());
+
+        // QueryDSL의 동적 쿼리 생성을 위한 조건 빌더
+        BooleanBuilder whereClause = new BooleanBuilder();
+        BooleanBuilder orderByClause = new BooleanBuilder();
+
+        whereClause.and(markerFavoritesEntity.member.memberId.eq(memberId));
+
+
+        // hospital 필터(filter) 눌렀을 때,
+        if(isHospital){
+            whereClause.and(markerFavoritesEntity.hospital.hospitalId.isNotEmpty());
+        }
+
+        // shelter 필터(filter)눌렀을 때,
+        if(isShelter){
+            whereClause.and(markerFavoritesEntity.shelter.shelterId.isNotNull());
+        }
+
+
+        // 이름(searchWord)
+        if(!Objects.equals(dto.getSearchWord(), "")) {
+            if(isHospital) {
+                whereClause.and(markerFavoritesEntity.hospital.hospitalName.contains(dto.getSearchWord()))
+                        .or(markerFavoritesEntity.nickname.contains(dto.getSearchWord()));
+            }
+
+            if(isShelter) {
+                whereClause.and(markerFavoritesEntity.shelter.shelterName.contains(dto.getSearchWord()))
+                        .or(markerFavoritesEntity.nickname.contains(dto.getSearchWord()));
+            }
+        }
+
+        // 리스트 업
+        List<MarkerFavoritesEntity> markerFavoritesEntityList = queryFactory.selectFrom(markerFavoritesEntity)
+                .where(whereClause)
+                // default 거리 기준으로 정렬, 이름 오름차순
+                .orderBy(
+                        new CaseBuilder()
+                                .when(markerFavoritesEntity.nickname.isNotEmpty())
+                                .then(markerFavoritesEntity.nickname)
+                                .otherwise(
+                                        // 아래 표현은
+                                        // COALESCE(hospital_name, shelter_name) 이라는 쿼리를 생성함!
+                                        Expressions.stringTemplate("COALESCE({0}, {1})",
+                                                markerFavoritesEntity.hospital.hospitalName,
+                                                markerFavoritesEntity.shelter.shelterName)
+                                ).asc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long total = queryFactory.selectFrom(markerFavoritesEntity)
+                .where(whereClause)
+                .fetchCount();
+
+        List<MarkerFavoritesDTO> tempMarkerFavoritesDTOList = markerFavoritesEntityList.stream().map(this::convertToMarkerFavoritesDTO).toList();
+
+        return new PageImpl<>(tempMarkerFavoritesDTOList, pageable, total);
+    }
+
+    // 5. 마커 목록 검색 (장소 이름 / 분류 / 별칭)
+    // 7. 마커 목록을 정렬한다. (기본: 거리 오름차순)
+    // 8. 마커 목록 정렬 기준을 선택해, 해당 마커를 출력한다. (거리 오름차순, 이름 오름차순)
+
+    // =================================================================================
+    // ====== INNER FUNCTION ===========================================================
     private MarkerFavoritesDTO convertToMarkerFavoritesDTO(MarkerFavoritesEntity markerFavoritesEntity) {
         return MarkerFavoritesDTO.builder()
                 .favoriteId(markerFavoritesEntity.getFavoriteId())
@@ -90,4 +157,20 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
                 .name(markerFavoritesEntity.getHospital() != null ? markerFavoritesEntity.getHospital().getHospitalName() : markerFavoritesEntity.getShelter().getShelterName())
                 .build();
     }
+    // =================================================================================
+
+    // =================================================================================
+    // ====== TEST AREA ================================================================
+    // ===== Without paging list ======
+    public List<MarkerFavoritesDTO> selectAllMarkerFavoritesDTO_NoPaging(String memberId) {
+        // 리스트업
+        List<MarkerFavoritesEntity> markerFavoritesEntityList = queryFactory.selectFrom(markerFavoritesEntity)
+                .fetch();
+
+        return markerFavoritesEntityList.stream()
+                .map(this::convertToMarkerFavoritesDTO)
+                .toList();
+    }
+    // =================================================================================
+
 }

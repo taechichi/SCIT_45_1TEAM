@@ -45,7 +45,7 @@ public class AdminMemberController {
         model.addAttribute("searchType", dto.getSearchType());
         model.addAttribute("searchWord", dto.getSearchWord());
 
-        return "admin/memberList";
+        return "admin/member/memberList";
     }
 
     /**

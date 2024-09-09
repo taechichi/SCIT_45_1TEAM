@@ -1,6 +1,7 @@
 package com.scit.proj.scitsainanguide.repository.impl;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.scit.proj.scitsainanguide.domain.dto.MarkerBoardDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
@@ -94,6 +95,7 @@ public class BoardRepositoryImpl implements BoardRepository {
         // 해당 게시글의 삭제여부를 다시 false 로 변경
         queryFactory.update(markerBoard)
                 .set(markerBoard.deleteYn, false)
+                .set(markerBoard.deleteDt, Expressions.nullExpression())
                 .where(markerBoard.boardId.eq(boardId))
                 .execute();
     }
@@ -105,8 +107,8 @@ public class BoardRepositoryImpl implements BoardRepository {
         return MarkerBoardDTO.builder()
                 .boardId(markerBoardEntity.getBoardId())
                 .memberId(markerBoardEntity.getMemberId())
-                .hospitalId(hospital != null ? hospital.getHospitalId() : null)
-                .shelterId(shelter != null ? shelter.getShelterId() : null)
+                .hospitalName(hospital != null ? hospital.getHospitalName() : null)
+                .shelterName(shelter != null ? shelter.getShelterName() : null)
                 .contents(markerBoardEntity.getContents())
                 .createDt(markerBoardEntity.getCreateDt())
                 .deleteReason(markerBoardEntity.getDeleteReason())

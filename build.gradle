@@ -42,6 +42,7 @@ dependencies {
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    implementation 'com.querydsl:querydsl-sql:4.0.7'
 
     // speechToText
     implementation platform('com.google.cloud:libraries-bom:26.1.1')
