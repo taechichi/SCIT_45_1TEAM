@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @ControllerAdvice
@@ -63,5 +66,20 @@ public class CommonControllerAdvice {
         log.error("[Exception Handler] ", e);
     }
 
+    // ===== TranslationController 관련 예외처리입니다. ==============================================
+    // 경우에 따른 IOException 처리
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<Map<String, String>> handleIOException(IOException e) {
+        Map<String, String> response = new HashMap<>();
 
+        // 예외 메시지에 따라 상태 코드와 에러 메시지를 설정
+        if (e.getMessage().contains("Unsupported format")) {
+            response.put("error", "Unsupported format: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } else {
+            response.put("error", "Internal server error: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    // ============================================================================================
 }

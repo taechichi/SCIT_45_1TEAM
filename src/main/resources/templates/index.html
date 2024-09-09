@@ -13,7 +13,7 @@
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
 
     <!-- google map script -->
-    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places"></script>-->
+   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places"></script>
     <!-- 추가 할 라이브러리를 api의 libraries 부분 뒤에 추가 places,geometry -->
     <script th:src="@{/js/search_marker.js}"></script>
     <!-- Custom fonts for this template-->
@@ -41,13 +41,13 @@
 
         </div>
         <div>
-            <button id="shareBtn">공유</button>
+            <button id="shareBtn" th:text="#{map.share}">공유</button>
         </div>
         <!-- 출발 버튼 - 클릭 시 출발마커로 지정하는 함수 호출 -->
         <div id="departureB" class="col-lg-6 mb-4" style="display: inline-block; text-align: center; width: 150px; height: 20px;">
             <div class="card bg-primary text-white shadow">
                 <div class="card-body">
-                    <p>출발</p>
+                    <p th:text="#{map.departure}">출발</p>
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@
         <div id="arrivalB" class="col-lg-6 mb-4" style="display: inline-block; text-align: center; width: 150px; height: 20px;">
             <div class="card bg-primary text-white shadow">
                 <div class="card-body">
-                    <p>도착</p>
+                    <p th:text="#{map.arrival}">도착</p>
                 </div>
             </div>
         </div>

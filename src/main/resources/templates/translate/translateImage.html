@@ -36,11 +36,24 @@
             <div th:insert="fragments/Topbar :: Topbar" id="Topbar"></div>
             <!-- End of Topbar -->
 
-            <h2 th:text="#{fileTranslate}"></h2>
-            <form method="POST" enctype="multipart/form-data" action="/uploadImage">
-                <input type="file" name="file" accept="image/*" required>
-                <button type="submit">업로드</button>
-            </form>
+            <h2 th:text="#{translate.fileTranslate}"></h2>
+            <form id="uploadForm" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)">
+                <input type="file" name="file" id="file" accept="image/*" required>
+                <select id="sourceLanguage">
+                    <option value="en-US" th:text="#{translate.en}">영어</option>
+                    <option value="ja-JP" th:text="#{translate.ja}" selected>일본어</option>
+                    <option value="ko-KR" th:text="#{translate.ko}">한국어</option>
+                </select>
+                <button type="submit" th:text="#{translate.uploadAndTranslate}">업로드 및 번역</button>
+            </form><br>
+            <div>
+                <h3 th:text="#{translate.extracted.text}">추출된 텍스트:</h3>
+                <div id="extractedText"></div>
+            </div><br>
+            <div>
+                <h3 th:text="#{translate.translated.text}">번역된 텍스트:</h3>
+                <div id="translatedText"></div>
+            </div>
         </div>
         <!-- End of Main Content -->
     </div>

@@ -38,16 +38,16 @@
 
             <audio id="audio-playback" controls></audio>
             <br>
-            <label for="streamingLan" th:text="#{selectLan}">언어 선택:</label>
+            <label for="streamingLan" th:text="#{translate.selectLan}">언어 선택:</label>
             <select id="streamingLan">
-                <option value="en-US" th:text="#{en}">영어</option>
-                <option value="ja-JP" th:text="#{ja}" selected>일본어</option>
-                <option value="ko-KR" th:text="#{ko}">한국어</option>
+                <option value="en-US" th:text="#{translate.en}">영어</option>
+                <option value="ja-JP" th:text="#{translate.ja}" selected>일본어</option>
+                <option value="ko-KR" th:text="#{translate.ko}">한국어</option>
             </select>
-            <button id="start-recording" th:text="#{startRec}">녹음 시작</button>
-            <button id="stop-recording" th:text="#{stopRec}" disabled>녹음 종료</button>
-            <h4 th:text="#{toText}">텍스트화: <span id="voiceTexted"></span></h4>
-            <h4 th:text="#{streamingTrans}">번역: <span id="voiceTranslated"></span></h4>
+            <button id="start-recording" th:text="#{translate.streaming.startRec}">녹음 시작</button>
+            <button id="stop-recording" th:text="#{translate.streaming.stopRec}" disabled>녹음 종료</button>
+            <h4 th:text="#{translate.streaming.toText}">텍스트화: <span id="voiceTexted"></span></h4>
+            <h4 th:text="#{translate.streamingTrans}">번역: <span id="voiceTranslated"></span></h4>
         </div>
         <!-- End of Main Content -->
     </div>
