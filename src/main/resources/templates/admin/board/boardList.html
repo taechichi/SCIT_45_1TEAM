@@ -78,12 +78,12 @@
                                     <input type="hidden" name="page" id="page"/>
                                     <select id="type" name="searchType">
                                         <option value="memberId" th:text="#{board.searchType.memberId}"
-                                                th:selected="${searchType == 'memberId'}">/option>
+                                                th:selected="${searchType == 'memberId'}"></option>
                                         <option value="deleteReason" th:text="#{admin.board.searchType.deleteReason}"
                                                 th:selected="${searchType == 'deleteReason'}"></option>
                                     </select>
                                     <input type="text" name="searchWord" th:value="${searchWord}"/>
-                                    <input type="submit" onclick="pagingFormSubmit(1)" value="검색"/>
+                                    <input type="submit" onclick="pagingFormSubmit(1)" th:value="#{board.button.search}"/>
                                 </form>
                             </div>
                         </div>
