@@ -13,7 +13,7 @@
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
 
     <!-- google map script -->
-   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places"></script>
+<!--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places"></script>-->
     <!-- 추가 할 라이브러리를 api의 libraries 부분 뒤에 추가 places,geometry -->
     <script th:src="@{/js/search_marker.js}"></script>
     <!-- Custom fonts for this template-->
@@ -22,8 +22,10 @@
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
     <!-- Custom styles for this template-->
-    <link rel="stylesheet" th:href="@{/css/index/indexcss.css}">
+    <link rel="stylesheet" th:href="@{/css/index/index.css}">
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
+
+    <link rel="stylesheet" th:href="@{/css/topbar.css}">
 </head>
 
 <body id="page-top">
@@ -72,7 +74,19 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div id="map" style="height: 95%; width: 100%;"></div>
+
+                <!-- 지도 컨테이너 -->
+                <div id="map-container" style="position: relative; height: 95%; width: 100%;">
+                    <!-- 구글 지도 -->
+                    <div id="map" style="height: 100%; width: 100%; z-index: 0;"></div>
+
+                    <!-- 병원 버튼 -->
+                    <button type="button" id="hospitalfilterbutton" onclick="hospitalfilter()">병원</button>
+
+                    <!-- 대피소 버튼 -->
+                    <button type="button" id="shelterfilterbutton" onclick="shelterfilter()">대피소</button>
+                </div>
+
 
             </div>
             <!-- End of Main Content -->

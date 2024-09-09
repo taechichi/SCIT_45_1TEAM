@@ -47,7 +47,7 @@ public class MyFriendController {
         model.addAttribute("linkSize", linkSize);
         model.addAttribute("searchType", dto.getSearchType());
         model.addAttribute("searchWord", dto.getSearchWord());
-        return "myPage/myFriend";
+        return "myPage/friend/myFriend";
     }
 
     /**
@@ -89,7 +89,7 @@ public class MyFriendController {
         model.addAttribute("friendRequestList", myFriendRequestList);
         model.addAttribute("page", dto.getPage());
         model.addAttribute("linkSize", linkSize);
-        return "myPage/myFriendRequest";
+        return "myPage/friend/myFriendRequest";
     }
 
     /**
