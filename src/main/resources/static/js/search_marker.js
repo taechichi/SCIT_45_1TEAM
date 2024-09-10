@@ -79,19 +79,83 @@
         // 1. 기본 장소 정보 표시
         let placeName = marker.title;
         let photoUrl = marker.placePhoto;    //place의 첫사진을 url을 받아 저장
-        let palceID = marker.placeId;
+        let placeID = marker.placeId;
         let placeInfo = `<h3>${placeName}</h3>                  <!--- infopanel에 넣을 값 ---!>  
                                               <div style="width: 100%;height: 200px">
                                               <img src="${photoUrl}" style="width: 100%; height: 100%;"></div>
-                                              <p>${palceID}</p>
+                                              <p>${placeID}</p>
                                               <p>추가입력예정</p>`;
         let infoPanel = document.getElementById("info-panel");
         let infoPart = document.getElementById("info_part");
         infoPart.innerHTML = placeInfo;
         infoPanel.style.display = 'block';
         isPanelVisible = true;
+        document.getElementById('writeLink').setAttribute('href', `/board/write/${placeID}`);
     }
 
+    // Google Places API 결과 처리 함수
+    function processGooglePlaces(places) {
+        return places.map(place => ({
+            name: place.name,
+            latitude: place.geometry.location.lat(),
+            longitude: place.geometry.location.lng(),
+            source: 'google'
+        }));
+    }
+
+    // DB 검색 결과 처리 함수
+    function processDBResults(dbPlaces) {
+        return dbPlaces.map(place => ({
+            name: place.name,
+            latitude: place.latitude,
+            longitude: place.longitude,
+            source: 'db'
+        }));
+    }
+
+    // 두 결과 병합 함수
+    function mergeResults(googlePlaces, dbPlaces) {
+        const mergedResults = [...googlePlaces];
+
+        // DB 결과와 중복되지 않는 장소만 추가
+        dbPlaces.forEach(dbPlace => {
+            const isDuplicate = googlePlaces.some(gPlace =>
+                Math.abs(gPlace.latitude - dbPlace.latitude) < 0.0001 &&
+                Math.abs(gPlace.longitude - dbPlace.longitude) < 0.0001
+            );
+
+            if (!isDuplicate) {
+                mergedResults.push(dbPlace);
+            }
+        });
+
+        return mergedResults;
+    }
+
+    // 병합된 장소들을 지도에 마커로 표시
+    function displayMarkersOnMap(places) {
+        const bounds = new google.maps.LatLngBounds();
+
+        places.forEach(place => {
+            const marker = new google.maps.Marker({
+                map: map,
+                position: { lat: place.latitude, lng: place.longitude },
+                title: place.name
+            });
+
+            markers.push(marker);
+
+            // 마커 클릭 시 정보 패널 표시
+            google.maps.event.addListener(marker, 'click', function () {
+                showInfoPanel(marker);
+            });
+
+            // 지도 경계에 마커 위치 포함
+            bounds.extend(new google.maps.LatLng(place.latitude, place.longitude));
+        });
+
+        map.fitBounds(bounds); // 모든 장소를 포함하도록 지도 경계 설정
+    }
 
     //맵 생성
     function initMap() {
@@ -136,6 +200,15 @@
         // 현위치 바운스 애니메이션 설정
         myMarker.setAnimation(google.maps.Animation.BOUNCE);
 
+        //맵 클릭 이벤트 (패널정보 none)
+        google.maps.event.addListener(map,'click',function(){
+            if(isPanelVisible){
+                let infoPanel = document.getElementById("info-panel");
+                infoPanel.style.display = 'none';
+                isPanelVisible = false;
+            }
+        });
+
         // 검색창 search-input 에서 사용자가 입력한 값을 받아 저장
         const input = document.getElementById('search-input');              //search-input 에서 값을 받아 저장
         // places api의 searchbox에 사용자가 입력한 input 데이터 입력(엔터나 검색버튼을 누르지 않아도 자동으로 뜨는 항목들)
@@ -162,6 +235,24 @@
             markers.forEach(marker => marker.setMap(null));    //markers배열에서 가져온 기존마커 null로 맵에서 삭제
             markers = [];   //마커 배열 초기화
 
+            // Google Places API에서 검색된 장소 place 객체 배열로 처리
+            const googlePlaceArray = processGooglePlaces(places);
+
+            // DB 검색
+            const query = input.value;
+            fetch('/api/search', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: query }) // 검색어를 DB로 전송
+            })
+                .then(response => response.json())
+                .then(dbData => {
+                    // DB 검색 결과 처리
+                    const dbResults = processDBResults(dbData.places);
+                })
+                .catch(error => console.error('DB 검색 중 오류:', error));
+
+
             // 지도의 경계를 받아 마커표시 시 지도 바깥이면 숨김
             // const bounds = map.getBounds(); // 현재 지도 경계 가져오기
             //
@@ -181,19 +272,7 @@
                     return;
                 }
 
-                //검색된 장소 하나씩 마커생성
-                createMarker(map, place, false);
-
-                //맵 클릭 이벤트 (패널정보 none)
-                google.maps.event.addListener(map,'click',function(){
-                    if(isPanelVisible){
-                        let infoPanel = document.getElementById("info-panel");
-                        infoPanel.style.display = 'none';
-                        isPanelVisible = false;
-                    }
-                });
-
-                // 새 마커를 생성하고 지도에 추가
+                //검색된 장소 하나씩 마커생성 지도에 추가
                 let marker = createMarker(map,place, false);
                 markers.push(marker);   //배열에 마커추가
 
