@@ -38,8 +38,8 @@ function upload() {
         // 실패시
         .catch(error => {
             console.error('Error converting audio to text:', error);
-            document.getElementById('texted').innerHTML = `<span th:text="#{textedError}"></span>`;
-            document.getElementById('translated').innerHTML = `<span th:text="#{transError}"></span>`;
+            document.getElementById('texted').innerHTML = `<span th:text="#{translate.textedError}"></span>`;
+            document.getElementById('translated').innerHTML = `<span th:text="#{translate.transError}"></span>`;
         });
 }
 
@@ -83,7 +83,7 @@ function requestTranslation(text, whatLan) {
             })
             .catch(error => {
                 console.error('번역 실패:', error);
-                document.getElementById('translated').append(`#{transError}`);
+                document.getElementById('translated').append(`#{translate.transError}`);
             });
     });
 }
