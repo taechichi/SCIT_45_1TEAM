@@ -4,6 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
+    <script th:src="@{/js/search_marker.js}"></script>
     <meta charset="UTF-8">
     <title>BoardWriteForm</title>
 </head>
@@ -14,8 +15,7 @@
 
 <section>
     <!-- 바이너리 데이터 포함되는 폼. enctype 반드시 정확히 지정 -->
-    <form id="writeForm" enctype="multipart/form-data"
-          th:action="@{/board/write}"  method="post">
+    <form id="writeForm" th:action="@{/board/write}"  method="post">
 
         <table>
             <tr>
@@ -23,12 +23,7 @@
                 <td>
                     <textarea name="contents" id="contents"></textarea>
                 </td>
-            </tr>
-            <tr>
-                <th>파일첨부</th>
-                <td>
-                    <input type="file" name="upload">
-                </td>
+                <p hidden="hidden">${palceID}</p>
             </tr>
             <tr>
                 <td colspan="2" class="white center">

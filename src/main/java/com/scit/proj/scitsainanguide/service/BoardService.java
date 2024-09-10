@@ -30,6 +30,7 @@ public class BoardService {
         MarkerBoardEntity markerBoardEntity = MarkerBoardEntity.builder()
                 .memberId(memberEntity.getMemberId())
                 .contents(boardDTO.getContents())
+                .deleteYn(false)
                 .build();
 
 
