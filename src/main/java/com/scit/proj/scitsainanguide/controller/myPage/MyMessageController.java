@@ -72,6 +72,15 @@ public class MyMessageController {
     }
 
     /**
+     * 쪽지 작성 페이지 이동
+     * @return 쪽지 작성 페이지 html
+     */
+    @GetMapping("write")
+    public String insertMyMessage() {
+        return "myPage/message/myMessageWriteForm";
+    }
+
+    /**
      * 쪽지 작성
      * @param dto 쪽지 정보 객체
      * @return redirect 하여 내 쪽지 목록으로 이동
@@ -79,7 +88,7 @@ public class MyMessageController {
     @PostMapping
     public String insertMyMessage(@ModelAttribute MessageDTO dto) {
         myMessageService.insertMyMessage(dto);
-        return "redirect:/my/message/list";
+        return "redirect:/my/message";
     }
 
     /**

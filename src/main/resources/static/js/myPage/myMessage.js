@@ -1,8 +1,14 @@
 $(document).ready(function() {
     // 이벤트 리스너 등록
+    $('#writeMessageBtn').on('click', writeMessage)
     $('#deleteMessageBtn').on('click', deleteSelectedMessage);
     $('#selectAll').on('click', toggleSelectAll);
 });
+
+// 쪽지 작성
+function writeMessage() {
+    location.href = '/my/message/write';    // 글쓰기 페이지로 이동
+}
 
 // '전체 선택' 체크박스 토글 기능
 function toggleSelectAll() {

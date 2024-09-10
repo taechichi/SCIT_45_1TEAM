@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @ControllerAdvice
@@ -62,6 +65,4 @@ public class CommonControllerAdvice {
         // TODO 추후 에러처리 방안이 생긴다면 아래의 코드를 수정해야함. 일단은 메세지만 출력하는 것으로 작성
         log.error("[Exception Handler] ", e);
     }
-
-
 }

@@ -130,10 +130,10 @@ public class MemberService {
      * @param response 첨부파일을 보낼 스트림
      */
     public void download(String memberId, String uploadPath, HttpServletResponse response) throws IOException {
-        // 전달된 글 번호로 파일명 확인
+        // 전달된 멤버아이디로 파일명 확인하기 위해 MemberEntity 조회
         MemberEntity memberEntity = memberJpaRepository.findById(memberId)
-                // 보드엔티티는 모든걸 알고있다.
                 .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다."));
+        
         //response의 헤더에 원래의 파일명을 셋팅 // 파일명(orugunalName을 한글일때 UTF-8로 인코딩
         response.setHeader("Content-Disposition", "attachment;filename="
                 + URLEncoder.encode(memberEntity.getFileName(), StandardCharsets.UTF_8));

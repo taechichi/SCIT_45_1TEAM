@@ -34,18 +34,18 @@
             <div th:insert="fragments/Topbar :: Topbar" id="Topbar"></div>
             <!-- End of Topbar -->
 
-            <h2 th:text="#{fileTranslate}"></h2>
+            <h2 th:text="#{translate.fileTranslate}"></h2>
             <input type="file" id="audioFile" accept="audio/*">
-            <label for="selectLan" th:text="#{selectLan}">언어 선택:</label>
+            <label for="selectLan" th:text="#{translate.selectLan}">언어 선택:</label>
             <select id="selectLan">
-                <option value="en-US" th:text="#{en}">영어</option>
-                <option value="ja-JP" th:text="#{ja}" selected>일본어</option>
-                <option value="ko-KR" th:text="#{ko}">한국어</option>
+                <option value="en-US" th:text="#{translate.en}">영어</option>
+                <option value="ja-JP" th:text="#{translate.ja}" selected>일본어</option>
+                <option value="ko-KR" th:text="#{translate.ko}">한국어</option>
             </select>
-            <button onclick="upload()" th:text="#{fileTranslate}"></button>
+            <button onclick="upload()" th:text="#{translate.microFileUpload}"></button>
             <hr>
-            <p id="texted">텍스트: </p>
-            <p id="translated">변역: </p>
+            <p id="texted" th:text="#{translate.text}">텍스트: </p>
+            <p id="translated" th:text="#{translate}">변역: </p>
         </div>
         <!-- End of Main Content -->
     </div>
