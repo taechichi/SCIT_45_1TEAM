@@ -6,7 +6,7 @@ package com.scit.proj.scitsainanguide.domain.enums;
  */
 public enum FriendSearchType {
 
-    MEMBER_ID("memberId"),
+    FRIEND_ID("friendId"),
     NICKNAME("nickname"),
     DEFAULT("");
 

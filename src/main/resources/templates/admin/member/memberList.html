@@ -138,7 +138,7 @@
                                     th:selected="${searchType == 'email'}"></option>
                         </select>
                         <input type="text" name="searchWord" th:value="${searchWord}"/>
-                        <input type="submit" onclick="pagingFormSubmit(1)" value="검색"/>
+                        <input type="submit" onclick="pagingFormSubmit(1)" th:value="#{board.button.search}"/>
                     </form>
                 </div>
 

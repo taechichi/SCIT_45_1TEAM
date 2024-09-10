@@ -60,8 +60,8 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
         // 동적 조건 추가
         // 1. 검색조건
         switch (searchType) {
-            case MEMBER_ID -> whereClause.and(friend.friendId.contains(dto.getSearchWord()));
-            case NICKNAME -> whereClause.and(friend.member.nickname.contains(dto.getSearchWord()));
+            case FRIEND_ID -> whereClause.and(friend.friendId.contains(dto.getSearchWord()));
+            case NICKNAME -> whereClause.and(friend.friend.nickname.contains(dto.getSearchWord()));
         }
 
         // 쿼리 실행
