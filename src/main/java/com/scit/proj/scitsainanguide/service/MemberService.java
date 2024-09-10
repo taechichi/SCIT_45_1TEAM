@@ -36,9 +36,14 @@ public class MemberService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     private final String uploadDir = "C:/profile-photos";
+    private final String defaultMaleImage = "undraw_profile.jpg";
+    private final String defaultFemaleImage = "undraw_profile_3.jpg";
+    private final String defaultNullImage = "icon8.png";
 
     public MemberDTO registerMember(MemberDTO memberDTO, MultipartFile file) throws IOException {
-        // 파일이 있을 경우 처리
+        // 프로필 이미지를 저장할 파일명
+        String profileImage;
+
         if (!file.isEmpty()) {
             // 업로드 디렉토리 생성
             File uploadPath = new File(uploadDir);
@@ -55,9 +60,21 @@ public class MemberService {
             // 파일 저장
             file.transferTo(filePath.toFile());
 
-            // 파일명(경로) DTO에 설정
-            memberDTO.setFileName(uniqueFileName);
+            // 저장된 파일명 설정
+            profileImage = uniqueFileName;
+        } else {
+            // 파일이 없을 경우 성별에 따른 기본 이미지 설정
+            if ("M".equals(memberDTO.getGender())) {
+                profileImage = defaultMaleImage;
+            } else if ("F".equals(memberDTO.getGender())) {
+                profileImage = defaultFemaleImage;
+            } else {
+                profileImage = defaultNullImage; // 성별이 null인 경우
+            }
         }
+
+        // 설정된 파일명이나 기본 이미지 파일명을 DTO에 저장
+        memberDTO.setFileName(profileImage);
 
         // statusId을 1로 설정
         memberDTO.setStatusId(1);
@@ -72,6 +89,7 @@ public class MemberService {
 
         return memberDTO;
     }
+
 
     // MemberEntity 객체 생성 메서드
     private MemberEntity createMemberEntity(MemberDTO memberDTO, StatusEntity statusEntity) {
