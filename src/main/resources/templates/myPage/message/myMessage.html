@@ -34,7 +34,7 @@
                         <table class="table table-bordered" id="dataTable">
                             <thead>
                                 <tr>
-                                    <th colspan="2" th:text="#{board.column.memberId}"></th>
+                                    <th th:text="#{board.column.memberId}"></th>
                                     <th th:text="#{my.message.column.content}"></th>
                                     <th th:text="#{board.column.createDt}"></th>
                                     <th>
@@ -47,8 +47,8 @@
                                     <td>
                                         <img class="rounded-circle" alt="Profile Picture"
                                              th:src="@{/member/download/{senderId}(senderId=*{senderId})}"/>
+                                        <span th:text="*{senderId}"></span>
                                     </td>
-                                    <td th:text="*{senderId}"></td>
                                     <td>
                                         <a th:href="@{/my/message/{messageId}(messageId=*{messageId})}" th:text="*{content}"></a>
                                     </td>

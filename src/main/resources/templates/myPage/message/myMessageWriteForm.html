@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action="/my/message" method="post">
+        <input type="hidden" name="senderId" th:value="${#authentication.name}">
+        <table>
+            <tr>
+                <th th:text="#{my.message.row.receiverId}"></th>
+                <td>
+                    <input type="text" name="receiverId" >
+                </td>
+            </tr>
+            <tr>
+                <th th:text="#{my.message.row.content}"></th>
+                <td>
+                    <textarea name="content"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" th:value="#{my.message.button.send}">
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

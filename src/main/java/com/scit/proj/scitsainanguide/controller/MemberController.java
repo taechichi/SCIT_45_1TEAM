@@ -63,18 +63,27 @@ public class MemberController {
     }
 
     /**
-     *
+     * 프로필 사진 다운로드 (로그인한 본인)
      * @param user 로그인 한 사용자 아이디
      * @param response  응답객체
      * @throws IOException
      */
-
     @GetMapping("download")
     public void download(@AuthenticationPrincipal AuthenticatedUser user
             , HttpServletResponse response) throws IOException {
         memberService.download(user.getId(), uploadPath, response);
     }
 
+    /**
+     * 프로필 사진 다운로드 (다른 회원)
+     * @param memberId 회원 아이디
+     * @param response 응답 객체
+     * @throws IOException
+     */
+    @GetMapping("download/{memberId}")
+    public void download(@PathVariable String memberId, HttpServletResponse response) throws IOException {
+        memberService.download(memberId, uploadPath, response);
+    }
 
     /**
      * 회원가입 페이지에서 "ID 중복확인" 버튼을 클릭하면 새 창으로 보여줄 검색 페이지로 이동
