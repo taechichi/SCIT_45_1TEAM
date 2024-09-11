@@ -165,8 +165,11 @@
     //비동기는 다른 함수와 동시에 실행될 수 있도록 하는 함수 따라서 비동기로 되어있기에 좌표구하는 함수가 실행중에 다른 함수도 실행이 실행된다.
     navigator.geolocation.getCurrentPosition((position) => {
         // 현재 위치로부터 위도 경도 추출
-        myLat = position.coords.latitude;
-        myLong = position.coords.longitude;
+        // myLat = position.coords.latitude;
+        // myLong = position.coords.longitude;
+
+        myLat = 35.68123525218729;
+        myLong = 139.76714259173016;
 
         let centerPosition = {lat: myLat, lng: myLong};
 

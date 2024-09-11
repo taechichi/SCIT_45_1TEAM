@@ -21,9 +21,9 @@ public class BoardController {
 
 
     @GetMapping("write/{placeID}")
-    public String write(@PathVariable("placeID") String placeID, Model model) {
+    public String write(@PathVariable("placeID") String hospitalName, Model model) {
 
-        model.addAttribute("placeID", placeID);
+        model.addAttribute("hospitalName", hospitalName);
 
         return "board/writeForm";
     }
