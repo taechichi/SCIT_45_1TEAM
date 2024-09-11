@@ -157,6 +157,33 @@
         map.fitBounds(bounds); // 모든 장소를 포함하도록 지도 경계 설정
     }
 
+    // nearbySearch를 사용해 병원 검색
+    function searchNearbyHospitals(lat, lng) {
+        const service = new google.maps.places.PlacesService(map);
+        const request = {
+            location: new google.maps.LatLng(lat, lng), // 현재 위치 기준
+            radius: 1000, // 반경 1km
+            type: 'hospital' // 병원 타입으로 검색
+        };
+
+        // 검색 결과 처리
+        service.nearbySearch(request, (results, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                // 기존 마커 제거
+                markers.forEach(marker => marker.setMap(null));
+                markers = [];
+
+                // 검색된 병원 정보 마커로 표시
+                results.forEach(place => {
+                    let marker = createMarker(map, place);
+                    markers.push(marker);
+                });
+            } else {
+                console.error('병원 검색에 실패했습니다:', status);
+            }
+        });
+    }
+
     //맵 생성
     function initMap() {
     //getCurrentPosition에서 값을 받으면 position으로 값이 들어간다.
@@ -212,6 +239,11 @@
             }
         });
 
+        //병원 버튼 클릭 시 근처 1km 검색
+        document.getElementById('hospitalfilterbutton').addEventListener('click', function() {
+            searchNearbyHospitals(myLat, myLong); // 병원 검색 함수 호출
+        });
+
         // 검색창 search-input 에서 사용자가 입력한 값을 받아 저장
         const input = document.getElementById('search-input');              //search-input 에서 값을 받아 저장
         // places api의 searchbox에 사용자가 입력한 input 데이터 입력(엔터나 검색버튼을 누르지 않아도 자동으로 뜨는 항목들)
@@ -242,16 +274,17 @@
             const googlePlaceArray = processGooglePlaces(places);
 
             // DB 검색
-            const query = input.value;
+            const dbLat = myLat;
+            const dbLong = myLong;
             fetch('/api/search', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ query: query }) // 검색어를 DB로 전송
+                body: JSON.stringify({ dbLat : dbLat, dbLong: dbLong }) // 검색어를 DB로 전송
             })
                 .then(response => response.json())
                 .then(dbData => {
                     // DB 검색 결과 처리
-                    const dbResults = processDBResults(dbData.places);
+                    const dbResults = processDBResults(dbData);
                 })
                 .catch(error => console.error('DB 검색 중 오류:', error));
 
