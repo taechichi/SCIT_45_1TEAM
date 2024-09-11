@@ -152,3 +152,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 })
+
+$(document).ready(function() {
+    // 이미지 클릭 시 언어 선택 및 녹음 시작
+    $('.language-selection img').on('click', function() {
+        var lang = $(this).data('lang');
+
+        // 언어를 select 요소에 설정
+        $('#streamingLan').val(lang);
+
+        // 녹음 시작 버튼을 클릭 상태로 설정
+        $('#start-recording').click();
+
+        // 선택한 언어의 녹음 시작 메시지
+        $('#language-label').text('녹음이 시작되었습니다: ' + $(this).attr('alt'));
+    });
+});
