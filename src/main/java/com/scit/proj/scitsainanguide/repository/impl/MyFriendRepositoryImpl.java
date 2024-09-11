@@ -67,8 +67,10 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
         // 쿼리 실행
         List<FriendDTO> friendDTOList = queryFactory.select(
                             Projections.constructor(FriendDTO.class,
+                            friend.relationId,
                             friend.friendId,
                             friend.friend.nickname,
+                            friend.favoriteYn,
                             friend.friend.nationality
                         )
                 ).from(friend)
@@ -119,12 +121,7 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
 
     @Override
     public void updateFriend(Integer relationId, String memberId) {
-        // 친구 즐겨찾기는 최대 5명까지 가능하기 때문에 유효성검사를 먼저 한다.
         BooleanBuilder whereClause = new BooleanBuilder();
-        whereClause.and(friend.memberId.eq(memberId));
-        if(getTotalCount(whereClause) == 5L) {
-            throw new IllegalStateException("친구 즐겨찾기는 최대 5명까지만 가능합니다.");
-        }
         whereClause.and(friend.relationId.eq(relationId));
 
         // FriendEntity 조회
@@ -135,10 +132,16 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
         if (friendEntity == null) {
             throw new EntityNotFoundException("해당하는 친구 관계를 찾을 수 없습니다.");
         }
+        boolean favoriteYn = friendEntity.getFavoriteYn();
 
-        // 즐겨찾기 업데이트
+        // 친구 즐겨찾기 추가 시에는 최대 5명까지 가능하기 때문에 유효성검사를 먼저 한다.
+        if(!favoriteYn && getTotalCount(whereClause) == 5L) {
+            throw new IllegalStateException("친구 즐겨찾기는 최대 5명까지만 가능합니다.");
+        }
+
+        // 즐겨찾기 업데이트 (즐겨찾기 추가 / 취소)
         queryFactory.update(friend)
-                .set(friend.favoriteYn, true)
+                .set(friend.favoriteYn, !favoriteYn)
                 .where(whereClause)
                 .execute();
     }

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class FriendDTO {
 
+    private Integer relationId;
     private String memberId;
     private String friendId;
     private Boolean friendYn;
@@ -25,9 +26,11 @@ public class FriendDTO {
     private String nationality;
 
     // 내 친구 목록 출력에 필요한 DTO 생성자
-    public FriendDTO(String friendId, String nickname, String nationality) {
+    public FriendDTO(Integer relationId, String friendId, String nickname, boolean favoriteYn, String nationality) {
+        this.relationId = relationId;
         this.friendId = friendId;
         this.nickname = nickname;
+        this.favoriteYn = favoriteYn;
         this.nationality = nationality;
     }
 

@@ -50,6 +50,7 @@
                                     <th th:text="#{my.friend.column.friendId}"></th>
                                     <th th:text="#{my.friend.column.nickname}"></th>
                                     <th th:text="#{my.friend.column.nationality}"></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody th:each="friend : ${friendList}" th:object="${friend}">
@@ -61,6 +62,14 @@
                                     </td>
                                     <td th:text="*{nickname}"></td>
                                     <td th:text="*{nationality}"></td>
+                                    <td>
+                                        <button th:if="*{favoriteYn == false}" class="updateFavoriteBtn" th:data-id="*{relationId}" th:data-favorite="*{favoriteYn}"
+                                                th:text="#{my.friend.button.favorite}"></button>
+                                        <button th:if="*{favoriteYn == true}" class="updateFavoriteBtn" th:data-id="*{relationId}" th:data-favorite="*{favoriteYn}"
+                                                th:text="#{my.friend.button.favorite.delete}"></button>
+                                        <button class="deleteFriendBtn" th:data-id="*{friendId}"
+                                                th:text="#{board.button.delete}"></button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -106,4 +115,7 @@
 
 <!-- 페이징 기능을 위한 js -->
 <script th:src="@{/js/paging.js}"></script>
+
+<!-- 친구 목록 페이지에 필요한 js -->
+<script th:src="@{/js/myPage/friend/myFriend.js}"></script>
 </html>
