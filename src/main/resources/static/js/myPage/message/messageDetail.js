@@ -25,7 +25,7 @@ function deleteMessage() {
                 alert('삭제가 성공적으로 되었습니다.');
             },
             error: function(xhr, status, error) {
-                alert('Error updating deleteYn: ' + error);
+                alert('쪽지 삭제에 실패했습니다.');
             }
         });
         // 쪽지 메뉴로 재 연결

@@ -13,8 +13,5 @@ public interface MarkerFavoritesRepository {
 
     Page<MarkerFavoritesDTO> selectMarkerFavoritesList(SearchRequestDTO dto, String memberId);
 
-    List<MarkerFavoritesDTO> selectAllMarkerFavoritesDTO_NoPaging(String memberId);
-
-
-
+    Page<MarkerFavoritesDTO> selectMarkerFavoritesBySearchAndFilter(SearchRequestDTO dto, String tsh0828);
 }

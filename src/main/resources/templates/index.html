@@ -37,31 +37,17 @@
         <div th:insert="fragments/menu :: menu" id="menu"></div>
         <!-- End of Sidebar -->
 
-    <!-- 마커 클릭 시 상세 정보 출력 판넬 -->
-    <ul id="info-panel">
-        <div id = "info_part">
-
-        </div>
-        <div>
-            <button id="shareBtn" th:text="#{map.share}">공유</button>
-        </div>
-        <!-- 출발 버튼 - 클릭 시 출발마커로 지정하는 함수 호출 -->
-        <div id="departureB" class="col-lg-6 mb-4" style="display: inline-block; text-align: center; width: 150px; height: 20px;">
-            <div class="card bg-primary text-white shadow">
-                <div class="card-body">
-                    <p th:text="#{map.departure}">출발</p>
-                </div>
+        <!-- 마커 클릭 시 상세 정보 출력 판넬 -->
+        <ul id="info-panel">
+            <div id="info_part"></div>
+            <div class="button-container">
+                <button id="departureB" class="info-button">출발</button>
+                <button id="arrivalB" class="info-button">도착</button>
             </div>
-        </div>
-        <!-- 도착 버튼 - 클릭 시 도착마커로 지정하는 함수 호출 -->
-        <div id="arrivalB" class="col-lg-6 mb-4" style="display: inline-block; text-align: center; width: 150px; height: 20px;">
-            <div class="card bg-primary text-white shadow">
-                <div class="card-body">
-                    <p th:text="#{map.arrival}">도착</p>
-                </div>
+            <div class="share-container">
+                <button id="shareBtn">공유</button>
             </div>
-        </div>
-    </ul>
+        </ul>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">

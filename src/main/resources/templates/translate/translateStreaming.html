@@ -16,6 +16,7 @@
             rel="stylesheet">
 
     <!-- Custom styles for this template-->
+    <link rel="stylesheet" th:href="@{/css/topbar.css}">
     <link rel="stylesheet" th:href="@{/css/translate/translateStreaming.css}">
 </head>
 <body>
@@ -30,26 +31,45 @@
     <div id="content-wrapper" class="d-flex flex-column">
 
         <!-- Main Content -->
-        <div id="content">
+        <div id="content" class="text-center">
 
             <!-- Topbar -->
             <div th:insert="fragments/Topbar :: Topbar" id="Topbar"></div>
             <!-- End of Topbar -->
 
+            <h2> 실시간 음성 번역 </h2>
+            <hr class="divider">
+
             <audio id="audio-playback" controls></audio>
+            <hr class="divider">
+
+            <label for="streamingLan" id="language-label">이미지를 누르면 해당 언어의 녹음이 시작 됩니다:</label>
             <br>
-            <label for="streamingLan" th:text="#{translate.selectLan}">언어 선택:</label>
-            <select id="streamingLan">
-                <option value="en-US" th:text="#{translate.en}">영어</option>
-                <option value="ja-JP" th:text="#{translate.ja}" selected>일본어</option>
-                <option value="ko-KR" th:text="#{translate.ko}">한국어</option>
+            <select id="streamingLan" style="display: none;">
+                <option value="en-US">영어</option>
+                <option value="ja-JP" selected>일본어</option>
+                <option value="ko-KR">한국어</option>
             </select>
-            <button id="start-recording" th:text="#{translate.streaming.startRec}">녹음 시작</button>
+            <button id="start-recording" style="display: none;">녹음 시작</button>
+            <div class="language-selection">
+                <img src="/img/usa.png" id="usa" alt="English" data-lang="en-US">
+                <img src="/img/japan.png" id="japan" alt="Japanese" data-lang="ja-JP">
+                <img src="/img/korea.png" id="korea" alt="Korean" data-lang="ko-KR">
+            </div>
+            <hr class="divider">
+
             <button id="stop-recording" th:text="#{translate.streaming.stopRec}" disabled>녹음 종료</button>
+
+            <hr class="divider">
+
             <h4 th:text="#{translate.streaming.toText}">텍스트화: </h4>
             <span id="voiceTexted"></span>
+
+            <hr class="divider">
+
             <h4 th:text="#{translate.streamingTrans}">번역: </h4>
             <span id="voiceTranslated"></span>
+
         </div>
         <!-- End of Main Content -->
     </div>
@@ -57,4 +77,16 @@
 </div>
 <!-- End of Page Wrapper -->
 </body>
+
+<!-- 게시판 페이지에 필요한 script 모음 -->
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.js}"></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/js/sb-admin-2.js}"></script>
+
 </html>

@@ -81,7 +81,8 @@ public class MyFriendController {
      * @return 내 친구 신청 목록 페이지 html
      */
     @GetMapping("request")
-    public String selectMyFriendRequestList(Model model, @AuthenticationPrincipal AuthenticatedUser user, @ModelAttribute SearchRequestDTO dto) {
+    public String selectMyFriendRequestList(Model model
+            , @AuthenticationPrincipal AuthenticatedUser user, @ModelAttribute SearchRequestDTO dto) {
         // dto 에 pageSize 셋팅
         dto.setPageSize(pageSize);
 
@@ -106,44 +107,45 @@ public class MyFriendController {
     /**
      * 친구 즐겨찾기
      * @param relationId 친구관계 아이디
+     * @param user 로그인 유저 객체
      */
     @ResponseBody
     @PatchMapping("{relationId}")
-    public void updateFriend(@PathVariable Integer relationId, @RequestParam String memberId) {
-        myFriendService.updateFriend(relationId, memberId);
+    public void updateFriend(@PathVariable Integer relationId, @AuthenticationPrincipal AuthenticatedUser user) {
+        myFriendService.updateFriend(relationId, user.getId());
     }
 
     /**
      * 친구 관계 삭제
-     * @param memberId 친구삭제 신청회원
+     * @param user 로그인 유저 객체
      * @param friendId 친구삭제 대상회원
      */
     @ResponseBody
-    @DeleteMapping
-    public void deleteFriend(@RequestParam String memberId, @RequestParam String friendId) {
-        myFriendService.deleteFriend(memberId, friendId);
+    @DeleteMapping("{friendId}")
+    public void deleteFriend(@AuthenticationPrincipal AuthenticatedUser user, @PathVariable String friendId) {
+        myFriendService.deleteFriend(user.getId(), friendId);
     }
 
     /**
      * 친구 신청 수락
-     * @param memberId 친구신청 수락회원
+     * @param user 로그인 유저 객체
      * @param relationId 친구관계 아이디
      */
     @ResponseBody
     @PostMapping("accept/{relationId}")
-    public void acceptFriend(@RequestParam String memberId, @PathVariable Integer relationId) {
-        myFriendService.acceptFriend(memberId, relationId);
+    public void acceptFriend(@AuthenticationPrincipal AuthenticatedUser user, @PathVariable Integer relationId) {
+        myFriendService.acceptFriend(user.getId(), relationId);
     }
 
     /**
      * 친구 신청 거절
-     * @param memberId 친구신청 거절회원
+     * @param user 로그인 유저 객체
      * @param relationId 친구관계 아이디
      */
     @ResponseBody
     @PostMapping("reject/{relationId}")
-    public void rejectFriend(@RequestParam String memberId, @PathVariable Integer relationId) {
-        myFriendService.rejectFriend(memberId, relationId);
+    public void rejectFriend(@AuthenticationPrincipal AuthenticatedUser user, @PathVariable Integer relationId) {
+        myFriendService.rejectFriend(user.getId(), relationId);
     }
 
 }

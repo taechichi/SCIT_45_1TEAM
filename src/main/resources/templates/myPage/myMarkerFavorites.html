@@ -4,12 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>[ scitSainanGuide.html]</title>
-    <script src="/js/jquery-3.7.1.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // alert("jq_ready.");
-        });
-    </script>
+    <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+    <script th:src="@{/js/myPage/myMarkerFavorites.js}"></script>
 </head>
 <body>
     <h1> [ scitSainanGuide ] </h1>
@@ -36,8 +32,14 @@
     <div>
         <!-- 검색 폼 -->
         <div>
-            <div> 검색</div>
+            <form id="searchForm">
+                <input type="text" id="searchWord" name="searchWord" placeholder="검색어를 입력하세요" autocomplete="off">
+                <input type="hidden" id="filter" name="filter" value="">
 
+                <button type="button" id="filterAll">모두 보기</button>
+                <button type="button" id="filterHospital">병원</button>
+                <button type="button" id="filterShelter">대피소</button>
+            </form>
         </div>
 
         <!-- 즐겨찾기 데이터 표시하는 공간 전체를 form으로 감싸 삭제할 수 있도록 함 -->
@@ -71,52 +73,42 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="marker : ${markerFavoritesDTOPage.content}">
-                        <td><input type="checkbox" name="favoriteId" th:value="${marker.favoriteId}"></td>
-                        <td th:text="${marker.favoriteId}">ID</td>
-                        <td>
-                            <span th:if="${marker.nickname != ''}"><a th:text="${marker.nickname}"></a></span>
-                            <span th:if="${marker.nickname == ''}"><a th:text="${marker.name}"></a></span>
-                        </td>
-                        <!-- 장소 이름 --> <!-- api 사용 -->
-                        <td th:text="${marker.memberId}">Member ID</td>
-                        <td>
-                            <span th:if="${marker.hospitalId == null}"><a th:value="shelter">대피소</a></span>
-                            <span th:unless="${marker.hospitalId == null}"><a th:value="hospital">병원</a></span>
-                        </td>
-                        <td th:text="${marker.hospitalId}">Hospital ID</td>
-                        <td th:text="${marker.shelterId}">Shelter ID</td>
-                        <td th:text="${marker.nickname}">Nickname</td>
-                        <td th:text="${marker.name}">RealName</td>
-                    </tr>
+                <tr th:each="marker : ${markerFavoritesDTOPage.content}">
+                    <td><input type="checkbox" name="favoriteId" th:value="${marker.favoriteId}"></td>
+                    <td th:text="${marker.favoriteId}">ID</td>
+                    <td>
+                        <span th:if="${marker.nickname != ''}"><a th:text="${marker.nickname}"></a></span>
+                        <span th:if="${marker.nickname == ''}"><a th:text="${marker.name}"></a></span>
+                    </td>
+                    <td th:text="${marker.memberId}">Member ID</td>
+                    <td>
+                        <span th:if="${marker.hospitalId == null}">대피소</span>
+                        <span th:unless="${marker.hospitalId == null}">병원</span>
+                    </td>
+                    <td th:text="${marker.hospitalId}">Hospital ID</td>
+                    <td th:text="${marker.shelterId}">Shelter ID</td>
+                    <td th:text="${marker.nickname}">Nickname</td>
+                    <td th:text="${marker.name}">RealName</td>
+                </tr>
                 </tbody>
             </table>
-            <!-- 즐겨찾기 마커 데이터 출력하는 공간 -->
-
         </form>
 
-
-
+        <!-- 페이지네이션 -->
         <div>
-            <!-- 이전 페이지 링크 -->
-            <span th:if="${markerFavoritesDTOPage.hasPrevious()}">
-                <a th:href="@{/my/myMarkerFavorites(page=${markerFavoritesDTOPage.number}, pageSize=${markerFavoritesDTOPage.size})}">이전</a>
-            </span>
+        <span th:if="${markerFavoritesDTOPage.hasPrevious()}">
+            <a th:href="@{/my/myMarkerFavorites(page=${markerFavoritesDTOPage.number}, pageSize=${markerFavoritesDTOPage.size})}">이전</a>
+        </span>
 
-            <!-- 각 페이지 번호 링크 -->
             <span th:each="i : ${#numbers.sequence(1, markerFavoritesDTOPage.totalPages)}">
-                <a th:href="@{/my/myMarkerFavorites(page=${i}, pageSize=${markerFavoritesDTOPage.size})}"
-                   th:text="${i}" th:classappend="${i == markerFavoritesDTOPage.number + 1} ? 'active'"></a>
-            </span>
+            <a th:href="@{/my/myMarkerFavorites(page=${i}, pageSize=${markerFavoritesDTOPage.size})}"
+               th:text="${i}" th:classappend="${i == markerFavoritesDTOPage.number + 1} ? 'active'"></a>
+        </span>
 
-            <!-- 다음 페이지 링크 -->
             <span th:if="${markerFavoritesDTOPage.hasNext()}">
-                <a th:href="@{/my/myMarkerFavorites(page=${markerFavoritesDTOPage.number + 2}, pageSize=${markerFavoritesDTOPage.size})}">다음</a>
-            </span>
+            <a th:href="@{/my/myMarkerFavorites(page=${markerFavoritesDTOPage.number + 2}, pageSize=${markerFavoritesDTOPage.size})}">다음</a>
+        </span>
         </div>
-
-
     </div>
-
 </body>
 </html>

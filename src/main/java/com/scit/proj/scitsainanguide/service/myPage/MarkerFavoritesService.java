@@ -27,14 +27,18 @@ public class MarkerFavoritesService {
     private final MarkerFavoritesJPARepository markerFavoritesJPARepository;
 
     // tsh0828의 마커 냅다 가져오는 코드
+    // 나중에 ID 받는걸로 수정 해야함.
     public Page<MarkerFavoritesDTO> viewAllFavoritesMarkerTest(SearchRequestDTO dto) {
         return markerFavoritesRepository.selectMarkerFavoritesList(dto, "tsh0828");
     }
 
-    public List<MarkerFavoritesDTO> viewAllFavoritesMarkerTest_NoPaging() {
-        return markerFavoritesRepository.selectAllMarkerFavoritesDTO_NoPaging("tsh0828");
+    // tsh0828의 마커 냅다 가져오긴하는데 검색하거나 필터 사용해서 가져오는 사비스
+    // 나중에 ID 받는걸로 수정 해야함.
+    public Page<MarkerFavoritesDTO> selectMarkerFavoritesFilterAndSearchList(SearchRequestDTO dto) {
+        log.debug("Service_SearchRequestDTO: {}", dto);
+        return markerFavoritesRepository.selectMarkerFavoritesBySearchAndFilter(dto, "tsh0828");
     }
-    
+
     // 마커 주인하고 맞나 비교하는 코드
     public boolean isMarkerOwner(Integer myFavoriteId, String memberId) {
         MarkerFavoritesEntity markerFavoritesEntity = markerFavoritesJPARepository.findById(myFavoriteId ).orElseThrow(() -> new EntityNotFoundException(memberId));
@@ -45,6 +49,7 @@ public class MarkerFavoritesService {
         return false;
     }
 
+    // 마커
     public boolean deleteMarker(Integer myFavoriteId, String memberId) {
         if(isMarkerOwner(myFavoriteId, memberId)) {
             // delete
@@ -55,24 +60,4 @@ public class MarkerFavoritesService {
         }
     }
 
-    // ==== TEST CODE ===============================================================
-    /*public Page<MarkerFavoritesDTO> getList(int page, int pageSize)*/
-    public Page<MarkerFavoritesDTO> getList(int page, int pageSize) {
-        Pageable p = PageRequest.of(page - 1, pageSize, Sort.Direction.DESC, "favoriteId");
-
-        Page<MarkerFavoritesEntity> entities = markerFavoritesJPARepository.findAll(p);
-
-        return entities.map(this::convertToDTO);
-    }
-
-    MarkerFavoritesDTO convertToDTO(MarkerFavoritesEntity entity) {
-        return MarkerFavoritesDTO.builder()
-                .favoriteId(entity.getFavoriteId())
-                .memberId(entity.getMember().getMemberId())
-                .hospitalId(entity.getHospital() != null ? entity.getHospital().getHospitalId() : null)
-                .shelterId(entity.getShelter() != null ? entity.getShelter().getShelterId() : null)
-                .nickname(entity.getNickname() != null ? entity.getNickname() : null)
-                .build();
-    }
-    // ==============================================================================
 }

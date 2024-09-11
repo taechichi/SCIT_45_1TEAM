@@ -4,11 +4,122 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <!-- 게시판 페이지에 필요한 link 태그 모음 -->
+    <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
+    <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
+    <!-- Custom styles for this template-->
+    <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
 </head>
 <body>
-<div th:fragment="menu">
-    <h1>[ 친구 목록 페이지 이지롱 ]</h1>
-    <span th:text="${friendList.getContent()}"></span>
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <div th:insert="fragments/menuAdmin :: menuAdmin" id="menuAdmin"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">게시판 관리</h6>
+                </div>
+                <!-- 검색 폼 -->
+                <div class="searchForm-container">
+                    <form id="pagingForm" th:action="@{/my/friend}" method="get">
+                        <input type="hidden" name="page" id="page"/>
+                        <select id="type" name="searchType">
+                            <option value="friendId" th:text="#{my.friend.searchType.friendId}"
+                                    th:selected="${searchType == 'friendId'}"></option>
+                            <option value="nickname" th:text="#{my.friend.searchType.nickname}"
+                                    th:selected="${searchType == 'nickname'}"></option>
+                        </select>
+                        <input type="text" name="searchWord" th:value="${searchWord}"/>
+                        <input type="submit" onclick="pagingFormSubmit(1)" th:value="#{board.button.search}"/>
+                    </form>
+
+                    <div id="btnArea">
+                        <button id="toRequestList" th:text="#{my.friend.button.requestList}"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th th:text="#{my.friend.column.friendId}"></th>
+                                    <th th:text="#{my.friend.column.nickname}"></th>
+                                    <th th:text="#{my.friend.column.nationality}"></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody th:each="friend : ${friendList}" th:object="${friend}">
+                                <tr>
+                                    <td>
+                                        <img class="rounded-circle" alt="Profile Picture"
+                                             th:src="@{/member/download/{friendId}(friendId=*{friendId})}"/>
+                                        <span th:text="*{friendId}"></span>
+                                    </td>
+                                    <td th:text="*{nickname}"></td>
+                                    <td th:text="*{nationality}"></td>
+                                    <td>
+                                        <button th:if="*{favoriteYn == false}" class="updateFavoriteBtn" th:data-id="*{relationId}" th:data-favorite="*{favoriteYn}"
+                                                th:text="#{my.friend.button.favorite}"></button>
+                                        <button th:if="*{favoriteYn == true}" class="updateFavoriteBtn" th:data-id="*{relationId}" th:data-favorite="*{favoriteYn}"
+                                                th:text="#{my.friend.button.favorite.delete}"></button>
+                                        <button class="deleteFriendBtn" th:data-id="*{friendId}"
+                                                th:text="#{board.button.delete}"></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div id="navigator">
+                            <!-- 페이지 번호 navigator -->
+                            <a th:if="${friendList.hasPrevious()}"
+                               th:href="|javascript:pagingFormSubmit(${friendList.getNumber()})|">◀ </a>
+                            <span th:if="${friendList.getTotalPages() > 0}"
+                                  th:each="counter : ${#numbers.sequence((page - 2 < 1 ? 1
+                                                    : (page + 2 > friendList.getTotalPages() ? friendList.getTotalPages() - 4
+                                                    : page - 2)),
+                                                    (page + 2 > friendList.getTotalPages() ? friendList.getTotalPages()
+                                                    : (page - 2 < 1 ? 5 : page + 2)))}">
+                                <th:block th:if="${counter == page}"><b></th:block>
+                                <a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
+                                <th:block th:if="${counter == page}"></b></th:block>
+                            </span>
+                            <a th:if="${friendList.hasNext()}"
+                               th:href="|javascript:pagingFormSubmit(${friendList.getNumber()}+2)|"> ▶</a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End of Main Content -->
+        </div>
+        <!-- End of Content Wrapper -->
+    </div>
+
 </div>
+<!-- End of Page Wrapper -->
 </body>
+<!-- 게시판 페이지에 필요한 script 모음 -->
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.js}"></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/js/sb-admin-2.js}"></script>
+
+<!-- 페이징 기능을 위한 js -->
+<script th:src="@{/js/paging.js}"></script>
+
+<!-- 친구 목록 페이지에 필요한 js -->
+<script th:src="@{/js/myPage/friend/myFriend.js}"></script>
 </html>
