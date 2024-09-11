@@ -41,6 +41,10 @@
                         <input type="text" name="searchWord" th:value="${searchWord}"/>
                         <input type="submit" onclick="pagingFormSubmit(1)" th:value="#{board.button.search}"/>
                     </form>
+
+                    <div id="btnArea">
+                        <button id="toRequestList" th:text="#{my.friend.button.requestList}"></button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

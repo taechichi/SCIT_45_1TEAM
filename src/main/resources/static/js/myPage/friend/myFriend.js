@@ -1,6 +1,7 @@
 $(document).ready(function(){
     $('.updateFavoriteBtn').on('click', updateFavorite);
     $('.deleteFriendBtn').on('click', deleteFriend);
+    $('#toRequestList').on('click', toRequestList);
 });
 
 function updateFavorite(){
@@ -47,4 +48,9 @@ function deleteFriend(){
         })
     }
 
+}
+
+function toRequestList() {
+    // 나에게 온 친구 신청 목록 페이지로 연결
+    location.href = './friend/request';
 }

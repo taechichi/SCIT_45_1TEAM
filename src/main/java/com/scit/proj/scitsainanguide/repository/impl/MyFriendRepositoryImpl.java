@@ -101,6 +101,7 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
         // 쿼리 실행
         List<FriendDTO> friendRequestDTOList = queryFactory.select(
                         Projections.constructor(FriendDTO.class,
+                                friend.relationId,
                                 friend.friendId,
                                 friend.friend.nickname,
                                 friend.friend.nationality,

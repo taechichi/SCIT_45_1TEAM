@@ -35,7 +35,8 @@ public class FriendDTO {
     }
 
     // 내 친구 신청 목록 출력에 필요한 DTO 생성자
-    public FriendDTO(String friendId, String nickname, String nationality, LocalDateTime requestDt) {
+    public FriendDTO(Integer relationId, String friendId, String nickname, String nationality, LocalDateTime requestDt) {
+        this.relationId = relationId;
         this.friendId = friendId;
         this.nickname = nickname;
         this.nationality = nationality;
