@@ -168,21 +168,14 @@
                         <!-- 페이지 번호 navigator -->
                         <div id="navigator" class="pagination">
                             <a th:if="${memberList.hasPrevious()}"
-                               th:href="|javascript:pagingFormSubmit(${memberList.getNumber()})|">◀</a>
-                            <span th:if="${memberList.getTotalPages() > 0}"
-                                  th:each="counter : ${#numbers.sequence((page - 2 < 1 ? 1
-                                                    : (page + 2 > memberList.getTotalPages() ? memberList.getTotalPages() - 4
-                                                    : page - 2)),
-                                                    (page + 2 > memberList.getTotalPages() ? memberList.getTotalPages()
-                                                    : (page - 2 < 1 ? 5 : page + 2)))}">
+                               th:href="|javascript:pagingFormSubmit(${page - 1})|">◀</a>
+                            <span th:each="counter : ${#numbers.sequence(startPage, endPage)}">
                                 <th:block th:if="${counter == page}"><b></th:block>
                                 <a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
                                 <th:block th:if="${counter == page}"></b></th:block>
                             </span>
                             <a th:if="${memberList.hasNext()}"
-                               th:href="|javascript:pagingFormSubmit(${memberList.getNumber()}+2)|">▶</a>
-
-
+                               th:href="|javascript:pagingFormSubmit(${page + 1})|">▶</a>
                         </div>
                     </div>
                 </div>
