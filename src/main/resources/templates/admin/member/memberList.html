@@ -154,7 +154,7 @@
                                 <th th:text="#{admin.member.column.nationality}"></th>
                             </tr>
                             </thead>
-                            <tbody th:each="member : ${memberList}" th:object="${member}">
+                            <tbody th:each="member : ${pageData}" th:object="${member}">
                             <tr>
                                 <td th:text="*{memberId}"></td>
                                 <td th:text="*{nickname}"></td>
@@ -166,17 +166,7 @@
                         </table>
 
                         <!-- 페이지 번호 navigator -->
-                        <div id="navigator" class="pagination">
-                            <a th:if="${memberList.hasPrevious()}"
-                               th:href="|javascript:pagingFormSubmit(${page - 1})|">◀</a>
-                            <span th:each="counter : ${#numbers.sequence(startPage, endPage)}">
-                                <th:block th:if="${counter == page}"><b></th:block>
-                                <a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
-                                <th:block th:if="${counter == page}"></b></th:block>
-                            </span>
-                            <a th:if="${memberList.hasNext()}"
-                               th:href="|javascript:pagingFormSubmit(${page + 1})|">▶</a>
-                        </div>
+                        <div th:insert="fragments/pagination :: pagination"></div>
                     </div>
                 </div>
             </div>

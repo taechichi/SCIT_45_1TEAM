@@ -38,7 +38,7 @@ public class AdminMemberController {
         Page<MemberDTO> memberList = adminMemberService.selectMemberList(dto);
         // 페이징 관련 값들을 세팅하여 ModelAndView 객체를 생성
         ModelAndView modelAndView = paginationUtils.getPaginationData(memberList, dto);
-        modelAndView.addObject("memberList", memberList); // 목록 데이터를 모델에 담는다.
+        modelAndView.addObject("pageData", memberList); // 목록 데이터를 모델에 담는다.
         modelAndView.setViewName("admin/member/memberList"); // 뷰 이름 설정
 
         return modelAndView;
