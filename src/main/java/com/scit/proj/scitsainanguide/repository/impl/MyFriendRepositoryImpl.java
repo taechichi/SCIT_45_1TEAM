@@ -2,6 +2,7 @@ package com.scit.proj.scitsainanguide.repository.impl;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
 import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
@@ -47,7 +48,7 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
     }
 
     @Override
-    public Page<FriendDTO> selectMyFirendList(SearchRequestDTO dto, String memberId) {
+    public Page<FriendDTO> selectMyFriendList(SearchRequestDTO dto, String memberId) {
         Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPageSize());
         FriendSearchType searchType = FriendSearchType.fromValue(dto.getSearchType());
 
@@ -264,6 +265,36 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
         .where(member.memberId.in(friendIdList))
         .fetch();
     }
+
+    ///////////////////////////////////////////////////////
+    @Override
+    public List<MemberDTO> selectMyFriendIdContainSearchWord(String memberId, String searchWord){
+
+        // 현재 로그인 중인 사용자의 친구들 중, 사용자가 검색한 단어가 포함된 id 리스트를 불러옴
+        List<String> myFriendList =  queryFactory.select(friend.friendId)
+                .from(friend)
+                .where(friend.memberId.eq(memberId).and(friend.friendId.contains(searchWord)))
+                .orderBy(friend.friendId.asc())
+                .fetch();
+
+        // 위에서 불러온 리스트 내 friendId로 member table 내 정보 가져옴
+        return queryFactory.select(
+                        Projections.constructor(MemberDTO.class,
+                                member.memberId,
+                                member.nickname,
+                                member.fileName,
+                                member.gender,
+                                member.nationality,
+                                friend.favoriteYn
+                        )
+                )
+                .from(member)
+                .leftJoin(friend).on(friend.friendId.eq(member.memberId))
+                .where(member.memberId.in(myFriendList))
+                .orderBy(friend.friendYn.desc(),(member.memberId.asc()))
+                .fetch();
+    }
+
 
     private long getTotalCount(BooleanBuilder whereClause) {
         return queryFactory.selectFrom(friend)

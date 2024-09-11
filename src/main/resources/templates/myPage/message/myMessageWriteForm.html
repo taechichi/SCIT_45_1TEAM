@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script ></script>
 </head>
 <body>
     <form action="/my/message" method="post">
@@ -12,21 +13,27 @@
             <tr>
                 <th th:text="#{my.message.row.receiverId}"></th>
                 <td>
-                    <input type="text" name="receiverId" >
+                    <input type="text" name="receiverId" id="receiverId" readonly placeholder="친구검색 버튼 이용">
+                </td>
+                <td>
+                    <button id="searchId" type="button" th:text="#{my.message.button.search.receiverId}"></button>
                 </td>
             </tr>
             <tr>
                 <th th:text="#{my.message.row.content}"></th>
-                <td>
+                <td colspan="2" >
                     <textarea name="content"></textarea>
                 </td>
             </tr>
             <tr>
-                <td colspan="2">
+                <td colspan="3">
                     <input type="submit" th:value="#{my.message.button.send}">
                 </td>
             </tr>
         </table>
     </form>
+    <!-- js -->
+    <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+    <script th:src="@{/js/myPage/myMessageWriteForm.js}"></script>
 </body>
 </html>

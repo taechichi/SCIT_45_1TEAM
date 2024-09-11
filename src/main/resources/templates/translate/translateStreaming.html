@@ -46,8 +46,10 @@
             </select>
             <button id="start-recording" th:text="#{translate.streaming.startRec}">녹음 시작</button>
             <button id="stop-recording" th:text="#{translate.streaming.stopRec}" disabled>녹음 종료</button>
-            <h4 th:text="#{translate.streaming.toText}">텍스트화: <span id="voiceTexted"></span></h4>
-            <h4 th:text="#{translate.streamingTrans}">번역: <span id="voiceTranslated"></span></h4>
+            <h4 th:text="#{translate.streaming.toText}">텍스트화: </h4>
+            <span id="voiceTexted"></span>
+            <h4 th:text="#{translate.streamingTrans}">번역: </h4>
+            <span id="voiceTranslated"></span>
         </div>
         <!-- End of Main Content -->
     </div>

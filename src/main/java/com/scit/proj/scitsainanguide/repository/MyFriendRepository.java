@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface MyFriendRepository {
 
-    Page<FriendDTO> selectMyFirendList(SearchRequestDTO dto, String memberId);
+    Page<FriendDTO> selectMyFriendList(SearchRequestDTO dto, String memberId);
 
     Page<FriendDTO> selectMyFriendRequestList(SearchRequestDTO dto, String memberId);
 
@@ -27,4 +27,6 @@ public interface MyFriendRepository {
     Optional<MemberDTO> selectMyFriend(String memberId);
 
     List<MemberDTO> selectMyFavoriteList(String memberId);
+
+    List<MemberDTO> selectMyFriendIdContainSearchWord(String memberId, String searchWord);
 }

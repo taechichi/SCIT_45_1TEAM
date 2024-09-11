@@ -20,7 +20,7 @@ public class MyFriendService {
     private final MyFriendRepository myFriendRepository;
 
     public Page<FriendDTO> selectMyFriendList(SearchRequestDTO dto, String memberId) {
-        return myFriendRepository.selectMyFirendList(dto, memberId);
+        return myFriendRepository.selectMyFriendList(dto, memberId);
     }
 
     public Page<FriendDTO> selectMyFriendRequestList(SearchRequestDTO dto, String memberId) {
@@ -57,4 +57,10 @@ public class MyFriendService {
     public List<MemberDTO> selectMyFavoriteList(String memberId) {
         return myFriendRepository.selectMyFavoriteList(memberId);
     }
+
+    // 사용자가 친구 검색에서 입력한 아이디가 포함된 아이디를 가진 친구 리스트를 반환한다.
+    public List<MemberDTO> selectMyFriendIdContainSearchWord(String memberId, String searchWord){
+        return myFriendRepository.selectMyFriendIdContainSearchWord(memberId, searchWord);
+    }
+
 }
