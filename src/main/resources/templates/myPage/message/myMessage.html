@@ -9,13 +9,15 @@
     <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
     <!-- Custom styles for this template -->
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
+    <link rel="stylesheet" th:href="@{/css/topbar.css}">
+    <link rel="stylesheet" th:href="@{/css/index/index.css}">
 </head>
 <body>
 <!-- Page Wrapper -->
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <div th:insert="fragments/menuAdmin :: menuAdmin" id="menuAdmin"></div>
+    <div th:insert="fragments/menu :: menu(${member})" id="menu"></div>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -26,7 +28,7 @@
 
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <div th:insert="fragments/TopbarAdmin :: TopbarAdmin" id="TopbarAdmin"></div>
+                    <div th:insert="fragments/Topbar :: Topbar" id="Topbar"></div>
                     <h6 class="m-0 font-weight-bold text-primary">테이블 이름을 여기에</h6>
                 </div>
                 <div class="card-body">

@@ -1,0 +1,100 @@
+/* 기본 테이블 스타일 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+}
+
+thead {
+    background-color: #f2f2f2;
+}
+
+th, td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #FEBE10;
+    color: white;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* 검색창 스타일 */
+.searchForm-container {
+    display: flex;
+    justify-content: flex-start;
+    margin: 20px;
+    gap: 10px;
+}
+
+.searchForm-container select,
+.searchForm-container input,
+.searchForm-container input[type="submit"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.searchForm-container select {
+    width: 150px;
+}
+
+.searchForm-container input {
+    width: 300px;
+}
+
+.searchForm-container input[type="submit"] {
+    padding: 8px 12px; /* 버튼 크기 조정 */
+    background-color: #FEBE10;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px; /* 버튼 텍스트 크기 조정 */
+    width: auto; /* 버튼의 넓이를 자동으로 조정 */
+}
+
+.searchForm-container input[type="submit"]:hover {
+    background-color: #f9a800; /* 버튼 호버 시 배경색 변경 */
+}
+
+/* 페이징 영역 스타일 */
+#navigator {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#navigator a {
+    margin: 0 5px;
+    padding: 10px 15px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: #4CAF50;
+    border-radius: 4px;
+}
+
+#navigator a.active {
+    background-color: #FEBE10;
+    color: white;
+    border: 1px solid #FEBE10;
+}
+
+#navigator a:hover {
+    background-color: #ddd;
+}
+#dataTable {
+    white-space: nowrap; /* 텍스트를 한 줄로 표시 */
+    overflow: hidden; /* 넘치는 텍스트를 숨김 */
+    text-overflow: ellipsis; /* 넘치는 텍스트를 ...으로 표시 */
+}
