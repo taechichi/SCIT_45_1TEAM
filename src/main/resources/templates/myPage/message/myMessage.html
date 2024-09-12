@@ -44,7 +44,7 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody th:each="message : ${messageList}" th:object="${message}">
+                            <tbody th:each="message : ${pageData}" th:object="${message}">
                                 <tr>
                                     <td>
                                         <img class="rounded-circle" alt="Profile Picture"
@@ -61,38 +61,25 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div id="navigator">
-                            <!-- 페이지 번호 navigator -->
-                            <a th:if="${messageList.hasPrevious()}"
-                               th:href="|javascript:pagingFormSubmit(${messageList.getNumber()})|">◀ </a>
-                            <span th:if="${messageList.getTotalPages() > 0}"
-                                  th:each="counter : ${#numbers.sequence((page - 2 < 1 ? 1
-                                                    : (page + 2 > messageList.getTotalPages() ? messageList.getTotalPages() - 4
-                                                    : page - 2)),
-                                                    (page + 2 > messageList.getTotalPages() ? messageList.getTotalPages()
-                                                    : (page - 2 < 1 ? 5 : page + 2)))}">
-                        <th:block th:if="${counter == page}"><b></th:block>
-                            <a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
-                        <th:block th:if="${counter == page}"></b></th:block>
-                    </span>
-                            <a th:if="${messageList.hasNext()}"
-                               th:href="|javascript:pagingFormSubmit(${messageList.getNumber()}+2)|"> ▶</a>
-                            <!-- 검색 폼 -->
-                            <div class="searchForm-container">
-                                <form id="pagingForm" th:action="@{/my/message}" method="get">
-                                    <input type="hidden" name="page" id="page"/>
-                                    <select id="type" name="searchType">
-                                        <option value="senderId" th:text="#{board.searchType.memberId}"
-                                                th:selected="${searchType == 'senderId'}">/option>
-                                        <option value="content" th:text="#{my.message.searchType.content}"
-                                                th:selected="${searchType == 'content'}"></option>
-                                    </select>
-                                    <input type="text" name="searchWord" th:value="${searchWord}"/>
-                                    <input type="submit" onclick="pagingFormSubmit(1)" th:value="#{board.button.search}"/>
-                                    <input type="button" id="writeMessageBtn" th:value="#{my.message.button.write}">
-                                    <input type="button" id="deleteMessageBtn" th:value="#{board.button.delete}">
-                                </form>
-                            </div>
+
+
+                        <!-- 페이지 번호 navigator -->
+                        <div th:insert="fragments/pagination :: pagination"></div>
+                        <!-- 검색 폼 -->
+                        <div class="searchForm-container">
+                            <form id="pagingForm" th:action="@{/my/message}" method="get">
+                                <input type="hidden" name="page" id="page"/>
+                                <select id="type" name="searchType">
+                                    <option value="senderId" th:text="#{board.searchType.memberId}"
+                                            th:selected="${searchType == 'senderId'}">/option>
+                                    <option value="content" th:text="#{my.message.searchType.content}"
+                                            th:selected="${searchType == 'content'}"></option>
+                                </select>
+                                <input type="text" name="searchWord" th:value="${searchWord}"/>
+                                <input type="submit" onclick="pagingFormSubmit(1)" th:value="#{board.button.search}"/>
+                                <input type="button" id="writeMessageBtn" th:value="#{my.message.button.write}">
+                                <input type="button" id="deleteMessageBtn" th:value="#{board.button.delete}">
+                            </form>
                         </div>
                     </div>
                 </div>

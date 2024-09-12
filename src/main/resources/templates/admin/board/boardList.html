@@ -55,39 +55,24 @@
                                 <th th:text="#{admin.board.column.deleteDt}"></th>
                             </tr>
                             </thead>
-                            <tbody th:each="deletedBoard : ${deletedBoardList}" th:object="${deletedBoard}">
-                            <tr>
-                                <td th:text="*{memberId}"></td>
-                                <td th:if="*{hospitalName != null}">
-                                    <a th:href="@{/admin/board/{boardId}(boardId=*{boardId})}" th:text="*{hospitalName}"></a>
-                                </td>
-                                <td th:if="*{shelterName != null}">
-                                    <a th:href="@{/admin/board/{boardId}(boardId=*{boardId})}" th:text="*{shelterName}"></a>
-                                </td>
-                                <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
-                                <td th:text="*{deleteReason}"></td>
-                                <td th:text="*{#temporals.format(deleteDt, 'yyyy.MM.dd HH:mm')}"></td>
-                            </tr>
+                            <tbody th:each="deletedBoard : ${pageData}" th:object="${deletedBoard}">
+                                <tr>
+                                    <td th:text="*{memberId}"></td>
+                                    <td th:if="*{hospitalName != null}">
+                                        <a th:href="@{/admin/board/{boardId}(boardId=*{boardId})}" th:text="*{hospitalName}"></a>
+                                    </td>
+                                    <td th:if="*{shelterName != null}">
+                                        <a th:href="@{/admin/board/{boardId}(boardId=*{boardId})}" th:text="*{shelterName}"></a>
+                                    </td>
+                                    <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
+                                    <td th:text="*{deleteReason}"></td>
+                                    <td th:text="*{#temporals.format(deleteDt, 'yyyy.MM.dd HH:mm')}"></td>
+                                </tr>
                             </tbody>
                         </table>
-                        <div id="navigator">
-                            <!-- 페이지 번호 navigator -->
-                            <a th:if="${deletedBoardList.hasPrevious()}"
-                               th:href="|javascript:pagingFormSubmit(${deletedBoardList.getNumber()})|">◀ </a>
-                            <span th:if="${deletedBoardList.getTotalPages() > 0}"
-                                  th:each="counter : ${#numbers.sequence((page - 2 < 1 ? 1
-                                                    : (page + 2 > deletedBoardList.getTotalPages() ? deletedBoardList.getTotalPages() - 4
-                                                    : page - 2)),
-                                                    (page + 2 > deletedBoardList.getTotalPages() ? deletedBoardList.getTotalPages()
-                                                    : (page - 2 < 1 ? 5 : page + 2)))}">
-                                <th:block th:if="${counter == page}"><b></th:block>
-                                <a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
-                                <th:block th:if="${counter == page}"></b></th:block>
-                            </span>
-                            <a th:if="${deletedBoardList.hasNext()}"
-                               th:href="|javascript:pagingFormSubmit(${deletedBoardList.getNumber()}+2)|"> ▶</a>
 
-                        </div>
+                        <!-- 페이지 번호 navigator -->
+                        <div th:insert="fragments/pagination :: pagination"></div>
                     </div>
                 </div>
             </div>

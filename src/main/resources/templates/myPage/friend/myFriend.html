@@ -59,7 +59,7 @@
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody th:each="friend : ${friendList}" th:object="${friend}">
+                            <tbody th:each="friend : ${pageData}" th:object="${friend}">
                                 <tr>
                                     <td>
                                         <img class="rounded-circle" alt="Profile Picture"
@@ -79,24 +79,9 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div id="navigator">
-                            <!-- 페이지 번호 navigator -->
-                            <a th:if="${friendList.hasPrevious()}"
-                               th:href="|javascript:pagingFormSubmit(${friendList.getNumber()})|">◀ </a>
-                            <span th:if="${friendList.getTotalPages() > 0}"
-                                  th:each="counter : ${#numbers.sequence((page - 2 < 1 ? 1
-                                                    : (page + 2 > friendList.getTotalPages() ? friendList.getTotalPages() - 4
-                                                    : page - 2)),
-                                                    (page + 2 > friendList.getTotalPages() ? friendList.getTotalPages()
-                                                    : (page - 2 < 1 ? 5 : page + 2)))}">
-                                <th:block th:if="${counter == page}"><b></th:block>
-                                <a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
-                                <th:block th:if="${counter == page}"></b></th:block>
-                            </span>
-                            <a th:if="${friendList.hasNext()}"
-                               th:href="|javascript:pagingFormSubmit(${friendList.getNumber()}+2)|"> ▶</a>
 
-                        </div>
+                        <!-- 페이지 번호 navigator -->
+                        <div th:insert="fragments/pagination :: pagination"></div>
                     </div>
                 </div>
             </div>

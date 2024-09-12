@@ -5,14 +5,15 @@ import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.myPage.MyFriendService;
+import com.scit.proj.scitsainanguide.util.PaginationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -23,31 +24,29 @@ import java.util.List;
 public class MyFriendController {
 
     private final MyFriendService myFriendService;
+    private final PaginationUtils paginationUtils;
 
     @Value("${board.pageSize}")
     private int pageSize;
-    @Value("${board.linkSize}")
-    private int linkSize;
 
     /**
      * 내 친구 목록 페이지 이동
-     * @param model 모델 객체
      * @param user 로그인한 회원 객체
      * @param dto 검색 요청 객체
-     * @return 내 친구 목록 페이지 html
+     * @return 내 친구 목록 페이지 정보와 모델을 담은 ModelAndView 객체
      */
     @GetMapping
-    public String selectMyFriendList(Model model, @AuthenticationPrincipal AuthenticatedUser user, @ModelAttribute SearchRequestDTO dto) {
+    public ModelAndView selectMyFriendList(@AuthenticationPrincipal AuthenticatedUser user, @ModelAttribute SearchRequestDTO dto) {
         // dto 에 pageSize 셋팅
         dto.setPageSize(pageSize);
 
         Page<FriendDTO> myFriendList = myFriendService.selectMyFriendList(dto, user.getId());
-        model.addAttribute("friendList", myFriendList);
-        model.addAttribute("page", dto.getPage());
-        model.addAttribute("linkSize", linkSize);
-        model.addAttribute("searchType", dto.getSearchType());
-        model.addAttribute("searchWord", dto.getSearchWord());
-        return "myPage/friend/myFriend";
+        // 페이징 관련 값들을 세팅하여 ModelAndView 객체를 생성
+        ModelAndView modelAndView = paginationUtils.getPaginationData(myFriendList, dto);
+        modelAndView.addObject("pageData", myFriendList); // 목록 데이터를 모델에 담는다.
+        modelAndView.setViewName("myPage/friend/myFriend"); // 뷰 이름 설정
+
+        return modelAndView;
     }
 
     /**
@@ -75,33 +74,33 @@ public class MyFriendController {
 
     /**
      * 내 친구 신청 목록 페이지 이동
-     * @param model 모델 객체
      * @param user 로그인한 회원 객체
      * @param dto 검색 요청 객체
-     * @return 내 친구 신청 목록 페이지 html
+     * @return 내 친구 신청 목록 페이지 정보와 모델을 담은 ModelAndView 객체
      */
     @GetMapping("request")
-    public String selectMyFriendRequestList(Model model
-            , @AuthenticationPrincipal AuthenticatedUser user, @ModelAttribute SearchRequestDTO dto) {
+    public ModelAndView selectMyFriendRequestList(@AuthenticationPrincipal AuthenticatedUser user, @ModelAttribute SearchRequestDTO dto) {
         // dto 에 pageSize 셋팅
         dto.setPageSize(pageSize);
 
         Page<FriendDTO> myFriendRequestList = myFriendService.selectMyFriendRequestList(dto, user.getId());
-        model.addAttribute("friendRequestList", myFriendRequestList);
-        model.addAttribute("page", dto.getPage());
-        model.addAttribute("linkSize", linkSize);
-        return "myPage/friend/myFriendRequest";
+        // 페이징 관련 값들을 세팅하여 ModelAndView 객체를 생성
+        ModelAndView modelAndView = paginationUtils.getPaginationData(myFriendRequestList, dto);
+        modelAndView.addObject("pageData", myFriendRequestList); // 목록 데이터를 모델에 담는다.
+        modelAndView.setViewName("myPage/friend/myFriendRequest"); // 뷰 이름 설정
+
+        return modelAndView;
     }
 
     /**
      * 친구 관계 추가 (친구 신청시)
      * @param user 로그인한 회원 객체
-     * @param friendId 친구추가 대상회원 아이디를 콤마로 구분해 여러 아이디 한 번에 가져옴
+     * @param friendIds 친구추가 대상회원 아이디를 콤마로 구분해 여러 아이디 한 번에 가져옴
      */
     @ResponseBody
-    @PostMapping("{friendId}")
-    public void insertFriend(@AuthenticationPrincipal AuthenticatedUser user, @PathVariable String friendId) {
-        myFriendService.insertFriend(user.getId(), friendId);
+    @PostMapping("{friendIds}")
+    public void insertFriend(@AuthenticationPrincipal AuthenticatedUser user, @PathVariable String friendIds) {
+        myFriendService.insertFriend(user.getId(), friendIds);
     }
 
     /**

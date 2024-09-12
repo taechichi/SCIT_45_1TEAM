@@ -6,6 +6,7 @@ import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.myPage.MyFriendService;
 import com.scit.proj.scitsainanguide.service.myPage.MyMessageService;
+import com.scit.proj.scitsainanguide.util.PaginationUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -25,32 +27,30 @@ public class MyMessageController {
 
     private final MyMessageService myMessageService;
     private final MyFriendService myFriendService;
+    private final PaginationUtils paginationUtils;
 
     @Value("${board.pageSize}")
     private int pageSize;
-    @Value("${board.linkSize}")
-    private int linkSize;
 
     /**
      * 내 쪽지 목록 조회 페이지 이동
      *
-     * @param model 모델 객체
      * @param user  로그인한 회원 객체
      * @param dto   검색 객체
-     * @return 내 쪽지 목록 조회 페이지 html
+     * @return 내 쪽지 목록 페이지 정보와 모델을 담은 ModelAndView 객체
      */
     @GetMapping
-    public String selectMyMessageList(Model model, @AuthenticationPrincipal AuthenticatedUser user, @ModelAttribute SearchRequestDTO dto) {
+    public ModelAndView selectMyMessageList(@AuthenticationPrincipal AuthenticatedUser user, @ModelAttribute SearchRequestDTO dto) {
         // pageSize 세팅
         dto.setPageSize(pageSize);
 
         Page<MessageDTO> messageList = myMessageService.selectMyMessageList(dto, user.getId());
-        model.addAttribute("messageList", messageList);
-        model.addAttribute("page", dto.getPage());
-        model.addAttribute("linkSize", linkSize);
-        model.addAttribute("searchType", dto.getSearchType());
-        model.addAttribute("searchWord", dto.getSearchWord());
-        return "myPage/message/myMessage";
+        // 페이징 관련 값들을 세팅하여 ModelAndView 객체를 생성
+        ModelAndView modelAndView = paginationUtils.getPaginationData(messageList, dto);
+        modelAndView.addObject("pageData", messageList); // 목록 데이터를 모델에 담는다.
+        modelAndView.setViewName("myPage/message/myMessage"); // 뷰 이름 설정
+
+        return modelAndView;
     }
 
     /**
