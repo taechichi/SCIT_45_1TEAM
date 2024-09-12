@@ -1,14 +1,15 @@
 package com.scit.proj.scitsainanguide.repository.impl;
 
-
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.scit.proj.scitsainanguide.domain.dto.MarkerFavoritesDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
-import com.scit.proj.scitsainanguide.domain.entity.MarkerFavoritesEntity;
-import com.scit.proj.scitsainanguide.domain.entity.QMarkerFavoritesEntity;
+import com.scit.proj.scitsainanguide.domain.entity.*;
 import com.scit.proj.scitsainanguide.repository.MarkerFavoritesRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -34,6 +35,10 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
 
     private final JPAQueryFactory queryFactory;
     private QMarkerFavoritesEntity markerFavoritesEntity = QMarkerFavoritesEntity.markerFavoritesEntity;
+    private QHospitalEntity hospitalEntity = QHospitalEntity.hospitalEntity;
+    private QShelterEntity shelterEntity = QShelterEntity.shelterEntity;
+    Expression<String> latitudeExpression;
+    Expression<String> longitudeExpression;
 
     // === CONSTRUCTOR ===
     @Autowired
@@ -51,7 +56,7 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
 
         // QueryDSL의 동적 쿼리 생성을 위한 조건 빌더
         BooleanBuilder whereClause = new BooleanBuilder();
-        whereClause.and(markerFavoritesEntity.member.memberId.eq(memberId));
+        whereClause.and(markerFavoritesEntity.member.memberId.eq(memberId));    // 기본적으로 memberId로 검색
 
         // 리스트업
         List<MarkerFavoritesEntity> markerFavoritesEntityList = queryFactory.selectFrom(markerFavoritesEntity)
@@ -75,76 +80,118 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
         return new PageImpl<>(tempMarkerFavoritesDTOList, pageable, total);
     }
 
-
     // 장소 이름, 별칭 검색창에 누를때마다 호출해서 가져오도록
     public Page<MarkerFavoritesDTO> selectMarkerFavoritesBySearchAndFilter(SearchRequestDTO dto, String memberId) {
-
-
         log.debug("=== 1 === SearchRequestDTO : {}", dto);
-
         boolean isHospital = dto.getFilter().equals("hospital");
         boolean isShelter = dto.getFilter().equals("shelter");
+        boolean isSortByDistance = dto.getSortBy().equals("sortByDistance");
+        boolean isSortByName = dto.getSortBy().equals("sortByName");
 
         log.debug("=== 2 === isHospital : {}", isHospital);
         log.debug("=== 3 === isShelter : {}", isShelter);
+        log.debug("=== 4 === isSortByDistance : {}", isSortByDistance);
+        log.debug("=== 5 === isSortByName : {}", isSortByName);
 
+        // 페이징 초기화
         Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPageSize());
-
         // QueryDSL의 동적 쿼리 생성을 위한 조건 빌더
         BooleanBuilder whereClause = new BooleanBuilder();
-        
+        // QueryDSL의 정렬 쿼리 생성을 위한 빌더
+        OrderSpecifier<?> sortBy = null;
         // 로그인한사람의 모든 즐겨찾기 마커 긁어오기
         whereClause.and(markerFavoritesEntity.member.memberId.eq(memberId));
 
-
         // hospital 필터(filter) 눌렀을 때,
         if(isHospital){
-            log.debug("=== 4 === isHospitalFilter applied.");
+            log.debug("=== 6 === isHospitalFilter applied.");
             whereClause.and(markerFavoritesEntity.hospital.hospitalId.isNotEmpty());
         }
-
         // shelter 필터(filter)눌렀을 때,
         if(isShelter){
-            log.debug("=== 5 === isShelterFilter applied.");
+            log.debug("=== 7 === isShelterFilter applied.");
             whereClause.and(markerFavoritesEntity.shelter.shelterId.stringValue().isNotEmpty());
         }
-
 
         // 이름(searchWord)
         if(!Objects.equals(dto.getSearchWord(), "")) {
             if(isHospital) {
-                log.debug("=== 6 === isHospitalFilter with searchWord applied.");
-                whereClause.and(markerFavoritesEntity.hospital.hospitalName.contains(dto.getSearchWord()))
-                        .or(markerFavoritesEntity.nickname.contains(dto.getSearchWord()));
+                log.debug("=== 8 === isHospitalFilter with searchWord applied.");
+                log.debug("hospital&dto.getSearchWord(): {}", dto.getSearchWord());
+                BooleanBuilder searchCondition = new BooleanBuilder();
+                searchCondition.and(markerFavoritesEntity.hospital.hospitalName.contains(dto.getSearchWord()).or(markerFavoritesEntity.nickname.contains(dto.getSearchWord())));
+                whereClause.and(searchCondition);
             } else if(isShelter) {
-                log.debug("=== 7 === isShelterFilter with searchWord applied.");
-                whereClause.and(markerFavoritesEntity.shelter.shelterName.contains(dto.getSearchWord()))
-                        .or(markerFavoritesEntity.nickname.contains(dto.getSearchWord()));
+                log.debug("=== 9 === isShelterFilter with searchWord applied.");
+                log.debug("shelter&dto.getSearchWord(): {}", dto.getSearchWord());
+                BooleanBuilder searchCondition = new BooleanBuilder();
+                searchCondition.and(markerFavoritesEntity.shelter.shelterName.contains(dto.getSearchWord()).or(markerFavoritesEntity.nickname.contains(dto.getSearchWord())));
+                whereClause.and(searchCondition);
             } else {
-                log.debug("=== 8 === Only searchWord applied.");
-                whereClause.and(markerFavoritesEntity.nickname.contains(dto.getSearchWord()))
+                log.debug("=== 10 === Only searchWord applied.");
+                log.debug("dto.getSearchWord() {}: ", dto.getSearchWord());
+                BooleanBuilder searchCondition = new BooleanBuilder();
+
+                // 검색어를 각 필드에 대해 or로 연결
+                searchCondition.or(markerFavoritesEntity.nickname.contains(dto.getSearchWord()))
                         .or(markerFavoritesEntity.hospital.hospitalName.contains(dto.getSearchWord()))
                         .or(markerFavoritesEntity.shelter.shelterName.contains(dto.getSearchWord()));
+
+                whereClause.and(searchCondition);
             }
         }
 
-        log.debug("=== 9 === filter, searchWord Passed.");
+        log.debug("=== 11 === filter, searchWord Passed.");
+
+        log.debug("=== 12 === sortBy Begin.");
+        // hospital과 shelter에 따라 latitude와 longitude를 설정
+        if (markerFavoritesEntity.hospital != null) {
+            latitudeExpression = markerFavoritesEntity.hospital.latitude;
+            longitudeExpression = markerFavoritesEntity.hospital.longitude;
+        } else {
+            latitudeExpression = markerFavoritesEntity.shelter.latitude;
+            longitudeExpression = markerFavoritesEntity.shelter.longitude;
+        }
+
+        if(isSortByDistance) {
+
+            NumberTemplate<Double> distanceExpression = Expressions.numberTemplate(
+                    Double.class,
+                    "({0} * cos(radians({1})) * cos(radians({2}))) + {3} * cos(radians({1})) * sin(radians({2})) + sin(radian({1})) * sin(radians({4}))",
+                    Math.cos(Math.toRadians(dto.getLatitude())),
+                    latitudeExpression,
+                    longitudeExpression,
+                    Math.sin(Math.toRadians(dto.getLatitude())),
+                    latitudeExpression
+            );
+
+            sortBy = distanceExpression.asc();
+        }
+
+        if(isSortByName) {
+            sortBy = new CaseBuilder()
+                    .when(markerFavoritesEntity.nickname.isNotEmpty())
+                    .then(markerFavoritesEntity.nickname)
+                    .otherwise(
+                            // 아래 표현은
+                            // COALESCE(hospital_name, shelter_name) 이라는 쿼리를 생성함!
+                            Expressions.stringTemplate("COALESCE({0}, {1})",
+                                    markerFavoritesEntity.hospital.hospitalName,
+                                    markerFavoritesEntity.shelter.shelterName)
+                    ).asc();
+        }
+        log.debug("=== 13 === sortBy End.");
+
 
         // 리스트 업
         List<MarkerFavoritesEntity> markerFavoritesEntityList = queryFactory.selectFrom(markerFavoritesEntity)
+                .leftJoin(markerFavoritesEntity.hospital, hospitalEntity)
+                .leftJoin(markerFavoritesEntity.shelter, shelterEntity)
                 .where(whereClause)
                 // default 거리 기준으로 정렬, 이름 오름차순
-                .orderBy(
-                        new CaseBuilder()
-                                .when(markerFavoritesEntity.nickname.isNotEmpty())
-                                .then(markerFavoritesEntity.nickname)
-                                .otherwise(
-                                        // 아래 표현은
-                                        // COALESCE(hospital_name, shelter_name) 이라는 쿼리를 생성함!
-                                        Expressions.stringTemplate("COALESCE({0}, {1})",
-                                                markerFavoritesEntity.hospital.hospitalName,
-                                                markerFavoritesEntity.shelter.shelterName)
-                                ).asc())
+                // 거리 기준으로 정렬
+                // 1. 내 위치 - 각자 위치 거리
+                .orderBy(sortBy)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -153,8 +200,10 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
                 .where(whereClause)
                 .fetchCount();
 
-        log.debug("==== 10 ==== Result list size: {}", markerFavoritesEntityList.size());
-        log.debug("==== 11 ==== Total count: {}", total);
+
+        log.debug("==== 12 ==== Result list size: {}", markerFavoritesEntityList.size());
+        log.debug("==== 13 ==== Total count: {}", total);
+        log.debug("==== 14 Result: {}", markerFavoritesEntityList);
 
         List<MarkerFavoritesDTO> tempMarkerFavoritesDTOList = markerFavoritesEntityList.stream().map(this::convertToMarkerFavoritesDTO).toList();
 
@@ -177,5 +226,6 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
                 .name(markerFavoritesEntity.getHospital() != null ? markerFavoritesEntity.getHospital().getHospitalName() : markerFavoritesEntity.getShelter().getShelterName())
                 .build();
     }
+    
     // =================================================================================
 }

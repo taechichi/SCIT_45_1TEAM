@@ -27,7 +27,6 @@ public class MarkerFavoritesController {
 
     // ============== 초기화 목록 ==============
     private final MarkerFavoritesService markerFavoritesService;
-    private final SpringTemplateEngine templateEngine;
 
     @Value("20")
     private int pageSize;
@@ -40,33 +39,25 @@ public class MarkerFavoritesController {
             Model model
     ) {
         log.debug("enterMarkerFavorites method called.");
+        log.debug("CONTROLLER_SearchRequestDTO: {}", dto);
         dto.setPageSize(pageSize);
-        Page<MarkerFavoritesDTO> markerFavoritesDTOPage = markerFavoritesService.viewAllFavoritesMarkerTest(dto);
-        model.addAttribute("markerFavoritesDTOPage", markerFavoritesDTOPage);
+
+        if(dto.getSortBy() == null || dto.getSortBy().isEmpty()) {
+            dto.setSortBy("sortByDistance");
+        }
+
+        // Service 에서 호출
+        Page<MarkerFavoritesDTO> markerFavoritesAllList = markerFavoritesService.selectMarkerFavoritesFilterAndSearchList(dto);
+
+        model.addAttribute("markerFavoritesList", markerFavoritesAllList);
+        model.addAttribute("page", dto.getPage());
+        model.addAttribute("searchWord", dto.getSearchWord());
+        model.addAttribute("filter", dto.getFilter());
+        model.addAttribute("sortBy", dto.getSortBy());
+
         return "myPage/myMarkerFavorites";
     }
     // ===================================================
-
-    // ===== 검색 조건에 따라 출력 (병원or대피소 필터; 검색어 필터; 정렬 순서) =====
-    @GetMapping("/search")
-    public String enterSearchMarkerFavorites(
-            @ModelAttribute SearchRequestDTO dto,
-            Model model
-    ) {
-        log.debug("enterSearchMarkerFavorites method called.");
-        dto.setPageSize(pageSize);
-        log.debug("GetMapping/searchController dto: {}", dto);
-        Page<MarkerFavoritesDTO> markerFavoritesDTOPage = markerFavoritesService.selectMarkerFavoritesFilterAndSearchList(dto);
-        model.addAttribute("markerFavoritesDTOPage", markerFavoritesDTOPage);
-        model.addAttribute("searchRequest", dto);
-
-        return "myPage/myMarkerFavorites";
-
-    }
-    // ====================================================================
-
-
-
 
     // ============ 삭제 기능 ============
     @PostMapping("/delete")
