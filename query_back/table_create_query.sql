@@ -185,6 +185,7 @@ CREATE TABLE message
     content       VARCHAR(500) NOT NULL,
     create_dt  TIMESTAMP    NOT NULL DEFAULT NOW(),
     delete_yn  TINYINT(1) NOT NULL DEFAULT 0,
+    read_dt    TIMESTAMP,
     PRIMARY KEY (message_id),
     FOREIGN KEY (sender_id) REFERENCES member (member_id),
     FOREIGN KEY (receiver_id) REFERENCES member (member_id)
