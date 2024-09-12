@@ -21,6 +21,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Slf4j
@@ -170,6 +172,30 @@ public class MemberService {
 
         filein.close();
         fileout.close();
+    }
+
+    /**
+     * 사용자의 상태를 변경하는 메서드
+     * @param memberId
+     * @param statusId
+     * @return 사용자의 상태값
+     */
+    public Integer changeMyStatus(String memberId, Integer statusId) {
+        // 현재 로그인 중인 사용자 엔티티 불러옴
+        MemberEntity mentity = memberJpaRepository
+                .findById(memberId).orElseThrow(()-> new EntityNotFoundException("존재하지 않는 회원입니다."));
+
+        // 현재 날짜와 시간으로 LocalDateTime 객체 생성해 최신 상태 수정 시간 설정
+        LocalDateTime lastUpdateDt = LocalDateTime.now();
+        mentity.setLastStUpdateDt(lastUpdateDt);
+        
+        // 상태 아이디로 상태 엔티티 불러와 멤버 엔티티에 변경된 상태 설정
+        StatusEntity sentity = statusJpaRepository.findById(statusId)
+                .orElseThrow(() -> new RuntimeException("Status not found"));
+        mentity.setStatus(sentity);
+
+        // 현재 로그인 중인 사용자의 상태 정보 반환
+        return mentity.getStatus().getStatusId();
     }
 }
 

@@ -208,3 +208,6 @@ ALTER TABLE marker_favorites
     ADD CONSTRAINT marker_favorites_ibfk_2
         FOREIGN KEY (hospital_id)
             REFERENCES hospital(hospital_id);
+
+ALTER TABLE `message`
+    ADD COLUMN `read_dt` TIMESTAMP NULL DEFAULT NULL;

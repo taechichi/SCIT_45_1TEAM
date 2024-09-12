@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -119,6 +121,22 @@ public class MemberController {
     public String showLoginForm(Model model) {
         model.addAttribute("memberDTO", new MemberDTO());
         return "member/login";  // login.html로 이동
+    }
+
+    /**
+     * 현재 로그인 중인 사용자가 아이콘 버튼을 클릭하면 상태 변경
+     * @param user
+     * @param statusId
+     * @return 변경 후 사용자의 상태값 반환
+     * @throws IOException
+     */
+    @PostMapping("/changeMyStatus")
+    public ResponseEntity<Integer> changeMyStatus(@AuthenticationPrincipal AuthenticatedUser user
+                                                , @RequestParam("statusId") Integer statusId) throws IOException{
+        String memberId = user.getUsername();
+        Integer statusNum = memberService.changeMyStatus(memberId, statusId);
+        // 상태 변경 후의 상태 ID를 반환합니다.
+        return new ResponseEntity<>(statusNum, HttpStatus.OK);
     }
 }
 
