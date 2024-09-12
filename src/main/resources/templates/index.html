@@ -34,7 +34,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <div th:insert="fragments/menu :: menu" id="menu"></div>
+        <div th:insert="fragments/menu :: menu(${member})" id="menu"></div>
         <!-- End of Sidebar -->
 
         <!-- 마커 클릭 시 상세 정보 출력 판넬 -->

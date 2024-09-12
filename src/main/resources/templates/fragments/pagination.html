@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+  <div th:fragment="pagination" id="navigator" class="pagination">
+    <a th:if="${pageData.hasPrevious()}"
+       th:href="|javascript:pagingFormSubmit(${page - 1})|">◀</a>
+    <span th:each="counter : ${#numbers.sequence(startPage, endPage)}">
+                                  <th:block th:if="${counter == page}"><b></th:block>
+                                  <a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
+                                  <th:block th:if="${counter == page}"></b></th:block>
+                              </span>
+    <a th:if="${pageData.hasNext()}"
+       th:href="|javascript:pagingFormSubmit(${page + 1})|">▶</a>
+  </div>
+
+</body>
+</html>

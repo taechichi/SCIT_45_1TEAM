@@ -8,103 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
     <!-- Custom styles for this template-->
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
-    <style>
-        /* 기본 테이블 스타일 */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 16px;
-            text-align: left;
-        }
-
-        thead {
-            background-color: #f2f2f2;
-        }
-
-        th, td {
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #FEBE10;
-            color: white;
-        }
-
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        /* 검색창 스타일 */
-        .searchForm-container {
-            display: flex;
-            justify-content: flex-start;
-            margin: 20px;
-            gap: 10px;
-        }
-
-        .searchForm-container select,
-        .searchForm-container input,
-        .searchForm-container button {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .searchForm-container select {
-            width: 150px;
-        }
-
-        .searchForm-container input {
-            width: 300px;
-        }
-
-        .searchForm-container input[type="submit"] {
-            padding: 12px; /* 버튼 크기 줄이기 */
-            background-color: #FEBE10;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px; /* 버튼 텍스트 크기 조정 */
-            width: auto; /* 버튼의 넓이를 자동으로 조정 */
-        }
-
-        .searchForm-container input[type="submit"]:hover {
-            background-color: #f9a800; /* 버튼 호버 시 배경색 변경 */
-        }
-
-        /* 페이징 영역 스타일 */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .pagination a {
-            margin: 0 5px;
-            padding: 10px 15px;
-            text-decoration: none;
-            border: 1px solid #ddd;
-            color: #4CAF50;
-            border-radius: 4px;
-        }
-
-        .pagination a.active {
-            background-color: #FEBE10;
-            color: white;
-            border: 1px solid #FEBE10;
-        }
-
-        .pagination a:hover {
-            background-color: #ddd;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/admin/memberList.css}">
 </head>
 <body>
 <!-- Page Wrapper -->
@@ -154,7 +58,7 @@
                                 <th th:text="#{admin.member.column.nationality}"></th>
                             </tr>
                             </thead>
-                            <tbody th:each="member : ${memberList}" th:object="${member}">
+                            <tbody th:each="member : ${pageData}" th:object="${member}">
                             <tr>
                                 <td th:text="*{memberId}"></td>
                                 <td th:text="*{nickname}"></td>
@@ -166,24 +70,7 @@
                         </table>
 
                         <!-- 페이지 번호 navigator -->
-                        <div id="navigator" class="pagination">
-                            <a th:if="${memberList.hasPrevious()}"
-                               th:href="|javascript:pagingFormSubmit(${memberList.getNumber()})|">◀</a>
-                            <span th:if="${memberList.getTotalPages() > 0}"
-                                  th:each="counter : ${#numbers.sequence((page - 2 < 1 ? 1
-                                                    : (page + 2 > memberList.getTotalPages() ? memberList.getTotalPages() - 4
-                                                    : page - 2)),
-                                                    (page + 2 > memberList.getTotalPages() ? memberList.getTotalPages()
-                                                    : (page - 2 < 1 ? 5 : page + 2)))}">
-                                <th:block th:if="${counter == page}"><b></th:block>
-                                <a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
-                                <th:block th:if="${counter == page}"></b></th:block>
-                            </span>
-                            <a th:if="${memberList.hasNext()}"
-                               th:href="|javascript:pagingFormSubmit(${memberList.getNumber()}+2)|">▶</a>
-
-
-                        </div>
+                        <div th:insert="fragments/pagination :: pagination"></div>
                     </div>
                 </div>
             </div>
