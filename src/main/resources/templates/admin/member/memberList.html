@@ -59,13 +59,13 @@
                             </tr>
                             </thead>
                             <tbody th:each="member : ${pageData}" th:object="${member}">
-                            <tr>
-                                <td th:text="*{memberId}"></td>
-                                <td th:text="*{nickname}"></td>
-                                <td th:text="*{email}"></td>
-                                <td th:text="*{gender}"></td>
-                                <td th:text="*{nationality}"></td>
-                            </tr>
+                                <tr>
+                                    <td th:text="*{memberId}"></td>
+                                    <td th:text="*{nickname}"></td>
+                                    <td th:text="*{email}"></td>
+                                    <td th:text="*{gender}"></td>
+                                    <td th:text="*{nationality}"></td>
+                                </tr>
                             </tbody>
                         </table>
 

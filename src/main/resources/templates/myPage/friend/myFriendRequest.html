@@ -51,43 +51,28 @@
                                 <th></th>
                             </tr>
                             </thead>
-                            <tbody th:each="friendRequest : ${friendRequestList}" th:object="${friendRequest}">
-                            <tr>
-                                <td>
-                                    <img class="rounded-circle" alt="Profile Picture"
-                                         th:src="@{/member/download/{friendId}(friendId=*{friendId})}"/>
-                                    <span th:text="*{friendId}"></span>
-                                </td>
-                                <td th:text="*{nickname}"></td>
-                                <td th:text="*{nationality}"></td>
-                                <td th:text="*{#temporals.format(requestDt, 'yyyy.MM.dd HH:mm')}"></td>
-                                <td>
-                                    <button class="acceptFriendBtn" th:data-id="*{relationId}"
-                                            th:text="#{my.friend.request.button.accept}"></button>
-                                    <button class="rejectFriendBtn" th:data-id="*{relationId}"
-                                            th:text="#{my.friend.request.button.reject}"></button>
-                                </td>
-                            </tr>
+                            <tbody th:each="friendRequest : ${pageData}" th:object="${friendRequest}">
+                                <tr>
+                                    <td>
+                                        <img class="rounded-circle" alt="Profile Picture"
+                                             th:src="@{/member/download/{friendId}(friendId=*{friendId})}"/>
+                                        <span th:text="*{friendId}"></span>
+                                    </td>
+                                    <td th:text="*{nickname}"></td>
+                                    <td th:text="*{nationality}"></td>
+                                    <td th:text="*{#temporals.format(requestDt, 'yyyy.MM.dd HH:mm')}"></td>
+                                    <td>
+                                        <button class="acceptFriendBtn" th:data-id="*{relationId}"
+                                                th:text="#{my.friend.request.button.accept}"></button>
+                                        <button class="rejectFriendBtn" th:data-id="*{relationId}"
+                                                th:text="#{my.friend.request.button.reject}"></button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
-                        <div id="navigator">
-                            <!-- 페이지 번호 navigator -->
-                            <a th:if="${friendRequestList.hasPrevious()}"
-                               th:href="|javascript:pagingFormSubmit(${friendRequestList.getNumber()})|">◀ </a>
-                            <span th:if="${friendRequestList.getTotalPages() > 0}"
-                                  th:each="counter : ${#numbers.sequence((page - 2 < 1 ? 1
-                                                    : (page + 2 > friendRequestList.getTotalPages() ? friendRequestList.getTotalPages() - 4
-                                                    : page - 2)),
-                                                    (page + 2 > friendRequestList.getTotalPages() ? friendRequestList.getTotalPages()
-                                                    : (page - 2 < 1 ? 5 : page + 2)))}">
-                                <th:block th:if="${counter == page}"><b></th:block>
-                                <a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
-                                <th:block th:if="${counter == page}"></b></th:block>
-                            </span>
-                            <a th:if="${friendRequestList.hasNext()}"
-                               th:href="|javascript:pagingFormSubmit(${friendRequestList.getNumber()}+2)|"> ▶</a>
 
-                        </div>
+                        <!-- 페이지 번호 navigator -->
+                        <div th:insert="fragments/pagination :: pagination"></div>
                     </div>
                 </div>
             </div>
