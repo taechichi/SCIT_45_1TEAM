@@ -70,7 +70,6 @@
             showInfoPanel(marker);
         }
 
-        map.setCenter(place.geometry.location);
         return marker;
     }
 
@@ -92,6 +91,26 @@
         isPanelVisible = true;
         document.getElementById('writeLink').setAttribute('href', `/board/write/${placeID}`);
     }
+
+    //마커배열을 확인해 마커들의 bound(경계값을 생성)
+    function calculateBoundsForMarkers(markers) {
+        const bounds = new google.maps.LatLngBounds();
+
+        // 모든 마커의 위치를 bounds에 포함
+        markers.forEach(marker => {
+            bounds.extend(marker.getPosition());
+        });
+
+        map.fitBounds(bounds);
+    }
+
+    function setCurrentZoom(centerPosition){
+        const zoom = map.getZoom();
+
+        map.setCenter(centerPosition);
+        map.setZoom(zoom);
+    }
+
 
     // Google Places API 결과 처리 함수
     function processGooglePlaces(places) {
@@ -158,11 +177,11 @@
     }
 
     // nearbySearch를 사용해 병원 검색
-    function searchNearbyHospitals(lat, lng) {
+    function searchNearbyHospitals() {
         const service = new google.maps.places.PlacesService(map);
         const request = {
-            location: new google.maps.LatLng(lat, lng), // 현재 위치 기준
-            radius: 1000, // 반경 1km
+            location: map.getCenter(),
+            radius: 500, // 반경 1km
             type: 'hospital' // 병원 타입으로 검색
         };
 
@@ -172,16 +191,52 @@
                 // 기존 마커 제거
                 markers.forEach(marker => marker.setMap(null));
                 markers = [];
+                alert(results[0].name);
 
                 // 검색된 병원 정보 마커로 표시
                 results.forEach(place => {
                     let marker = createMarker(map, place);
                     markers.push(marker);
                 });
+                calculateBoundsForMarkers(markers);  // 마커들로 경계 설정
+                setCurrentZoom(centerPosition);      // 현재 위치 중심으로 줌 조정
             } else {
                 console.error('병원 검색에 실패했습니다:', status);
             }
         });
+    }
+
+    // DB에 저장된 대피소 정보를 불러오는 함수
+    function fetchNearbyShelters() {
+        const center = map.getCenter(); //보는 지도의 중심좌표 획득
+        const lat = center.lat;
+        const lng = center.lng;
+        // 서버에 현재 위치 정보를 전송 (latitude, longitude)
+        fetch('/api/nearby-shelters', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                latitude: lat, // 현재 위치 위도
+                longitude: lng, // 현재 위치 경도
+                radius: 1000 // 반경 1km 설정
+            })
+        })
+            .then(response => response.json()) // 서버로부터 JSON 응답 받기
+            .then(data => {
+                if (data.s && data.shelter.length > 0) {
+                    // 대피소 데이터가 있으면 지도에 표시
+                    data.shelter.forEach(place => {
+                        createMarker(map, place); // 대피소 마커 생성 함수
+                    });
+                } else {
+                    console.log('1km 내 대피소가 없습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('대피소 데이터를 불러오는 중 오류 발생:', error);
+            });
     }
 
     //맵 생성
@@ -207,6 +262,7 @@
             scaleControl:true,
             zoomControl: true,
             mapId:'d506da1b6acddc31',
+            mapTypeControl:false
             // minZoom:15,                 //지도 200m까지 축소
         });   //맵 지정 및 맵 옵션 설정
 
@@ -241,8 +297,9 @@
 
         //병원 버튼 클릭 시 근처 1km 검색
         document.getElementById('hospitalfilterbutton').addEventListener('click', function() {
-            searchNearbyHospitals(myLat, myLong); // 병원 검색 함수 호출
+            searchNearbyHospitals(); // 병원 검색 함수 호출
         });
+
 
         // 검색창 search-input 에서 사용자가 입력한 값을 받아 저장
         const input = document.getElementById('search-input');              //search-input 에서 값을 받아 저장
@@ -269,25 +326,6 @@
             //기존 마커 제거
             markers.forEach(marker => marker.setMap(null));    //markers배열에서 가져온 기존마커 null로 맵에서 삭제
             markers = [];   //마커 배열 초기화
-
-            // Google Places API에서 검색된 장소 place 객체 배열로 처리
-            const googlePlaceArray = processGooglePlaces(places);
-
-            // DB 검색
-            const dbLat = myLat;
-            const dbLong = myLong;
-            fetch('/api/search', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ dbLat : dbLat, dbLong: dbLong }) // 검색어를 DB로 전송
-            })
-                .then(response => response.json())
-                .then(dbData => {
-                    // DB 검색 결과 처리
-                    const dbResults = processDBResults(dbData);
-                })
-                .catch(error => console.error('DB 검색 중 오류:', error));
-
 
             // 지도의 경계를 받아 마커표시 시 지도 바깥이면 숨김
             // const bounds = map.getBounds(); // 현재 지도 경계 가져오기

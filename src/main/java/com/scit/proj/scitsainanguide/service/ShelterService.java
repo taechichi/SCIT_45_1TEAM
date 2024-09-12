@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -61,4 +62,11 @@ public class ShelterService {
             shelterRepository.save(shelter);
         }
     }
+
+    // 반경 내 대피소 정보 검색
+    public List<ShelterEntity> findNearbyShelters(double latitude, double longitude) {
+        // Repository를 호출하여 데이터베이스에서 대피소 정보 가져오기
+        return shelterRepository.findNearbyShelters(latitude, longitude);
+    }
+
 }
