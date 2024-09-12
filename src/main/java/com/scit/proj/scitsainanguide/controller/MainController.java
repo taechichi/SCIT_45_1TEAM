@@ -20,13 +20,16 @@ public class MainController {
      */
     @GetMapping
     public String index(@AuthenticationPrincipal AuthenticatedUser user, Model model) {
-        MemberDTO memberDTO = new MemberDTO();
+        MemberDTO memberDTO = null;
         if (user != null) {
             memberDTO = memberService.findByMemberId(user.getUsername());
+        } else {
+            // user가 null일 때 처리 (예: 로그인하지 않은 상태)
+            memberDTO = new MemberDTO();
         }
 
         model.addAttribute("member", memberDTO);
-
         return "index";
     }
+
 }

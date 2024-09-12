@@ -96,7 +96,7 @@ public class MyFriendController {
     /**
      * 친구 관계 추가 (친구 신청시)
      * @param user 로그인한 회원 객체
-     * @param friendId 친구추가 대상회원
+     * @param friendId 친구추가 대상회원 아이디를 콤마로 구분해 여러 아이디 한 번에 가져옴
      */
     @ResponseBody
     @PostMapping("{friendId}")

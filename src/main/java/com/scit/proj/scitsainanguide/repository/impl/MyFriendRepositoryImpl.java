@@ -25,6 +25,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -168,21 +169,26 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
 
     @Override
     public void insertFriend(String memberId, String friendId, boolean friendYn) {
+        // 친구 요청 거는 대상이 여러명일 수도 있음. 콤마로 아이디가 구분된 friendId를 list에 담음
+        List<String> friendIdList = Arrays.asList(friendId.split("\\s*,\\s*"));
+
         // friend_member entity 를 생성
-        FriendEntity friendEntity = FriendEntity.builder()
-                .memberId(memberId)
-                .friendId(friendId)
-                .favoriteYn(false)
-                .friendYn(friendYn)
-                .build();
+        for (String fId : friendIdList) {
+            FriendEntity friendEntity = FriendEntity.builder()
+                    .memberId(memberId)
+                    .friendId(fId)
+                    .favoriteYn(false)
+                    .friendYn(friendYn)
+                    .build();
 
-        // 친구 신청을 수락하면서 친구 관계를 추가하는 경우 수락일시를 추가한다.
-        if (friendYn) {
-            friendEntity.setAcceptDt(LocalDateTime.now());
+            // 친구 신청을 수락하면서 친구 관계를 추가하는 경우 수락일시를 추가한다.
+            if (friendYn) {
+                friendEntity.setAcceptDt(LocalDateTime.now());
+            }
+
+            // 엔티티 매니저를 통해 엔티티를 저장.
+            em.persist(friendEntity);
         }
-
-        // 엔티티 매니저를 통해 엔티티를 저장.
-        em.persist(friendEntity);
     }
 
     @Override
@@ -270,7 +276,12 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
         .fetch();
     }
 
-    ///////////////////////////////////////////////////////
+    /**
+     * 여러 명의 사용자를 대상으로 한 번에 쪽지 보내기
+     * @param memberId
+     * @param searchWord
+     * @return
+     */
     @Override
     public List<MemberDTO> selectMyFriendIdContainSearchWord(String memberId, String searchWord){
 

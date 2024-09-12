@@ -37,6 +37,7 @@ public class MyFriendService {
         myFriendRepository.deleteFriend(friendId, memberId);
     }
 
+    // 친구 추가 메서드
     public void insertFriend(String memberId, String friendId) {
         myFriendRepository.insertFriend(memberId, friendId, false);
     }
