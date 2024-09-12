@@ -37,8 +37,6 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
     private QMarkerFavoritesEntity markerFavoritesEntity = QMarkerFavoritesEntity.markerFavoritesEntity;
     private QHospitalEntity hospitalEntity = QHospitalEntity.hospitalEntity;
     private QShelterEntity shelterEntity = QShelterEntity.shelterEntity;
-    Expression<String> latitudeExpression;
-    Expression<String> longitudeExpression;
 
     // === CONSTRUCTOR ===
     @Autowired
@@ -102,6 +100,10 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
         // 로그인한사람의 모든 즐겨찾기 마커 긁어오기
         whereClause.and(markerFavoritesEntity.member.memberId.eq(memberId));
 
+        // hospital과 shelter에 따라 latitude와 longitude를 설정하고, String을 Double로 캐스팅
+        NumberTemplate<Double> latitudeExpression;
+        NumberTemplate<Double> longitudeExpression;
+
         // hospital 필터(filter) 눌렀을 때,
         if(isHospital){
             log.debug("=== 6 === isHospitalFilter applied.");
@@ -146,18 +148,17 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
         log.debug("=== 12 === sortBy Begin.");
         // hospital과 shelter에 따라 latitude와 longitude를 설정
         if (markerFavoritesEntity.hospital != null) {
-            latitudeExpression = markerFavoritesEntity.hospital.latitude;
-            longitudeExpression = markerFavoritesEntity.hospital.longitude;
+            latitudeExpression = Expressions.numberTemplate(Double.class, "CAST({0} AS DOUBLE)", markerFavoritesEntity.hospital.latitude);
+            longitudeExpression = Expressions.numberTemplate(Double.class, "CAST({0} AS DOUBLE)", markerFavoritesEntity.hospital.longitude);
         } else {
-            latitudeExpression = markerFavoritesEntity.shelter.latitude;
-            longitudeExpression = markerFavoritesEntity.shelter.longitude;
+            latitudeExpression = Expressions.numberTemplate(Double.class, "CAST({0} AS DOUBLE)", markerFavoritesEntity.shelter.latitude);
+            longitudeExpression = Expressions.numberTemplate(Double.class, "CAST({0} AS DOUBLE)", markerFavoritesEntity.shelter.longitude);
         }
 
         if(isSortByDistance) {
-
             NumberTemplate<Double> distanceExpression = Expressions.numberTemplate(
                     Double.class,
-                    "({0} * cos(radians({1})) * cos(radians({2}))) + {3} * cos(radians({1})) * sin(radians({2})) + sin(radian({1})) * sin(radians({4}))",
+                    "({0} * cos(radians({1})) * cos(radians({2}))) + ({3} * cos(radians({1})) * sin(radians({2}))) + sin(radians({1})) * sin(radians({4}))",
                     Math.cos(Math.toRadians(dto.getLatitude())),
                     latitudeExpression,
                     longitudeExpression,

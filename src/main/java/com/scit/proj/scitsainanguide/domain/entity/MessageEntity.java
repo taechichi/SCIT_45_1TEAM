@@ -47,4 +47,7 @@ public class MessageEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id", insertable = false, updatable = false)
     private MemberEntity receiver;
+
+    @Column(name = "read_dt")
+    private LocalDateTime readDt;
 }

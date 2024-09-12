@@ -1,21 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const profilePicLink = document.getElementById('profilePicLink');
-
-    profilePicLink.addEventListener('click', function() {
-      // 모달에 내용 삽입 (예시: static content 또는 AJAX를 통해 동적 내용 삽입 가능)
-      const messageContent = "Example message content"; // 실제 메시지 내용으로 대체
-      const messageTimestamp = "Example timestamp"; // 실제 타임스탬프로 대체
-
-      document.getElementById('messageContent').innerText = messageContent;
-      document.getElementById('messageTimestamp').innerText = messageTimestamp;
-    });
-  });
-</script>
-
+<link rel="stylesheet" th:href="@{/css/topbar.css}">
 
 <body>
 <div th:fragment="Topbar">
@@ -239,26 +225,38 @@
                th:src="@{/member/download}" alt="Profile Picture" />
         </a>
         <!-- Dropdown - User Information -->
+        <!-- css 수정하기 -->
         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-             aria-labelledby="userDropdown">
-          <a class="dropdown-item" href="#">
-            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-            Profile
-          </a>
+             aria-labelledby="userDropdown" style="width: 400px; height: 400px;">
           <a class="dropdown-item" href="#">
             <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-            Settings
+            현재상태 설정
           </a>
+          <img class="img-profile rounded-circle" style="width: 100px; height: 100px; margin-top: 5%;"
+               th:src="@{/member/download}" alt="Profile Picture" />
+          <div class="circle" th:text="#{main.myStatus.safe}" id="2" style="background-color: green">안전</div>
+          <div class="circle" th:text="#{main.myStatus.evacuate}" id="3" style="background-color: yellow">피난중</div>
+          <div class="circle" th:text="#{main.myStatus.help}" id="4" style="background-color: red">도와주세요</div>
+          <br>
+          <span>마지막 업데이트: <span>lastStUpdateDt값 가져오기</span></span>
+          <p th:text="${#authentication.principal.nickname}"></p>
+
           <a class="dropdown-item" href="#">
-            <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-            Activity Log
+            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+            상태메시지
           </a>
+          <div id="statusMessage">
+            <pre>상태메시지 작성!@!@!@!@!@!@!@!@!@!@
+            !@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@
+            @!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</pre>
+          </div>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
             <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
             Logout
           </a>
         </div>
+
       </li>
     </ul>
     <!-- 로그인이 되어 있지 않은 경우 버튼을 표시 -->

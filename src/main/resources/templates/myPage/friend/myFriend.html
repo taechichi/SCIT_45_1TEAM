@@ -28,7 +28,7 @@
             <div th:insert="fragments/Topbar :: Topbar" id="Topbar"></div>
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">게시판 관리</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">친구 관리</h6>
                 </div>
                 <!-- 검색 폼 -->
                 <div class="searchForm-container">
@@ -62,7 +62,7 @@
                             <tbody th:each="friend : ${pageData}" th:object="${friend}">
                                 <tr>
                                     <td>
-                                        <img class="rounded-circle" alt="Profile Picture"
+                                        <img class="rounded-circle img-64" alt="Profile Picture"
                                              th:src="@{/member/download/{friendId}(friendId=*{friendId})}"/>
                                         <span th:text="*{friendId}"></span>
                                     </td>

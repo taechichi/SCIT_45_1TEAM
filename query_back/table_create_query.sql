@@ -185,6 +185,7 @@ CREATE TABLE message
     content       VARCHAR(500) NOT NULL,
     create_dt  TIMESTAMP    NOT NULL DEFAULT NOW(),
     delete_yn  TINYINT(1) NOT NULL DEFAULT 0,
+    read_dt    TIMESTAMP,
     PRIMARY KEY (message_id),
     FOREIGN KEY (sender_id) REFERENCES member (member_id),
     FOREIGN KEY (receiver_id) REFERENCES member (member_id)
@@ -207,3 +208,6 @@ ALTER TABLE marker_favorites
     ADD CONSTRAINT marker_favorites_ibfk_2
         FOREIGN KEY (hospital_id)
             REFERENCES hospital(hospital_id);
+
+ALTER TABLE `message`
+    ADD COLUMN `read_dt` TIMESTAMP NULL DEFAULT NULL;

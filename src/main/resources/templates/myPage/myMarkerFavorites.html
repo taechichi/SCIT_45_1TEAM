@@ -84,12 +84,19 @@
                 </thead>
 
                 <tbody id="markerTableBody">
-                    <tr th:each="marker : ${markerFavoritesList.content}">
+                    <tr th:each="marker : ${pageData.content}">
                         <td><input type="checkbox" name="favoriteId" th:value="${marker.favoriteId}"></td>
                         <td th:text="${marker.favoriteId}">ID</td>
                         <td>
-                            <span th:if="${marker.nickname != ''}"><a th:text="${marker.nickname}"></a></span>
-                            <span th:if="${marker.nickname == ''}"><a th:text="${marker.name}"></a></span>
+                            <span th:if="${marker.nickname != ''}">
+                                <a th:text="${marker.nickname}" class="nickname-exists"></a>
+                                <a>(</a>
+                                <a th:text="${marker.name}"></a>
+                                <a>)</a>
+                            </span>
+                            <span th:if="${marker.nickname == ''}">
+                                <a th:text="${marker.name}" class="nickname-missing"></a>
+                            </span>
                         </td>
                         <td th:text="${marker.memberId}">Member ID</td>
 
@@ -106,23 +113,7 @@
         </form>
 
         <!-- pagination 부분 -->
-        <div id="navigator">
-            <!-- 페이지 번호 navigator -->
-            <a th:if="${markerFavoritesList.hasPrevious()}"
-               th:href="|javascript:pagingFormSubmit(${markerFavoritesList.getNumber()})|">◀ </a>
-            <span th:if="${markerFavoritesList.getTotalPages() > 0}"
-                  th:each="counter : ${#numbers.sequence((page - 2 < 1 ? 1
-                                                    : (page + 2 > markerFavoritesList.getTotalPages() ? markerFavoritesList.getTotalPages() - 4
-                                                    : page - 2)),
-                                                    (page + 2 > markerFavoritesList.getTotalPages() ? markerFavoritesList.getTotalPages()
-                                                    : (page - 2 < 1 ? 5 : page + 2)))}">
-                                <th:block th:if="${counter == page}"><b></th:block>
-                                <a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
-                                <th:block th:if="${counter == page}"></b></th:block>
-                            </span>
-            <a th:if="${markerFavoritesList.hasNext()}"
-               th:href="|javascript:pagingFormSubmit(${markerFavoritesList.getNumber()}+2)|"> ▶</a>
-        </div>
+        <div th:insert="fragments/pagination :: pagination"></div>
     </div>
 </body>
 
