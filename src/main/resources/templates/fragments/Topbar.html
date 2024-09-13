@@ -207,39 +207,43 @@
         </a>
         <!-- Dropdown - User Information -->
         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-             aria-labelledby="userDropdown" style="width: 400px; height: 400px;">
-          <a class="dropdown-item" href="#">
+             aria-labelledby="userDropdown" style="width: 400px; height: 420px;">
+          <div class="dropdown-item">
             <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-            나의 현재 상태 설정
-          </a>
+            친구에게 내 상태 알리기
+          </div>
 
           <div style="display: flex; align-items: center;">
-          <img class="img-profile rounded-circle" style="width: 100px; height: 100px; margin-top: 5%;"
-               th:src="@{/member/download}" alt="Profile Picture" />
+          <img class="img-profile rounded-circle" style="width: 100px; height: 100px; margin-top: 5%; border: 6px solid black;"
+               th:src="@{/member/download}" alt="Profile Picture" id="profileImg"/>
           <div class="circle" th:text="#{main.myStatus.safe}" id="2" style="background-color: green">안전</div>
-          <div class="circle" th:text="#{main.myStatus.evacuate}" id="3" style="background-color: yellow">피난중</div>
+          <div class="circle" th:text="#{main.myStatus.evacuate}" id="3" style="background-color: yellow; color:black">피난중</div>
           <div class="circle" th:text="#{main.myStatus.help}" id="4" style="background-color: red">도와주세요</div>
           </div>
 
-          <a class="dropdown-item" href="#">
+          <div class="dropdown-item">
             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
             <span>닉네임: <span th:text="${#authentication.principal.nickname}"></span></span>
-          </a>
+          </div>
 
-          <a class="dropdown-item" href="#">
+          <div class="dropdown-item">
             <i class="fas fa-clock fa-sm fa-fw mr-2 text-gray-400"></i>
-            <span>마지막 업데이트: <span>lastStUpdateDt값 가져오기</span></span>
-          </a>
+            <span>마지막 상태 업데이트: <span id="lastStUpdateDt">lastStUpdateDt값 가져오기</span></span>
+          </div>
 
-          <a class="dropdown-item" href="#">
+          <div class="dropdown-item">
             <i class="fas fa-sticky-note fa-sm fa-fw mr-2 text-gray-400"></i>
-            <span>상태메시지</span>
+            <span id="stMessage">상태메시지</span>
             <i class="fas fa-pencil-alt fa-sm fa-fw mr-2 text-gray-400" style="margin-left: 200px"></i>
-            <span id ="updateStatusMessage">수정</span><br>
+            <span id ="editStatusMessage">수정</span><br>
             <div id="statusMessage" style="width: 350px; height: 100px;">
-            상태메시지 작성!@!
+              상태메시지 작성
             </div>
-          </a>
+            <!-- 수정용 텍스트박스, 처음엔 숨김 -->
+            <textarea id="statusMessageInput" style="display: none; width: 350px; height: 100px;"></textarea>
+            <span id="saveStatusMessage" style="display: none; margin-left: 300px">
+              <i class="fas fa-save fa-sm fa-fw mr-2 text-gray-400" ></i>저장</span>
+          </div>
 
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">

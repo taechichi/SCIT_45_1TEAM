@@ -17,12 +17,15 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.lang.reflect.Member;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -196,6 +199,35 @@ public class MemberService {
 
         // 현재 로그인 중인 사용자의 상태 정보 반환
         return mentity.getStatus().getStatusId();
+    }
+
+
+    /**
+     * 사용자의 상태 메시지를 변경하는 메서드
+     * @param memberId 현재 로그인 중인 아이디
+     * @param newStatusMessage 사용자에게 새로 입력받은 메시지
+     */
+    public void changeMyStatusMessage(String memberId, String newStatusMessage){
+        MemberEntity mentity = memberJpaRepository.findById(memberId)
+                .orElseThrow(()-> new EntityNotFoundException("존재하지 않는 사용자"));
+        mentity.setStMessage(newStatusMessage);
+    }
+
+    /**
+     * 사용자의 최신 상태 정보를 읽어와 반환하는 메서드
+     * @param memberId 현재 로그인 중인 사용자 id
+     * @return 마지막 수정일시, 상태 메시지, 상태 아이디
+     */
+    public Map<String, Object> viewStatuses(String memberId){
+        MemberEntity mentity = memberJpaRepository.findById(memberId)
+                .orElseThrow(()-> new EntityNotFoundException("존재하지 않는 사용자"));
+
+        // 받아온 값 담을 맵 구조 객체 생성해 담기
+        Map<String, Object> response = new HashMap<>();
+        response.put("lastStUpdateDt", mentity.getLastStUpdateDt());
+        response.put("stMessage", mentity.getStMessage());
+        response.put("statusId", mentity.getStatus().getStatusId());
+        return response;
     }
 }
 
