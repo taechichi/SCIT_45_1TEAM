@@ -36,6 +36,18 @@ public class MessageDTO {
         this.fileName = fileName;
     }
 
+    // 내 쪽지 상세보기에 필요한 DTO 생성자
+    public MessageDTO(Integer messageId, String senderId, String receiverId
+            , String content, LocalDateTime createDt, boolean deleteYn, String fileName) {
+        this.messageId = messageId;
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.content = content;
+        this.deleteYn = deleteYn;
+        this.createDt = createDt;
+        this.fileName = fileName;
+    }
+
     // 내가 읽지 않은 쪽지 목록 출력(홈 화면)에 필요한 DTO 생성자
     public MessageDTO(Integer messageId, String senderId, Integer statusId, String content, LocalDateTime createDt, LocalDateTime readDt) {
         this.messageId = messageId;
