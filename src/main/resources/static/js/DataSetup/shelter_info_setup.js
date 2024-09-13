@@ -27,7 +27,7 @@ function uploadFile() {
 
     startProgress();
 
-    fetch('http://localhost:8888/Data/shelters/import-file', {
+    fetch('http://localhost:8888/Data/shelter/import-file', {
         method: 'POST',
         body: formData
     })

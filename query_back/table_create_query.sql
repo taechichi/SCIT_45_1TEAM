@@ -43,7 +43,7 @@ drop table hospital;
 CREATE TABLE shelter
 (
     shelter_id         INTEGER     NOT NULL AUTO_INCREMENT,
-    shelter_name       VARCHAR(50) NOT NULL,
+    shelter_name       VARCHAR(500) NOT NULL,
     longitude          VARCHAR(20) NOT NULL,
     latitude           VARCHAR(20) NOT NULL,
     flood_yn           TINYINT(1) NOT NULL DEFAULT 0,
@@ -208,3 +208,6 @@ ALTER TABLE marker_favorites
     ADD CONSTRAINT marker_favorites_ibfk_2
         FOREIGN KEY (hospital_id)
             REFERENCES hospital(hospital_id);
+
+ALTER TABLE `message`
+    ADD COLUMN `read_dt` TIMESTAMP NULL DEFAULT NULL;

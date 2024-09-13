@@ -31,6 +31,7 @@ public class PaginationUtils {
         modelAndView.addObject("filterWord", dto.getFilterWord());
         modelAndView.addObject("searchType", dto.getSearchType());
         modelAndView.addObject("searchWord", dto.getSearchWord());
+        modelAndView.addObject("sortBy", dto.getSortBy());
 
         // 뷰 이름 설정 (뷰의 이름은 여기서 설정할 필요는 없지만, 예시로 추가)
         // modelAndView.setViewName("viewName");

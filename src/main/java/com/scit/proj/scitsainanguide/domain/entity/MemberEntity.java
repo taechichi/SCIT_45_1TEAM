@@ -57,6 +57,6 @@ public class MemberEntity {
     private LocalDateTime endTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "status_id", updatable = false)
+    @JoinColumn(name = "status_id")
     private StatusEntity status;
 }
