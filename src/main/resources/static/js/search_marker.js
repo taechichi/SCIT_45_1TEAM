@@ -50,7 +50,23 @@
 
 
     //마커생성 함수
-    function createMarker(map, place, visible=false, type = "place"){
+    function createMarker(map, place, visible=false, type = "none"){
+        let markerOption={
+            placeId: place.place_id,
+            map: map,
+            position : place.geometry.location,
+            title: place.name,
+            placePhoto: place.photos ? place.photos[0].getUrl() : ""
+        };
+
+        if(type==="shelter"){
+            markerOption={
+                placeId: place.shelterId,
+                map: map,
+                position : new google.maps.LatLng(place.latitude, place.longitude),
+                title: place.shelterName
+            }
+        }
         let marker = new google.maps.Marker({
             placeId: place.place_id,
             map: map,
@@ -69,7 +85,15 @@
         if(visible){
             showInfoPanel(marker);
         }
-
+        switch (type) {
+            case "none":
+                break;
+            case "myMarker":
+                break;
+            case "dbShelter":
+                break;
+            default:
+        }
         return marker;
     }
 
@@ -209,8 +233,9 @@
     // DB에 저장된 대피소 정보를 불러오는 함수
     function fetchNearbyShelters() {
         const center = map.getCenter(); //보는 지도의 중심좌표 획득
-        const lat = center.lat;
-        const lng = center.lng;
+        const lat = center.lat();
+        const lng = center.lng();
+        console.log(lat);
         // 서버에 현재 위치 정보를 전송 (latitude, longitude)
         fetch('/api/nearby-shelters', {
             method: 'POST',
@@ -220,15 +245,16 @@
             body: JSON.stringify({
                 latitude: lat, // 현재 위치 위도
                 longitude: lng, // 현재 위치 경도
-                radius: 1000 // 반경 1km 설정
             })
         })
             .then(response => response.json()) // 서버로부터 JSON 응답 받기
             .then(data => {
-                if (data.s && data.shelter.length > 0) {
+
+                if (data && data.length > 0) {
                     // 대피소 데이터가 있으면 지도에 표시
-                    data.shelter.forEach(place => {
-                        createMarker(map, place); // 대피소 마커 생성 함수
+                    data.forEach(place => {
+                         console.log("확인데이터",place);
+                        createMarker(map, place,false,"nearbyshelter"); // 대피소 마커 생성 함수
                     });
                 } else {
                     console.log('1km 내 대피소가 없습니다.');
@@ -298,6 +324,10 @@
         //병원 버튼 클릭 시 근처 1km 검색
         document.getElementById('hospitalfilterbutton').addEventListener('click', function() {
             searchNearbyHospitals(); // 병원 검색 함수 호출
+        });
+        //대피소 클릭 시 검색
+        document.getElementById('shelterfilterbutton').addEventListener('click', function (){
+            fetchNearbyShelters();
         });
 
 
