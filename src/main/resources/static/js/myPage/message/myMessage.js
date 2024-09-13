@@ -1,6 +1,6 @@
 $(document).ready(function() {
     // 이벤트 리스너 등록
-    $('#writeMessageBtn').on('click', writeMessage)
+    $('#writeMessageBtn').on('click', writeMessage);
     $('#deleteMessageBtn').on('click', deleteSelectedMessage);
     $('#selectAll').on('click', toggleSelectAll);
 });

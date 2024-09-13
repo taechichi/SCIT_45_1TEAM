@@ -4,6 +4,8 @@ package com.scit.proj.scitsainanguide.controller.myPage;
 import com.scit.proj.scitsainanguide.service.myPage.MarkerFavoritesService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.scit.proj.scitsainanguide.domain.dto.MarkerFavoritesDTO;
@@ -12,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.util.List;
 
@@ -23,31 +27,44 @@ public class MarkerFavoritesController {
 
     // ============== 초기화 목록 ==============
     private final MarkerFavoritesService markerFavoritesService;
+    private final SpringTemplateEngine templateEngine;
 
     @Value("20")
     private int pageSize;
-    @Value("1")
-    private int page;
     // =======================================
 
     // ============ 처음에 들어오면 모든 정보 출력 ============
     @GetMapping("")
     public String enterMarkerFavorites(
-            /*@RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,*/
             @ModelAttribute SearchRequestDTO dto,
             Model model
     ) {
+        log.debug("enterMarkerFavorites method called.");
         dto.setPageSize(pageSize);
         Page<MarkerFavoritesDTO> markerFavoritesDTOPage = markerFavoritesService.viewAllFavoritesMarkerTest(dto);
-
-        log.debug("markerFavoritesDTOPage: {}", markerFavoritesDTOPage);
         model.addAttribute("markerFavoritesDTOPage", markerFavoritesDTOPage);
-        model.addAttribute("page", dto.getPage());
-
         return "myPage/myMarkerFavorites";
     }
     // ===================================================
+
+    // ===== 검색 조건에 따라 출력 (병원or대피소 필터; 검색어 필터; 정렬 순서) =====
+    @GetMapping("/search")
+    public String enterSearchMarkerFavorites(
+            @ModelAttribute SearchRequestDTO dto,
+            Model model
+    ) {
+        log.debug("enterSearchMarkerFavorites method called.");
+        dto.setPageSize(pageSize);
+        log.debug("GetMapping/searchController dto: {}", dto);
+        Page<MarkerFavoritesDTO> markerFavoritesDTOPage = markerFavoritesService.selectMarkerFavoritesFilterAndSearchList(dto);
+        model.addAttribute("markerFavoritesDTOPage", markerFavoritesDTOPage);
+        model.addAttribute("searchRequest", dto);
+
+        return "myPage/myMarkerFavorites";
+
+    }
+    // ====================================================================
+
 
 
 

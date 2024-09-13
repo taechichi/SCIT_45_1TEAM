@@ -7,7 +7,7 @@
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
     <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
-    <script th:src="@{/js/translateImage.js}"></script>
+    <script th:src="@{/js/translate/translateImage.js}"></script>
 
     <!-- Custom fonts for this template-->
     <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
@@ -16,7 +16,7 @@
             rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link rel="stylesheet" th:href="@{/css/translate/translateImage.css}">
+    <link rel="stylesheet" th:href="@{/css/topbar.css}">
 </head>
 <body>
 <!-- Page Wrapper -->
@@ -36,7 +36,8 @@
             <div th:insert="fragments/Topbar :: Topbar" id="Topbar"></div>
             <!-- End of Topbar -->
 
-            <h2 th:text="#{translate.fileTranslate}"></h2>
+<!--            <h2 th:text="#{translate.fileTranslate}"></h2>-->
+            <h2> 이미지 번역 </h2>
             <form id="uploadForm" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)">
                 <input type="file" name="file" id="file" accept="image/*" required>
                 <select id="sourceLanguage">
@@ -61,4 +62,15 @@
 </div>
 <!-- End of Page Wrapper -->
 </body>
+<!-- 게시판 페이지에 필요한 script 모음 -->
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.js}"></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/js/sb-admin-2.js}"></script>
+
 </html>

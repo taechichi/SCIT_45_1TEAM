@@ -9,13 +9,15 @@
     <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
     <!-- Custom styles for this template -->
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
+    <link rel="stylesheet" th:href="@{/css/topbar.css}">
+    <link rel="stylesheet" th:href="@{/css/index/index.css}">
 </head>
 <body>
 <!-- Page Wrapper -->
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <div th:insert="fragments/menuAdmin :: menuAdmin" id="menuAdmin"></div>
+    <div th:insert="fragments/menu :: menu(${member})" id="menu"></div>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -26,7 +28,7 @@
 
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <div th:insert="fragments/TopbarAdmin :: TopbarAdmin" id="TopbarAdmin"></div>
+                    <div th:insert="fragments/Topbar :: Topbar" id="Topbar"></div>
                     <h6 class="m-0 font-weight-bold text-primary">테이블 이름을 여기에</h6>
                 </div>
                 <div class="card-body">
@@ -42,7 +44,7 @@
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody th:each="message : ${messageList}" th:object="${message}">
+                            <tbody th:each="message : ${pageData}" th:object="${message}">
                                 <tr>
                                     <td>
                                         <img class="rounded-circle" alt="Profile Picture"
@@ -59,38 +61,25 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div id="navigator">
-                            <!-- 페이지 번호 navigator -->
-                            <a th:if="${messageList.hasPrevious()}"
-                               th:href="|javascript:pagingFormSubmit(${messageList.getNumber()})|">◀ </a>
-                            <span th:if="${messageList.getTotalPages() > 0}"
-                                  th:each="counter : ${#numbers.sequence((page - 2 < 1 ? 1
-                                                    : (page + 2 > messageList.getTotalPages() ? messageList.getTotalPages() - 4
-                                                    : page - 2)),
-                                                    (page + 2 > messageList.getTotalPages() ? messageList.getTotalPages()
-                                                    : (page - 2 < 1 ? 5 : page + 2)))}">
-                        <th:block th:if="${counter == page}"><b></th:block>
-                            <a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
-                        <th:block th:if="${counter == page}"></b></th:block>
-                    </span>
-                            <a th:if="${messageList.hasNext()}"
-                               th:href="|javascript:pagingFormSubmit(${messageList.getNumber()}+2)|"> ▶</a>
-                            <!-- 검색 폼 -->
-                            <div class="searchForm-container">
-                                <form id="pagingForm" th:action="@{/my/message}" method="get">
-                                    <input type="hidden" name="page" id="page"/>
-                                    <select id="type" name="searchType">
-                                        <option value="senderId" th:text="#{board.searchType.memberId}"
-                                                th:selected="${searchType == 'senderId'}">/option>
-                                        <option value="content" th:text="#{my.message.searchType.content}"
-                                                th:selected="${searchType == 'content'}"></option>
-                                    </select>
-                                    <input type="text" name="searchWord" th:value="${searchWord}"/>
-                                    <input type="submit" onclick="pagingFormSubmit(1)" th:value="#{board.button.search}"/>
-                                    <input type="button" id="writeMessageBtn" th:value="#{my.message.button.write}">
-                                    <input type="button" id="deleteMessageBtn" th:value="#{board.button.delete}">
-                                </form>
-                            </div>
+
+
+                        <!-- 페이지 번호 navigator -->
+                        <div th:insert="fragments/pagination :: pagination"></div>
+                        <!-- 검색 폼 -->
+                        <div class="searchForm-container">
+                            <form id="pagingForm" th:action="@{/my/message}" method="get">
+                                <input type="hidden" name="page" id="page"/>
+                                <select id="type" name="searchType">
+                                    <option value="senderId" th:text="#{board.searchType.memberId}"
+                                            th:selected="${searchType == 'senderId'}">/option>
+                                    <option value="content" th:text="#{my.message.searchType.content}"
+                                            th:selected="${searchType == 'content'}"></option>
+                                </select>
+                                <input type="text" name="searchWord" th:value="${searchWord}"/>
+                                <input type="submit" onclick="pagingFormSubmit(1)" th:value="#{board.button.search}"/>
+                                <input type="button" id="writeMessageBtn" th:value="#{my.message.button.write}">
+                                <input type="button" id="deleteMessageBtn" th:value="#{board.button.delete}">
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -118,6 +107,6 @@ z
 <script th:src="@{/js/paging.js}"></script>
 
 <!-- Custom js -->
-<script th:src="@{/js/myPage/myMessage.js}"></script>
+<script th:src="@{/js/myPage/message/myMessage.js}"></script>
 </body>
 </html>

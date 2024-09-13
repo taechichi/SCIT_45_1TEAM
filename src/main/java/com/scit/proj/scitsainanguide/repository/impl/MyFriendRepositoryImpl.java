@@ -2,6 +2,7 @@ package com.scit.proj.scitsainanguide.repository.impl;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
 import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +49,7 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
     }
 
     @Override
-    public Page<FriendDTO> selectMyFirendList(SearchRequestDTO dto, String memberId) {
+    public Page<FriendDTO> selectMyFriendList(SearchRequestDTO dto, String memberId) {
         Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPageSize());
         FriendSearchType searchType = FriendSearchType.fromValue(dto.getSearchType());
 
@@ -60,15 +62,17 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
         // 동적 조건 추가
         // 1. 검색조건
         switch (searchType) {
-            case MEMBER_ID -> whereClause.and(friend.friendId.contains(dto.getSearchWord()));
-            case NICKNAME -> whereClause.and(friend.member.nickname.contains(dto.getSearchWord()));
+            case FRIEND_ID -> whereClause.and(friend.friendId.contains(dto.getSearchWord()));
+            case NICKNAME -> whereClause.and(friend.friend.nickname.contains(dto.getSearchWord()));
         }
 
         // 쿼리 실행
         List<FriendDTO> friendDTOList = queryFactory.select(
                             Projections.constructor(FriendDTO.class,
+                            friend.relationId,
                             friend.friendId,
                             friend.friend.nickname,
+                            friend.favoriteYn,
                             friend.friend.nationality
                         )
                 ).from(friend)
@@ -99,6 +103,7 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
         // 쿼리 실행
         List<FriendDTO> friendRequestDTOList = queryFactory.select(
                         Projections.constructor(FriendDTO.class,
+                                friend.relationId,
                                 friend.friendId,
                                 friend.friend.nickname,
                                 friend.friend.nationality,
@@ -119,12 +124,7 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
 
     @Override
     public void updateFriend(Integer relationId, String memberId) {
-        // 친구 즐겨찾기는 최대 5명까지 가능하기 때문에 유효성검사를 먼저 한다.
         BooleanBuilder whereClause = new BooleanBuilder();
-        whereClause.and(friend.memberId.eq(memberId));
-        if(getTotalCount(whereClause) == 5L) {
-            throw new IllegalStateException("친구 즐겨찾기는 최대 5명까지만 가능합니다.");
-        }
         whereClause.and(friend.relationId.eq(relationId));
 
         // FriendEntity 조회
@@ -135,10 +135,16 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
         if (friendEntity == null) {
             throw new EntityNotFoundException("해당하는 친구 관계를 찾을 수 없습니다.");
         }
+        boolean favoriteYn = friendEntity.getFavoriteYn();
 
-        // 즐겨찾기 업데이트
+        // 친구 즐겨찾기 추가 시에는 최대 5명까지 가능하기 때문에 유효성검사를 먼저 한다.
+        if(!favoriteYn && getTotalCount(whereClause) == 5L) {
+            throw new IllegalStateException("친구 즐겨찾기는 최대 5명까지만 가능합니다.");
+        }
+
+        // 즐겨찾기 업데이트 (즐겨찾기 추가 / 취소)
         queryFactory.update(friend)
-                .set(friend.favoriteYn, true)
+                .set(friend.favoriteYn, !favoriteYn)
                 .where(whereClause)
                 .execute();
     }
@@ -163,21 +169,26 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
 
     @Override
     public void insertFriend(String memberId, String friendId, boolean friendYn) {
+        // 친구 요청 거는 대상이 여러명일 수도 있음. 콤마로 아이디가 구분된 friendId를 list에 담음
+        List<String> friendIdList = Arrays.asList(friendId.split("\\s*,\\s*"));
+
         // friend_member entity 를 생성
-        FriendEntity friendEntity = FriendEntity.builder()
-                .memberId(memberId)
-                .friendId(friendId)
-                .favoriteYn(false)
-                .friendYn(friendYn)
-                .build();
+        for (String fId : friendIdList) {
+            FriendEntity friendEntity = FriendEntity.builder()
+                    .memberId(memberId)
+                    .friendId(fId)
+                    .favoriteYn(false)
+                    .friendYn(friendYn)
+                    .build();
 
-        // 친구 신청을 수락하면서 친구 관계를 추가하는 경우 수락일시를 추가한다.
-        if (friendYn) {
-            friendEntity.setAcceptDt(LocalDateTime.now());
+            // 친구 신청을 수락하면서 친구 관계를 추가하는 경우 수락일시를 추가한다.
+            if (friendYn) {
+                friendEntity.setAcceptDt(LocalDateTime.now());
+            }
+
+            // 엔티티 매니저를 통해 엔티티를 저장.
+            em.persist(friendEntity);
         }
-
-        // 엔티티 매니저를 통해 엔티티를 저장.
-        em.persist(friendEntity);
     }
 
     @Override
@@ -264,6 +275,41 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
         .where(member.memberId.in(friendIdList))
         .fetch();
     }
+
+    /**
+     * 여러 명의 사용자를 대상으로 한 번에 쪽지 보내기
+     * @param memberId
+     * @param searchWord
+     * @return
+     */
+    @Override
+    public List<MemberDTO> selectMyFriendIdContainSearchWord(String memberId, String searchWord){
+
+        // 현재 로그인 중인 사용자의 친구들 중, 사용자가 검색한 단어가 포함된 id 리스트를 불러옴
+        List<String> myFriendList =  queryFactory.select(friend.friendId)
+                .from(friend)
+                .where(friend.memberId.eq(memberId).and(friend.friendId.contains(searchWord)))
+                .orderBy(friend.friendId.asc())
+                .fetch();
+
+        // 위에서 불러온 리스트 내 friendId로 member table 내 정보 가져옴
+        return queryFactory.select(
+                        Projections.constructor(MemberDTO.class,
+                                member.memberId,
+                                member.nickname,
+                                member.fileName,
+                                member.gender,
+                                member.nationality,
+                                friend.favoriteYn
+                        )
+                )
+                .from(member)
+                .leftJoin(friend).on(friend.friendId.eq(member.memberId))
+                .where(member.memberId.in(myFriendList))
+                .orderBy(friend.friendYn.desc(),(member.memberId.asc()))
+                .fetch();
+    }
+
 
     private long getTotalCount(BooleanBuilder whereClause) {
         return queryFactory.selectFrom(friend)

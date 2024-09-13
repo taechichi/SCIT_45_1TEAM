@@ -38,4 +38,5 @@ public class MyMessageService {
         return myMessageRepository.selectMyMessage(messageId)
                 .orElseThrow(() -> new EntityNotFoundException("해당하는 쪽지를 찾을 수 없습니다."));
     }
+
 }

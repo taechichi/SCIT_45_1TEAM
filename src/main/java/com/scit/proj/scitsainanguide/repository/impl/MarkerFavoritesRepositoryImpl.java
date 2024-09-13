@@ -4,7 +4,6 @@ package com.scit.proj.scitsainanguide.repository.impl;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.sql.SQLExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.scit.proj.scitsainanguide.domain.dto.MarkerFavoritesDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
@@ -46,6 +45,7 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
     // ===== with paging list =====
     // ===== View All list =====
     public Page<MarkerFavoritesDTO> selectMarkerFavoritesList(SearchRequestDTO dto, String memberId) {
+
         // PageRequest 객체를 생성하여 페이지 번호와 페이지 크기 설정
         Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPageSize());
 
@@ -75,43 +75,60 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
         return new PageImpl<>(tempMarkerFavoritesDTOList, pageable, total);
     }
 
+
     // 장소 이름, 별칭 검색창에 누를때마다 호출해서 가져오도록
-    public Page<MarkerFavoritesDTO> selectMarkerFavoriteBySearchAndFilter(SearchRequestDTO dto, String memberId) {
+    public Page<MarkerFavoritesDTO> selectMarkerFavoritesBySearchAndFilter(SearchRequestDTO dto, String memberId) {
+
+
+        log.debug("=== 1 === SearchRequestDTO : {}", dto);
+
         boolean isHospital = dto.getFilter().equals("hospital");
         boolean isShelter = dto.getFilter().equals("shelter");
+
+        log.debug("=== 2 === isHospital : {}", isHospital);
+        log.debug("=== 3 === isShelter : {}", isShelter);
 
         Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPageSize());
 
         // QueryDSL의 동적 쿼리 생성을 위한 조건 빌더
         BooleanBuilder whereClause = new BooleanBuilder();
-        BooleanBuilder orderByClause = new BooleanBuilder();
-
+        
+        // 로그인한사람의 모든 즐겨찾기 마커 긁어오기
         whereClause.and(markerFavoritesEntity.member.memberId.eq(memberId));
 
 
         // hospital 필터(filter) 눌렀을 때,
         if(isHospital){
+            log.debug("=== 4 === isHospitalFilter applied.");
             whereClause.and(markerFavoritesEntity.hospital.hospitalId.isNotEmpty());
         }
 
         // shelter 필터(filter)눌렀을 때,
         if(isShelter){
-            whereClause.and(markerFavoritesEntity.shelter.shelterId.isNotNull());
+            log.debug("=== 5 === isShelterFilter applied.");
+            whereClause.and(markerFavoritesEntity.shelter.shelterId.stringValue().isNotEmpty());
         }
 
 
         // 이름(searchWord)
         if(!Objects.equals(dto.getSearchWord(), "")) {
             if(isHospital) {
+                log.debug("=== 6 === isHospitalFilter with searchWord applied.");
                 whereClause.and(markerFavoritesEntity.hospital.hospitalName.contains(dto.getSearchWord()))
                         .or(markerFavoritesEntity.nickname.contains(dto.getSearchWord()));
-            }
-
-            if(isShelter) {
+            } else if(isShelter) {
+                log.debug("=== 7 === isShelterFilter with searchWord applied.");
                 whereClause.and(markerFavoritesEntity.shelter.shelterName.contains(dto.getSearchWord()))
                         .or(markerFavoritesEntity.nickname.contains(dto.getSearchWord()));
+            } else {
+                log.debug("=== 8 === Only searchWord applied.");
+                whereClause.and(markerFavoritesEntity.nickname.contains(dto.getSearchWord()))
+                        .or(markerFavoritesEntity.hospital.hospitalName.contains(dto.getSearchWord()))
+                        .or(markerFavoritesEntity.shelter.shelterName.contains(dto.getSearchWord()));
             }
         }
+
+        log.debug("=== 9 === filter, searchWord Passed.");
 
         // 리스트 업
         List<MarkerFavoritesEntity> markerFavoritesEntityList = queryFactory.selectFrom(markerFavoritesEntity)
@@ -136,6 +153,9 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
                 .where(whereClause)
                 .fetchCount();
 
+        log.debug("==== 10 ==== Result list size: {}", markerFavoritesEntityList.size());
+        log.debug("==== 11 ==== Total count: {}", total);
+
         List<MarkerFavoritesDTO> tempMarkerFavoritesDTOList = markerFavoritesEntityList.stream().map(this::convertToMarkerFavoritesDTO).toList();
 
         return new PageImpl<>(tempMarkerFavoritesDTOList, pageable, total);
@@ -158,19 +178,4 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
                 .build();
     }
     // =================================================================================
-
-    // =================================================================================
-    // ====== TEST AREA ================================================================
-    // ===== Without paging list ======
-    public List<MarkerFavoritesDTO> selectAllMarkerFavoritesDTO_NoPaging(String memberId) {
-        // 리스트업
-        List<MarkerFavoritesEntity> markerFavoritesEntityList = queryFactory.selectFrom(markerFavoritesEntity)
-                .fetch();
-
-        return markerFavoritesEntityList.stream()
-                .map(this::convertToMarkerFavoritesDTO)
-                .toList();
-    }
-    // =================================================================================
-
 }

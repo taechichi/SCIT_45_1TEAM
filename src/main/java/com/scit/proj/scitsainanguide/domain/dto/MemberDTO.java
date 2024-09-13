@@ -25,6 +25,7 @@ public class MemberDTO {
     private String fileName;
     private String stMessage;
     private LocalDateTime endTime;
+    private Boolean favoriteYn;
 
     // Status 명을 직접 구해서 넣을 경우
     private String statusName;
@@ -41,5 +42,14 @@ public class MemberDTO {
         this.nickname = nickname;
         this.statusName = statusName;
     }
+
+    public MemberDTO(String memberId, String nickname, String fileName, String gender, String nationality, Boolean favoriteYn) {
+        this.memberId = memberId;
+        this.nickname = nickname;
+        this.fileName = fileName;
+        this.gender = gender;
+        this.nationality = nationality;
+        this.favoriteYn = favoriteYn;
+     }
 }
 

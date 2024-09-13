@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ import java.util.Optional;
 public class MyMessageRepositoryImpl implements MyMessageRepository {
 
     @PersistenceContext
-    private final EntityManager em;
+    private final EntityManager em; // JPA 영속성 관리!
 
     private final JPAQueryFactory queryFactory;
 
@@ -108,16 +109,20 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
 
     @Override
     public void insertMyMessage(MessageDTO dto) {
-        // message entity 를 생성
-        MessageEntity messageEntity = MessageEntity.builder()
-                .senderId(dto.getSenderId())
-                .receiverId(dto.getReceiverId())
-                .content(dto.getContent())
-                .deleteYn(false)
-                .build();
+        // 받는이가 여러 명일 수도 있는, 콤마로 구분된 receiverIds를 String list에 담기
+        List<String> receiverIdList = Arrays.asList(dto.getReceiverId().split("\\s*,\\s*"));
 
-        // 엔티티 매니저를 통해 엔티티를 저장.
-        em.persist(messageEntity);
+        // message entity 를 생성
+        for (String receiverId : receiverIdList) {
+            MessageEntity messageEntity = MessageEntity.builder()
+                    .senderId(dto.getSenderId())
+                    .receiverId(receiverId)
+                    .content(dto.getContent())
+                    .deleteYn(false)
+                    .build();
+            // 엔티티 매니저를 통해 엔티티를 저장. - insert
+            em.persist(messageEntity);
+        }
     }
 
     @Override
@@ -139,7 +144,7 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
                 .fetchOne()
         );
     }
-
+    
     private void executeDeleteMessageQuery(BooleanBuilder whereClause) {
         // 삭제시 해당 메세지의 삭제여부 컬럼의 값만 true 로 변경
         queryFactory.update(message)
@@ -159,3 +164,5 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
                 .build();
     }
 }
+
+

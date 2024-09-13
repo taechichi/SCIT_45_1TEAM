@@ -21,6 +21,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Slf4j
@@ -36,9 +38,14 @@ public class MemberService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     private final String uploadDir = "C:/profile-photos";
+    private final String defaultMaleImage = "undraw_profile.jpg";
+    private final String defaultFemaleImage = "undraw_profile_3.jpg";
+    private final String defaultNullImage = "icon8.png";
 
     public MemberDTO registerMember(MemberDTO memberDTO, MultipartFile file) throws IOException {
-        // 파일이 있을 경우 처리
+        // 프로필 이미지를 저장할 파일명
+        String profileImage;
+
         if (!file.isEmpty()) {
             // 업로드 디렉토리 생성
             File uploadPath = new File(uploadDir);
@@ -55,9 +62,21 @@ public class MemberService {
             // 파일 저장
             file.transferTo(filePath.toFile());
 
-            // 파일명(경로) DTO에 설정
-            memberDTO.setFileName(uniqueFileName);
+            // 저장된 파일명 설정
+            profileImage = uniqueFileName;
+        } else {
+            // 파일이 없을 경우 성별에 따른 기본 이미지 설정
+            if ("M".equals(memberDTO.getGender())) {
+                profileImage = defaultMaleImage;
+            } else if ("F".equals(memberDTO.getGender())) {
+                profileImage = defaultFemaleImage;
+            } else {
+                profileImage = defaultNullImage; // 성별이 null인 경우
+            }
         }
+
+        // 설정된 파일명이나 기본 이미지 파일명을 DTO에 저장
+        memberDTO.setFileName(profileImage);
 
         // statusId을 1로 설정
         memberDTO.setStatusId(1);
@@ -72,6 +91,7 @@ public class MemberService {
 
         return memberDTO;
     }
+
 
     // MemberEntity 객체 생성 메서드
     private MemberEntity createMemberEntity(MemberDTO memberDTO, StatusEntity statusEntity) {
@@ -152,6 +172,30 @@ public class MemberService {
 
         filein.close();
         fileout.close();
+    }
+
+    /**
+     * 사용자의 상태를 변경하는 메서드
+     * @param memberId
+     * @param statusId
+     * @return 사용자의 상태값
+     */
+    public Integer changeMyStatus(String memberId, Integer statusId) {
+        // 현재 로그인 중인 사용자 엔티티 불러옴
+        MemberEntity mentity = memberJpaRepository
+                .findById(memberId).orElseThrow(()-> new EntityNotFoundException("존재하지 않는 회원입니다."));
+
+        // 현재 날짜와 시간으로 LocalDateTime 객체 생성해 최신 상태 수정 시간 설정
+        LocalDateTime lastUpdateDt = LocalDateTime.now();
+        mentity.setLastStUpdateDt(lastUpdateDt);
+        
+        // 상태 아이디로 상태 엔티티 불러와 멤버 엔티티에 변경된 상태 설정
+        StatusEntity sentity = statusJpaRepository.findById(statusId)
+                .orElseThrow(() -> new RuntimeException("Status not found"));
+        mentity.setStatus(sentity);
+
+        // 현재 로그인 중인 사용자의 상태 정보 반환
+        return mentity.getStatus().getStatusId();
     }
 }
 
