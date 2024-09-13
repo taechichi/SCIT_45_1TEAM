@@ -11,7 +11,7 @@ CREATE TABLE member
     member_id         VARCHAR(30)  NOT NULL,
     status_id         INTEGER      NOT NULL,
     password          VARCHAR(100) NOT NULL,
-    nickname          VARCHAR(10)  NOT NULL,
+    nickname          VARCHAR(20)  NOT NULL,
     email             VARCHAR(50)  NOT NULL,
     gender            VARCHAR(1),
     phone             VARCHAR(20)  NOT NULL,
@@ -38,12 +38,10 @@ CREATE TABLE hospital
     PRIMARY KEY (hospital_id)
 );
 
-drop table hospital;
-
 CREATE TABLE shelter
 (
     shelter_id         INTEGER     NOT NULL AUTO_INCREMENT,
-    shelter_name       VARCHAR(50) NOT NULL,
+    shelter_name       VARCHAR(500) NOT NULL,
     longitude          VARCHAR(20) NOT NULL,
     latitude           VARCHAR(20) NOT NULL,
     flood_yn           TINYINT(1) NOT NULL DEFAULT 0,
@@ -70,7 +68,7 @@ CREATE TABLE realtime_comment
 (
     comment_num INTEGER      NOT NULL AUTO_INCREMENT,
     reply_num   INTEGER NULL,
-    nickname    VARCHAR(10)  NOT NULL,
+    nickname    VARCHAR(20)  NOT NULL,
     location    VARCHAR(100) NOT NULL,
     contents    VARCHAR(200) NOT NULL,
     create_dt   TIMESTAMP    NOT NULL DEFAULT NOW(),
@@ -81,7 +79,7 @@ CREATE TABLE realtime_comment
 CREATE TABLE marker_board
 (
     board_id    INTEGER     NOT NULL AUTO_INCREMENT,
-    member_id   VARCHAR(50) NOT NULL,
+    member_id   VARCHAR(30) NOT NULL,
     shelter_id  Integer NULL,
     hospital_id VARCHAR(500) NULL,
     contents    VARCHAR(500) NULL,
@@ -153,8 +151,8 @@ CREATE TABLE alarm
 CREATE TABLE friend_member
 (
     relation_id INTEGER     NOT NULL AUTO_INCREMENT,
-    member_id   VARCHAR(50) NOT NULL,
-    friend_id   VARCHAR(50) NOT NULL,
+    member_id   VARCHAR(30) NOT NULL,
+    friend_id   VARCHAR(30) NOT NULL,
     friend_yn   TINYINT(1) NOT NULL DEFAULT 0,
     favorite_yn TINYINT(1) NOT NULL DEFAULT 0,
     request_dt  TIMESTAMP NULL,
@@ -167,7 +165,7 @@ CREATE TABLE friend_member
 CREATE TABLE marker_favorites
 (
     favorite_id INTEGER         NOT NULL AUTO_INCREMENT,
-    member_id   VARCHAR(10)     NOT NULL,
+    member_id   VARCHAR(30)     NOT NULL,
     hospital_id VARCHAR(500)    NULL,
     shelter_id  Integer NULL,
     nickname    VARCHAR(20)     NULL,
@@ -190,24 +188,3 @@ CREATE TABLE message
     FOREIGN KEY (sender_id) REFERENCES member (member_id),
     FOREIGN KEY (receiver_id) REFERENCES member (member_id)
 );
-
-ALTER TABLE hospital MODIFY COLUMN hospital_name VARCHAR(200);
-
-alter table marker_board drop foreign key marker_board_ibfk_3;
-alter table marker_favorites drop foreign key marker_favorites_ibfk_2;
-alter table hospital modify column hospital_id varchar(500) NOT null;
-alter table marker_board modify column hospital_id varchar(500) null;
-alter table marker_favorites modify column hospital_id varchar(500) null;
-
-ALTER TABLE marker_board
-    ADD CONSTRAINT marker_board_ibfk_3
-        FOREIGN KEY (hospital_id)
-            REFERENCES hospital(hospital_id);
-
-ALTER TABLE marker_favorites
-    ADD CONSTRAINT marker_favorites_ibfk_2
-        FOREIGN KEY (hospital_id)
-            REFERENCES hospital(hospital_id);
-
-ALTER TABLE `message`
-    ADD COLUMN `read_dt` TIMESTAMP NULL DEFAULT NULL;
