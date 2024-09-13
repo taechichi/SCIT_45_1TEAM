@@ -43,7 +43,7 @@ drop table hospital;
 CREATE TABLE shelter
 (
     shelter_id         INTEGER     NOT NULL AUTO_INCREMENT,
-    shelter_name       VARCHAR(50) NOT NULL,
+    shelter_name       VARCHAR(500) NOT NULL,
     longitude          VARCHAR(20) NOT NULL,
     latitude           VARCHAR(20) NOT NULL,
     flood_yn           TINYINT(1) NOT NULL DEFAULT 0,
