@@ -39,4 +39,7 @@ public class MyMessageService {
                 .orElseThrow(() -> new EntityNotFoundException("해당하는 쪽지를 찾을 수 없습니다."));
     }
 
+    public List<MessageDTO> selectMyUnreadMessageList(String memberId) {
+        return myMessageRepository.selectMyUnreadMessageList(memberId);
+    }
 }

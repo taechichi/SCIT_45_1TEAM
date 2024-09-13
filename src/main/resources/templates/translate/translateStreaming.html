@@ -7,6 +7,8 @@
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
     <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+    <script th:src="@{/js/translateStreaming.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/index/index.css}">
     <script th:src="@{/js/translate/translateStreaming.js}"></script>
 
     <!-- Custom fonts for this template-->
@@ -34,7 +36,7 @@
         <div id="content" class="text-center">
 
             <!-- Topbar -->
-            <div th:insert="fragments/Topbar :: Topbar" id="Topbar"></div>
+            <div th:insert="fragments/topbar :: topbar" id="topbar"></div>
             <!-- End of Topbar -->
 
             <h2> 실시간 음성 번역 </h2>

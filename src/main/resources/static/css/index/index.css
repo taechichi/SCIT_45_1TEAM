@@ -89,12 +89,10 @@
     z-index: 0;  /* 지도의 z-index를 낮게 설정하여 버튼이 위에 나오도록 설정 */
 }
 
-/* 지도 위에 버튼 스타일 */
 #hospitalfilterbutton,
-#shelterfilterbutton {
+#shelterfilterbutton,
+#myLocation {
     position: absolute;  /* 지도 위에 고정시키기 위해 사용 */
-    top: 10px;           /* 지도 위쪽에 여백 */
-    left: 10px;          /* 지도 왼쪽에 여백 */
     z-index: 1000;       /* 버튼을 지도 위로 올리기 */
     padding: 10px 20px;
     background-color: white;
@@ -103,9 +101,22 @@
     cursor: pointer;
 }
 
+/* 병원 버튼 */
+#hospitalfilterbutton {
+    top: 10px;           /* 지도 위쪽에 여백 */
+    left: 10px;          /* 지도 왼쪽에 여백 */
+}
+
 /* 대피소 버튼은 병원 버튼 옆에 위치 */
 #shelterfilterbutton {
-    left: 120px;  /* 병원 버튼과의 간격 조정 */
+    top: 10px;           /* 지도 위쪽에 여백 */
+    left: 120px;         /* 병원 버튼과의 간격 조정 */
+}
+
+/* 내 위치 버튼을 오른쪽 아래로부터 170px 띄우기 */
+#myLocation {
+    right: 10px;         /* 오른쪽 여백 */
+    bottom: 180px;       /* 아래쪽으로부터 170px 띄우기 */
 }
 
 /* 전체 정보 패널 스타일링 */

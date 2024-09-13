@@ -2,6 +2,7 @@ package com.scit.proj.scitsainanguide.repository.impl;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.scit.proj.scitsainanguide.domain.dto.MessageDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
@@ -144,7 +145,30 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
                 .fetchOne()
         );
     }
-    
+
+    @Override
+    public List<MessageDTO> selectMyUnreadMessageList(String memberId) {
+        BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(message.receiverId.eq(memberId)
+                .and(message.deleteYn.eq(false))
+                .and(message.readDt.isNull()));
+
+        return queryFactory.select(
+                        Projections.constructor(MessageDTO.class,
+                                message.messageId,
+                                message.senderId,
+                                message.sender.status.statusId,
+                                message.content,
+                                message.createDt,
+                                message.readDt
+                        )
+                )
+                .from(message)
+                .where(whereClause)
+                .orderBy(message.createDt.desc())
+                .fetch();
+    }
+
     private void executeDeleteMessageQuery(BooleanBuilder whereClause) {
         // 삭제시 해당 메세지의 삭제여부 컬럼의 값만 true 로 변경
         queryFactory.update(message)

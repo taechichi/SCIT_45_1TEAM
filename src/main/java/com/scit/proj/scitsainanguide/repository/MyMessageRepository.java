@@ -18,4 +18,6 @@ public interface MyMessageRepository {
     void insertMyMessage(MessageDTO dto);
 
     Optional<MessageDTO> selectMyMessage(Integer messageId);
+
+    List<MessageDTO> selectMyUnreadMessageList(String memberId);
 }
