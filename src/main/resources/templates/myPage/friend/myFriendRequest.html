@@ -18,7 +18,7 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <div th:insert="fragments/menu :: menu(${member})" id="menu"></div>
+    <div th:insert="~{fragments/menu :: menu}"></div>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -27,7 +27,7 @@
         <!-- Main Content -->
         <div id="content">
 
-            <div th:insert="fragments/topbar :: topbar" id="topbar"></div>
+            <div th:insert="~{fragments/topbar :: topbar}"></div>
 
             <div class="card shadow mb-4">
                 <div class="card-header py-3">

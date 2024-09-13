@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
+<link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
+<body>
+<div th:fragment="logoutModel">
+
+  <!-- Logout Modal-->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">정말 로그아웃 하실건가요?</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">로그아웃을 하려면 아래 로그아웃 버튼을 눌러주세요!</div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">취소</button>
+          <a class="btn btn-primary" th:href="@{/member/logout}">로그아웃</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+<!-- Custom scripts for all pages-->
+<script th:src="@{/js/sb-admin-2.js}"></script>
+
+<!-- 내 아이콘을 누르면 상태 변경 모달이 출력되고, 상태 및 상태메시지 변경 가능 -->
+<script th:src="@{/js/main/topbar.js}"></script>
+</html>
