@@ -1,14 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-   /* const profilePicLink = document.getElementById('profilePicLink');
-
-    profilePicLink.addEventListener('click', function() {
-        // 모달에 내용 삽입 (예시: static content 또는 AJAX를 통해 동적 내용 삽입 가능)
-        const messageContent = "Example message content"; // 실제 메시지 내용으로 대체
-        const messageTimestamp = "Example timestamp"; // 실제 타임스탬프로 대체
-
-        document.getElementById('messageContent').innerText = messageContent;
-        document.getElementById('messageTimestamp').innerText = messageTimestamp;
-    });*/
 
     // 상태 변경 원 요소들을 가져옴
     let circles = document.querySelectorAll('.circle');
@@ -38,5 +28,11 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
+
+
+
+
+
+
 }); // end of DOMContentLoaded;
 
