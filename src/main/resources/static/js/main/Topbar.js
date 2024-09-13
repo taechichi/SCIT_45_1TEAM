@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 상태 변경 원 요소들을 가져옴
     let circles = document.querySelectorAll('.circle');
 
-    // 클릭 이벤트를 각 원에 대해 설정합니다.
+    // 상태 수정 원 요소들에 대한 클릭 이벤트 설정
     circles.forEach(function(element) {
         element.addEventListener('click', function() {
             alert('클릭됨'); // 클릭 확인을 위한 alert
