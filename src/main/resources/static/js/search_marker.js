@@ -51,30 +51,36 @@
 
     //마커생성 함수
     function createMarker(map, place, visible=false, type = "none"){
-        let markerOption={
-            placeId: place.place_id,
-            map: map,
-            position : place.geometry.location,
-            title: place.name,
-            placePhoto: place.photos ? place.photos[0].getUrl() : ""
-        };
-
-        if(type==="shelter"){
-            markerOption={
+        if (type === "dbShelter") {
+            // Shelter 데이터 처리 (DB에서 가져온 데이터)
+            let shelterPosition = { lat: parseFloat(place.latitude), lng: parseFloat(place.longitude) };
+            markerOption = {
                 placeId: place.shelterId,
                 map: map,
-                position : new google.maps.LatLng(place.latitude, place.longitude),
+                position: shelterPosition,
                 title: place.shelterName
-            }
+            };
+        } else {
+            // place.geometry와 place.geometry.location의 유효성 검사
+            markerOption = {
+                placeId: place.place_id,
+                map: map,
+                position: place.geometry.location,
+                title: place.name,
+                placePhoto: place.photos ? place.photos[0].getUrl() : ""
+            };
         }
-        let marker = new google.maps.Marker({
-            placeId: place.place_id,
-            map: map,
-            position : place.geometry.location,
-            title: place.name,
-            placePhoto: place.photos ? place.photos[0].getUrl() : ""
-        });
-
+        let marker = new google.maps.Marker(markerOption);
+        // switch (type) {
+        //     case "none":
+        //
+        //         break;
+        //     case "myMarker":
+        //         break;
+        //     case "dbShelter":
+        //         break;
+        //     default:
+        // }
 
         //마커 클릭 이벤트
         google.maps.event.addListener(marker, 'click', function (){
@@ -85,15 +91,7 @@
         if(visible){
             showInfoPanel(marker);
         }
-        switch (type) {
-            case "none":
-                break;
-            case "myMarker":
-                break;
-            case "dbShelter":
-                break;
-            default:
-        }
+
         return marker;
     }
 
@@ -254,7 +252,8 @@
                     // 대피소 데이터가 있으면 지도에 표시
                     data.forEach(place => {
                          console.log("확인데이터",place);
-                        createMarker(map, place,false,"nearbyshelter"); // 대피소 마커 생성 함수
+                        let marker = createMarker(map, place,false,"dbShelter"); // 대피소 마커 생성 함수
+                        markers.push(marker);
                     });
                 } else {
                     console.log('1km 내 대피소가 없습니다.');
