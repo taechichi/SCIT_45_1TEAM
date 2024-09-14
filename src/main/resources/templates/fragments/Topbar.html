@@ -2,6 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <link rel="stylesheet" th:href="@{/css/topbar.css}">
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const profilePicLink = document.getElementById('profilePicLink');
@@ -207,19 +208,7 @@
         </a>
         <!-- Dropdown - User Information -->
         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-             aria-labelledby="userDropdown" style="width: 400px; height: 420px;">
-          <div class="dropdown-item">
-            <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-            친구에게 내 상태 알리기
-          </div>
-
-          <div style="display: flex; align-items: center;">
-          <img class="img-profile rounded-circle" style="width: 100px; height: 100px; margin-top: 5%; border: 6px solid black;"
-               th:src="@{/member/download}" alt="Profile Picture" id="profileImg"/>
-          <div class="circle" th:text="#{main.myStatus.safe}" id="2" style="background-color: green">안전</div>
-          <div class="circle" th:text="#{main.myStatus.evacuate}" id="3" style="background-color: yellow; color:black">피난중</div>
-          <div class="circle" th:text="#{main.myStatus.help}" id="4" style="background-color: red">도와주세요</div>
-          </div>
+             aria-labelledby="userDropdown" style="width: 400px; height: 540px;">
 
           <div class="dropdown-item">
             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -231,16 +220,36 @@
             <span>마지막 상태 업데이트: <span id="lastStUpdateDt">lastStUpdateDt값 가져오기</span></span>
           </div>
 
+          <div style="display: flex; align-items: center;">
+          <img class="img-profile rounded-circle" style="width: 100px; height: 100px; margin-top: 5%; border: 6px solid black;"
+               th:src="@{/member/download}" alt="Profile Picture" id="profileImg"/>
+          <div class="circle" th:text="#{main.myStatus.safe}" id="2" style="background-color: green">안전</div>
+          <div class="circle" th:text="#{main.myStatus.evacuate}" id="3" style="background-color: yellow; color:black">피난중</div>
+          <div class="circle" th:text="#{main.myStatus.help}" id="4" style="background-color: red">도와주세요</div>
+          </div>
+
+          <div class="dropdown-item">
+            <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+            시간 설정 후 상태버튼 클릭
+            <div id="timeInputContainer" style="margin: 5px;">
+              <input type="number" id="hours" value="1" style="text-align: right;">
+              <span>시간동안 상태가 지속됩니다.</span>
+            </div>
+            <div id="remainingTime" style="text-align: center"></div>
+          </div>
+
           <div class="dropdown-item">
             <i class="fas fa-sticky-note fa-sm fa-fw mr-2 text-gray-400"></i>
-            <span id="stMessage">상태메시지</span>
-            <i class="fas fa-pencil-alt fa-sm fa-fw mr-2 text-gray-400" style="margin-left: 200px"></i>
+            <span>상태메시지</span>
+            <i class="fas fa-pencil-alt fa-sm fa-fw mr-2 text-gray-400" style="margin-left: 180px"></i>
             <span id ="editStatusMessage">수정</span><br>
-            <div id="statusMessage" style="width: 350px; height: 100px;">
+            <div>
+            <pre id="statusMessage" style="width: 350px; height: 150px;">
               상태메시지 작성
-            </div>
+            </pre></div>
             <!-- 수정용 텍스트박스, 처음엔 숨김 -->
-            <textarea id="statusMessageInput" style="display: none; width: 350px; height: 100px;"></textarea>
+            <textarea id="statusMessageInput" maxlength="200" style="display: none; width: 350px; height: 150px;"></textarea>
+            <div id="charCount" style="display: none; margin-left: 300px">0/200자</div>
             <span id="saveStatusMessage" style="display: none; margin-left: 300px">
               <i class="fas fa-save fa-sm fa-fw mr-2 text-gray-400" ></i>저장</span>
           </div>

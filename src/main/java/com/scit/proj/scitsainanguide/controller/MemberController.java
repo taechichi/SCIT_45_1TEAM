@@ -130,20 +130,19 @@ public class MemberController {
     }
 
     /**
-     * 현재 로그인 중인 사용자가 아이콘 버튼을 클릭하면 상태 변경
-     *
-     * @param user
-     * @param statusId
-     * @return 변경 후 사용자의 상태값 반환
-     * @throws IOException
+     * 현재 로그인 중인 사용자가 아이콘을 클릭해 상태 변경
+     * @param user 현재 로그인 중인 유저
+     * @param statusId 바꾸고자 하는 상태
+     * @param hours 상태 유지 시간
      */
+    @ResponseBody
     @PostMapping("/changeMyStatus")
-    public ResponseEntity<Integer> changeMyStatus(@AuthenticationPrincipal AuthenticatedUser user
-            , @RequestParam("statusId") Integer statusId) throws IOException {
+    public ResponseEntity<Void> changeMyStatus(@AuthenticationPrincipal AuthenticatedUser user
+            , @RequestParam("statusId") Integer statusId
+            , @RequestParam("duration") Integer hours) {
         String memberId = user.getUsername();
-        Integer statusNum = memberService.changeMyStatus(memberId, statusId);
-        // 상태 변경 후의 상태 ID를 반환합니다.
-        return new ResponseEntity<>(statusNum, HttpStatus.OK);
+        memberService.changeMyStatus(memberId, statusId, hours);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -153,10 +152,11 @@ public class MemberController {
      */
     @ResponseBody
     @PostMapping("/changeMyStatusMessage")
-    public void changeMyStatusMessage(@AuthenticationPrincipal AuthenticatedUser user,
+    public ResponseEntity<Void> changeMyStatusMessage(@AuthenticationPrincipal AuthenticatedUser user,
                                                         @RequestParam("newStatusMessage") String newStatusMessage) {
         String memberId = user.getUsername();
         memberService.changeMyStatusMessage(memberId, newStatusMessage);
+        return ResponseEntity.ok().build();
     }
 
     /**
