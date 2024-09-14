@@ -144,10 +144,10 @@ public class MemberService {
 
 
     /**
-     * 첨부파일 다운로드
-     * @param memberId 다운로드 할 글번호
-     * @param uploadPath 첨부파일의 경로
-     * @param response 첨부파일을 보낼 스트림
+     * 프로필 사진 다운로드
+     * @param memberId 다운로드 할 아이디
+     * @param uploadPath 프로필 사진 경로
+     * @param response 프로필사진 보낼 스트림
      */
     public void download(String memberId, String uploadPath, HttpServletResponse response) throws IOException {
         // 전달된 멤버아이디로 파일명 확인하기 위해 MemberEntity 조회

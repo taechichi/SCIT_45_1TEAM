@@ -25,7 +25,7 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <div th:insert="fragments/menuTranslate :: menuTranslate" id="menuTranslate"></div>
+    <div th:insert="~{fragments/menu :: menu}"></div>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -34,9 +34,9 @@
         <!-- Main Content -->
         <div id="content">
 
-            <!-- Topbar -->
-            <div th:insert="fragments/topbar :: topbar" id="topbar"></div>
-            <!-- End of Topbar -->
+            <!-- topbar -->
+            <div th:insert="~{fragments/topbar :: topbar}"></div>
+            <!-- End of topbar -->
 
 <!--            <h2 th:text="#{translate.fileTranslate}"></h2>-->
             <h2> 이미지 번역 </h2>
@@ -63,6 +63,9 @@
     <!-- End of Content Wrapper -->
 </div>
 <!-- End of Page Wrapper -->
+
+<div th:insert="~{fragments/logoutModal :: logoutModel}"></div>
+
 </body>
 <!-- 게시판 페이지에 필요한 script 모음 -->
 <!-- Bootstrap core JavaScript-->
@@ -74,5 +77,8 @@
 
 <!-- Custom scripts for all pages-->
 <script th:src="@{/js/sb-admin-2.js}"></script>
+
+<!-- 내 아이콘을 누르면 상태 변경 모달이 출력되고, 상태 및 상태메시지 변경 가능 -->
+<script th:src="@{/js/main/topbar.js}"></script>
 
 </html>

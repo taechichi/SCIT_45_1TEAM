@@ -90,8 +90,7 @@
 }
 
 #hospitalfilterbutton,
-#shelterfilterbutton,
-#myLocation {
+#shelterfilterbutton {
     position: absolute;  /* 지도 위에 고정시키기 위해 사용 */
     z-index: 1000;       /* 버튼을 지도 위로 올리기 */
     padding: 10px 20px;
@@ -117,6 +116,8 @@
 #myLocation {
     right: 10px;         /* 오른쪽 여백 */
     bottom: 180px;       /* 아래쪽으로부터 170px 띄우기 */
+    position: absolute;  /* 지도 위에 고정시키기 위해 사용 */
+    z-index: 1000;       /* 버튼을 지도 위로 올리기 */
 }
 
 /* 전체 정보 패널 스타일링 */
@@ -180,6 +181,12 @@
     width: 64px;
     height: 64px;
     object-fit: cover; /* 이미지가 잘리지 않고 채워지도록 설정 */
+}
+
+.img-40 {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
 }
 
 

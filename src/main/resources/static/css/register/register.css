@@ -13,7 +13,7 @@ body {
     padding: 20px;
     background-color: #f4f4f4;
 }
-.container {
+#RegisterContainer {
     max-width: 600px;
     margin: auto;
     padding: 20px;
@@ -97,4 +97,8 @@ h1 {
     object-fit: cover;
     border: 2px solid #008B8B;
     background-color: #eaeaea;
+}
+
+#A1 {
+    color: #0a2351;
 }

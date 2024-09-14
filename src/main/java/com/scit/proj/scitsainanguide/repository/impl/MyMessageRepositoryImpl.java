@@ -166,6 +166,7 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
                 .from(message)
                 .where(whereClause)
                 .orderBy(message.createDt.desc())
+                .limit(5)   // 최대 5건의 쪽지까지만 확인 가능
                 .fetch();
     }
 

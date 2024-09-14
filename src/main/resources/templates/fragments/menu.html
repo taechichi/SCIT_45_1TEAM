@@ -1,123 +1,120 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <body>
-<div th:fragment="menu(member)">
-	<ul class="navbar-nav bg-gradient-info sidebar sidebar-dark accordion" id="accordionSidebar">
+<div th:fragment="menu">
+    <ul class="navbar-nav bg-gradient-info sidebar sidebar-dark accordion" id="accordionSidebar">
 
-		<!-- Sidebar - Brand -->
-	<div class="bg-gradient-info">
-		<a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
-			<div class="sidebar-brand-icon">
-				<div class="primary-colors-icon">
-					<i class="fas fa-circle red-circle"></i>
-					<i class="fas fa-circle blue-circle"></i>
-					<i class="fas fa-circle green-circle"></i>
-				</div>
-			</div>
-			<div class="sidebar-brand-text mx-3">primary colors</div>
-		</a>
-	</div>
+        <!-- Sidebar - Brand -->
+        <div class="bg-gradient-info">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+                <div class="sidebar-brand-icon">
+                    <div class="primary-colors-icon">
+                        <i class="fas fa-circle red-circle"></i>
+                        <i class="fas fa-circle blue-circle"></i>
+                        <i class="fas fa-circle green-circle"></i>
+                    </div>
+                </div>
+                <div class="sidebar-brand-text mx-3">primary colors</div>
+            </a>
+        </div>
 
-		<!-- Divider -->
-		<hr class="sidebar-divider">
+        <!-- Divider -->
+        <hr class="sidebar-divider">
 
-		<!-- Heading -->
-		<div class="sidebar-heading">
-			Interface
-		</div>
+        <div th:if="${admin_yn}">
 
-		<!-- Nav Item - Pages Collapse Menu -->
-		<li class="nav-item">
-		<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-			   aria-expanded="true" aria-controls="collapseTwo">
-				<i class="fas fa-fw fa-cog"></i>
-				<span>관리자 페이지</span>
-			</a>
-			<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-				<div class="bg-white py-2 collapse-inner rounded">
-					<h6 class="collapse-header">관리 목록</h6>
-					<a class="collapse-item" th:href="@{/admin/board}">게시판 관리</a>
-					<a class="collapse-item" th:href="@{/admin/member}">회원 관리</a>
-				</div>
-			</div>
-		</li>
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                adminMenu
+            </div>
 
-		<!-- Divider -->
-		<hr class="sidebar-divider">
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                   aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>관리자 페이지</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">관리 목록</h6>
+                        <a class="collapse-item" th:href="@{/admin/board}">게시판 관리</a>
+                        <a class="collapse-item" th:href="@{/admin/member}">회원 관리</a>
+                    </div>
+                </div>
+            </li>
 
-		<!-- Heading -->
-		<div class="sidebar-heading">
-			Addons
-		</div>
+        </div>
 
-		<!-- Nav Item - Pages Collapse Menu -->
-		<li class="nav-item" sec:authorize="isAuthenticated()">
-			<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-			   aria-expanded="true" aria-controls="collapsePages">
-				<i class="fas fa-fw fa-user"></i>
-				<span>마이 페이지</span>
-			</a>
-			<div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-				<div class="bg-white py-2 collapse-inner rounded">
-					<h6 class="collapse-header">Login Screens:</h6>
-					<a class="collapse-item" th:href="@{/member/login}">개인정보 관리</a> <!--다른 기능을 넣어주세요-->
-					<a class="collapse-item" th:href="@{/my/friend}">친구 관리</a> <!--다른 기능을 넣어주세요-->
-					<a class="collapse-item" th:href="@{/my/message}">쪽지함</a>
-					<div class="collapse-divider"></div>
-					<h6 class="collapse-header">Other Pages:</h6>
-					<a class="collapse-item" th:href="@{/my/myMarkerFavorites}">즐겨찾기 한 장소</a>
-					<a class="collapse-item" th:href="@{/404.html}">404 Page</a>
-					<a class="collapse-item" th:href="@{/blank.html}">Blank Page</a>
-				</div>
-			</div>
+        <!-- Divider -->
+        <hr class="sidebar-divider">
 
-		</li>
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Menu
+        </div>
 
-		<!-- Nav Item - Charts -->
-		<li class="nav-item">
-			<a class="nav-link" href="charts.html">
-				<i class="fas fa-fw fa-book"></i>
-				<span>재난 가이드북</span></a>
-		</li>
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+               aria-expanded="true" aria-controls="collapsePages">
+                <i class="fas fa-fw fa-user"></i>
+                <span>마이 페이지</span>
+            </a>
+            <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Login Screens:</h6>
+                    <a class="collapse-item" th:href="@{/member/login}">개인정보 관리</a> <!--다른 기능을 넣어주세요-->
+                    <a class="collapse-item" th:href="@{/my/friend}">친구 관리</a> <!--다른 기능을 넣어주세요-->
+                    <a class="collapse-item" th:href="@{/my/message}">쪽지함</a>
+                    <div class="collapse-divider"></div>
+                    <h6 class="collapse-header">Other Pages:</h6>
+                    <a class="collapse-item" th:href="@{/my/myMarkerFavorites}">즐겨찾기 한 장소</a>
+                    <a class="collapse-item" th:href="@{/404.html}">404 Page</a>
+                    <a class="collapse-item" th:href="@{/blank.html}">Blank Page</a>
+                </div>
+            </div>
 
-		<!-- Nav Item - Charts -->
-		<li class="nav-item">
-			<a class="nav-link" href="fileToTranslate">
-				<i class="fas fa-fw fa-language"></i>
-				<span>파일 번역</span></a>
-		</li>
+        </li>
 
-		<!-- Nav Item - Charts -->
-		<li class="nav-item">
-			<a class="nav-link" href="streamingToTranslate">
-				<i class="fas fa-fw fa-microphone"></i>
-				<span>실시간 녹음 번역</span></a>
-		</li>
+        <!-- Nav Item - Charts -->
+        <li class="nav-item">
+            <a class="nav-link" href="fileToTranslate">
+                <i class="fas fa-fw fa-language"></i>
+                <span>파일 번역</span></a>
+        </li>
 
-		<!-- Nav Item - Charts -->
-		<li class="nav-item">
-			<a class="nav-link" href="imageTranslate">
-				<i class="fas fa-fw fa-camera"></i>
-				<span>이미지 번역</span></a>
-		</li>
+        <!-- Nav Item - Charts -->
+        <li class="nav-item">
+            <a class="nav-link" href="streamingToTranslate">
+                <i class="fas fa-fw fa-microphone"></i>
+                <span>실시간 녹음 번역</span></a>
+        </li>
+
+        <!-- Nav Item - Charts -->
+        <li class="nav-item">
+            <a class="nav-link" href="imageTranslate">
+                <i class="fas fa-fw fa-camera"></i>
+                <span>이미지 번역</span></a>
+        </li>
 
 
-		<!-- Nav Item - Tables -->
-		<li class="nav-item">
-			<a class="nav-link" href="tables.html">
-				<i class="fas fa-fw fa-video"></i>
-				<span>재난 방송 보기</span></a>
-		</li>
+        <!-- Nav Item - Tables -->
+        <li class="nav-item">
+            <a class="nav-link" href="video">
+                <i class="fas fa-fw fa-video"></i>
+                <span>재난 방송 보기</span></a>
+        </li>
 
-		<!-- Divider -->
-		<hr class="sidebar-divider d-none d-md-block">
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
 
-		<!-- Sidebar Toggler (Sidebar)
+        <!-- Sidebar Toggler (Sidebar)
         <div class="text-center d-none d-md-inline">
             <button class="rounded-circle border-0" id="sidebarToggle"></button>
         </div>-->
 
-	</ul>
+    </ul>
 
 </div>
 </body>
