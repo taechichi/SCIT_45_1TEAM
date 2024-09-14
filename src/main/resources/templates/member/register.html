@@ -5,27 +5,29 @@
     <title>회원가입</title>
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
     <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
-    <link rel="stylesheet" th:href="@{/css/register/register.css}" />
+    <link rel="stylesheet" th:href="@{/css/register/register.css}"/>
     <script th:src="@{/js/register.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
 </head>
 <body>
-<div class="container">
-    <h1>회원가입</h1>
+<div id="RegisterContainer">
+    <h1 id="A1">회원가입</h1>
     <!-- 프로필 사진 미리보기 -->
     <img id="profilePreview" src="#" alt="프로필 사진 미리보기" class="profile-preview" style="display: none;"/>
 
-    <form id="joinForm" th:action="@{/member/register}" th:object="${memberDTO}" method="post" enctype="multipart/form-data">
+    <form id="joinForm" th:action="@{/member/register}" th:object="${memberDTO}" method="post"
+          enctype="multipart/form-data">
         <div class="form-group">
             <span>회원 ID</span>
-            <span><button id="checkDuplicateId" type="button" class="btn-inline">ID 중복 확인</button></span>
+            <span><button id="checkDuplicateId" type="button" class="btn-inline" data-toggle="modal" data-target="#idCheckModal">중복 확인</button></span>
             <input type="text" id="memberId" th:field="*{memberId}" placeholder="ID를 중복확인 하세요" readonly required />
         </div>
 
         <div class="form-group password-container">
             <span>비밀번호</span>
-            <input type="password" id="password" th:field="*{password}" required />
+            <input type="password" id="password" th:field="*{password}" required/>
             <!-- 아이콘을 비밀번호 입력창 오른쪽에 추가 -->
-            <img src="/img/hide_eye.ico" alt="비밀번호 표시" class="password-toggle-icon" />
+            <img src="/img/hide_eye.ico" alt="비밀번호 표시" class="password-toggle-icon"/>
 
             <br>
             <!-- 유효성 검사 메시지 -->
@@ -34,12 +36,12 @@
 
         <div class="form-group">
             <label for="nickname">닉네임</label>
-            <input type="text" id="nickname" th:field="*{nickname}" required />
+            <input type="text" id="nickname" th:field="*{nickname}" required/>
         </div>
 
         <div class="form-group">
             <label for="email">이메일</label>
-            <input type="email" id="email" th:field="*{email}" required />
+            <input type="email" id="email" th:field="*{email}" required/>
         </div>
 
         <div class="form-group">
@@ -53,7 +55,7 @@
 
         <div class="form-group">
             <label for="phone">전화번호</label>
-            <input type="text" id="phone" th:field="*{phone}" required />
+            <input type="text" id="phone" th:field="*{phone}" required/>
         </div>
 
         <div class="form-group">
@@ -67,7 +69,7 @@
 
         <div class="form-group">
             <label for="file">프로필 사진</label>
-            <input type="file" id="file" name="file" accept=".jpg,.jpeg,.png" />
+            <input type="file" id="file" name="file" accept=".jpg,.jpeg,.png"/>
             <small id="fileError" class="error" style="display: none;">허용된 파일 형식이 아닙니다. (.jpg, .jpeg, .png)</small>
         </div>
 
@@ -75,6 +77,35 @@
             <button id="submitBtn" type="submit">회원가입</button>
         </div>
     </form>
+
+    <!-- Modal for ID Check -->
+    <div class="modal fade" id="idCheckModal" tabindex="-1" role="dialog" aria-labelledby="idCheckModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="idCheckModalLabel">ID 중복 확인</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="searchForm" method="post">
+                        검색 할 ID: <input type="text" id="searchId" maxlength="20">
+                        <button type="button" id="searchButton">검색</button>
+                    </form>
+                    <!-- 검색 결과를 표시할 영역 -->
+                    <div id="resultMessage"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
+
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

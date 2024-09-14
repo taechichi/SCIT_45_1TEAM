@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -96,21 +98,18 @@ public class MemberController {
         return "member/idCheck";
     }
 
-    /**
-     * ID중복확인 페이지에서 검색 요청했을 때 처리
-     *
-     * @param searchId 아이디 중복 체크를 위해 새 창에서 입력 받은 아이디를 받는 변수
-     * @return ID검색 HTML파일 경로
-     */
     @PostMapping("idCheck")
-    public String idCheckResult(
-            @RequestParam("searchId") String searchId,
-            Model model) {
+    @ResponseBody
+    public Map<String, Object> idCheckResult(@RequestParam("searchId") String searchId) {
+        log.debug("전달된 객체 : {}", searchId);
         boolean result = memberService.findId(searchId);
-        model.addAttribute("searchId", searchId);
-        model.addAttribute("result", result);
 
-        return "member/idCheck";
+        // JSON 형태로 반환
+        Map<String, Object> response = new HashMap<>();
+        response.put("searchId", searchId);
+        response.put("result", result);
+
+        return response;
     }
 
     /**
