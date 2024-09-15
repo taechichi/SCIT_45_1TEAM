@@ -32,16 +32,15 @@
       <li class="nav-item">
         <div class="d-flex align-items-center">
           <!-- 반복문으로 프로필 사진 항목들 생성 -->
-          <div th:each="i : ${#numbers.sequence(1, 5)}" class="nav-link profile-picture-wrapper">
+          <div th:each="friend : ${favoriteFriendList}" class="nav-link profile-picture-wrapper">
             <a href="#" data-toggle="modal" data-target="#profileModal">
               <div class="profile-picture-container">
-                <img class="img-profile rounded-circle" th:src="@{/member/download}" th:alt="'Profile Picture ' + ${i}" />
-                <div class="status-indicator bg-gradient-danger"></div>
+                <img class="img-profile rounded-circle" th:src="@{/member/download/{memberId}(memberId=${friend.memberId})}"/>
                 <!-- 회원의 상태를 정해진 색으로 표시 -->
-                <!--<div th:if="${message.statusId == 1}" class="status-indicator"></div>
-                <div th:if="${message.statusId == 2}" class="status-indicator bg-success"></div>
-                <div th:if="${message.statusId == 3}" class="status-indicator bg-warning"></div>
-                <div th:if="${message.statusId == 4}" class="status-indicator bg-gradient-danger"></div>-->
+                <div th:if="${friend.statusId == 1}" class="status-indicator"></div>
+                <div th:if="${friend.statusId == 2}" class="status-indicator bg-success"></div>
+                <div th:if="${friend.statusId == 3}" class="status-indicator bg-warning"></div>
+                <div th:if="${friend.statusId == 4}" class="status-indicator bg-gradient-danger"></div>
               </div>
             </a>
           </div>
