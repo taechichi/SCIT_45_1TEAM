@@ -15,7 +15,7 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <div th:insert="fragments/menuAdmin :: menuAdmin"></div>
+    <div th:replace="fragments/menuAdmin :: menuAdmin"></div>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -70,7 +70,7 @@
                         </table>
 
                         <!-- 페이지 번호 navigator -->
-                        <div th:insert="fragments/pagination :: pagination"></div>
+                        <div th:replace="fragments/pagination :: pagination"></div>
                     </div>
                 </div>
             </div>

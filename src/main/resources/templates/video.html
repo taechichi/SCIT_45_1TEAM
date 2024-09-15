@@ -24,7 +24,7 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <div th:insert="~{fragments/menu :: menu}"></div>
+    <div th:replace="~{fragments/menu :: menu}"></div>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -34,7 +34,7 @@
         <div id="content">
 
             <!-- topbar -->
-            <div th:insert="~{fragments/topbar :: topbar}"></div>
+            <div th:replace="~{fragments/topbar :: topbar}"></div>
             <!-- End of topbar -->
 
             <h1> 실시간 방송 </h1>
@@ -52,7 +52,7 @@
 </div>
 <!-- End of Page Wrapper -->
 
-<div th:insert="~{fragments/logoutModal :: logoutModel}"></div>
+<div th:replace="~{fragments/logoutModal :: logoutModel}"></div>
 
 <!-- Bootstrap core JavaScript-->
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>

@@ -35,7 +35,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <div th:insert="~{fragments/menu :: menu}"></div>
+        <div th:replace="~{fragments/menu :: menu}"></div>
         <!-- End of Sidebar -->
 
         <!-- 마커 클릭 시 상세 정보 출력 판넬 -->
@@ -57,7 +57,7 @@
             <div id="content">
 
                 <!-- topbar -->
-                <div th:insert="~{fragments/topbar :: topbar}"></div>
+                <div th:replace="~{fragments/topbar :: topbar}"></div>
                 <!-- End of topbar -->
 
                 <!-- Begin Page Content -->
@@ -82,7 +82,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-        <div th:insert="~{fragments/footer :: footer}"></div>
+        <div th:replace="~{fragments/footer :: footer}"></div>
         <!-- End of Footer -->
 
         </div>
@@ -96,7 +96,7 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <div th:insert="~{fragments/logoutModal :: logoutModel}"></div>
+    <div th:replace="~{fragments/logoutModal :: logoutModel}"></div>
 
     <!-- Bootstrap core JavaScript-->
     <script th:src="@{/vendor/jquery/jquery.min.js}"></script>

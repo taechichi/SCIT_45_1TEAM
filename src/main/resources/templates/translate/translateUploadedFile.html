@@ -24,7 +24,7 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <div th:insert="~{fragments/menu :: menu}"></div>
+    <div th:replace="~{fragments/menu :: menu}"></div>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -34,7 +34,7 @@
         <div id="content">
 
             <!-- topbar -->
-            <div th:insert="~{fragments/topbar :: topbar}"></div>
+            <div th:replace="~{fragments/topbar :: topbar}"></div>
             <!-- End of topbar -->
 
             <h2 th:text="#{translate.fileTranslate}"></h2>
@@ -56,7 +56,7 @@
 </div>
 <!-- End of Page Wrapper -->
 
-<div th:insert="~{fragments/logoutModal :: logoutModel}"></div>
+<div th:replace="~{fragments/logoutModal :: logoutModel}"></div>
 
 </body>
 <!-- Bootstrap core JavaScript-->

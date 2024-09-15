@@ -17,7 +17,7 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <div th:insert="~{fragments/menu :: menu}"></div>
+    <div th:replace="~{fragments/menu :: menu}"></div>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -28,7 +28,7 @@
 
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <div th:insert="~{fragments/topbar :: topbar}"></div>
+                    <div th:replace="~{fragments/topbar :: topbar}"></div>
                     <h6 class="m-0 font-weight-bold text-primary">테이블 이름을 여기에</h6>
                 </div>
                 <div class="card-body">
@@ -64,7 +64,7 @@
 
 
                         <!-- 페이지 번호 navigator -->
-                        <div th:insert="fragments/pagination :: pagination"></div>
+                        <div th:replace="fragments/pagination :: pagination"></div>
                         <!-- 검색 폼 -->
                         <div class="searchForm-container">
                             <form id="pagingForm" th:action="@{/my/message}" method="get">
