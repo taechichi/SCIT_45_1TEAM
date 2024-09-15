@@ -2,21 +2,6 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <link rel="stylesheet" th:href="@{/css/topbar.css}">
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const profilePicLink = document.getElementById('profilePicLink');
-
-    profilePicLink.addEventListener('click', function () {
-      // 모달에 내용 삽입 (예시: static content 또는 AJAX를 통해 동적 내용 삽입 가능)
-      const messageContent = "Example message content"; // 실제 메시지 내용으로 대체
-      const messageTimestamp = "Example timestamp"; // 실제 타임스탬프로 대체
-
-      document.getElementById('messageContent').innerText = messageContent;
-      document.getElementById('messageTimestamp').innerText = messageTimestamp;
-    });
-  });
-</script>
 <body>
 <div th:fragment="topbar">
   <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -52,11 +37,11 @@
               <div class="profile-picture-container">
                 <img class="img-profile rounded-circle" th:src="@{/member/download}" th:alt="'Profile Picture ' + ${i}" />
                 <div class="status-indicator bg-gradient-danger"></div>
-<!--        <div class="status-indicator"></div> 하얀색
-            <div class="status-indicator bg-success"></div> 초록색
-            <div class="status-indicator bg-warning"></div> 노란색
-            <div class="status-indicator bg-gradient-danger"></div> 빨간색
-          -->
+                <!-- 회원의 상태를 정해진 색으로 표시 -->
+                <!--<div th:if="${message.statusId == 1}" class="status-indicator"></div>
+                <div th:if="${message.statusId == 2}" class="status-indicator bg-success"></div>
+                <div th:if="${message.statusId == 3}" class="status-indicator bg-warning"></div>
+                <div th:if="${message.statusId == 4}" class="status-indicator bg-gradient-danger"></div>-->
               </div>
             </a>
           </div>
@@ -170,7 +155,7 @@
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-envelope fa-fw"></i>
           <!-- Counter - Messages -->
-          <span class="badge badge-danger badge-counter">7</span>
+          <span class="badge badge-danger badge-counter" th:text="${unreadMessageCnt}"></span>
         </a>
         <!-- 쪽지함 목록 드롭다운 -->
         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"

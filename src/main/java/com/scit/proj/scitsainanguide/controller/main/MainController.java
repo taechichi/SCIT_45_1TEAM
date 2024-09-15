@@ -1,13 +1,10 @@
 package com.scit.proj.scitsainanguide.controller.main;
 
-import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
-import com.scit.proj.scitsainanguide.service.MemberService;
 import com.scit.proj.scitsainanguide.service.main.MainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,7 +20,7 @@ public class MainController {
      * @return 메인 페이지에 보낼 모델과 뷰 정보 객체
      */
     @GetMapping
-    public ModelAndView index(@AuthenticationPrincipal AuthenticatedUser user, Model model) {
+    public ModelAndView index(@AuthenticationPrincipal AuthenticatedUser user) {
         return mainService.selectIndexPageData(user);
     }
 
