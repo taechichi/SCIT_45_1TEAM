@@ -14,4 +14,5 @@ public class StatusDTO {
     private Integer statusId;
     private String statusName;
     private String statusNameJa;
+
 }

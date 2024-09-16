@@ -20,4 +20,8 @@ public interface MyMessageRepository {
     Optional<MessageDTO> selectMyMessage(Integer messageId);
 
     List<MessageDTO> selectMyUnreadMessageList(String memberId);
+
+    void updateMessageReadDt(Integer messageId);
+
+    Long selectMyUnreadMessageCnt(String memberId);
 }

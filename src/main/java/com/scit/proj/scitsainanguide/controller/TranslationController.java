@@ -3,6 +3,8 @@ package com.scit.proj.scitsainanguide.controller;
 import com.google.cloud.vision.v1.*;
 import com.google.protobuf.ByteString;
 import com.scit.proj.scitsainanguide.service.TranslationService;
+import com.scit.proj.scitsainanguide.util.TopbarUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 
 import java.io.IOException;
@@ -29,15 +32,15 @@ import java.util.stream.Collectors;
 @Data
 public class TranslationController {
 
-    // try-catch 없애기
-    
+    private final TopbarUtils topbarUtils;
+
     /**
      * 홈화면에서 좌측 탭 메뉴 > FileToTranslate 버튼을 클릭하면 이동
      * @return
      */
     @GetMapping("fileToTranslate")
-    public String fileTrans(){
-        return "translate/translateUploadedFile";
+    public ModelAndView fileTrans(HttpServletRequest request) {
+        return getModelAndView(request, "translate/translateUploadedFile");
     }
 
     /**
@@ -45,8 +48,8 @@ public class TranslationController {
      * @return
      */
     @GetMapping("streamingToTranslate")
-    public String streamingTrans(){
-        return "translate/translateStreaming";
+    public ModelAndView streamingTrans(HttpServletRequest request){
+        return getModelAndView(request, "translate/translateStreaming");
     }
 
     /**
@@ -54,8 +57,8 @@ public class TranslationController {
      * @return
      */
     @GetMapping("imageTranslate")
-    public String imageTranslate(){
-        return "translate/translateImage";
+    public ModelAndView imageTranslate(HttpServletRequest request){
+        return getModelAndView(request, "translate/translateImage");
     }
 
     // 사용할 서비스
@@ -235,6 +238,12 @@ public class TranslationController {
             // 불필요한 개행 문자 제거 및 공백으로 대체
             return text.replaceAll("\\s+", " ").trim();
         }
+    }
+
+    private static ModelAndView getModelAndView(HttpServletRequest request, String viewName) {
+        ModelAndView modelAndView = (ModelAndView) request.getAttribute("modelAndView");
+        modelAndView.setViewName(viewName);
+        return modelAndView;
     }
 
 }

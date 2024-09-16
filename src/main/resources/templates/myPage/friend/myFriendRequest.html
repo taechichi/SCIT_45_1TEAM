@@ -18,7 +18,7 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <div th:insert="fragments/menu :: menu(${member})" id="menu"></div>
+    <div th:replace="~{fragments/menu :: menu}"></div>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -27,7 +27,7 @@
         <!-- Main Content -->
         <div id="content">
 
-            <div th:insert="fragments/topbar :: topbar" id="topbar"></div>
+            <div th:replace="~{fragments/topbar :: topbar}"></div>
 
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
@@ -72,7 +72,7 @@
                         </table>
 
                         <!-- 페이지 번호 navigator -->
-                        <div th:insert="fragments/pagination :: pagination"></div>
+                        <div th:replace="fragments/pagination :: pagination"></div>
                     </div>
                 </div>
             </div>

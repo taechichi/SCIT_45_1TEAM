@@ -21,6 +21,6 @@ public class AlarmCategoryEntity {
     @Column(name = "category_name", length = 10, nullable = false)
     private String categoryName;
 
-    @Column(name = "lang_cd", length = 2, nullable = false)
-    private String langCd;
+    @Column(name = "category_name_ja", length = 10, nullable = false)
+    private String categoryNameJa;
 }

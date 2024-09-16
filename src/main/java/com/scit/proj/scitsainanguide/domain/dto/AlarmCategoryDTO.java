@@ -13,5 +13,5 @@ public class AlarmCategoryDTO {
 
     private Integer categoryId;
     private String categoryName;
-    private String langCd;
+    private String categoryNameJa;
 }

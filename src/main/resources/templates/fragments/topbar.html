@@ -2,7 +2,6 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <link rel="stylesheet" th:href="@{/css/topbar.css}">
-
 <body>
 <div th:fragment="topbar">
   <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -33,16 +32,15 @@
       <li class="nav-item">
         <div class="d-flex align-items-center">
           <!-- 반복문으로 프로필 사진 항목들 생성 -->
-          <div th:each="i : ${#numbers.sequence(1, 5)}" class="nav-link profile-picture-wrapper">
+          <div th:each="friend : ${favoriteFriendList}" class="nav-link profile-picture-wrapper">
             <a href="#" data-toggle="modal" data-target="#profileModal">
               <div class="profile-picture-container">
-                <img class="img-profile rounded-circle" th:src="@{/member/download}" th:alt="'Profile Picture ' + ${i}" />
-                <div class="status-indicator bg-gradient-danger"></div>
-<!--        <div class="status-indicator"></div> 하얀색
-            <div class="status-indicator bg-success"></div> 초록색
-            <div class="status-indicator bg-warning"></div> 노란색
-            <div class="status-indicator bg-gradient-danger"></div> 빨간색
-          -->
+                <img class="img-profile rounded-circle" th:src="@{/member/download/{memberId}(memberId=${friend.memberId})}"/>
+                <!-- 회원의 상태를 정해진 색으로 표시 -->
+                <div th:if="${friend.statusId == 1}" class="status-indicator"></div>
+                <div th:if="${friend.statusId == 2}" class="status-indicator bg-success"></div>
+                <div th:if="${friend.statusId == 3}" class="status-indicator bg-warning"></div>
+                <div th:if="${friend.statusId == 4}" class="status-indicator bg-gradient-danger"></div>
               </div>
             </a>
           </div>
@@ -156,7 +154,7 @@
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-envelope fa-fw"></i>
           <!-- Counter - Messages -->
-          <span class="badge badge-danger badge-counter">7</span>
+          <span class="badge badge-danger badge-counter" th:text="${unreadMessageCnt}"></span>
         </a>
         <!-- 쪽지함 목록 드롭다운 -->
         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -173,7 +171,10 @@
             </div>
             <div class="font-weight-bold">
               <div class="text-truncate" th:text="${message.content}"></div>
-              <div class="small text-gray-500" th:text="${message.senderId}"></div>
+              <div class="span-container">
+                <span class="small text-gray-500" th:text="${message.senderId}"></span>
+                <span class="small text-gray-500" th:text="(*{#temporals.format(message.createDt, 'yyyy.MM.dd')})"></span>
+              </div>
             </div>
           </a>
           <a class="dropdown-item text-center small text-gray-500" th:text="#{main.message.list}" th:href="@{/my/message}"></a>
@@ -186,36 +187,58 @@
       <li class="nav-item dropdown no-arrow">
         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${#authentication.principal.nickname}"></span>
+          <span class="mr-2 d-none d-lg-inline text-gray-600 small" th:text="${#authentication.principal.username}"></span>
           <img class="img-profile rounded-circle"
                th:src="@{/member/download}" alt="Profile Picture" />
         </a>
         <!-- Dropdown - User Information -->
-        <!-- css 수정하기 -->
         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-             aria-labelledby="userDropdown" style="width: 400px; height: 400px;">
-          <a class="dropdown-item" href="#">
-            <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-            현재상태 설정
-          </a>
-          <img class="img-profile rounded-circle" style="width: 100px; height: 100px; margin-top: 5%;"
-               th:src="@{/member/download}" alt="Profile Picture" />
-          <div class="circle" th:text="#{main.myStatus.safe}" id="2" style="background-color: green">안전</div>
-          <div class="circle" th:text="#{main.myStatus.evacuate}" id="3" style="background-color: yellow">피난중</div>
-          <div class="circle" th:text="#{main.myStatus.help}" id="4" style="background-color: red">도와주세요</div>
-          <br>
-          <span>마지막 업데이트: <span>lastStUpdateDt값 가져오기</span></span>
-          <p th:text="${#authentication.principal.nickname}"></p>
+             aria-labelledby="userDropdown" style="width: 400px; height: 540px;">
 
-          <a class="dropdown-item" href="#">
+          <div class="dropdown-item">
             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-            상태메시지
-          </a>
-          <div id="statusMessage">
-            <pre>상태메시지 작성!@!@!@!@!@!@!@!@!@!@
-            !@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@!@
-            @!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</pre>
+            <span>닉네임: <span th:text="${#authentication.principal.nickname}"></span></span>
           </div>
+
+          <div class="dropdown-item">
+            <i class="fas fa-clock fa-sm fa-fw mr-2 text-gray-400"></i>
+            <span>마지막 상태 업데이트: <span id="lastStUpdateDt">lastStUpdateDt값 가져오기</span></span>
+          </div>
+
+          <div style="display: flex; align-items: center;">
+          <img class="img-profile rounded-circle" style="width: 100px; height: 100px; margin-top: 5%; border: 6px solid black;"
+               th:src="@{/member/download}" alt="Profile Picture" id="profileImg"/>
+          <div class="circle" th:text="#{main.myStatus.safe}" id="2" style="background-color: green">안전</div>
+          <div class="circle" th:text="#{main.myStatus.evacuate}" id="3" style="background-color: yellow; color:black">피난중</div>
+          <div class="circle" th:text="#{main.myStatus.help}" id="4" style="background-color: red">도와주세요</div>
+          </div>
+
+          <div class="dropdown-item">
+            <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+            시간 설정 후 상태버튼 클릭
+            <div id="timeInputContainer" style="margin: 5px;">
+              <input type="number" id="hours" value="1" style="text-align: right;">
+              <span>시간동안 상태가 지속됩니다.</span>
+            </div>
+            <div id="remainingTime" style="text-align: center"></div>
+          </div>
+
+          <div class="dropdown-item">
+            <i class="fas fa-sticky-note fa-sm fa-fw mr-2 text-gray-400"></i>
+            <span>상태메시지</span>
+            <i class="fas fa-pencil-alt fa-sm fa-fw mr-2 text-gray-400" style="margin-left: 180px"></i>
+            <span id ="editStatusMessage">수정</span><br>
+            <div>
+            <pre id="statusMessage" style="width: 350px; height: 150px;">
+              상태메시지 작성
+            </pre></div>
+            <!-- 수정용 텍스트박스, 처음엔 숨김 -->
+            <textarea id="statusMessageInput" maxlength="200" style="display: none; width: 350px; height: 150px;"></textarea>
+            <div id="charCount" style="display: none; margin-left: 300px">0/200자</div>
+            <span id="saveStatusMessage" style="display: none; margin-left: 300px">
+              <i class="fas fa-save fa-sm fa-fw mr-2 text-gray-400" ></i>저장</span>
+          </div>
+
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
             <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>

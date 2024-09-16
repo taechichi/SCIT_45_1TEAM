@@ -266,8 +266,10 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
         // 해당 친구들의 정보 조회
         return queryFactory.select(
                 Projections.constructor(MemberDTO.class,
+                        member.memberId,
                         member.nickname,
                         member.fileName,
+                        member.status.statusId,
                         member.status.statusName
                 )
         )
