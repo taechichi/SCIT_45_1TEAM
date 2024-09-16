@@ -57,11 +57,11 @@ public class SseEmitterService {
 
         if (emitter != null) {
             try {
-                // 친구 요청 알림 이벤트 전송
-                emitter.send(SseEmitter.event().name(eventName).data(message));
-
                 // alarm 테이블에 저장
                 alarmRepository.insertAlarm(memberId, message, categoryId);
+
+                // 친구 요청 알림 이벤트 전송 (테스트 용으로 message 를 data 에 담아 보내 front 에서 확인해본다)
+                emitter.send(SseEmitter.event().name(eventName).data(message));
             } catch (IOException e) {
                 // 에러 발생 시, Emitter를 오류로 완료 처리
                 emitter.completeWithError(e);

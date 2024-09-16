@@ -114,13 +114,9 @@ $(document).ready(function() {
     let data;  // 서버에서 보내온 친구 요청 데이터
 
     // 친구 요청 수신, 친구 요청 수락, 메시지 수신 이벤트
-    const events = ['friendRequestReceive', 'friendRequestAccept', 'messageReceive'];
-
-    // 모든 이벤트에 대해 동일한 처리
-    events.forEach(event => {
-        $(eventSource).on(event, function(e) {
-            data = JSON.parse(e.data);
-        });
+    $(eventSource).on('messageReceive friendRequestReceive friendRequestAccept', function(e) {
+        selectAlarmList();
+        updateAlarmUI(data);
     });
 
 }); // end of $(document).ready(function() {})
@@ -214,39 +210,55 @@ function startTimer(endTime) {
     updateRemainingTime(); // 즉시 업데이트
 }
 
-// 알림 UI 갱신
-function updateAlarmUI(data) {
-    const alertsDropdown = document.querySelector("#alertsDropdown");
-    const badgeCounter = alertsDropdown.querySelector(".badge-counter");
-    const dropdownList = document.querySelector(".dropdown-list");
-
-    const iconClass = getIconClass(data.categoryId);  // categoryId에 따라 아이콘 결정
-
-    // 알림 개수 갱신
-    const currentCount = parseInt(badgeCounter.textContent) || 0;
-    badgeCounter.textContent = currentCount + 1;
-
-    // 새로운 알림 추가
-    const newAlarm = document.createElement("a");
-    newAlarm.classList.add("dropdown-item", "d-flex", "align-items-center");
-    newAlarm.innerHTML = `
-        <div class="mr-3">
-            <div class="icon-circle ${iconClass}">
-                <i class="fas fa-file-alt text-white"></i>
-            </div>
-        </div>
-        <div>
-            <div class="small text-gray-500">${new Date().toLocaleDateString()}</div>
-            <span class="font-weight-bold">${data.contents}</span>
-        </div>
-    `;
-
-    // 알림 목록에 추가
-    dropdownList.insertBefore(newAlarm, dropdownList.firstChild);
+// 알림 조회
+function selectAlarmList() {
+    // 서버에서 알림 데이터를 조회
+    $.ajax({
+        url: '/notification/list',  // 알림 데이터 조회 URL
+        method: 'GET',
+        success: function(response) {
+            updateAlarmUI(response);
+        },
+        error: function(xhr, status, error) {
+            console.error('알림 데이터를 가져오는 중 오류 발생:', error);
+        }
+    });
 }
 
-// 알림 아이콘 동적으로 적용
-function getIconClass(categoryId) {
+// 알림 UI 갱신
+function updateAlarmUI(response) {
+    const $alertsDropdown = $("#alertsDropdown");
+    const $badgeCounter = $alertsDropdown.find(".badge-counter");
+    const $target = $(".alarm-list-header");
+    const alarm = response.alarmList[0];
+    const iconBgClass = getIconBgClass(alarm.categoryId);  // categoryId에 따라 아이콘 배경 결정
+    const iconClass = getIconClass(alarm.categoryId);  // categoryId에 따라 아이콘 결정
+
+    // 알림 개수 갱신
+    const currentCount = parseInt($badgeCounter.text()) || 0;
+    $badgeCounter.text(currentCount + 1);
+
+    // 새로운 알림 추가
+    const newAlarm = $(`
+            <a class="dropdown-item d-flex align-items-center">
+                <div class="mr-3">
+                    <div class="icon-circle ${iconBgClass}">
+                        <i class="fas ${iconClass} text-white"></i>
+                    </div>
+                </div>
+                <div>
+                    <div class="small text-gray-500">${new Date().toLocaleDateString()}</div>
+                    <span class="font-weight-bold">${alarm.contents}</span>
+                </div>
+            </a>
+        `);
+
+    // 알림 목록에 추가
+    $target.after(newAlarm);
+}
+
+// 알림 아이콘 배경 동적으로 적용
+function getIconBgClass(categoryId) {
     if (categoryId === 1) {
         return "bg-primary";
     } else if (categoryId === 2 || categoryId === 3) {
@@ -255,5 +267,18 @@ function getIconClass(categoryId) {
         return "bg-warning";
     } else {
         return "bg-primary";
+    }
+}
+
+// 알림 아이콘 동적으로 적용
+function getIconClass(categoryId) {
+    if (categoryId === 1) {
+        return "fa-file-alt";
+    } else if (categoryId === 2 || categoryId === 3) {
+        return "fa-fw fa-user";
+    } else if (categoryId === 4) {
+        return "fa-exclamation-triangle";
+    } else {
+        return "fa-file-alt";
     }
 }
