@@ -2,7 +2,7 @@
     let myLat;  // 내 위치 위도
     let myLong; // 내 위치 경도
     var map;  //맵
-    let myMarker;   // 내 위치 마커
+    // let myMarker;   // 내 위치 마커
 
     let markers = [];                  //마커배열(places 검색을 통해 나온 마커들의 배열)
     let isPanelVisible = false;     //패널 상태 false
@@ -48,39 +48,59 @@
         });
     }
 
+    //마커제거
+    function  delMarker(){
+        markers.forEach(marker => marker.setMap(null));
+        markers = [];
+    }
 
     //마커생성 함수
     function createMarker(map, place, visible=false, type = "none"){
-        if (type === "dbShelter") {
-            // Shelter 데이터 처리 (DB에서 가져온 데이터)
-            let shelterPosition = { lat: parseFloat(place.latitude), lng: parseFloat(place.longitude) };
-            markerOption = {
-                placeId: place.shelterId,
-                map: map,
-                position: shelterPosition,
-                title: place.shelterName
-            };
-        } else {
-            // place.geometry와 place.geometry.location의 유효성 검사
-            markerOption = {
-                placeId: place.place_id,
-                map: map,
-                position: place.geometry.location,
-                title: place.name,
-                placePhoto: place.photos ? place.photos[0].getUrl() : ""
-            };
+        let markerOption;
+        switch (type) {
+            case "dbShelter":
+                let shelterPosition = { lat: parseFloat(place.latitude), lng: parseFloat(place.longitude) };
+                markerOption = {
+                    placeId: place.shelterId,
+                    map: map,
+                    position: shelterPosition,
+                    title: place.shelterName
+                };
+                break;
+            case "myMarker":
+                markerOption ={
+                    map: map,
+                    title: "myLocation",
+                    position : place,
+                    icon: {
+                        url: '/img/myMarker.png', // 사용자 정의 아이콘 URL
+                        scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
+                        origin: new google.maps.Point(0, 0), // 아이콘의 원점
+                        anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
+                    }
+                };
+                break;
+            default:
+                markerOption = {
+                    placeId: place.place_id,
+                    map: map,
+                    position: place.geometry.location,
+                    title: place.name,
+                    placePhoto: place.photos ? place.photos[0].getUrl() : ""
+                };
         }
         let marker = new google.maps.Marker(markerOption);
-        // switch (type) {
-        //     case "none":
-        //
-        //         break;
-        //     case "myMarker":
-        //         break;
-        //     case "dbShelter":
-        //         break;
-        //     default:
-        // }
+
+        switch (type) {
+            case "none":
+
+                break;
+            case "myMarker":
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+                break;
+            default:
+                markers.push(marker);
+        }
 
         //마커 클릭 이벤트
         google.maps.event.addListener(marker, 'click', function (){
@@ -95,23 +115,43 @@
         return marker;
     }
 
+    //좌표를 주소로 전환
+    function geocodeLatLng(location, callback){
+        geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ 'location': location }, function (results, status){
+            let localAddress;
+            if (status === 'OK') {
+                if (results[0]) {
+                    localAddress = results[0].formatted_address;
+                } else {
+                    localAddress = "No results found";
+                }
+            } else {
+                alert('Geocoder failed due to: ' + status);
+            }
+            callback(localAddress);
+        });
+    }
+
     //정보 패널을 보여주는 함수
     function showInfoPanel(marker){
         // 1. 기본 장소 정보 표시
         let placeName = marker.title;
         let photoUrl = marker.placePhoto;    //place의 첫사진을 url을 받아 저장
         let placeID = marker.placeId;
-        let placeInfo = `<h3>${placeName}</h3>                  <!--- infopanel에 넣을 값 ---!>  
+        geocodeLatLng(marker.position, function (placeAdress){
+            let placeInfo = `<h3>${placeName}</h3>                  <!--- infopanel에 넣을 값 ---!>  
                                               <div style="width: 100%;height: 200px">
                                               <img src="${photoUrl}" style="width: 100%; height: 100%;"></div>
-                                              <p>${placeID}</p>
+                                              <p>${placeAdress}</p>
                                               <p>추가입력예정</p>`;
-        let infoPanel = document.getElementById("info-panel");
-        let infoPart = document.getElementById("info_part");
-        infoPart.innerHTML = placeInfo;
-        infoPanel.style.display = 'block';
-        isPanelVisible = true;
-        document.getElementById('writeLink').setAttribute('href', `/board/write/${placeID}`);
+            let infoPanel = document.getElementById("info-panel");
+            let infoPart = document.getElementById("info_part");
+            infoPart.innerHTML = placeInfo;
+            infoPanel.style.display = 'block';
+            isPanelVisible = true;
+            document.getElementById('writeLink').setAttribute('href', `/board/write/${placeID}`);
+        });
     }
 
     //마커배열을 확인해 마커들의 bound(경계값을 생성)
@@ -133,71 +173,6 @@
         map.setZoom(zoom);
     }
 
-
-    // Google Places API 결과 처리 함수
-    function processGooglePlaces(places) {
-        return places.map(place => ({
-            name: place.name,
-            latitude: place.geometry.location.lat(),
-            longitude: place.geometry.location.lng(),
-            source: 'google'
-        }));
-    }
-
-    // DB 검색 결과 처리 함수
-    function processDBResults(dbPlaces) {
-        return dbPlaces.map(place => ({
-            name: place.name,
-            latitude: place.latitude,
-            longitude: place.longitude,
-            source: 'db'
-        }));
-    }
-
-    // 두 결과 병합 함수
-    function mergeResults(googlePlaces, dbPlaces) {
-        const mergedResults = [...googlePlaces];
-
-        // DB 결과와 중복되지 않는 장소만 추가
-        dbPlaces.forEach(dbPlace => {
-            const isDuplicate = googlePlaces.some(gPlace =>
-                Math.abs(gPlace.latitude - dbPlace.latitude) < 0.0001 &&
-                Math.abs(gPlace.longitude - dbPlace.longitude) < 0.0001
-            );
-
-            if (!isDuplicate) {
-                mergedResults.push(dbPlace);
-            }
-        });
-
-        return mergedResults;
-    }
-
-    // 병합된 장소들을 지도에 마커로 표시
-    function displayMarkersOnMap(places) {
-        const bounds = new google.maps.LatLngBounds();
-
-        places.forEach(place => {
-            const marker = new google.maps.Marker({
-                map: map,
-                position: { lat: place.latitude, lng: place.longitude },
-                title: place.name
-            });
-
-            markers.push(marker);
-
-            // 마커 클릭 시 정보 패널 표시
-            google.maps.event.addListener(marker, 'click', function () {
-                showInfoPanel(marker);
-            });
-
-            // 지도 경계에 마커 위치 포함
-            bounds.extend(new google.maps.LatLng(place.latitude, place.longitude));
-        });
-
-        map.fitBounds(bounds); // 모든 장소를 포함하도록 지도 경계 설정
-    }
-
     // nearbySearch를 사용해 병원 검색
     function searchNearbyHospitals() {
         const service = new google.maps.places.PlacesService(map);
@@ -211,8 +186,7 @@
         service.nearbySearch(request, (results, status) => {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
                 // 기존 마커 제거
-                markers.forEach(marker => marker.setMap(null));
-                markers = [];
+                delMarker();
                 alert(results[0].name);
 
                 // 검색된 병원 정보 마커로 표시
@@ -231,9 +205,9 @@
     // DB에 저장된 대피소 정보를 불러오는 함수
     function fetchNearbyShelters() {
         const center = map.getCenter(); //보는 지도의 중심좌표 획득
-        const lat = center.lat();
-        const lng = center.lng();
-        console.log(lat);
+
+        delMarker();
+
         // 서버에 현재 위치 정보를 전송 (latitude, longitude)
         fetch('/api/nearby-shelters', {
             method: 'POST',
@@ -241,8 +215,8 @@
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                latitude: lat, // 현재 위치 위도
-                longitude: lng, // 현재 위치 경도
+                latitude: center.lat(), // 현재 위치 위도
+                longitude: center.lng(), // 현재 위치 경도
             })
         })
             .then(response => response.json()) // 서버로부터 JSON 응답 받기
@@ -254,6 +228,7 @@
                          console.log("확인데이터",place);
                         let marker = createMarker(map, place,false,"dbShelter"); // 대피소 마커 생성 함수
                         markers.push(marker);
+                        calculateBoundsForMarkers(markers);
                     });
                 } else {
                     console.log('1km 내 대피소가 없습니다.');
@@ -297,19 +272,20 @@
             searchPlaceByPlaceId(shareId);
         }
 
-        myMarker = new google.maps.Marker({
-            map: map,
-            title: "myLocation",
-            position : {lat: myLat, lng: myLong},
-            icon: {
-                url: '/img/myMarker.png', // 사용자 정의 아이콘 URL
-                scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
-                origin: new google.maps.Point(0, 0), // 아이콘의 원점
-                anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
-            }
-        });
+        // myMarker = new google.maps.Marker({
+        //     map: map,
+        //     title: "myLocation",
+        //     position : centerPosition,
+        //     icon: {
+        //         url: '/img/myMarker.png', // 사용자 정의 아이콘 URL
+        //         scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
+        //         origin: new google.maps.Point(0, 0), // 아이콘의 원점
+        //         anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
+        //     }
+        // });
         // 현위치 바운스 애니메이션 설정
-        myMarker.setAnimation(google.maps.Animation.BOUNCE);
+        createMarker(map,centerPosition,false,"myMarker");
+
 
         //맵 클릭 이벤트 (패널정보 none)
         google.maps.event.addListener(map,'click',function(){
@@ -353,8 +329,7 @@
             alert("result"+places[0].name)              //검색장소의 첫번째로 나오는 장소 알림
 
             //기존 마커 제거
-            markers.forEach(marker => marker.setMap(null));    //markers배열에서 가져온 기존마커 null로 맵에서 삭제
-            markers = [];   //마커 배열 초기화
+            delMarker();
 
             // 지도의 경계를 받아 마커표시 시 지도 바깥이면 숨김
             // const bounds = map.getBounds(); // 현재 지도 경계 가져오기
