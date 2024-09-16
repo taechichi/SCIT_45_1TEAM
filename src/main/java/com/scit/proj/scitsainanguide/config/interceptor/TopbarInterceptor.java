@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -24,8 +25,9 @@ public class TopbarInterceptor implements HandlerInterceptor {
         // @ResponseBody가 붙은 Controller 메서드를 처리하는 요청인지 확인
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
-            if (handlerMethod.hasMethodAnnotation(ResponseBody.class)) {
-                // @ResponseBody가 붙은 메서드에는 이 인터셉터를 적용하지 않을 것임
+            if (handlerMethod.hasMethodAnnotation(ResponseBody.class)
+                || !handlerMethod.hasMethodAnnotation(GetMapping.class)) {
+                // @ResponseBody가 붙어있거나, @GetMapping이 붙어있지 않은 메서드에는 이 인터셉터를 적용하지 않을 것임
                 return true;
             }
         }

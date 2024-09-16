@@ -1,11 +1,14 @@
 package com.scit.proj.scitsainanguide.util;
 
+import com.scit.proj.scitsainanguide.domain.dto.AlarmDTO;
+import com.scit.proj.scitsainanguide.domain.dto.AlarmResponseDTO;
 import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.MessageDTO;
 import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.MemberService;
 import com.scit.proj.scitsainanguide.service.myPage.MyFriendService;
 import com.scit.proj.scitsainanguide.service.myPage.MyMessageService;
+import com.scit.proj.scitsainanguide.service.sse.AlarmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,6 +22,7 @@ public class TopbarUtils {
     private final MemberService memberService;
     private final MyMessageService myMessageService;
     private final MyFriendService myFriendService;
+    private final AlarmService alarmService;
 
     // 처음부터 ModelAndView 객체를 만들어서 사용해야할 경우
     public ModelAndView setTopbarFragmentData(AuthenticatedUser user, String viewName) {
@@ -47,6 +51,11 @@ public class TopbarUtils {
             // 내가 즐겨찾기한 친구 정보 세팅
             List<MemberDTO> friendDTOList = myFriendService.selectMyFavoriteList(memberId);
             modelAndView.addObject("favoriteFriendList", friendDTOList);
+
+            // 내가 읽지않은 알람 목록 정보 세팅
+            AlarmResponseDTO alarmResponseDTO = alarmService.selectAlarmList(memberId);
+            modelAndView.addObject("alarmList", alarmResponseDTO.getAlarmList());
+            modelAndView.addObject("alarmCnt", alarmResponseDTO.getTotalCount());
         }
         modelAndView.addObject("member", memberDTO);
         return modelAndView;

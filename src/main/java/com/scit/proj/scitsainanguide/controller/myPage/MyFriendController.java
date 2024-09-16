@@ -5,9 +5,9 @@ import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.myPage.MyFriendService;
+import com.scit.proj.scitsainanguide.service.sse.SseEmitterService;
 import com.scit.proj.scitsainanguide.util.PaginationUtils;
 import com.scit.proj.scitsainanguide.util.TopbarUtils;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MyFriendController {
 
+    private final SseEmitterService sseEmitterService;
     private final MyFriendService myFriendService;
     private final PaginationUtils paginationUtils;
     private final TopbarUtils topbarUtils;
@@ -105,7 +106,10 @@ public class MyFriendController {
     @ResponseBody
     @PostMapping("{friendIds}")
     public void insertFriend(@AuthenticationPrincipal AuthenticatedUser user, @PathVariable String friendIds) {
-        myFriendService.insertFriend(user.getId(), friendIds);
+        myFriendService.insertFriend("tester4", friendIds);
+
+        // 친구추가 대상회원들에게 SSE 를 통해 알림을 전송한다.
+        sseEmitterService.sendFriendRequestNotification("tester4", friendIds);
     }
 
     /**
@@ -139,6 +143,9 @@ public class MyFriendController {
     @PostMapping("accept/{relationId}")
     public void acceptFriend(@AuthenticationPrincipal AuthenticatedUser user, @PathVariable Integer relationId) {
         myFriendService.acceptFriend(user.getId(), relationId);
+
+        // 친구수락 대상회원에게 SSE 를 통해 알림을 전송한다.
+        sseEmitterService.sendFriendAcceptNotification(user.getId());
     }
 
     /**

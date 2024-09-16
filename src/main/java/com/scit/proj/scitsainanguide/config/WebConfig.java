@@ -30,6 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .resourceChain(false);
     }
 
+    // interceptor 관련 설정
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         String[] allowedPatterns = {

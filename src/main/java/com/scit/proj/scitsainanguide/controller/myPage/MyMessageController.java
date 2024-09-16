@@ -6,6 +6,7 @@ import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.myPage.MyFriendService;
 import com.scit.proj.scitsainanguide.service.myPage.MyMessageService;
+import com.scit.proj.scitsainanguide.service.sse.SseEmitterService;
 import com.scit.proj.scitsainanguide.util.PaginationUtils;
 import com.scit.proj.scitsainanguide.util.TopbarUtils;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import java.util.List;
 public class MyMessageController {
 
     private final MyMessageService myMessageService;
+    private final SseEmitterService sseEmitterService;
     private final MyFriendService myFriendService;
     private final PaginationUtils paginationUtils;
     private final TopbarUtils topbarUtils;
@@ -97,8 +99,11 @@ public class MyMessageController {
      * @return redirect 하여 내 쪽지 목록으로 이동
      */
     @PostMapping
-    public String insertMyMessage(@ModelAttribute MessageDTO dto) {
+    public String insertMyMessage(@AuthenticationPrincipal AuthenticatedUser user, @ModelAttribute MessageDTO dto) {
         myMessageService.insertMyMessage(dto);
+
+        // 쪽지 작성시 받는 사람에게 SSE 를 통해 알림을 전송한다.
+        sseEmitterService.sendMessageReceiveNotification(user.getId(), dto.getReceiverId());
         return "redirect:/my/message";
     }
 

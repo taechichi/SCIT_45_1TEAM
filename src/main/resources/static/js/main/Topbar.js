@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+$(document).ready(function() {
     // 페이지가 로드될 때마다 최신 유저 상태를 반영하는 함수 실행
     myStatus();
 
@@ -109,8 +109,21 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     });
 
+    // 알림 이벤트 감지해서 알림 보내기
+    const eventSource = new EventSource('/notification');
+    let data;  // 서버에서 보내온 친구 요청 데이터
 
-}); // end of DOMContentLoaded;
+    // 친구 요청 수신, 친구 요청 수락, 메시지 수신 이벤트
+    const events = ['friendRequestReceive', 'friendRequestAccept', 'messageReceive'];
+
+    // 모든 이벤트에 대해 동일한 처리
+    events.forEach(event => {
+        $(eventSource).on(event, function(e) {
+            data = JSON.parse(e.data);
+        });
+    });
+
+}); // end of $(document).ready(function() {})
 
 // 사용자 최신 상태를 읽어와 반영할 element
 let lastStUpdateDt = document.getElementById("lastStUpdateDt");
@@ -199,4 +212,48 @@ function startTimer(endTime) {
     // 타이머를 매 1초마다 업데이트
     let timerInterval = setInterval(updateRemainingTime, 1000);
     updateRemainingTime(); // 즉시 업데이트
+}
+
+// 알림 UI 갱신
+function updateAlarmUI(data) {
+    const alertsDropdown = document.querySelector("#alertsDropdown");
+    const badgeCounter = alertsDropdown.querySelector(".badge-counter");
+    const dropdownList = document.querySelector(".dropdown-list");
+
+    const iconClass = getIconClass(data.categoryId);  // categoryId에 따라 아이콘 결정
+
+    // 알림 개수 갱신
+    const currentCount = parseInt(badgeCounter.textContent) || 0;
+    badgeCounter.textContent = currentCount + 1;
+
+    // 새로운 알림 추가
+    const newAlarm = document.createElement("a");
+    newAlarm.classList.add("dropdown-item", "d-flex", "align-items-center");
+    newAlarm.innerHTML = `
+        <div class="mr-3">
+            <div class="icon-circle ${iconClass}">
+                <i class="fas fa-file-alt text-white"></i>
+            </div>
+        </div>
+        <div>
+            <div class="small text-gray-500">${new Date().toLocaleDateString()}</div>
+            <span class="font-weight-bold">${data.contents}</span>
+        </div>
+    `;
+
+    // 알림 목록에 추가
+    dropdownList.insertBefore(newAlarm, dropdownList.firstChild);
+}
+
+// 알림 아이콘 동적으로 적용
+function getIconClass(categoryId) {
+    if (categoryId === 1) {
+        return "bg-primary";
+    } else if (categoryId === 2 || categoryId === 3) {
+        return "bg-success";
+    } else if (categoryId === 4) {
+        return "bg-warning";
+    } else {
+        return "bg-primary";
+    }
 }
