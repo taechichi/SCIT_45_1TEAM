@@ -88,13 +88,13 @@
                         <td><input type="checkbox" name="favoriteId" th:value="${marker.favoriteId}"></td>
                         <td th:text="${marker.favoriteId}">ID</td>
                         <td>
-                            <span th:if="${marker.nickname != ''}">
+                            <span th:if="${marker.nickname != null and !marker.nickname.isEmpty()}">
                                 <a th:text="${marker.nickname}" class="nickname-exists"></a>
                                 <a>(</a>
                                 <a th:text="${marker.name}"></a>
                                 <a>)</a>
                             </span>
-                            <span th:if="${marker.nickname == ''}">
+                            <span th:if="${marker.nickname == null or marker.nickname.isEmpty()}">
                                 <a th:text="${marker.name}" class="nickname-missing"></a>
                             </span>
                         </td>
@@ -113,7 +113,7 @@
         </form>
 
         <!-- pagination 부분 -->
-        <div th:insert="fragments/pagination :: pagination"></div>
+        <div th:replace="fragments/pagination :: pagination"></div>
     </div>
 </body>
 

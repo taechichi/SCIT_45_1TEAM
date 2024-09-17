@@ -18,12 +18,13 @@
 
     <!-- Custom styles for this template-->
     <link rel="stylesheet" th:href="@{/css/translate/translateUploadedFile.css}">
+    <link rel="stylesheet" th:href="@{/css/topbar.css}">
 </head>
 <body>
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <div th:insert="fragments/menuTranslate :: menuTranslate" id="menuTranslate"></div>
+    <div th:replace="~{fragments/menu :: menu}"></div>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -32,9 +33,9 @@
         <!-- Main Content -->
         <div id="content">
 
-            <!-- Topbar -->
-            <div th:insert="fragments/topbar :: topbar" id="topbar"></div>
-            <!-- End of Topbar -->
+            <!-- topbar -->
+            <div th:replace="~{fragments/topbar :: topbar}"></div>
+            <!-- End of topbar -->
 
             <h2 th:text="#{translate.fileTranslate}"></h2>
             <input type="file" id="audioFile" accept="audio/*">
@@ -54,6 +55,9 @@
     <!-- End of Content Wrapper -->
 </div>
 <!-- End of Page Wrapper -->
+
+<div th:replace="~{fragments/logoutModal :: logoutModel}"></div>
+
 </body>
 <!-- Bootstrap core JavaScript-->
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
@@ -64,4 +68,7 @@
 
 <!-- Custom scripts for all pages-->
 <script th:src="@{/js/sb-admin-2.js}"></script>
+
+<!-- 내 아이콘을 누르면 상태 변경 모달이 출력되고, 상태 및 상태메시지 변경 가능 -->
+<script th:src="@{/js/main/topbar.js}"></script>
 </html>

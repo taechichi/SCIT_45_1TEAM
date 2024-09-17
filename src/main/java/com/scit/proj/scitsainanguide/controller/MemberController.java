@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -30,6 +32,7 @@ public class MemberController {
 
     /**
      * 로그인폼으로 이동
+     *
      * @return 로그인 HTML
      */
     @GetMapping("/register")
@@ -39,10 +42,9 @@ public class MemberController {
     }
 
     /**
-     * 
      * @param memberDTO 회원정보 dto
-     * @param file  프로필 사진 저장
-     * @param model 모댈 객체
+     * @param file      프로필 사진 저장
+     * @param model     모댈 객체
      * @return 성공하면 매인으로 실패하면 다시 로그인 페이지로
      */
     @PostMapping("/register")
@@ -66,8 +68,9 @@ public class MemberController {
 
     /**
      * 프로필 사진 다운로드 (로그인한 본인)
-     * @param user 로그인 한 사용자 아이디
-     * @param response  응답객체
+     *
+     * @param user     로그인 한 사용자 아이디
+     * @param response 응답객체
      * @throws IOException
      */
     @GetMapping("download")
@@ -78,6 +81,7 @@ public class MemberController {
 
     /**
      * 프로필 사진 다운로드 (다른 회원)
+     *
      * @param memberId 회원 아이디
      * @param response 응답 객체
      * @throws IOException
@@ -89,6 +93,7 @@ public class MemberController {
 
     /**
      * 회원가입 페이지에서 "ID 중복확인" 버튼을 클릭하면 새 창으로 보여줄 검색 페이지로 이동
+     *
      * @return ID검색 HTML파일 경로
      */
     @GetMapping("idCheck")
@@ -96,25 +101,23 @@ public class MemberController {
         return "member/idCheck";
     }
 
-    /**
-     * ID중복확인 페이지에서 검색 요청했을 때 처리
-     *
-     * @param searchId 아이디 중복 체크를 위해 새 창에서 입력 받은 아이디를 받는 변수
-     * @return ID검색 HTML파일 경로
-     */
     @PostMapping("idCheck")
-    public String idCheckResult(
-            @RequestParam("searchId") String searchId,
-            Model model) {
+    @ResponseBody
+    public Map<String, Object> idCheckResult(@RequestParam("searchId") String searchId) {
+        log.debug("전달된 객체 : {}", searchId);
         boolean result = memberService.findId(searchId);
-        model.addAttribute("searchId", searchId);
-        model.addAttribute("result", result);
 
-        return "member/idCheck";
+        // JSON 형태로 반환
+        Map<String, Object> response = new HashMap<>();
+        response.put("searchId", searchId);
+        response.put("result", result);
+
+        return response;
     }
 
     /**
      * 가입폼으로 이동
+     *
      * @return 가입폼 HTML
      */
     @GetMapping("login")
@@ -124,19 +127,47 @@ public class MemberController {
     }
 
     /**
-     * 현재 로그인 중인 사용자가 아이콘 버튼을 클릭하면 상태 변경
-     * @param user
-     * @param statusId
-     * @return 변경 후 사용자의 상태값 반환
-     * @throws IOException
+     * 현재 로그인 중인 사용자가 아이콘을 클릭해 상태 변경
+     * @param user 현재 로그인 중인 유저
+     * @param statusId 바꾸고자 하는 상태
+     * @param hours 상태 유지 시간
      */
+    @ResponseBody
     @PostMapping("/changeMyStatus")
-    public ResponseEntity<Integer> changeMyStatus(@AuthenticationPrincipal AuthenticatedUser user
-                                                , @RequestParam("statusId") Integer statusId) throws IOException{
+    public ResponseEntity<Void> changeMyStatus(@AuthenticationPrincipal AuthenticatedUser user
+            , @RequestParam("statusId") Integer statusId
+            , @RequestParam("duration") Integer hours) {
         String memberId = user.getUsername();
-        Integer statusNum = memberService.changeMyStatus(memberId, statusId);
-        // 상태 변경 후의 상태 ID를 반환합니다.
-        return new ResponseEntity<>(statusNum, HttpStatus.OK);
+        memberService.changeMyStatus(memberId, statusId, hours);
+        return ResponseEntity.ok().build();
     }
+
+    /**
+     * 상태 메시지 변경하는 메서드
+     * @param user
+     * @param newStatusMessage
+     */
+    @ResponseBody
+    @PostMapping("/changeMyStatusMessage")
+    public ResponseEntity<Void> changeMyStatusMessage(@AuthenticationPrincipal AuthenticatedUser user,
+                                                        @RequestParam("newStatusMessage") String newStatusMessage) {
+        String memberId = user.getUsername();
+        memberService.changeMyStatusMessage(memberId, newStatusMessage);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 최신 상태를 불러와 반환하는 메서드
+     * @param user
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/viewStatuses")
+    public ResponseEntity<Map<String, Object>> viewStatuses(@AuthenticationPrincipal AuthenticatedUser user) {
+        Map<String, Object> response = memberService.viewStatuses(user.getUsername());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
 }
 

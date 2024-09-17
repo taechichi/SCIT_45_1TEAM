@@ -56,6 +56,34 @@ public class MarkerFavoritesController {
 
     // ===================================================
 
+
+    // ============ 닉네임 수정 기능 ============
+    @PostMapping("/updateNickname")
+    public String updateNickname(
+            @RequestParam("favoriteId") Integer favoriteId,
+            @RequestParam("nickname") String newNickname,
+            RedirectAttributes redirectAttributes) {
+
+        // 임시 계정
+        String currentUserId = "tsh0828";
+
+        log.debug("updateNickname method called.");
+        log.debug("CONTROLLER_favoriteId: {}", favoriteId);
+        log.debug("CONTROLLER_newNickname: {}", newNickname);
+
+        try {
+            // 닉네임 수정 서비스 호출
+            markerFavoritesService.updateNickname(favoriteId, newNickname, currentUserId);
+            redirectAttributes.addFlashAttribute("successMessage", "닉네임이 성공적으로 수정되었습니다.");
+        } catch (Exception e) {
+            log.error("닉네임 수정 중 오류 발생: ", e);
+            redirectAttributes.addFlashAttribute("errorMessage", "닉네임 수정 중 오류가 발생했습니다.");
+        }
+
+        return "redirect:/my/myMarkerFavorites";
+    }
+    // =========================================
+
     // ============ 삭제 기능 ============
     @PostMapping("/delete")
     public String deleteMarkerFavorites(

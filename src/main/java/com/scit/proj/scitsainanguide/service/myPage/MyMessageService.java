@@ -35,11 +35,20 @@ public class MyMessageService {
     }
 
     public MessageDTO selectMyMessage(Integer messageId) {
-        return myMessageRepository.selectMyMessage(messageId)
+        MessageDTO messageDTO = myMessageRepository.selectMyMessage(messageId)
                 .orElseThrow(() -> new EntityNotFoundException("해당하는 쪽지를 찾을 수 없습니다."));
+        // 상세보기시 해당 쪽지의 읽은 시간을 업데이트 한다. (최초 1회만)
+        if (messageDTO.getReadDt() == null) {
+            myMessageRepository.updateMessageReadDt(messageId);
+        }
+        return messageDTO;
     }
 
     public List<MessageDTO> selectMyUnreadMessageList(String memberId) {
         return myMessageRepository.selectMyUnreadMessageList(memberId);
+    }
+
+    public Long selectMyUnreadMessageCnt(String memberId) {
+        return myMessageRepository.selectMyUnreadMessageCnt(memberId);
     }
 }
