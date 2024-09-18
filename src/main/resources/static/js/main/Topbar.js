@@ -111,12 +111,11 @@ $(document).ready(function() {
 
     // 알림 이벤트 감지해서 알림 보내기
     const eventSource = new EventSource('/notification');
-    let data;  // 서버에서 보내온 친구 요청 데이터
 
     // 친구 요청 수신, 친구 요청 수락, 메시지 수신 이벤트
     $(eventSource).on('messageReceive friendRequestReceive friendRequestAccept', function(e) {
-        selectAlarmList();
-        updateAlarmUI(data);
+        const eventType = e.type;
+        selectAlarmList(eventType);
     });
 
 }); // end of $(document).ready(function() {})
@@ -211,13 +210,16 @@ function startTimer(endTime) {
 }
 
 // 알림 조회
-function selectAlarmList() {
+function selectAlarmList(eventType) {
     // 서버에서 알림 데이터를 조회
     $.ajax({
         url: '/notification/list',  // 알림 데이터 조회 URL
+        data: {
+            eventType : eventType
+        },
         method: 'GET',
         success: function(response) {
-            updateAlarmUI(response);
+            updateAlarmUI(response, eventType);
         },
         error: function(xhr, status, error) {
             console.error('알림 데이터를 가져오는 중 오류 발생:', error);
@@ -226,35 +228,67 @@ function selectAlarmList() {
 }
 
 // 알림 UI 갱신
-function updateAlarmUI(response) {
+function updateAlarmUI(response, eventType) {
     const $alertsDropdown = $("#alertsDropdown");
-    const $badgeCounter = $alertsDropdown.find(".badge-counter");
-    const $target = $(".alarm-list-header");
-    const alarm = response.alarmList[0];
-    const iconBgClass = getIconBgClass(alarm.categoryId);  // categoryId에 따라 아이콘 배경 결정
-    const iconClass = getIconClass(alarm.categoryId);  // categoryId에 따라 아이콘 결정
+    const $alarmBadgeCounter = $alertsDropdown.find(".alarm-badge");
 
     // 알림 개수 갱신
-    const currentCount = parseInt($badgeCounter.text()) || 0;
-    $badgeCounter.text(currentCount + 1);
+    updateCnt($alarmBadgeCounter);
 
-    // 새로운 알림 추가
+    if (eventType === "messageReceive") {
+        const $messageDropdown = $("#messagesDropdown");
+        const $messageBadgeCounter = $messageDropdown.find(".message-badge");
+        updateCnt($messageBadgeCounter);
+        updateMessageDropdown(response.messageList[0]);
+    }
+
+    updateAlarmDropdown(response.alarmList[0]);
+}
+
+// 알림 드롭다운 갱신
+function updateAlarmDropdown(alarm) {
+    const $alarmTarget = $(".alarm-list-header");
+
     const newAlarm = $(`
-            <a class="dropdown-item d-flex align-items-center">
-                <div class="mr-3">
-                    <div class="icon-circle ${iconBgClass}">
-                        <i class="fas ${iconClass} text-white"></i>
-                    </div>
+        <a class="dropdown-item d-flex align-items-center">
+            <div class="mr-3">
+                <div class="icon-circle ${getIconBgClass(alarm.categoryId)}">
+                    <i class="fas ${getIconClass(alarm.categoryId)} text-white"></i>
                 </div>
-                <div>
-                    <div class="small text-gray-500">${new Date().toLocaleDateString()}</div>
-                    <span class="font-weight-bold">${alarm.contents}</span>
-                </div>
-            </a>
-        `);
+            </div>
+            <div>
+                <span class="font-weight-bold">${alarm.contents}</span>
+                <div class="small text-gray-500">${formatDate(alarm.alarmDt)}</div>
+            </div>
+        </a>
+    `);
 
-    // 알림 목록에 추가
-    $target.after(newAlarm);
+    $alarmTarget.after(newAlarm);
+}
+
+function updateMessageDropdown(message) {
+    const $messageTarget = $(".message-list-header");
+
+    const newMessage = $(`
+        <a class="dropdown-item d-flex align-items-center" href="/my/message/${message.messageId}">
+            <div class="dropdown-list-image mr-3">
+                <img class="rounded-circle" src="/member/download/${message.senderId}" alt="Profile Picture" />
+                <div class="status-indicator ${getStatusIndicatorClass(message.statusId)}"></div>
+            </div>
+            <div class="font-weight-bold">
+                <div class="text-truncate">${message.content}</div>
+                <div class="span-container">
+                    <span class="small text-gray-500">${message.senderId}</span>
+                    <span class="small text-gray-500">${formatDate(message.createDt)}</span>
+                </div>
+            </div>
+        </a>
+    `);
+
+    $messageTarget.after(newMessage);
+
+    // 메시지 목록 링크 업데이트
+    $(".dropdown-item.text-center.small.text-gray-500").attr("href", "/my/message");
 }
 
 // 알림 아이콘 배경 동적으로 적용
@@ -281,4 +315,28 @@ function getIconClass(categoryId) {
     } else {
         return "fa-file-alt";
     }
+}
+
+function getStatusIndicatorClass(statusId) {
+    if (statusId === 1) {
+        return "";
+    } else if (statusId === 2) {
+        return "bg-success";
+    } else if (statusId === 3) {
+        return "bg-warning";
+    } else if (statusId === 4) {
+        return "bg-gradient-danger";
+    } else {
+        return "";
+    }
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '.');
+}
+
+function updateCnt($badgeCounter) {
+    let cnt = parseInt($badgeCounter.text()) || 0;
+    $badgeCounter.text(cnt + 1);
 }
