@@ -19,10 +19,32 @@
     align-items: center; /* 수직으로 중앙 정렬 */
     gap: 3px; /* 요소들 간의 간격 */
 }
+
 .img-profile {
     width: 100px;
     height: 100px;
     margin: 2%;
+}
+
+#statusCircles{
+   display: flex;
+    align-items: center;
+}
+
+#userInformation{
+    width: 400px;
+    height: 540px;
+}
+
+#statusProfileImg{
+    width: 100px;
+    height: 100px;
+    margin-top: 5%;
+    border: 6px solid black;
+}
+
+.nav-item dropdown no-arrow{
+    /*해당 모달 영역 내부를 클릭해도 닫히지 않도록, 부분 코드 찾아서 수정하기*/
 }
 
 .circle{
@@ -39,3 +61,57 @@
     align-items: center;
     justify-content: center; /* 가로 중앙 정렬 */
 }
+
+#2{
+    background-color: green;
+}
+
+#3{
+    background-color: yellow;
+    color: black;
+}
+
+#4{
+    background-color: red;
+}
+
+#timeInputContainer{
+    margin: 5px;
+}
+
+#hours{
+    text-align: right;
+}
+
+#remainingTime{
+    text-align: center;
+}
+
+#statusMessageDiv{
+    margin-left: 200px;
+}
+
+#statusMessage{
+    width: 350px;
+    height: 150px;
+}
+
+#statusMessageInputDiv{
+    display: none;
+}
+
+#statusMessageInput{
+    width: 350px;
+    height: 150px;
+}
+
+#charCount{
+    visibility: hidden; /* 기본적으로 보이지 않게 설정 */
+    margin-left: 230px;
+}
+
+#saveStatusMessage{
+    visibility: hidden; /* 기본적으로 보이지 않게 설정 */
+    margin-left: 10px;
+}
+

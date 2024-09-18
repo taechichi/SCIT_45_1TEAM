@@ -5,6 +5,7 @@ import com.scit.proj.scitsainanguide.domain.entity.MemberEntity;
 import com.scit.proj.scitsainanguide.domain.entity.StatusEntity;
 import com.scit.proj.scitsainanguide.repository.MemberJpaRepository;
 import com.scit.proj.scitsainanguide.repository.StatusJpaRepository;
+import com.scit.proj.scitsainanguide.scheduler.StatusScheduler;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,6 +34,7 @@ public class MemberService {
 
     private final MemberJpaRepository memberJpaRepository;
     private final StatusJpaRepository statusJpaRepository;
+    private final StatusScheduler statusScheduler;
 
     //암호화 인코더
     private final BCryptPasswordEncoder passwordEncoder;
@@ -189,8 +191,8 @@ public class MemberService {
         // 현재 날짜와 시간으로 LocalDateTime 객체 생성해 최신 상태 수정 시간 설정
         LocalDateTime lastUpdateDt = LocalDateTime.now();
         mentity.setLastStUpdateDt(lastUpdateDt);
-        // mentity.setEndTime(lastUpdateDt.plusMinutes(hours)); test 용
-        mentity.setEndTime(lastUpdateDt.plusHours(hours));
+        mentity.setEndTime(lastUpdateDt.plusMinutes(hours)); //test 용
+        //mentity.setEndTime(lastUpdateDt.plusHours(hours));
 
         // 상태 아이디로 상태 엔티티 불러와 멤버 엔티티에 변경된 상태 설정
         StatusEntity sentity = statusJpaRepository.findById(statusId)
@@ -223,7 +225,8 @@ public class MemberService {
 
         // 받아온 값 담을 맵 구조 객체 생성해 담기
         Map<String, Object> response = new HashMap<>();
-        response.put("lastStUpdateDt", mentity.getLastStUpdateDt());
+        String relativeTime = statusScheduler.getRelativeTime(mentity.getLastStUpdateDt());
+        response.put("lastStUpdateDt", relativeTime);
         response.put("endTime", mentity.getEndTime());
         response.put("stMessage", mentity.getStMessage());
         response.put("statusId", mentity.getStatus().getStatusId());
