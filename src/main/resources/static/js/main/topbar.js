@@ -1,24 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // 페이지가 로드될 때마다 최신 유저 상태를 반영하는 함수 실행
-    myStatus();
 
-    // index에서 아이콘 요소를 클릭하면, 현재 로그인 중인 사용자 정보 불러옴
+    // index에서 아이콘 요소를 클릭하면, 현재 로그인 중인 최신 사용자 정보 불러옴
     let dropdown = document.getElementById('userDropdown');
     dropdown.addEventListener('click', myStatus);
 
-    // 상태 변경 원 요소들을 가져옴
+    // 상태 변경 div 원 요소들을 가져옴
     let circles = document.querySelectorAll('.circle');
 
     // 상태 수정 원 요소들에 대한 클릭 이벤트 설정
     circles.forEach(function(element) {
         element.addEventListener('click', function() {
 
-            // 이전 타이머 정리
+            // 이전 타이머가 존재하면 정리
             if (timerInterval) {
                 clearInterval(timerInterval);
             }
 
-            // 클릭된 원의 ID 가져오기
+            // 클릭된 원의 status ID 가져오기
             let statusId = parseInt(element.id);
             // 상태 유지 기본시간(사용자가 무효값을 입력했을 때 대비)
             let defaultValue = 1;
@@ -49,31 +47,30 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-
     // 상태 메시지 관련 요소들
     let editButton = document.getElementById('editStatusMessage');
     let statusMessageDiv = document.getElementById('statusMessage');
     let statusMessageInput = document.getElementById('statusMessageInput');
+    let statusMessageInputDiv = document.getElementById('statusMessageInputDiv');
     let saveButton = document.getElementById('saveStatusMessage');
     let charCount = document.getElementById('charCount');
 
     // 수정 버튼 클릭 시
     editButton.addEventListener('click', function() {
-        // 기존 상태 메시지를 텍스트박스에 넣기 - 기존 것에서 수정하도록
+        // 기존 상태 메시지를 텍스트박스에 넣기 - 기존 것에서 수정 가능하도록
         statusMessageInput.value = statusMessageDiv.textContent.trim();
 
         // DIV 숨기고 텍스트박스와 저장 버튼, 입력 글자수 보이기
         statusMessageDiv.style.display = 'none';
-        statusMessageInput.style.display = 'block';
-        saveButton.style.display = 'inline';
-        charCount.style.display = 'block';
+        statusMessageInputDiv.style.display = 'block';
+        saveButton.style.visibility = 'visible'; // 저장 버튼 보이기
+        charCount.style.visibility = 'visible'; // 문자 수 보이기
     });
 
     // 입력 이벤트 리스너 등록
     statusMessageInput.addEventListener('input', function() {
         // 현재 입력된 문자의 수를 계산
         let charCountValue = statusMessageInput.value.length;
-
         // 화면에 문자 수와 최대 문자 수를 업데이트
         charCount.textContent = `${charCountValue}/200자`;
     });
@@ -112,11 +109,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 }); // end of DOMContentLoaded;
 
+
 // 사용자 최신 상태를 읽어와 반영할 element
 let lastStUpdateDt = document.getElementById("lastStUpdateDt");
 let stMessage = document.getElementById("statusMessage");
-let profileImg = document.getElementById("profileImg");
+let profileImg = document.getElementById("statusProfileImg");
 let remainingTime = document.getElementById("remainingTime");
+
+let timerInterval = null; // 전역 변수로 선언
 
 // 사용자 최신 상태 반환
 function myStatus(){
@@ -132,26 +132,20 @@ function myStatus(){
         })
         .then((data) => {
             // 사용자 상태 정보 뿌리기
-            // lastStUpdateDt를 포맷팅해서 화면에 출력
-            let formattedTime = formatTime(data.lastStUpdateDt);
-
-            // UI 갱신
-            lastStUpdateDt.textContent = formattedTime;
             stMessage.textContent = data.stMessage;
-
+            // 아이콘을 누른 시점 기준 상대적 시간 일회 표시 - 클릭 시 마다 업데이트됨
+            lastStUpdateDt.textContent = data.lastStUpdateDt;
             // 상태에 따른 사용자 프로필 이미지 둘레 색 변경
-            switch(data.statusId){
-                case 1: profileImg.style.border = '6px solid black'; break;
-                case 2: profileImg.style.border = '6px solid green'; break;
-                case 3: profileImg.style.border = '6px solid yellow'; break;
-                case 4: profileImg.style.border = '6px solid red'; break;
-                default: console.log("statusId 오류");
-            }
-
+            updateStatusColor(data.statusId);
 
             // 남은 시간 업데이트
             if (data.endTime) {
-                startTimer(new Date(data.endTime)); // endTime을 기준으로 타이머 시작
+                // 이전 타이머가 존재하면 정리
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+                let endTime = new Date(data.endTime).getTime();  // UTC 시간을 사용해 endTime 계산
+                startTimer(endTime); // endTime을 기준으로 타이머 시작
             }
         })
         .catch(error => {
@@ -159,24 +153,16 @@ function myStatus(){
         });
 }
 
-// 날짜 정보 포맷해서 띄우기
-function formatTime(dateString) {
-    // Date 객체 생성
-    let date = new Date(dateString);
-
-    // 연도, 월, 일, 시간, 분, 초 추출
-    let year = date.getFullYear();
-    let month = String(date.getMonth() + 1).padStart(2, '0');
-    let day = String(date.getDate()).padStart(2, '0');
-    let hours = String(date.getHours()).padStart(2, '0');
-    let minutes = String(date.getMinutes()).padStart(2, '0');
-    let seconds = String(date.getSeconds()).padStart(2, '0');
-
-    // 포맷팅된 날짜와 시간 반환
-    return `${year}/${month}/${day} / ${hours}:${minutes}:${seconds}`;
+// 프로필 이미지 업데이트 함수
+function updateStatusColor(statusId){
+    switch(statusId){
+        case 1: profileImg.style.border = '6px solid black'; break;
+        case 2: profileImg.style.border = '6px solid green'; break;
+        case 3: profileImg.style.border = '6px solid yellow'; break;
+        case 4: profileImg.style.border = '6px solid red'; break;
+        default: console.log("statusId 오류");
+    }
 }
-
-let timerInterval = null; // 전역 변수로 선언
 
 // 타이머 시작
 function startTimer(endTime) {
@@ -197,6 +183,6 @@ function startTimer(endTime) {
     }
 
     // 타이머를 매 1초마다 업데이트
-    let timerInterval = setInterval(updateRemainingTime, 1000);
+    timerInterval = setInterval(updateRemainingTime, 1000);
     updateRemainingTime(); // 즉시 업데이트
 }

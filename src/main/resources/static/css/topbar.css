@@ -25,6 +25,18 @@
     margin: 2%;
 }
 
+#userInformation{
+    width: 400px;
+    height: 540px;
+}
+
+#statusProfileImg{
+    width: 100px;
+    height: 100px;
+    margin-top: 5%;
+    border: 6px solid black;
+}
+
 .circle{
     cursor: pointer; /* 클릭 가능 */
     width: 80px; /* 원의 너비 */
@@ -39,3 +51,57 @@
     align-items: center;
     justify-content: center; /* 가로 중앙 정렬 */
 }
+
+#statusNo2{
+    background-color: green;
+}
+
+#statusNo3{
+    background-color: yellow;
+    color: black;
+}
+
+#statusNo4{
+    background-color: red;
+}
+
+#timeInputContainer{
+    margin: 5px;
+}
+
+#hours{
+    text-align: right;
+}
+
+#remainingTime{
+    text-align: center;
+}
+
+#statusMessageDiv{
+    margin-left: 200px;
+}
+
+#statusMessage{
+    width: 350px;
+    height: 150px;
+}
+
+#statusMessageInputDiv{
+    display: none;
+}
+
+#statusMessageInput{
+    width: 350px;
+    height: 150px;
+}
+
+#charCount{
+    visibility: hidden; /* 기본적으로 보이지 않게 설정 */
+    margin-left: 230px;
+}
+
+#saveStatusMessage{
+    visibility: hidden; /* 기본적으로 보이지 않게 설정 */
+    margin-left: 10px;
+}
+

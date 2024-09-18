@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component // bean 객체
@@ -46,4 +48,31 @@ public class StatusScheduler {
             }
         }
     }
+
+    // 상대적인 시간을 계산해, 최신 상태 변경 시간을 반환
+    public String getRelativeTime(LocalDateTime dateTime) {
+        Duration duration = Duration.between(dateTime, LocalDateTime.now());
+        long seconds = duration.getSeconds();
+        long days = duration.toDays();
+
+        if (seconds < 60) {
+            return seconds + "초 전";
+        } else if (seconds < 3600) {
+            return (seconds / 60) + "분 전";
+        } else if (seconds < 86400) {
+            return (seconds / 3600) + "시간 전";
+        } else if (days < 3) {
+            return days + "일 전";
+        } else {
+            // 3일 이상인 경우, formatTime 메서드 사용
+            return formatTime(dateTime);
+        }
+    }
+
+    // 날짜 정보를 포맷해서 반환하는 메서드
+    public String formatTime(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd / HH:mm:ss");
+        return dateTime.format(formatter);
+    }
+
 }
