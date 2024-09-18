@@ -305,7 +305,6 @@
             fetchNearbyShelters();
         });
 
-
         // 검색창 search-input 에서 사용자가 입력한 값을 받아 저장
         const input = document.getElementById('search-input');              //search-input 에서 값을 받아 저장
         // places api의 searchbox에 사용자가 입력한 input 데이터 입력(엔터나 검색버튼을 누르지 않아도 자동으로 뜨는 항목들)

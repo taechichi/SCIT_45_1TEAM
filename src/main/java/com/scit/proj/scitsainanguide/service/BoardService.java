@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -34,16 +35,45 @@ public class BoardService {
                 .orElseThrow(() -> new EntityNotFoundException("회원아이디가 없습니다."));
 
 
-        // shelterName으로 ShelterEntity 조회
-        HospitalEntity hospitalEntity = hospitalRepository.findById(boardDTO.getHospitalName())
-                .orElseThrow(() -> new EntityNotFoundException("병원이 없습니다."));
+        String placeId = boardDTO.getHospitalName();
+        MarkerBoardEntity markerBoardEntity = null;
+        Optional<HospitalEntity> hospitalEntityOptional = hospitalRepository.findById(placeId);
+        Optional<ShelterEntity> shelterEntityOptional= Optional.empty();
 
-        MarkerBoardEntity markerBoardEntity = MarkerBoardEntity.builder()
-                .memberId(memberEntity.getMemberId())
-                .hospital(hospitalEntity)
-                .contents(boardDTO.getContents())
-                .deleteYn(false)
-                .build();
+
+        if(hospitalEntityOptional.isPresent()) {
+            HospitalEntity hospitalEntity = hospitalEntityOptional.get();
+            markerBoardEntity = MarkerBoardEntity.builder()
+                    .memberId(memberEntity.getMemberId())
+                    .hospital(hospitalEntity)
+                    .contents(boardDTO.getContents())
+                    .deleteYn(false)
+                    .build();
+        }else{
+            shelterEntityOptional = shelterRepository.findById(Integer.valueOf(placeId));
+            if(shelterEntityOptional.isPresent()){
+                ShelterEntity shelterEntity = shelterEntityOptional.get();
+                markerBoardEntity = MarkerBoardEntity.builder()
+                        .memberId(memberEntity.getMemberId())
+                        .shelter(shelterEntity)
+                        .contents(boardDTO.getContents())
+                        .deleteYn(false)
+                        .build();
+            }else{
+                log.debug("일치하는 ID가 없습니다.");
+            }
+        }
+
+//        // shelterName으로 ShelterEntity 조회
+//        HospitalEntity hospitalEntity = hospitalRepository.findById(boardDTO.getHospitalName())
+//                .orElseThrow(() -> new EntityNotFoundException("병원이 없습니다."));
+//
+//        MarkerBoardEntity markerBoardEntity = MarkerBoardEntity.builder()
+//                .memberId(memberEntity.getMemberId())
+//                .hospital(hospitalEntity)
+//                .contents(boardDTO.getContents())
+//                .deleteYn(false)
+//                .build();
 
 
         log.debug("저장되는 엔티티 : {}", markerBoardEntity);
