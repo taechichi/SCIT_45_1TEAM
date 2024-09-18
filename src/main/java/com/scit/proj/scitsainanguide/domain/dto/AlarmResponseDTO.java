@@ -5,13 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class AlarmCategoryDTO {
+import java.util.List;
 
-    private Integer categoryId;
-    private String categoryName;
-    private String categoryNameJa;
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class AlarmResponseDTO {
+
+    private List<AlarmDTO> alarmList;
+
+    private Long totalCount;
 }

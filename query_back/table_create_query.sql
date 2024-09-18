@@ -130,8 +130,8 @@ CREATE TABLE board_picture
 CREATE TABLE alarm_category
 (
     category_id   INTEGER     NOT NULL AUTO_INCREMENT,
-    category_name VARCHAR(10) NOT NULL,
-    lang_cd       VARCHAR(2)  NOT NULL,
+    category_name       VARCHAR(10) NOT NULL,
+    category_name_ja    VARCHAR(10) NOT NULL,
     PRIMARY KEY (category_id)
 );
 

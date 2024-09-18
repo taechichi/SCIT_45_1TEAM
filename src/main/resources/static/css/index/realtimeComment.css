@@ -1,0 +1,50 @@
+#realtime_comment {
+    position: absolute;
+    top: 120px;
+    left: 0px;
+    width: 300px;
+    height: auto;
+    max-height: 80%;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    transition: all 0.3s ease; /* 애니메이션 효과 */
+    z-index: 1000;
+}
+
+#realtime_comment.open {
+    left: 120px;
+    opacity: 1;
+}
+
+#realtime_comment.close {
+    left: -300px;
+    opacity: 0;
+}
+
+#toggleCommentButton {
+    position: absolute;
+    z-index: 1000;
+    top: 50%;
+    left: 300px;
+    transform: translateY(-50%); /* 수직 중앙 정렬 */
+    width: 30px; /* 버튼 너비 설정 */
+    height: 40px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    transition: all 0.3s ease; /* 버튼 애니메이션 */
+    cursor: pointer;
+}
+
+/* 미디어 쿼리 추가 */
+@media (max-width: 768px) {
+    #realtime_comment {
+        width: 300px; /* 화면이 좁아질 때 게시판 너비를 50%로 조정 */
+    }
+
+    #toggleCommentButton {
+        left: 300px; /* 화면이 좁아질 때 버튼 위치 조정 */
+    }
+}

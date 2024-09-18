@@ -2,21 +2,6 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <link rel="stylesheet" th:href="@{/css/topbar.css}">
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const profilePicLink = document.getElementById('profilePicLink');
-
-    profilePicLink.addEventListener('click', function () {
-      // 모달에 내용 삽입 (예시: static content 또는 AJAX를 통해 동적 내용 삽입 가능)
-      const messageContent = "Example message content"; // 실제 메시지 내용으로 대체
-      const messageTimestamp = "Example timestamp"; // 실제 타임스탬프로 대체
-
-      document.getElementById('messageContent').innerText = messageContent;
-      document.getElementById('messageTimestamp').innerText = messageTimestamp;
-    });
-  });
-</script>
 <body>
 <div th:fragment="topbar">
   <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -47,16 +32,15 @@
       <li class="nav-item">
         <div class="d-flex align-items-center">
           <!-- 반복문으로 프로필 사진 항목들 생성 -->
-          <div th:each="i : ${#numbers.sequence(1, 5)}" class="nav-link profile-picture-wrapper">
+          <div th:each="friend : ${favoriteFriendList}" class="nav-link profile-picture-wrapper">
             <a href="#" data-toggle="modal" data-target="#profileModal">
               <div class="profile-picture-container">
-                <img class="img-profile rounded-circle" th:src="@{/member/download}" th:alt="'Profile Picture ' + ${i}" />
-                <div class="status-indicator bg-gradient-danger"></div>
-<!--        <div class="status-indicator"></div> 하얀색
-            <div class="status-indicator bg-success"></div> 초록색
-            <div class="status-indicator bg-warning"></div> 노란색
-            <div class="status-indicator bg-gradient-danger"></div> 빨간색
-          -->
+                <img class="img-profile rounded-circle" th:src="@{/member/download/{memberId}(memberId=${friend.memberId})}"/>
+                <!-- 회원의 상태를 정해진 색으로 표시 -->
+                <div th:if="${friend.statusId == 1}" class="status-indicator"></div>
+                <div th:if="${friend.statusId == 2}" class="status-indicator bg-success"></div>
+                <div th:if="${friend.statusId == 3}" class="status-indicator bg-warning"></div>
+                <div th:if="${friend.statusId == 4}" class="status-indicator bg-gradient-danger"></div>
               </div>
             </a>
           </div>
@@ -113,51 +97,34 @@
       </li>
 
       <!-- 오른쪽 상단 네비게이션 - 알림 -->
-
       <li class="nav-item dropdown no-arrow mx-1">
         <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-bell fa-fw"></i>
           <!-- Counter - Alerts -->
-          <span class="badge badge-danger badge-counter">3+</span>
+          <span class="badge badge-danger badge-counter" th:text="${alarmCnt}"></span>
         </a>
         <!-- Dropdown - Alerts -->
         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
              aria-labelledby="alertsDropdown">
-          <h6 class="dropdown-header">
+          <h6 class="dropdown-header alarm-list-header">
             Alerts Center
           </h6>
-          <a class="dropdown-item d-flex align-items-center" href="#">
+          <a class="dropdown-item d-flex align-items-center" th:each="alarm : ${alarmList}">
             <div class="mr-3">
-              <div class="icon-circle bg-primary">
+              <div th:if="${alarm.categoryId == 1}" class="icon-circle bg-primary">
                 <i class="fas fa-file-alt text-white"></i>
               </div>
-            </div>
-            <div>
-              <div class="small text-gray-500">December 12, 2019</div>
-              <span class="font-weight-bold">A new monthly report is ready to download!</span>
-            </div>
-          </a>
-          <a class="dropdown-item d-flex align-items-center" href="#">
-            <div class="mr-3">
-              <div class="icon-circle bg-success">
-                <i class="fas fa-donate text-white"></i>
+              <div th:if="${alarm.categoryId == 2 || alarm.categoryId == 3}" class="icon-circle bg-success">
+                <i class="fas fa-fw fa-user text-white"></i>
               </div>
-            </div>
-            <div>
-              <div class="small text-gray-500">December 7, 2019</div>
-              $290.29 has been deposited into your account!
-            </div>
-          </a>
-          <a class="dropdown-item d-flex align-items-center" href="#">
-            <div class="mr-3">
-              <div class="icon-circle bg-warning">
+              <div th:if="${alarm.categoryId == 4}" class="icon-circle bg-warning">
                 <i class="fas fa-exclamation-triangle text-white"></i>
               </div>
             </div>
             <div>
-              <div class="small text-gray-500">December 2, 2019</div>
-              Spending Alert: We've noticed unusually high spending for your account.
+              <div class="small text-gray-500" th:text="(*{#temporals.format(alarm.alarmDt, 'yyyy.MM.dd')})"></div>
+              <span class="font-weight-bold" th:text="${alarm.contents}"></span>
             </div>
           </a>
           <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
@@ -170,13 +137,14 @@
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-envelope fa-fw"></i>
           <!-- Counter - Messages -->
-          <span class="badge badge-danger badge-counter">7</span>
+          <span class="badge badge-danger badge-counter" th:text="${unreadMessageCnt}"></span>
         </a>
         <!-- 쪽지함 목록 드롭다운 -->
         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
              aria-labelledby="messagesDropdown">
-          <h6 class="dropdown-header"></h6>
-          <a class="dropdown-item d-flex align-items-center" th:href="@{/my/message/{messageId}(messageId=${message.messageId})}" th:each="message : ${unreadMessageList}" href="#">
+          <h6 class="dropdown-header message-list-header"></h6>
+          <a class="dropdown-item d-flex align-items-center" th:each="message : ${unreadMessageList}"
+             th:href="@{/my/message/{messageId}(messageId=${message.messageId})}">
             <div class="dropdown-list-image mr-3">
               <img class="rounded-circle" th:src="@{/member/download/{senderId}(senderId=${message.senderId})}" alt="Profile Picture" />
               <!-- 회원의 상태를 정해진 색으로 표시 -->
@@ -187,7 +155,10 @@
             </div>
             <div class="font-weight-bold">
               <div class="text-truncate" th:text="${message.content}"></div>
-              <div class="small text-gray-500" th:text="${message.senderId}"></div>
+              <div class="span-container">
+                <span class="small text-gray-500" th:text="${message.senderId}"></span>
+                <span class="small text-gray-500" th:text="(*{#temporals.format(message.createDt, 'yyyy.MM.dd')})"></span>
+              </div>
             </div>
           </a>
           <a class="dropdown-item text-center small text-gray-500" th:text="#{main.message.list}" th:href="@{/my/message}"></a>
@@ -218,11 +189,11 @@
             <span>마지막 상태 업데이트: <span id="lastStUpdateDt">lastStUpdateDt값 가져오기</span></span>
           </div>
 
-          <div style="display: flex; align-items: center;">
+          <div id="statusCircles">
           <img class="img-profile rounded-circle" th:src="@{/member/download}" alt="Profile Picture" id="statusProfileImg"/>
-          <div class="circle" th:text="#{main.myStatus.safe}" id="statusNo2" >안전</div>
-          <div class="circle" th:text="#{main.myStatus.evacuate}" id="statusNo3" >피난중</div>
-          <div class="circle" th:text="#{main.myStatus.help}" id="statusNo4" >도와주세요</div>
+          <div class="circle" id="2" th:text="#{main.myStatus.safe}">안전</div>
+          <div class="circle" id="3" th:text="#{main.myStatus.evacuate}">피난중</div>
+          <div class="circle" id="4" th:text="#{main.myStatus.help}">도와주세요</div>
           </div>
 
           <div class="dropdown-item">

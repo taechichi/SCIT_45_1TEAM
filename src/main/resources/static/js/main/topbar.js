@@ -1,10 +1,10 @@
-document.addEventListener('DOMContentLoaded', function() {
+$(document).ready(function() {
 
-    // index에서 아이콘 요소를 클릭하면, 현재 로그인 중인 최신 사용자 정보 불러옴
+    // index에서 아이콘 요소를 클릭하면, 현재 로그인 중인 사용자 정보 불러옴
     let dropdown = document.getElementById('userDropdown');
     dropdown.addEventListener('click', myStatus);
 
-    // 상태 변경 div 원 요소들을 가져옴
+    // 상태 변경 원 요소들을 가져옴
     let circles = document.querySelectorAll('.circle');
 
     // 상태 수정 원 요소들에 대한 클릭 이벤트 설정
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearInterval(timerInterval);
             }
 
-            // 클릭된 원의 status ID 가져오기
+            // 클릭된 원의 ID 가져오기
             let statusId = parseInt(element.id);
             // 상태 유지 기본시간(사용자가 무효값을 입력했을 때 대비)
             let defaultValue = 1;
@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         });
     });
+
 
     // 상태 메시지 관련 요소들
     let editButton = document.getElementById('editStatusMessage');
@@ -106,9 +107,17 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     });
 
+    // 알림 이벤트 감지해서 알림 보내기
+    const eventSource = new EventSource('/notification');
+    let data;  // 서버에서 보내온 친구 요청 데이터
 
-}); // end of DOMContentLoaded;
+    // 친구 요청 수신, 친구 요청 수락, 메시지 수신 이벤트
+    $(eventSource).on('messageReceive friendRequestReceive friendRequestAccept', function(e) {
+        selectAlarmList();
+        updateAlarmUI(data);
+    });
 
+}); // end of $(document).ready(function() {})
 
 // 사용자 최신 상태를 읽어와 반영할 element
 let lastStUpdateDt = document.getElementById("lastStUpdateDt");
@@ -185,4 +194,78 @@ function startTimer(endTime) {
     // 타이머를 매 1초마다 업데이트
     timerInterval = setInterval(updateRemainingTime, 1000);
     updateRemainingTime(); // 즉시 업데이트
+}
+
+
+// 알림 조회
+function selectAlarmList() {
+    // 서버에서 알림 데이터를 조회
+    $.ajax({
+        url: '/notification/list',  // 알림 데이터 조회 URL
+        method: 'GET',
+        success: function(response) {
+            updateAlarmUI(response);
+        },
+        error: function(xhr, status, error) {
+            console.error('알림 데이터를 가져오는 중 오류 발생:', error);
+        }
+    });
+}
+
+// 알림 UI 갱신
+function updateAlarmUI(response) {
+    const $alertsDropdown = $("#alertsDropdown");
+    const $badgeCounter = $alertsDropdown.find(".badge-counter");
+    const $target = $(".alarm-list-header");
+    const alarm = response.alarmList[0];
+    const iconBgClass = getIconBgClass(alarm.categoryId);  // categoryId에 따라 아이콘 배경 결정
+    const iconClass = getIconClass(alarm.categoryId);  // categoryId에 따라 아이콘 결정
+
+    // 알림 개수 갱신
+    const currentCount = parseInt($badgeCounter.text()) || 0;
+    $badgeCounter.text(currentCount + 1);
+
+    // 새로운 알림 추가
+    const newAlarm = $(`
+            <a class="dropdown-item d-flex align-items-center">
+                <div class="mr-3">
+                    <div class="icon-circle ${iconBgClass}">
+                        <i class="fas ${iconClass} text-white"></i>
+                    </div>
+                </div>
+                <div>
+                    <div class="small text-gray-500">${new Date().toLocaleDateString()}</div>
+                    <span class="font-weight-bold">${alarm.contents}</span>
+                </div>
+            </a>
+        `);
+
+    // 알림 목록에 추가
+    $target.after(newAlarm);
+}
+
+// 알림 아이콘 배경 동적으로 적용
+function getIconBgClass(categoryId) {
+    if (categoryId === 1) {
+        return "bg-primary";
+    } else if (categoryId === 2 || categoryId === 3) {
+        return "bg-success";
+    } else if (categoryId === 4) {
+        return "bg-warning";
+    } else {
+        return "bg-primary";
+    }
+}
+
+// 알림 아이콘 동적으로 적용
+function getIconClass(categoryId) {
+    if (categoryId === 1) {
+        return "fa-file-alt";
+    } else if (categoryId === 2 || categoryId === 3) {
+        return "fa-fw fa-user";
+    } else if (categoryId === 4) {
+        return "fa-exclamation-triangle";
+    } else {
+        return "fa-file-alt";
+    }
 }

@@ -24,7 +24,8 @@ public class MessageDTO {
     // 내 쪽지 목록 출력에 필요한 필드
     private String fileName;
 
-    // 내 친구의 상태를 표시하기 위해 필요한 값
+    // topbar 에서 사용할 값들
+    private Long unreadMessageCnt;
     private Integer statusId;
 
     // 내 쪽지 목록 출력에 필요한 DTO 생성자

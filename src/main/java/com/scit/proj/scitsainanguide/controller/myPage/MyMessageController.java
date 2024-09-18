@@ -6,7 +6,9 @@ import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.myPage.MyFriendService;
 import com.scit.proj.scitsainanguide.service.myPage.MyMessageService;
+import com.scit.proj.scitsainanguide.service.sse.SseEmitterService;
 import com.scit.proj.scitsainanguide.util.PaginationUtils;
+import com.scit.proj.scitsainanguide.util.TopbarUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,8 +28,10 @@ import java.util.List;
 public class MyMessageController {
 
     private final MyMessageService myMessageService;
+    private final SseEmitterService sseEmitterService;
     private final MyFriendService myFriendService;
     private final PaginationUtils paginationUtils;
+    private final TopbarUtils topbarUtils;
 
     @Value("${board.pageSize}")
     private int pageSize;
@@ -49,6 +53,7 @@ public class MyMessageController {
         ModelAndView modelAndView = paginationUtils.getPaginationData(messageList, dto);
         modelAndView.addObject("pageData", messageList); // 목록 데이터를 모델에 담는다.
         modelAndView.setViewName("myPage/message/myMessage"); // 뷰 이름 설정
+        topbarUtils.setTopbarFragmentData(user, modelAndView);  // topbar 관련 데이터 설정
 
         return modelAndView;
     }
@@ -94,8 +99,11 @@ public class MyMessageController {
      * @return redirect 하여 내 쪽지 목록으로 이동
      */
     @PostMapping
-    public String insertMyMessage(@ModelAttribute MessageDTO dto) {
+    public String insertMyMessage(@AuthenticationPrincipal AuthenticatedUser user, @ModelAttribute MessageDTO dto) {
         myMessageService.insertMyMessage(dto);
+
+        // 쪽지 작성시 받는 사람에게 SSE 를 통해 알림을 전송한다.
+        sseEmitterService.sendMessageReceiveNotification(user.getId(), dto.getReceiverId());
         return "redirect:/my/message";
     }
 

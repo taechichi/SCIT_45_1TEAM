@@ -5,7 +5,9 @@ import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.myPage.MyFriendService;
+import com.scit.proj.scitsainanguide.service.sse.SseEmitterService;
 import com.scit.proj.scitsainanguide.util.PaginationUtils;
+import com.scit.proj.scitsainanguide.util.TopbarUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,8 +25,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MyFriendController {
 
+    private final SseEmitterService sseEmitterService;
     private final MyFriendService myFriendService;
     private final PaginationUtils paginationUtils;
+    private final TopbarUtils topbarUtils;
 
     @Value("${board.pageSize}")
     private int pageSize;
@@ -45,6 +49,7 @@ public class MyFriendController {
         ModelAndView modelAndView = paginationUtils.getPaginationData(myFriendList, dto);
         modelAndView.addObject("pageData", myFriendList); // 목록 데이터를 모델에 담는다.
         modelAndView.setViewName("myPage/friend/myFriend"); // 뷰 이름 설정
+        topbarUtils.setTopbarFragmentData(user, modelAndView);  // topbar 관련 데이터 설정
 
         return modelAndView;
     }
@@ -88,6 +93,7 @@ public class MyFriendController {
         ModelAndView modelAndView = paginationUtils.getPaginationData(myFriendRequestList, dto);
         modelAndView.addObject("pageData", myFriendRequestList); // 목록 데이터를 모델에 담는다.
         modelAndView.setViewName("myPage/friend/myFriendRequest"); // 뷰 이름 설정
+        topbarUtils.setTopbarFragmentData(user, modelAndView);  // topbar 관련 데이터 설정
 
         return modelAndView;
     }
@@ -100,7 +106,10 @@ public class MyFriendController {
     @ResponseBody
     @PostMapping("{friendIds}")
     public void insertFriend(@AuthenticationPrincipal AuthenticatedUser user, @PathVariable String friendIds) {
-        myFriendService.insertFriend(user.getId(), friendIds);
+        myFriendService.insertFriend("user4", friendIds);
+
+        // 친구추가 대상회원들에게 SSE 를 통해 알림을 전송한다.
+        sseEmitterService.sendFriendRequestNotification("user4", friendIds);
     }
 
     /**
@@ -134,6 +143,9 @@ public class MyFriendController {
     @PostMapping("accept/{relationId}")
     public void acceptFriend(@AuthenticationPrincipal AuthenticatedUser user, @PathVariable Integer relationId) {
         myFriendService.acceptFriend(user.getId(), relationId);
+
+        // 친구수락 대상회원에게 SSE 를 통해 알림을 전송한다.
+        sseEmitterService.sendFriendAcceptNotification(user.getId());
     }
 
     /**

@@ -37,9 +37,11 @@ public class MemberDTO {
         this.statusName = statusName;
     }
 
-    public MemberDTO(String memberId, String nickname, String statusName) {
+    public MemberDTO(String memberId, String nickname, String fileName, Integer statusId, String statusName) {
         this.memberId = memberId;
         this.nickname = nickname;
+        this.fileName = fileName;
+        this.statusId = statusId;
         this.statusName = statusName;
     }
 

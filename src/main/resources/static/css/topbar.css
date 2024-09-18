@@ -19,10 +19,16 @@
     align-items: center; /* 수직으로 중앙 정렬 */
     gap: 3px; /* 요소들 간의 간격 */
 }
+
 .img-profile {
     width: 100px;
     height: 100px;
     margin: 2%;
+}
+
+#statusCircles{
+   display: flex;
+    align-items: center;
 }
 
 #userInformation{
@@ -35,6 +41,10 @@
     height: 100px;
     margin-top: 5%;
     border: 6px solid black;
+}
+
+.nav-item dropdown no-arrow{
+    /*해당 모달 영역 내부를 클릭해도 닫히지 않도록, 부분 코드 찾아서 수정하기*/
 }
 
 .circle{
@@ -52,16 +62,16 @@
     justify-content: center; /* 가로 중앙 정렬 */
 }
 
-#statusNo2{
+#2{
     background-color: green;
 }
 
-#statusNo3{
+#3{
     background-color: yellow;
     color: black;
 }
 
-#statusNo4{
+#4{
     background-color: red;
 }
 

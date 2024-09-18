@@ -44,5 +44,5 @@ function rejectFriend(){
 
 function toFriendList() {
     // 친구 목록 페이지로 연결
-    location.href = './';
+    location.href = '../friend';
 }

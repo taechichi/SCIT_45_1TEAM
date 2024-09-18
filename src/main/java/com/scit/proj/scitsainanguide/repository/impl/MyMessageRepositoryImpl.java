@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -168,6 +169,24 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
                 .orderBy(message.createDt.desc())
                 .limit(5)   // 최대 5건의 쪽지까지만 확인 가능
                 .fetch();
+    }
+
+    @Override
+    public void updateMessageReadDt(Integer messageId) {
+        // 일단, message 의 readDt 만 수정가능
+        queryFactory.update(message)
+                .set(message.readDt, LocalDateTime.now())
+                .where(message.messageId.eq(messageId))
+                .execute();
+    }
+
+    @Override
+    public Long selectMyUnreadMessageCnt(String memberId) {
+        return queryFactory.selectFrom(message)
+                .where(message.receiverId.eq(memberId)
+                        .and(message.readDt.isNull())
+                        .and(message.deleteYn.eq(false)))
+                .fetchCount();
     }
 
     private void executeDeleteMessageQuery(BooleanBuilder whereClause) {
