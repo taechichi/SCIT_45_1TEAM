@@ -17,7 +17,7 @@ $(document).ready(function() {
             }
 
             // 클릭된 원의 ID 가져오기
-            let statusId = parseInt(element.id);
+            let statusId = parseInt(element.getAttribute('data-id'));
             // 상태 유지 기본시간(사용자가 무효값을 입력했을 때 대비)
             let defaultValue = 1;
 
@@ -33,8 +33,8 @@ $(document).ready(function() {
 
             // ajax 요청을 보냄
             $.ajax({
-                url: '/member/changeMyStatus',
-                method: 'POST',
+                url: '/member/change/status',
+                method: 'PATCH',
                 data: { statusId: statusId, duration: hours },
                 success: function() {
                     myStatus(); // 상태 변경 후 최신 상태 다시 불러옴
@@ -82,8 +82,8 @@ $(document).ready(function() {
         let newStatusMessage = statusMessageInput.value;
 
         // 서버에 업데이트 요청 보내기
-        fetch('/member/changeMyStatusMessage', {
-            method: 'POST',
+        fetch('/member/change/smessage', {
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
@@ -130,7 +130,7 @@ let timerInterval = null; // 전역 변수로 선언
 // 사용자 최신 상태 반환
 function myStatus(){
     // 서버에 업데이트 요청 보내기
-    fetch('/member/viewStatuses', {
+    fetch('/member/view/statuses', {
         method: 'GET',
     })
         .then(response => {

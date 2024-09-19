@@ -181,47 +181,47 @@
 
           <div class="dropdown-item">
             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-            <span>닉네임: <span th:text="${#authentication.principal.nickname}"></span></span>
+            <span th:text="#{main.myStatus.nickName}">닉네임: </span> <span th:text="${#authentication.principal.nickname}"></span>
           </div>
 
           <div class="dropdown-item">
             <i class="fas fa-clock fa-sm fa-fw mr-2 text-gray-400"></i>
-            <span>마지막 상태 업데이트: <span id="lastStUpdateDt">lastStUpdateDt값 가져오기</span></span>
+            <span th:text="#{main.myStatus.lastUpdatedSt}">마지막 상태 업데이트: </span> <span id="lastStUpdateDt">lastStUpdateDt값 가져오기</span>
           </div>
 
           <div id="statusCircles">
           <img class="img-profile rounded-circle" th:src="@{/member/download}" alt="Profile Picture" id="statusProfileImg"/>
-          <div class="circle" id="2" th:text="#{main.myStatus.safe}">안전</div>
-          <div class="circle" id="3" th:text="#{main.myStatus.evacuate}">피난중</div>
-          <div class="circle" id="4" th:text="#{main.myStatus.help}">도와주세요</div>
+          <div class="circle" data-id="2" id="circleNo2" th:text="#{main.myStatus.safe}">안전</div>
+          <div class="circle" data-id="3" id="circleNo3" th:text="#{main.myStatus.evacuate}">피난중</div>
+          <div class="circle" data-id="4" id="circleNo4" th:text="#{main.myStatus.help}">도와주세요</div>
           </div>
 
           <div class="dropdown-item">
             <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-            시간 설정 후 상태버튼 클릭
+            <span th:text="#{main.myStatus.timeSetMessage}">시간 설정 후 상태버튼 클릭</span>
             <div id="timeInputContainer">
               <input type="number" id="hours" value="1" >
-              <span>시간동안 상태가 지속됩니다.</span>
+              <span th:text="#{main.myStatus.hoursLastMessage}">시간동안 상태가 지속됩니다.</span>
             </div>
             <div id="remainingTime"></div>
           </div>
 
           <div class="dropdown-item">
             <i class="fas fa-sticky-note fa-sm fa-fw mr-2 text-gray-400"></i>
-            <span>상태메시지</span>
+            <span th:text="#{main.myStatus.message}">상태메시지</span>
             <i class="fas fa-pencil-alt fa-sm fa-fw mr-2 text-gray-400"  id="statusMessageDiv"></i>
-            <span id ="editStatusMessage">수정</span><br>
+            <span id ="editStatusMessage" th:text="#{main.myStatus.editMessage}">수정</span><br>
             <div>
-            <pre id="statusMessage">
+            <pre id="statusMessage" th:text="#{main.myStatus.writeMessage}">
               상태메시지 작성
             </pre></div>
             <!-- 수정용 텍스트박스, 처음엔 숨김 -->
             <div id="statusMessageInputDiv">
             <textarea id="statusMessageInput" maxlength="200" ></textarea>
             </div>
-            <span id="charCount">0/200자</span>
+            <span id="charCount">0/200<span th:text="#{main.myStatus.charCount}">자</span></span>
             <span id="saveStatusMessage">
-              <i class="fas fa-save fa-sm fa-fw mr-2 text-gray-400" ></i>저장
+              <i class="fas fa-save fa-sm fa-fw mr-2 text-gray-400" ></i><span th:text="#{main.myStatus.saveMessage}">저장</span>
             </span>
           </div>
 

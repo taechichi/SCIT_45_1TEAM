@@ -43,8 +43,21 @@
     border: 6px solid black;
 }
 
-.nav-item dropdown no-arrow{
+#userInformation{
     /*해당 모달 영역 내부를 클릭해도 닫히지 않도록, 부분 코드 찾아서 수정하기*/
+}
+
+#circleNo2{
+    background-color: green;
+}
+
+#circleNo3{
+    background-color: yellow;
+    color: black;
+}
+
+#circleNo4{
+    background-color: red;
 }
 
 .circle{
@@ -60,19 +73,6 @@
     display: flex;
     align-items: center;
     justify-content: center; /* 가로 중앙 정렬 */
-}
-
-#2{
-    background-color: green;
-}
-
-#3{
-    background-color: yellow;
-    color: black;
-}
-
-#4{
-    background-color: red;
 }
 
 #timeInputContainer{
