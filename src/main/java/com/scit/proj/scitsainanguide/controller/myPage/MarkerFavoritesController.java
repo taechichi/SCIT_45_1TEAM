@@ -1,12 +1,14 @@
 package com.scit.proj.scitsainanguide.controller.myPage;
 
 
+import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.myPage.MarkerFavoritesService;
 import com.scit.proj.scitsainanguide.util.PaginationUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.scit.proj.scitsainanguide.domain.dto.MarkerFavoritesDTO;
@@ -38,7 +40,8 @@ public class MarkerFavoritesController {
     // ============ 처음에 들어오면 모든 정보 출력 ============
     @GetMapping("")
     public ModelAndView enterMarkerFavorites(
-            @ModelAttribute SearchRequestDTO dto
+            @ModelAttribute SearchRequestDTO dto,
+            @AuthenticationPrincipal AuthenticatedUser user
     ) {
         log.debug("enterMarkerFavorites method called.");
         log.debug("CONTROLLER_SearchRequestDTO: {}", dto);
@@ -47,7 +50,7 @@ public class MarkerFavoritesController {
             dto.setSortBy("sortByDistance");
         }
         // Service 에서 호출
-        Page<MarkerFavoritesDTO> markerFavoritesAllList = markerFavoritesService.selectMarkerFavoritesFilterAndSearchList(dto);
+        Page<MarkerFavoritesDTO> markerFavoritesAllList = markerFavoritesService.selectMarkerFavoritesFilterAndSearchList(dto, user.getUsername());
         ModelAndView modelAndView = paginationUtils.getPaginationData(markerFavoritesAllList, dto);
         modelAndView.addObject("pageData", markerFavoritesAllList);
         modelAndView.setViewName("myPage/myMarkerFavorites");
@@ -62,10 +65,12 @@ public class MarkerFavoritesController {
     public String updateNickname(
             @RequestParam("favoriteId") Integer favoriteId,
             @RequestParam("nickname") String newNickname,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,
+            @AuthenticationPrincipal AuthenticatedUser user
+            ) {
 
         // 임시 계정
-        String currentUserId = "tsh0828";
+        String currentUserId = user.getUsername();
 
         log.debug("updateNickname method called.");
         log.debug("CONTROLLER_favoriteId: {}", favoriteId);
@@ -88,10 +93,11 @@ public class MarkerFavoritesController {
     @PostMapping("/delete")
     public String deleteMarkerFavorites(
             @RequestParam(name = "favoriteId", required = false) List<Integer> favoriteIdsForDelete,
-            RedirectAttributes redirectAttributes
+            RedirectAttributes redirectAttributes,
+            @AuthenticationPrincipal AuthenticatedUser user
     ) {
         // 임시 계정
-        String currentUserId = "tsh0828";
+        String currentUserId = user.getUsername();
 
         // favoriteIds가 비어있거나 null인 경우 처리
         if (favoriteIdsForDelete == null || favoriteIdsForDelete.isEmpty()) {

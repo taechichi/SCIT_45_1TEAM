@@ -156,7 +156,7 @@ public class MemberController {
      * @param hours 상태 유지 시간
      */
     @ResponseBody
-    @PostMapping("/changeMyStatus")
+    @PatchMapping("/change/status")
     public ResponseEntity<Void> changeMyStatus(@AuthenticationPrincipal AuthenticatedUser user
             , @RequestParam("statusId") Integer statusId
             , @RequestParam("duration") Integer hours) {
@@ -171,7 +171,7 @@ public class MemberController {
      * @param newStatusMessage
      */
     @ResponseBody
-    @PostMapping("/changeMyStatusMessage")
+    @PatchMapping("/change/smessage")
     public ResponseEntity<Void> changeMyStatusMessage(@AuthenticationPrincipal AuthenticatedUser user,
                                                         @RequestParam("newStatusMessage") String newStatusMessage) {
         String memberId = user.getUsername();
@@ -185,7 +185,7 @@ public class MemberController {
      * @return
      */
     @ResponseBody
-    @GetMapping("/viewStatuses")
+    @GetMapping("/view/statuses")
     public ResponseEntity<Map<String, Object>> viewStatuses(@AuthenticationPrincipal AuthenticatedUser user) {
         Map<String, Object> response = memberService.viewStatuses(user.getUsername());
         return new ResponseEntity<>(response, HttpStatus.OK);

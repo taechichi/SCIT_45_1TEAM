@@ -195,8 +195,8 @@ public class MemberService {
         // 현재 날짜와 시간으로 LocalDateTime 객체 생성해 최신 상태 수정 시간 설정
         LocalDateTime lastUpdateDt = LocalDateTime.now();
         mentity.setLastStUpdateDt(lastUpdateDt);
-        mentity.setEndTime(lastUpdateDt.plusMinutes(hours)); //test 용
-        //mentity.setEndTime(lastUpdateDt.plusHours(hours));
+        //mentity.setEndTime(lastUpdateDt.plusMinutes(hours)); //test 용
+        mentity.setEndTime(lastUpdateDt.plusHours(hours));
 
         // 상태 아이디로 상태 엔티티 불러와 멤버 엔티티에 변경된 상태 설정
         StatusEntity sentity = statusJpaRepository.findById(statusId)
