@@ -1,11 +1,14 @@
+
 <body>
 <div th:fragment="realtimeCommentFragment">
     <div id="realtime_comment">
-        <ul id="commentList">
-        </ul>
+        <div id="commentListContainer">
+            <ul id="commentList">
+            </ul>
+        </div>
 
         <!-- 댓글 입력 -->
-        <div>
+        <div id="comment-input-section">
             <input type="text" id="nicknameInput" placeholder="닉네임">
             <input type="text" id="commentInput" placeholder="댓글 입력">
             <button id="sendCommentButton">댓글 보내기</button>
@@ -14,9 +17,37 @@
 
     <!-- 열고 닫을 버튼 -->
     <div id="toggle-button">
+        <button id="toggleCommentButton">◀</button>
+    </div>
+</div>
+</body>
+
+
+
+
+
+
+
+<!--
+<body>
+<div th:fragment="realtimeCommentFragment">
+    <div id="realtime_comment">
+        <ul id="commentList">
+        </ul>
+
+        &lt;!&ndash; 댓글 입력 &ndash;&gt;
+        <div>
+            <input type="text" id="nicknameInput" placeholder="닉네임">
+            <input type="text" id="commentInput" placeholder="댓글 입력">
+            <button id="sendCommentButton">댓글 보내기</button>
+        </div>
+    </div>
+
+    &lt;!&ndash; 열고 닫을 버튼 &ndash;&gt;
+    <div id="toggle-button">
         <button id="toggleCommentButton" >◀</button>
     </div>
 
 
 </div>
-</body>
+</body>-->
