@@ -130,6 +130,11 @@
           <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
         </div>
       </li>
+      <!-- 언어 설정 변경 -->
+      <li class="nav-item dropdown no-arrow mx-1">
+        <a th:if="${session.lang == 'ja'}" th:href="@{/language(lang='ko')}">한국어</a>
+        <a th:if="${session.lang != 'ja'}" th:href="@{/language(lang='ja')}">日本語</a>
+      </li>
 
       <!-- 오른쪽 상단 네비게이션 - 메세지 알림 -->
       <li class="nav-item dropdown no-arrow mx-1">
