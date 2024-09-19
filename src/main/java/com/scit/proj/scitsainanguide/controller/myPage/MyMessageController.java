@@ -48,7 +48,7 @@ public class MyMessageController {
         // pageSize 세팅
         dto.setPageSize(pageSize);
 
-        Page<MessageDTO> messageList = myMessageService.selectMyMessageList(dto, "tester1");
+        Page<MessageDTO> messageList = myMessageService.selectMyMessageList(dto, user.getId());
         // 페이징 관련 값들을 세팅하여 ModelAndView 객체를 생성
         ModelAndView modelAndView = paginationUtils.getPaginationData(messageList, dto);
         modelAndView.addObject("pageData", messageList); // 목록 데이터를 모델에 담는다.
@@ -103,7 +103,7 @@ public class MyMessageController {
         myMessageService.insertMyMessage(dto);
 
         // 쪽지 작성시 받는 사람에게 SSE 를 통해 알림을 전송한다.
-        sseEmitterService.sendMessageReceiveNotification("tester5", dto.getReceiverId());
+        sseEmitterService.sendMessageReceiveNotification(user.getId(), dto.getReceiverId());
         return "redirect:/my/message";
     }
 
