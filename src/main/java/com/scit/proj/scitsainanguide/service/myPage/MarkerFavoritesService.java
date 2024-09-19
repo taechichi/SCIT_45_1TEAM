@@ -1,10 +1,10 @@
 package com.scit.proj.scitsainanguide.service.myPage;
 
+import com.scit.proj.scitsainanguide.domain.dto.MarkerBoardDTO;
 import com.scit.proj.scitsainanguide.domain.dto.MarkerFavoritesDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
-import com.scit.proj.scitsainanguide.domain.entity.MarkerFavoritesEntity;
-import com.scit.proj.scitsainanguide.repository.MarkerFavoritesJPARepository;
-import com.scit.proj.scitsainanguide.repository.MarkerFavoritesRepository;
+import com.scit.proj.scitsainanguide.domain.entity.*;
+import com.scit.proj.scitsainanguide.repository.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
@@ -18,8 +18,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -29,9 +31,47 @@ public class MarkerFavoritesService {
 
     private final MarkerFavoritesRepository markerFavoritesRepository;
     private final MarkerFavoritesJPARepository markerFavoritesJPARepository;
+    private final MemberJpaRepository memberJpaRepository;
+    private final HospitalRepository hospitalRepository;
+    private final ShelterRepository shelterRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    //즐겨찾기마커 추가 기능
+    public void AddFavMarker(MarkerFavoritesDTO markerFavoritesDTO) throws IOException {
+        MemberEntity memberEntity = memberJpaRepository.findById(markerFavoritesDTO.getMemberId())
+                .orElseThrow(() -> new EntityNotFoundException("회원아이디가 없습니다."));
+
+        String placeId = markerFavoritesDTO.getHospitalId();
+        MarkerFavoritesEntity markerFavoritesEntity = null;
+        Optional<HospitalEntity> hospitalEntityOptional = hospitalRepository.findById(placeId);
+        Optional<ShelterEntity> shelterEntityOptional= Optional.empty();
+
+        if(hospitalEntityOptional.isPresent()) {
+            HospitalEntity hospitalEntity = hospitalEntityOptional.get();
+            markerFavoritesEntity = MarkerFavoritesEntity.builder()
+                    .member(memberEntity)
+                    .hospital(hospitalEntity)
+                    .build();
+        }else{
+            shelterEntityOptional = shelterRepository.findById(Integer.valueOf(placeId));
+            if(shelterEntityOptional.isPresent()){
+                ShelterEntity shelterEntity = shelterEntityOptional.get();
+                markerFavoritesEntity = MarkerFavoritesEntity.builder()
+                        .member(memberEntity)
+                        .shelter(shelterEntity)
+                        .build();
+            }else{
+                log.debug("일치하는 ID가 없습니다.");
+            }
+        }
+        if (markerFavoritesEntity != null) {
+            markerFavoritesJPARepository.save(markerFavoritesEntity);
+        } else {
+            log.debug("markerFavoritesEntity가 null이어서 저장하지 않았습니다.");
+        }
+    }
 
     // tsh0828의 마커 냅다 가져오는 코드
     // 나중에 ID 받는걸로 수정 해야함.

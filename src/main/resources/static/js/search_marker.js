@@ -165,7 +165,7 @@
 
         map.fitBounds(bounds);
     }
-
+    //현재 보고있는 화면 좌표기준으로 변경
     function setCurrentZoom(centerPosition){
         const zoom = map.getZoom();
 
@@ -195,7 +195,6 @@
                     markers.push(marker);
                 });
                 calculateBoundsForMarkers(markers);  // 마커들로 경계 설정
-                setCurrentZoom(centerPosition);      // 현재 위치 중심으로 줌 조정
             } else {
                 console.error('병원 검색에 실패했습니다:', status);
             }
@@ -236,6 +235,23 @@
             })
             .catch(error => {
                 console.error('대피소 데이터를 불러오는 중 오류 발생:', error);
+            });
+    }
+
+    //즐겨찾기
+    function favMarker(placeID) {
+        fetch('/addFavorite/' + encodeURIComponent(placeID), {
+            method: 'POST'
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('즐겨찾기에 추가되었습니다.');
+                } else {
+                    console.error('즐겨찾기 추가에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
     }
 
@@ -303,6 +319,23 @@
         //대피소 클릭 시 검색
         document.getElementById('shelterfilterbutton').addEventListener('click', function (){
             fetchNearbyShelters();
+        });
+        // 현재 위치 중심으로 줌 조정
+        document.getElementById('myLocation').addEventListener('click',function (){
+            setCurrentZoom(centerPosition);
+        });
+        // 즐겨찾기 버튼
+        const favBtn = document.getElementById('favMarker');
+        const favImg = favBtn.querySelector('img'); // 버튼 내부의 이미지 요소 선택
+
+        favBtn.addEventListener('click', function () {
+            // 이미지 변경
+            if (favImg.src.includes('star2.png')) {
+                favImg.src = '/img/star1.png'; 
+                favMarker(currentMarker.placeId);// 즐겨찾기 추가
+            } else {
+                favImg.src = '/img/star2.png';
+            }
         });
 
         // 검색창 search-input 에서 사용자가 입력한 값을 받아 저장

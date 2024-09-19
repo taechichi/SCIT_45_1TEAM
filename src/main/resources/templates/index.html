@@ -51,6 +51,9 @@
             <!-- 글목록 -->
             <div>
                 <a id="writeLink" th:href="@{/board/write/${palceID}}">글쓰기</a>
+                <button id="favMarker">
+                    <img th:src="@{/img/star2.png}">
+                </button>
             </div>
         </ul>
 
@@ -78,7 +81,7 @@
                     <button type="button" id="shelterfilterbutton">대피소</button>
 
                     <!-- 내 위치 버튼 -->
-                    <img th:src="@{/img/myLocation.png}" id="myLocation" class="img-40">
+                    <button><img th:src="@{/img/myLocation.png}" id="myLocation" class="img-40"></button>
                 </div>
 
                 <!-- 실시간 댓글 반응 창 -->
