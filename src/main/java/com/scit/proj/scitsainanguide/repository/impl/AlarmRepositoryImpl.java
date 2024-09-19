@@ -7,6 +7,7 @@ import com.scit.proj.scitsainanguide.domain.dto.AlarmResponseDTO;
 import com.scit.proj.scitsainanguide.domain.entity.AlarmEntity;
 import com.scit.proj.scitsainanguide.domain.entity.MemberEntity;
 import com.scit.proj.scitsainanguide.domain.entity.QAlarmEntity;
+import com.scit.proj.scitsainanguide.domain.entity.QMessageEntity;
 import com.scit.proj.scitsainanguide.repository.AlarmRepository;
 import com.scit.proj.scitsainanguide.repository.MemberJpaRepository;
 import jakarta.persistence.EntityManager;
@@ -59,14 +60,14 @@ public class AlarmRepositoryImpl implements AlarmRepository {
         whereClause.and(alarm.readYn.eq(false)
                 .and(alarm.member.memberId.eq(memberId)));
 
+        // 알람 목록
         List<AlarmEntity> alarmEntityList = queryFactory.selectFrom(alarm)
                 .where(whereClause)
                 .orderBy(alarm.alarmDt.desc())
                 .fetch();
 
-
-        // 전체 카운트 쿼리 (페이징을 위한 total count)
-        long total = queryFactory.selectFrom(alarm)
+        // 알람 목록 전체 카운트 쿼리
+        long alarmCnt = queryFactory.selectFrom(alarm)
                 .where(whereClause)
                 .fetchCount();
 
@@ -75,7 +76,7 @@ public class AlarmRepositoryImpl implements AlarmRepository {
                 .map(this::convertToAlarmDTO)
                 .toList();
 
-        return new AlarmResponseDTO(alarmDTOList, total);
+        return new AlarmResponseDTO(alarmDTOList, alarmCnt);
     }
 
     private AlarmDTO convertToAlarmDTO(AlarmEntity alarmEntity) {
