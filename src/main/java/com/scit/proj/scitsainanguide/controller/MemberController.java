@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,8 @@ import java.util.Map;
 public class MemberController {
 
     private final MemberService memberService;
+
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Value("${board.uploadPath}")
     String uploadPath;
@@ -115,6 +118,26 @@ public class MemberController {
         return response;
     }
 
+    @PostMapping("passwordCheck")
+    @ResponseBody
+    public Map<String, Object> passwordCheckResult(@RequestParam("searchPw") String searchPw, @AuthenticationPrincipal AuthenticatedUser user) {
+        log.debug("전달된 비밀번호 : {}", searchPw);
+
+        // 사용자 정보를 DB에서 가져옴 (로그인한 사용자의 ID를 사용)
+        MemberDTO memberDTO = memberService.findByMemberId(user.getUsername());
+
+        // 암호화된 비밀번호와 입력된 비밀번호 비교
+        boolean result = passwordEncoder.matches(searchPw, memberDTO.getPassword());
+
+        // JSON 형태로 반환
+        Map<String, Object> response = new HashMap<>();
+        response.put("searchPw", searchPw);
+        response.put("result", result); // 비밀번호 일치 여부 반환
+
+        return response;
+    }
+
+
     /**
      * 가입폼으로 이동
      *
@@ -133,7 +156,7 @@ public class MemberController {
      * @param hours 상태 유지 시간
      */
     @ResponseBody
-    @PostMapping("/changeMyStatus")
+    @PatchMapping("/change/status")
     public ResponseEntity<Void> changeMyStatus(@AuthenticationPrincipal AuthenticatedUser user
             , @RequestParam("statusId") Integer statusId
             , @RequestParam("duration") Integer hours) {
@@ -148,7 +171,7 @@ public class MemberController {
      * @param newStatusMessage
      */
     @ResponseBody
-    @PostMapping("/changeMyStatusMessage")
+    @PatchMapping("/change/smessage")
     public ResponseEntity<Void> changeMyStatusMessage(@AuthenticationPrincipal AuthenticatedUser user,
                                                         @RequestParam("newStatusMessage") String newStatusMessage) {
         String memberId = user.getUsername();
@@ -162,11 +185,45 @@ public class MemberController {
      * @return
      */
     @ResponseBody
-    @GetMapping("/viewStatuses")
+    @GetMapping("/view/statuses")
     public ResponseEntity<Map<String, Object>> viewStatuses(@AuthenticationPrincipal AuthenticatedUser user) {
         Map<String, Object> response = memberService.viewStatuses(user.getUsername());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    /**
+     * 개인정보 수정폼으로 이동
+     *
+     * @return info HTML
+     */
+    @GetMapping("/info")
+    public String showInfoForm(Model model, @AuthenticationPrincipal AuthenticatedUser user) {
+        // 로그인된 사용자의 정보를 가져와서 MemberDTO로 변환
+        MemberDTO memberDTO = memberService.findByMemberId(user.getUsername());
+        model.addAttribute("memberDTO", memberDTO);
+        return "/member/info";
+    }
+
+    @PostMapping("/info")
+    public String infoForm(
+            @AuthenticationPrincipal AuthenticatedUser user,
+            @ModelAttribute MemberDTO memberDTO,
+            @RequestParam("file") MultipartFile file // 프로필 사진 파일
+    ) {
+        try {
+            // 사용자 정보 업데이트 처리
+            memberService.updateMember(memberDTO, file); // MultipartFile도 함께 전달
+        } catch (IOException e) {
+            log.error("회원 정보 업데이트 중 오류 발생: {}", e.getMessage());
+            // 오류 처리 (예: 에러 메시지 설정, 에러 페이지 리다이렉트 등)
+            return "redirect:/error"; // 오류 페이지로 리다이렉트
+        }
+
+        return "redirect:/";  // 수정 후 메인 페이지로 리다이렉트
+    }
+
+
+
 
 
 }

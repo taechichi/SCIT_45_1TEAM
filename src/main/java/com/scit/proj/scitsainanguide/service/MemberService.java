@@ -5,6 +5,7 @@ import com.scit.proj.scitsainanguide.domain.entity.MemberEntity;
 import com.scit.proj.scitsainanguide.domain.entity.StatusEntity;
 import com.scit.proj.scitsainanguide.repository.MemberJpaRepository;
 import com.scit.proj.scitsainanguide.repository.StatusJpaRepository;
+import com.scit.proj.scitsainanguide.scheduler.StatusScheduler;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,9 +18,9 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.lang.reflect.Member;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -33,6 +34,7 @@ public class MemberService {
 
     private final MemberJpaRepository memberJpaRepository;
     private final StatusJpaRepository statusJpaRepository;
+    private final StatusScheduler statusScheduler;
 
     //암호화 인코더
     private final BCryptPasswordEncoder passwordEncoder;
@@ -113,6 +115,10 @@ public class MemberService {
     public boolean findId(String searchId) {
         return memberJpaRepository.findById(searchId).isEmpty();
     }
+    public String findPassword(String searchPw) {
+
+        return passwordEncoder.encode(searchPw);
+    }
 
     public boolean check(String memberId) {
         return memberJpaRepository.findById(memberId).isPresent();
@@ -189,7 +195,7 @@ public class MemberService {
         // 현재 날짜와 시간으로 LocalDateTime 객체 생성해 최신 상태 수정 시간 설정
         LocalDateTime lastUpdateDt = LocalDateTime.now();
         mentity.setLastStUpdateDt(lastUpdateDt);
-        // mentity.setEndTime(lastUpdateDt.plusMinutes(hours)); test 용
+        //mentity.setEndTime(lastUpdateDt.plusMinutes(hours)); //test 용
         mentity.setEndTime(lastUpdateDt.plusHours(hours));
 
         // 상태 아이디로 상태 엔티티 불러와 멤버 엔티티에 변경된 상태 설정
@@ -223,7 +229,8 @@ public class MemberService {
 
         // 받아온 값 담을 맵 구조 객체 생성해 담기
         Map<String, Object> response = new HashMap<>();
-        response.put("lastStUpdateDt", mentity.getLastStUpdateDt());
+        String relativeTime = statusScheduler.getRelativeTime(mentity.getLastStUpdateDt());
+        response.put("lastStUpdateDt", relativeTime);
         response.put("endTime", mentity.getEndTime());
         response.put("stMessage", mentity.getStMessage());
         response.put("statusId", mentity.getStatus().getStatusId());
@@ -231,6 +238,71 @@ public class MemberService {
     }
 
 
+    public void updateMember(MemberDTO memberDTO, MultipartFile file) throws IOException {
+        // 기존 회원 정보 조회
+        MemberEntity existingMember = memberJpaRepository.findById(memberDTO.getMemberId())
+                .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
+
+        // 프로필 이미지를 저장할 파일명
+        String profileImage = existingMember.getFileName(); // 기본적으로 기존 파일명을 유지
+
+        if (!file.isEmpty()) {
+            // 업로드 디렉토리 생성
+            File uploadPath = new File(uploadDir);
+            if (!uploadPath.exists()) {
+                uploadPath.mkdirs();
+            }
+
+            // 고유한 파일명 생성
+            String uniqueFileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+
+            // 파일의 실제 경로 생성
+            Path filePath = Paths.get(uploadPath.getAbsolutePath(), uniqueFileName);
+
+            // 파일 저장
+            file.transferTo(filePath.toFile());
+
+            // 기존 프로필 사진 삭제 (기본 이미지가 아닐 경우)
+            if (!existingMember.getFileName().equals(defaultMaleImage) &&
+                    !existingMember.getFileName().equals(defaultFemaleImage) &&
+                    !existingMember.getFileName().equals(defaultNullImage)) {
+                Path oldFilePath = Paths.get(uploadPath.getAbsolutePath(), existingMember.getFileName());
+                Files.deleteIfExists(oldFilePath);
+            }
+
+            // 새 파일명으로 설정
+            profileImage = uniqueFileName;
+        }
+
+        // 성별에 따른 기본 이미지 설정 (새로운 사진이 없는 경우)
+        if (profileImage == null) {
+            if ("M".equals(memberDTO.getGender())) {
+                profileImage = defaultMaleImage;
+            } else if ("F".equals(memberDTO.getGender())) {
+                profileImage = defaultFemaleImage;
+            } else {
+                profileImage = defaultNullImage;
+            }
+        }
+
+        // 설정된 파일명이나 기본 이미지 파일명을 DTO에 저장
+        memberDTO.setFileName(profileImage);
+
+        // 비밀번호가 입력된 경우에만 비밀번호 변경
+        if (memberDTO.getPassword() != null && !memberDTO.getPassword().isEmpty()) {
+            existingMember.setPassword(passwordEncoder.encode(memberDTO.getPassword())); // 비밀번호 인코딩 후 저장
+        }
+
+        // 회원 정보 업데이트
+        existingMember.setNickname(memberDTO.getNickname());
+        existingMember.setEmail(memberDTO.getEmail());
+        existingMember.setGender(memberDTO.getGender());
+        existingMember.setPhone(memberDTO.getPhone());
+        existingMember.setNationality(memberDTO.getNationality());
+        existingMember.setFileName(profileImage); // 프로필 사진 변경
+
+        memberJpaRepository.save(existingMember);
+    }
 
 }
 

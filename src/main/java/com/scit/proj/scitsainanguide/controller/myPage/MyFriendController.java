@@ -106,10 +106,10 @@ public class MyFriendController {
     @ResponseBody
     @PostMapping("{friendIds}")
     public void insertFriend(@AuthenticationPrincipal AuthenticatedUser user, @PathVariable String friendIds) {
-        myFriendService.insertFriend("user4", friendIds);
+        myFriendService.insertFriend(user.getId(), friendIds);
 
         // 친구추가 대상회원들에게 SSE 를 통해 알림을 전송한다.
-        sseEmitterService.sendFriendRequestNotification("user4", friendIds);
+        sseEmitterService.sendFriendRequestNotification(user.getId(), friendIds);
     }
 
     /**

@@ -5,6 +5,10 @@ import com.scit.proj.scitsainanguide.domain.dto.MarkerFavoritesDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.domain.entity.*;
 import com.scit.proj.scitsainanguide.repository.*;
+import com.scit.proj.scitsainanguide.domain.entity.MarkerFavoritesEntity;
+import com.scit.proj.scitsainanguide.repository.MarkerFavoritesJPARepository;
+import com.scit.proj.scitsainanguide.repository.MarkerFavoritesRepository;
+import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
@@ -81,9 +85,9 @@ public class MarkerFavoritesService {
 
     // tsh0828의 마커 냅다 가져오긴하는데 검색하거나 필터 사용해서 가져오는 사비스
     // 나중에 ID 받는걸로 수정 해야함.
-    public Page<MarkerFavoritesDTO> selectMarkerFavoritesFilterAndSearchList(SearchRequestDTO dto) {
+    public Page<MarkerFavoritesDTO> selectMarkerFavoritesFilterAndSearchList(SearchRequestDTO dto, String userId) {
         log.debug("Service_SearchRequestDTO: {}", dto);
-        return markerFavoritesRepository.selectMarkerFavoritesBySearchAndFilter(dto, "tsh0828");
+        return markerFavoritesRepository.selectMarkerFavoritesBySearchAndFilter(dto, userId);
     }
 
     // 마커 삭제 기능

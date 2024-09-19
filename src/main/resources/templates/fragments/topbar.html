@@ -102,7 +102,7 @@
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-bell fa-fw"></i>
           <!-- Counter - Alerts -->
-          <span class="badge badge-danger badge-counter" th:text="${alarmCnt}"></span>
+          <span class="badge badge-danger badge-counter alarm-badge" th:text="${alarmCnt}"></span>
         </a>
         <!-- Dropdown - Alerts -->
         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -123,12 +123,17 @@
               </div>
             </div>
             <div>
-              <div class="small text-gray-500" th:text="(*{#temporals.format(alarm.alarmDt, 'yyyy.MM.dd')})"></div>
               <span class="font-weight-bold" th:text="${alarm.contents}"></span>
+              <div class="small text-gray-500" th:text="(*{#temporals.format(alarm.alarmDt, 'yyyy.MM.dd')})"></div>
             </div>
           </a>
           <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
         </div>
+      </li>
+      <!-- 언어 설정 변경 -->
+      <li class="nav-item dropdown no-arrow mx-1">
+        <a th:if="${session.lang == 'ja'}" th:href="@{/language(lang='ko')}">한국어</a>
+        <a th:if="${session.lang != 'ja'}" th:href="@{/language(lang='ja')}">日本語</a>
       </li>
 
       <!-- 오른쪽 상단 네비게이션 - 메세지 알림 -->
@@ -137,7 +142,7 @@
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-envelope fa-fw"></i>
           <!-- Counter - Messages -->
-          <span class="badge badge-danger badge-counter" th:text="${unreadMessageCnt}"></span>
+          <span class="badge badge-danger badge-counter message-badge" th:text="${unreadMessageCnt}"></span>
         </a>
         <!-- 쪽지함 목록 드롭다운 -->
         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -177,50 +182,52 @@
         </a>
         <!-- Dropdown - User Information -->
         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-             aria-labelledby="userDropdown" style="width: 400px; height: 540px;">
+             aria-labelledby="userDropdown" id="userInformation">
 
           <div class="dropdown-item">
             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-            <span>닉네임: <span th:text="${#authentication.principal.nickname}"></span></span>
+            <span th:text="#{main.myStatus.nickName}">닉네임: </span> <span th:text="${#authentication.principal.nickname}"></span>
           </div>
 
           <div class="dropdown-item">
             <i class="fas fa-clock fa-sm fa-fw mr-2 text-gray-400"></i>
-            <span>마지막 상태 업데이트: <span id="lastStUpdateDt">lastStUpdateDt값 가져오기</span></span>
+            <span th:text="#{main.myStatus.lastUpdatedSt}">마지막 상태 업데이트: </span> <span id="lastStUpdateDt">lastStUpdateDt값 가져오기</span>
           </div>
 
-          <div style="display: flex; align-items: center;">
-          <img class="img-profile rounded-circle" style="width: 100px; height: 100px; margin-top: 5%; border: 6px solid black;"
-               th:src="@{/member/download}" alt="Profile Picture" id="profileImg"/>
-          <div class="circle" th:text="#{main.myStatus.safe}" id="2" style="background-color: green">안전</div>
-          <div class="circle" th:text="#{main.myStatus.evacuate}" id="3" style="background-color: yellow; color:black">피난중</div>
-          <div class="circle" th:text="#{main.myStatus.help}" id="4" style="background-color: red">도와주세요</div>
+          <div id="statusCircles">
+          <img class="img-profile rounded-circle" th:src="@{/member/download}" alt="Profile Picture" id="statusProfileImg"/>
+          <div class="circle" data-id="2" id="circleNo2" th:text="#{main.myStatus.safe}">안전</div>
+          <div class="circle" data-id="3" id="circleNo3" th:text="#{main.myStatus.evacuate}">피난중</div>
+          <div class="circle" data-id="4" id="circleNo4" th:text="#{main.myStatus.help}">도와주세요</div>
           </div>
 
           <div class="dropdown-item">
             <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-            시간 설정 후 상태버튼 클릭
-            <div id="timeInputContainer" style="margin: 5px;">
-              <input type="number" id="hours" value="1" style="text-align: right;">
-              <span>시간동안 상태가 지속됩니다.</span>
+            <span th:text="#{main.myStatus.timeSetMessage}">시간 설정 후 상태버튼 클릭</span>
+            <div id="timeInputContainer">
+              <input type="number" id="hours" value="1" >
+              <span th:text="#{main.myStatus.hoursLastMessage}">시간동안 상태가 지속됩니다.</span>
             </div>
-            <div id="remainingTime" style="text-align: center"></div>
+            <div id="remainingTime"></div>
           </div>
 
           <div class="dropdown-item">
             <i class="fas fa-sticky-note fa-sm fa-fw mr-2 text-gray-400"></i>
-            <span>상태메시지</span>
-            <i class="fas fa-pencil-alt fa-sm fa-fw mr-2 text-gray-400" style="margin-left: 180px"></i>
-            <span id ="editStatusMessage">수정</span><br>
+            <span th:text="#{main.myStatus.message}">상태메시지</span>
+            <i class="fas fa-pencil-alt fa-sm fa-fw mr-2 text-gray-400"  id="statusMessageDiv"></i>
+            <span id ="editStatusMessage" th:text="#{main.myStatus.editMessage}">수정</span><br>
             <div>
-            <pre id="statusMessage" style="width: 350px; height: 150px;">
+            <pre id="statusMessage" th:text="#{main.myStatus.writeMessage}">
               상태메시지 작성
             </pre></div>
             <!-- 수정용 텍스트박스, 처음엔 숨김 -->
-            <textarea id="statusMessageInput" maxlength="200" style="display: none; width: 350px; height: 150px;"></textarea>
-            <div id="charCount" style="display: none; margin-left: 300px">0/200자</div>
-            <span id="saveStatusMessage" style="display: none; margin-left: 300px">
-              <i class="fas fa-save fa-sm fa-fw mr-2 text-gray-400" ></i>저장</span>
+            <div id="statusMessageInputDiv">
+            <textarea id="statusMessageInput" maxlength="200" ></textarea>
+            </div>
+            <span id="charCount">0/200<span th:text="#{main.myStatus.charCount}">자</span></span>
+            <span id="saveStatusMessage">
+              <i class="fas fa-save fa-sm fa-fw mr-2 text-gray-400" ></i><span th:text="#{main.myStatus.saveMessage}">저장</span>
+            </span>
           </div>
 
           <div class="dropdown-divider"></div>

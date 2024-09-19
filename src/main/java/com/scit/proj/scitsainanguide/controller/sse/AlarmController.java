@@ -1,19 +1,21 @@
 package com.scit.proj.scitsainanguide.controller.sse;
 
 import com.scit.proj.scitsainanguide.domain.dto.AlarmDTO;
+import com.scit.proj.scitsainanguide.domain.dto.AlarmRequestDTO;
 import com.scit.proj.scitsainanguide.domain.dto.AlarmResponseDTO;
 import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.sse.AlarmService;
 import com.scit.proj.scitsainanguide.service.sse.SseEmitterService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.util.List;
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("notification")
@@ -37,7 +39,7 @@ public class AlarmController {
      * @return 알림 정보 목록 객체
      */
     @GetMapping("list")
-    public AlarmResponseDTO selectAlarmList(@AuthenticationPrincipal AuthenticatedUser user) {
-        return alarmService.selectAlarmList(user.getId());
+    public AlarmResponseDTO selectAlarmList(@AuthenticationPrincipal AuthenticatedUser user, @RequestParam String eventType) {
+        return alarmService.selectAlarmList(new AlarmRequestDTO(user.getId(), eventType));
     }
 }

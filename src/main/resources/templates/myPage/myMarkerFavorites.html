@@ -72,21 +72,14 @@
                 <thead>
                     <tr>
                         <th>Select</th>
-                        <th>Favorite Marker ID</th>
                         <th>Name</th>
-                        <th>Member ID</th>
                         <th>Type</th>
-                        <th>Hospital ID</th>
-                        <th>Shelter ID</th>
-                        <th>Nickname</th>
-                        <th>RealName</th>
                     </tr>
                 </thead>
 
                 <tbody id="markerTableBody">
                     <tr th:each="marker : ${pageData.content}">
                         <td><input type="checkbox" name="favoriteId" th:value="${marker.favoriteId}"></td>
-                        <td th:text="${marker.favoriteId}">ID</td>
                         <td>
                             <span th:if="${marker.nickname != null and !marker.nickname.isEmpty()}">
                                 <a th:text="${marker.nickname}" class="nickname-exists"></a>
@@ -98,14 +91,9 @@
                                 <a th:text="${marker.name}" class="nickname-missing"></a>
                             </span>
                         </td>
-                        <td th:text="${marker.memberId}">Member ID</td>
 
                         <!-- 병원과 데이터를 구분해서 표시 -->
                         <td><span th:if="${marker.hospitalId != null}">병원</span><span th:if="${marker.hospitalId == null}">대피소</span></td>
-                        <td th:text="${marker.hospitalId != null ? marker.hospitalId : ''}">Hospital ID</td>
-                        <td th:text="${marker.shelterId != null ? marker.shelterId : ''}">Shelter ID</td>
-                        <td th:text="${marker.nickname}">Nickname</td>
-                        <td th:text="${marker.name}">RealName</td>
                     </tr>
                 </tbody>
 

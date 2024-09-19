@@ -15,5 +15,14 @@ public class AlarmResponseDTO {
 
     private List<AlarmDTO> alarmList;
 
-    private Long totalCount;
+    private Long alarmCnt;
+
+    private List<MessageDTO> messageList;
+
+    private Long messageCnt;
+
+    public AlarmResponseDTO(List<AlarmDTO> alarmList, Long alarmCnt) {
+        this.alarmList = alarmList;
+        this.alarmCnt = alarmCnt;
+    }
 }
