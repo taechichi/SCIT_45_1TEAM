@@ -11,6 +11,7 @@
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
     <link rel="stylesheet" th:href="@{/css/topbar.css}">
     <link rel="stylesheet" th:href="@{/css/index/index.css}">
+    <link rel="stylesheet" th:href="@{/css/myPage/myFriend.css}">
 </head>
 <body>
 <!-- Page Wrapper -->
@@ -34,20 +35,30 @@
                 <div class="searchForm-container">
                     <form id="pagingForm" th:action="@{/my/friend}" method="get">
                         <input type="hidden" name="page" id="page"/>
-                        <select id="type" name="searchType">
-                            <option value="friendId" th:text="#{my.friend.searchType.friendId}"
-                                    th:selected="${searchType == 'friendId'}"></option>
-                            <option value="nickname" th:text="#{my.friend.searchType.nickname}"
-                                    th:selected="${searchType == 'nickname'}"></option>
-                        </select>
-                        <input type="text" name="searchWord" th:value="${searchWord}"/>
-                        <input type="submit" onclick="pagingFormSubmit(1)" th:value="#{board.button.search}"/>
+                        <div class="search-form-group">
+                            <!-- 숨겨진 셀렉트 박스 -->
+                            <select id="typeSelect" name="searchType" style="display: none;">
+                                <option value="friendId" th:text="#{my.friend.searchType.friendId}"></option>
+                                <option value="nickname" th:text="#{my.friend.searchType.nickname}"></option>
+                            </select>
+
+                            <!-- 버튼으로 스타일링 -->
+                            <button type="button" id="btnFriendId" class="filter-btn" data-value="friendId">아이디</button>
+                            <button type="button" id="btnNickname" class="filter-btn" data-value="nickname">닉네임</button>
+
+                            <!-- 검색 입력창 -->
+                            <input type="text" id="searchInput" name="searchWord" placeholder="아이디를 입력하세요"/>
+                            <input type="submit" onclick="pagingFormSubmit(1)" th:value="#{board.button.search}"/>
+                        </div>
                     </form>
 
+                    <!-- 요청 리스트 버튼을 폼 밖에 위치시키기 -->
                     <div id="btnArea">
-                        <button id="toRequestList" th:text="#{my.friend.button.requestList}"></button>
+                        <button id="toRequestList" class="request-list-btn" onclick="window.location.href='@{/path/to/requestList}';" th:text="#{my.friend.button.requestList}"></button>
                     </div>
                 </div>
+
+
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable">
