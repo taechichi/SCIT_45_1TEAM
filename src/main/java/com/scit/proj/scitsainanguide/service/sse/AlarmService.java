@@ -20,7 +20,6 @@ public class AlarmService {
         String memberId = alarmRequestDTO.getMemberId();
         AlarmResponseDTO alarmResponseDTO = alarmRepository.selectAlarmList(memberId);
 
-        log.debug("TEST >>>> {}", alarmRequestDTO.getEventType());
         // 새로운 매세지가 온 경우엔 알림뿐만 아니라 읽지않은 메세지 목록도 최신화해줘야한다.
         if ("messageReceive".equals(alarmRequestDTO.getEventType())) {
             alarmResponseDTO.setMessageList(myMessageRepository.selectMyUnreadMessageList(memberId));

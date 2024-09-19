@@ -40,7 +40,6 @@ public class AlarmController {
      */
     @GetMapping("list")
     public AlarmResponseDTO selectAlarmList(@AuthenticationPrincipal AuthenticatedUser user, @RequestParam String eventType) {
-        log.debug("TEST >>>> {}", eventType);
         return alarmService.selectAlarmList(new AlarmRequestDTO(user.getId(), eventType));
     }
 }

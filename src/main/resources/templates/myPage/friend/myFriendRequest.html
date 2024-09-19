@@ -11,6 +11,7 @@
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
     <link rel="stylesheet" th:href="@{/css/topbar.css}">
     <link rel="stylesheet" th:href="@{/css/index/index.css}">
+    <link rel="stylesheet" th:href="@{/css/myPage/myFriendRequest.css}">
 </head>
 <body>
 
@@ -36,7 +37,7 @@
                 <!-- 검색 폼 -->
                 <div class="searchForm-container">
                     <div id="btnArea">
-                        <button id="toFriendList" th:text="#{my.friend.request.button.friendList}"></button>
+                        <button id="toFriendList" class="request-list-btn" th:text="#{my.friend.request.button.friendList} + '으로 가기'"></button>
                     </div>
                 </div>
                 <div class="card-body">
