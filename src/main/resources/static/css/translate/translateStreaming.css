@@ -35,18 +35,6 @@ h2, h4 {
     transition: background-color 0.3s ease;
 }
 
-/* 이미지 클릭 시 색상 변경 */
-.usa-bg {
-    background-color: #ADD8E6; /* Light Blue */
-}
-
-.japan-bg {
-    background-color: #FFB6C1; /* Cherry Blossom Pink */
-}
-
-.korea-bg {
-    background-color: #90EE90; /* Light Green */
-}
 
 /* 녹음 종료 버튼 스타일 */
 #stop-recording {

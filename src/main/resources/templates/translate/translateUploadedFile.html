@@ -37,18 +37,60 @@
             <div th:replace="~{fragments/topbar :: topbar}"></div>
             <!-- End of topbar -->
 
-            <h2 th:text="#{translate.fileTranslate}"></h2>
-            <input type="file" id="audioFile" accept="audio/*">
-            <label for="selectLan" th:text="#{translate.selectLan}">언어 선택:</label>
-            <select id="selectLan">
-                <option value="en-US" th:text="#{translate.en}">영어</option>
-                <option value="ja-JP" th:text="#{translate.ja}" selected>일본어</option>
-                <option value="ko-KR" th:text="#{translate.ko}">한국어</option>
-            </select>
-            <button onclick="upload()" th:text="#{translate.microFileUpload}"></button>
-            <hr>
-            <p id="texted" th:text="#{translate.text}">텍스트: </p>
-            <p id="translated" th:text="#{translate}">변역: </p>
+            <!-- 부트스트랩꺼 갖다 쓰기 -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h3 class="m-0 font-weight-bold text-primary" th:text="#{translate.fileTranslate}">파일 번역</h3>
+            </div>
+            <div class="card-body">
+                    <label for="selectLan" th:text="#{translate.selectLan}">파일 언어:</label>
+                    <select id="selectLan">
+                        <option value="en-US" th:text="#{translate.en}">영어</option>
+                        <option value="ja-JP" th:text="#{translate.ja}" selected>일본어</option>
+                        <option value="ko-KR" th:text="#{translate.ko}">한국어</option>
+                    </select>
+                    <input type="file" id="audioFile" accept="audio/*" onchange="displayFileName()">
+                    <label for="audioFile" class="button btnPush btnSkyblue" id="labelOfFile" th:text="#{translate.select.microFile}">select File</label>
+                    <span id="fileName">파일 업로드 시 파일명 나타남</span>
+                    <a class="button btnPush btnBlue" onclick="upload()" th:text="#{translate.microFileUpload}">push to upload</a>
+                </div>
+            </div>
+
+            <div class="translateCard">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    TEXTED
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><div id="texted" th:text="#{translate.text}">텍스트: </div></div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-language fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="translateCard">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    TRANSLATED
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><div id="translated" th:text="#{translate}">번역: </div></div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-globe fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
         <!-- End of Main Content -->
     </div>
