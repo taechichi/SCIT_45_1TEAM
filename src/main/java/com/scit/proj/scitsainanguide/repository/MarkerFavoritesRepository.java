@@ -6,12 +6,10 @@ import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface MarkerFavoritesRepository {
 
     Page<MarkerFavoritesDTO> selectMarkerFavoritesList(SearchRequestDTO dto, String memberId);
 
-    Page<MarkerFavoritesDTO> selectMarkerFavoritesBySearchAndFilter(SearchRequestDTO dto, String tsh0828);
+    Page<MarkerFavoritesDTO> selectMarkerFavoritesBySearchAndFilter(SearchRequestDTO dto, String memberId);
 }
