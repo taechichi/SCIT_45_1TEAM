@@ -102,7 +102,7 @@
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-bell fa-fw"></i>
           <!-- Counter - Alerts -->
-          <span class="badge badge-danger badge-counter" th:text="${alarmCnt}"></span>
+          <span class="badge badge-danger badge-counter alarm-badge" th:text="${alarmCnt}"></span>
         </a>
         <!-- Dropdown - Alerts -->
         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -123,8 +123,8 @@
               </div>
             </div>
             <div>
-              <div class="small text-gray-500" th:text="(*{#temporals.format(alarm.alarmDt, 'yyyy.MM.dd')})"></div>
               <span class="font-weight-bold" th:text="${alarm.contents}"></span>
+              <div class="small text-gray-500" th:text="(*{#temporals.format(alarm.alarmDt, 'yyyy.MM.dd')})"></div>
             </div>
           </a>
           <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
@@ -137,7 +137,7 @@
            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-envelope fa-fw"></i>
           <!-- Counter - Messages -->
-          <span class="badge badge-danger badge-counter" th:text="${unreadMessageCnt}"></span>
+          <span class="badge badge-danger badge-counter message-badge" th:text="${unreadMessageCnt}"></span>
         </a>
         <!-- 쪽지함 목록 드롭다운 -->
         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"

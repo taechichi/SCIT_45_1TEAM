@@ -56,8 +56,11 @@ $(document).ready(function () {
         }
     });
     $(document).ready(function () {
-        // searchId 입력 값이 변경될 때 resultMessage를 초기화
-        $('#searchId').on('input', function () {
+        // 페이지 로드 시 모달 자동 표시
+        $('#passwordCheckModal').modal('show');
+
+        // 비밀번호 입력 값이 변경될 때 resultMessage를 초기화
+        $('#searchPw').on('input', function () {
             $('#resultMessage').html(''); // resultMessage 영역 초기화
         });
 
@@ -65,37 +68,36 @@ $(document).ready(function () {
         $('#passwordForm').on('keypress', function (e) {
             if (e.which === 13) { // 13은 엔터 키의 키 코드입니다
                 e.preventDefault(); // 기본 동작 방지
-                $('#searchButton').click(); // 아이디 확인 버튼 클릭
+                $('#searchButton').click(); // 비밀번호 확인 버튼 클릭
             }
         });
 
         $('#searchButton').on('click', function () {
-            var searchId = $('#searchId').val();
+            var searchPw = $('#searchPw').val();
 
-            // ID 입력 유효성 검사
-            if (searchId.trim() === '') {
-                $('#resultMessage').html('<p style="color:red;">ID를 입력하세요.</p>');
+            // 비밀번호 입력 유효성 검사
+            if (searchPw.trim() === '') {
+                $('#resultMessage').html('<p style="color:red;">비밀번호를 입력하세요.</p>');
                 return;
             }
 
             // AJAX 요청 보내기
             $.ajax({
-                url: 'idCheck', // 컨트롤러의 PostMapping URL
+                url: 'passwordCheck', // 컨트롤러의 PostMapping URL
                 type: 'POST',
-                data: {searchId: searchId},
+                data: {searchPw: searchPw},
                 success: function (response) {
                     // 서버에서 반환된 결과에 따라 메시지 표시
                     if (response.result) {
-                        $('#resultMessage').html('<p style="color:green;">사용 가능한 아이디입니다.</p>' +
-                            '<button type="button" class="btn btn-primary" id="useIdButton">ID 사용하기</button>');
+                        $('#resultMessage').html('<p style="color:green;">비밀번호가 일치합니다.</p>');
 
-                        // ID 사용하기 버튼 클릭 시 메인 폼에 ID 입력
-                        $('#useIdButton').on('click', function () {
-                            $('#memberId').val(searchId); // 메인 폼에 ID 입력
-                            $('#idCheckModal').modal('hide'); // 모달 닫기
+                        // 비밀번호가 일치하면 확인 버튼을 활성화
+                        $('#confirmButton').show().on('click', function () {
+                            $('#passwordCheckModal').modal('hide'); // 모달을 닫음
+                            // 추가로 수정 페이지로 이동하거나 다른 작업을 수행할 수 있습니다.
                         });
                     } else {
-                        $('#resultMessage').html('<p style="color:red;">이미 사용 중인 아이디입니다.</p>');
+                        $('#resultMessage').html('<p style="color:red;">비밀번호가 일치하지 않습니다.</p>');
                     }
                 },
                 error: function () {
@@ -105,5 +107,13 @@ $(document).ready(function () {
         });
     });
 
+    $('#joinForm').on('submit', function () {
+        var isChecked = $('#withdrawCheckbox').is(':checked');
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'withdraw',
+            value: isChecked
+        }).appendTo('#joinForm');
+    });
 
 });
