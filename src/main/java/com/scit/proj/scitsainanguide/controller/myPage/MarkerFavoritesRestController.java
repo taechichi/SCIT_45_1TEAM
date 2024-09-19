@@ -38,4 +38,22 @@ public class MarkerFavoritesRestController {
         }
     }
 
+    @PostMapping("/isFavorite/{placeId}")
+    public ResponseEntity<Boolean> checkFavorite(
+            @PathVariable("placeId") String placeId,
+            @AuthenticationPrincipal AuthenticatedUser user) {
+        try {
+            // 인증된 사용자 ID를 가져오기
+            String memberId = user.getUsername();
+
+            // placeId와 인증된 사용자 ID를 사용하여 즐겨찾기 여부 확인
+            boolean isFavorite = markerFavoritesService.isFavorite(memberId, placeId);
+
+            return ResponseEntity.ok(isFavorite);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
+    }
+
 }

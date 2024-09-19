@@ -19,6 +19,9 @@
 
     let currentMarker;
 
+    const favBtn = document.getElementById('favMarker');
+    const favImg = favBtn.querySelector('img'); // 버튼 내부의 이미지 요소 선택
+
     //해시 부분을 받아 placeId를 추출
     function getLatLngFromUrl() {
         const hash = window.location.hash; //#~~~ 처럼 해시 부분 추출
@@ -238,7 +241,7 @@
             });
     }
 
-    //즐겨찾기
+    //즐겨찾기 추가
     function favMarker(placeID) {
         fetch('/addFavorite/' + encodeURIComponent(placeID), {
             method: 'POST'
@@ -252,6 +255,43 @@
             })
             .catch(error => {
                 console.error('Error:', error);
+            });
+    }
+
+    //즐겨찾기 삭제
+    function favMarkerDel(placeID) {
+        fetch('/delFavorite/' + encodeURIComponent(placeID), {
+            method: 'POST'
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('즐겨찾기에 추가되었습니다.');
+                } else {
+                    console.error('즐겨찾기 추가에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+    //즐겨찾기 확인
+    function favMarkerCheck(placeID){
+
+        fetch(`/isFavorite/${encodeURIComponent(placeID)}`, {
+            method: 'POST'
+        })
+            .then(response => response.json())
+            .then(isFavorite => {
+                if (isFavorite) {
+                    // 이미 즐겨찾기에 추가된 경우
+
+                } else {
+                    // 즐겨찾기에 추가되지 않은 경우
+
+                }
+            })
+            .catch(error => {
+                console.error('즐겨찾기 확인 중 오류 발생:', error);
             });
     }
 
@@ -325,8 +365,6 @@
             setCurrentZoom(centerPosition);
         });
         // 즐겨찾기 버튼
-        const favBtn = document.getElementById('favMarker');
-        const favImg = favBtn.querySelector('img'); // 버튼 내부의 이미지 요소 선택
 
         favBtn.addEventListener('click', function () {
             // 이미지 변경

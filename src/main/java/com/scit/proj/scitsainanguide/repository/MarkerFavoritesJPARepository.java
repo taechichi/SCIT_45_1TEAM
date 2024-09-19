@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MarkerFavoritesJPARepository extends JpaRepository<MarkerFavoritesEntity, Integer> {
+    boolean existsByMemberIdAndHospitalId(String memberId, String hospitalId);
+    boolean existsByMemberIdAndShelterId(String memberId, String shelterId);
 }
