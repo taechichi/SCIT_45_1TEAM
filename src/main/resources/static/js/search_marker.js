@@ -83,6 +83,21 @@
                     }
                 };
                 break;
+            case "hospital":
+                markerOption = {
+                    placeId: place.place_id,
+                    map: map,
+                    position: place.geometry.location,
+                    title: place.name,
+                    placePhoto: place.photos ? place.photos[0].getUrl() : "",
+                    icon: {
+                        url: '/img/hpmk.png', // 사용자 정의 아이콘 URL
+                        scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
+                        origin: new google.maps.Point(0, 0), // 아이콘의 원점
+                        anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
+                    }
+                };
+                break;
             default:
                 markerOption = {
                     placeId: place.place_id,
@@ -95,9 +110,6 @@
         let marker = new google.maps.Marker(markerOption);
 
         switch (type) {
-            case "none":
-
-                break;
             case "myMarker":
                 marker.setAnimation(google.maps.Animation.BOUNCE);
                 break;
@@ -195,7 +207,7 @@
 
                 // 검색된 병원 정보 마커로 표시
                 results.forEach(place => {
-                    let marker = createMarker(map, place);
+                    let marker = createMarker(map, place,false,"hospital");
                     markers.push(marker);
                 });
                 calculateBoundsForMarkers(markers);  // 마커들로 경계 설정
@@ -355,7 +367,7 @@
             }
         });
 
-        //병원 버튼 클릭 시 근처 1km 검색
+        //병원 버튼 클릭 시 근처 500m 검색
         document.getElementById('hospitalfilterbutton').addEventListener('click', function() {
             searchNearbyHospitals(); // 병원 검색 함수 호출
         });
