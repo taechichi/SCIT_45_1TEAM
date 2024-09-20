@@ -91,8 +91,8 @@
                     title: place.name,
                     placePhoto: place.photos ? place.photos[0].getUrl() : "",
                     icon: {
-                        url: '/img/hpmk.png', // 사용자 정의 아이콘 URL
-                        scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
+                        url: '/img/hospitalMarker.png', // 사용자 정의 아이콘 URL
+                        scaledSize: new google.maps.Size(40, 40), // 아이콘의 크기 조정
                         origin: new google.maps.Point(0, 0), // 아이콘의 원점
                         anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
                     }
@@ -194,7 +194,7 @@
         const service = new google.maps.places.PlacesService(map);
         const request = {
             location: map.getCenter(),
-            radius: 500, // 반경 500m
+            radius: 1000, // 반경 500m
             type: 'hospital' // 병원 타입으로 검색
         };
 
