@@ -1,3 +1,63 @@
+// ==== 댓글 표시 기능 ======================================================
+document.addEventListener("DOMContentLoaded", function () {
+    let userLocation = "Unknown";
+
+    // 외부 API를 통해 사용자의 위치 정보 얻기 (ipinfo.io 예시)
+    // API 쓸라면 주석 해제
+    /*fetch('https://ipinfo.io/json?token=8024395341b3f3')
+        .then(response => response.json())
+        .then(data => {
+            userLocation = data.city;   // 도시 정보 추출
+            console.log("User location: ", userLocation);
+        })
+        .catch(error => {
+            console.error("Error fetching location: ", error);
+            userLocation = "Unknown";   // 위치 정보가 없을 때 기본값
+        });*/
+
+    // SSE 연결 설정
+    const eventSource = new EventSource("/comments/stream");
+    const commentList = document.getElementById("commentList");
+
+    // 서버로부터 새로운 메시지가 올 때마다 실행
+    eventSource.onmessage = function (event) {
+        const comments = JSON.parse(event.data);
+        commentList.innerHTML = ''; // 기존 메시지 목록 초기화
+
+        comments.forEach(comment => {
+            const li = document.createElement("li");
+            li.textContent = `[${comment.nickname}] ${comment.contents}`;
+            commentList.appendChild(li);
+        });
+    };
+
+    // 댓글 전송하는 함수
+    document.getElementById("sendCommentButton").addEventListener("click", function () {
+        const nickname = document.getElementById("nicknameInput").value;
+        const contents = document.getElementById("commentInput").value;
+
+        fetch("/comments", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                nickname: nickname,
+                contents: contents,
+                location: userLocation
+            })
+        }).then(response => {
+            if(response.ok) {
+                console.log(response);
+                console.log("댓글 전송 완료");
+            }
+        }).catch(error => {
+            console.log("댓글 전송 실패: ", error);
+        });
+    });
+});
+
+// ==== 댓글창 열고 닫는 기능 ================================================
 document.addEventListener("DOMContentLoaded", function() {
     const commentSection = document.getElementById("realtime_comment");
     const toggleButton = document.getElementById("toggleCommentButton");
