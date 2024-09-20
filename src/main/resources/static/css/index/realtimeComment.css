@@ -1,108 +1,10 @@
-/*!* 채팅창 전체 컨테이너 *!
-#realtime_comment {
-    position: absolute;
-    top: 120px;
-    left: 0px;
-    width: 300px;
-    height: 400px;
-    background-color: white;
-    border: 1px solid #ccc;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease; !* 애니메이션 효과 *!
-    z-index: 1000;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-sizing: border-box; !* 전체 크기 유지 *!
-}
-
-!* 채팅 목록 (스크롤 가능) *!
-#commentList {
-    flex: 1;
-    overflow-y: auto;
-    padding: 10px;
-    box-sizing: border-box; !* 스크롤이 전체 크기를 넘지 않도록 조정 *!
-    width: 100%;
-}
-
-!* 댓글 입력창 *!
-#comment-input-section {
-    display: flex;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-top: 1px solid #ddd;
-    width: 100%; !* 입력창이 채팅창 너비에 맞게 *!
-    box-sizing: border-box; !* 패딩을 포함한 전체 크기 맞춤 *!
-}
-
-#comment-input-section input {
-    margin-right: 5px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    flex: 1;
-    box-sizing: border-box; !* 패딩과 테두리를 포함한 크기 *!
-}
-
-#sendCommentButton {
-    padding: 5px 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    white-space: nowrap; !* 버튼 텍스트가 넘치지 않도록 *!
-}
-
-#sendCommentButton:hover {
-    background-color: #45a049;
-}
-
-!* 열고 닫기 애니메이션 *!
-#realtime_comment.open {
-    left: 120px;
-    opacity: 1;
-}
-
-#realtime_comment.close {
-    left: -300px;
-    opacity: 0;
-}
-
-!* 열고 닫기 버튼 *!
-#toggleCommentButton {
-    position: absolute;
-    z-index: 1000;
-    top: 50%;
-    left: 300px;
-    transform: translateY(-50%);
-    width: 30px;
-    height: 40px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-!* 미디어 쿼리 *!
-@media (max-width: 768px) {
-    #realtime_comment {
-        width: 100%; !* 화면이 좁아질 때 게시판 너비를 100%로 조정 *!
-    }
-
-    #toggleCommentButton {
-        left: 100%; !* 화면이 좁아질 때 버튼 위치 조정 *!
-    }
-}*/
-/* ========================================================================== */
-
 /* 채팅창 전체 컨테이너 */
 #realtime_comment {
     position: absolute;
-    top: 120px;
+    top: 70px;
     left: 0px;
     width: 300px;
-    height: 400px;
+    height: 700px;
     background-color: white;
     border: 1px solid #ccc;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
@@ -154,13 +56,6 @@
     flex: 1;
     font-size: 12px;
 }
-/*#comment-input-section input {
-    margin-right: 5px;
-    padding: 3px;
-    border: 1px solid #ccc;
-    flex: 1;
-    font-size: 12px;
-}*/
 
 #sendCommentButton {
     padding: 3px 8px;
@@ -211,86 +106,5 @@
         left: 300px; /* 화면이 좁아질 때 버튼 위치 조정 */
     }
 }
-
-/* ========================================================================== */
-
-/*
- 기존 애니메이션
-!* 채팅창 전체 컨테이너 *!
-#realtime_comment {
-    position: absolute;
-    top: 120px;
-    left: 0px;
-    width: 300px;
-    height: 400px;
-    background-color: white;
-    border: 1px solid #ccc;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
-    overflow-y: auto;
-    transition: all 0.3s ease; !* 애니메이션 효과 *!
-    z-index: 1000;
-
-
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    justify-content: space-between;*/
-/*}*/
-
-/*#realtime_comment.open {*/
-/*    left: 120px;*/
-/*    opacity: 1;*/
-/*}*/
-
-/*#realtime_comment.close {*/
-/*    left: -300px;*/
-/*    opacity: 0;*/
-/*}*/
-
-/*#comment-input-section {*/
-/*    display: flex;*/
-/*    padding: 10px;*/
-/*    background-color: #f9f9f9;*/
-/*    border: 1px solid #ddd;*/
-/*}*/
-
-/*#comment-input-section input {*/
-/*    margin-right: 5px;*/
-/*    padding: 5px;*/
-/*    border: 1px solid #ccc;*/
-/*    flex: 1;*/
-/*}*/
-
-/*#sendCommentButton {*/
-/*    padding: 5px 10px;*/
-/*    background-color: #4CAF50;*/
-/*    color: white;*/
-/*    border: none;*/
-/*    cursor: pointer;*/
-/*}*/
-
-/*#sendCommentButton:hover {*/
-/*    background-color: #45a049;*/
-/*}*/
-
-@media (max-width: 768px) {
-    #realtime_comment {
-        width: 300px; /*화면이 좁아질 때 게시판 너비를 50%로 조정 */
-    }
-
-    #toggleCommentButton {
-        left: 300px; /* 화면이 좁아질 때 버튼 위치 조정 */
-    }
-}
-
-/*
- !* 인피니트 스크롤 트리거 *!
-#infinite-scroll-trigger {
-    height: 1px;
-    background-color: transparent;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-}
-*/
 
 /* ========================================================================== */
