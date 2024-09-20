@@ -19,8 +19,8 @@
 
     let currentMarker;
 
-    const favBtn = document.getElementById('favMarker');
-    const favImg = favBtn.querySelector('img'); // 버튼 내부의 이미지 요소 선택
+    let favBtn;
+    let favImg;
 
     //해시 부분을 받아 placeId를 추출
     function getLatLngFromUrl() {
@@ -154,6 +154,7 @@
             infoPanel.style.display = 'block';
             isPanelVisible = true;
             document.getElementById('writeLink').setAttribute('href', `/board/write/${placeID}`);
+            favMarkerCheck(currentMarker.placeId)
         });
     }
 
@@ -284,10 +285,12 @@
             .then(isFavorite => {
                 if (isFavorite) {
                     // 이미 즐겨찾기에 추가된 경우
-
+                    console.log("check:fav");
+                    favImg.src = '/img/star1.png';
                 } else {
                     // 즐겨찾기에 추가되지 않은 경우
-
+                    console.log("check:not fav");
+                    favImg.src = '/img/star2.png';
                 }
             })
             .catch(error => {
@@ -365,6 +368,8 @@
             setCurrentZoom(centerPosition);
         });
         // 즐겨찾기 버튼
+        favBtn = document.getElementById('favMarker');
+        favImg = favBtn.querySelector('img'); // 버튼 내부의 이미지 요소 선택
 
         favBtn.addEventListener('click', function () {
             // 이미지 변경

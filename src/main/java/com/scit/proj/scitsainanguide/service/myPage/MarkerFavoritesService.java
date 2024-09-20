@@ -77,6 +77,19 @@ public class MarkerFavoritesService {
         }
     }
 
+    public boolean isFavorite(String memberId, String placeId) {
+        // 먼저 병원 ID로 검색
+        boolean isHospitalFavorite = markerFavoritesJPARepository.existsByMemberIdAndHospitalId(memberId, placeId);
+
+        if (isHospitalFavorite) {
+            return true;  // 병원이 즐겨찾기에 있는 경우 true 반환
+        }
+
+        // 병원이 아닌 경우 쉘터 ID로 검색
+        return markerFavoritesJPARepository.existsByMemberIdAndShelterId(memberId, placeId);
+    }
+
+
     // tsh0828의 마커 냅다 가져오는 코드
     // 나중에 ID 받는걸로 수정 해야함.
     public Page<MarkerFavoritesDTO> viewAllFavoritesMarkerTest(SearchRequestDTO dto) {
