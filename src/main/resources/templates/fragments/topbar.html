@@ -131,9 +131,16 @@
         </div>
       </li>
       <!-- 언어 설정 변경 -->
-      <li class="nav-item dropdown no-arrow mx-1">
-        <a th:if="${session.lang == 'ja'}" th:href="@{/language(lang='ko')}">한국어</a>
-        <a th:if="${session.lang != 'ja'}" th:href="@{/language(lang='ja')}">日本語</a>
+      <li id="abc" class="nav-item dropdown no-arrow mx-1">
+        <!-- 일본어가 설정된 경우 -->
+        <a th:if="${session.lang == 'ja'}" th:href="@{/language(lang='ko')}">
+          <img id="flagJa" th:src="@{/img/ja.png}" alt="한국어" />
+        </a>
+
+        <!-- 일본어가 설정되지 않은 경우 -->
+        <a th:if="${session.lang != 'ja'}" th:href="@{/language(lang='ja')}">
+          <img id="flagKo" th:src="@{/img/ko.png}" alt="日本語" />
+        </a>
       </li>
 
       <!-- 오른쪽 상단 네비게이션 - 메세지 알림 -->

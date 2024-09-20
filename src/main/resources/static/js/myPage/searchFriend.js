@@ -32,39 +32,47 @@ function list(){
     $.ajax({
         url: 'friendList',
         type: 'post',
-        data: { searchWord: $("#searchWord").val()},
+        data: { searchWord: $("#searchWord").val() },
         success: function(list){
             $('#output').empty();
 
             $(list).each(function(i, obj){
-                // 반환된 데이터 가공
                 let favoriteYn = obj.favoriteYn ? '즐겨찾기' : '일반';
-                let gender = '남성';
-                if(obj.gender=='F'){
-                    gender = '여성';
-                }
-                let nationality = '한국';
-                if(obj.nationality=='JP'){
-                    nationality = '일본';
-                }
-                let html = `
-							<tr>
-								<th>${i+1}</th>
-								<th>${favoriteYn}</th>
-								<td>${obj.filename}</td>
-								<td>${obj.memberId}</td>
-								<td>${obj.nickname}</td>
-								<td>${gender}</td>
-								<td>${nationality}</td>
-								<td class="receiver" data-id="${obj.memberId}">➕</td>
-							</tr>
-						`;
-                $('#output').append(html)
-            });
+                let gender = obj.gender == 'F' ? '여성' : '남성';
+                let nationality = obj.nationality == 'JP' ? '일본' : '한국';
 
+                // 프로필 사진 경로 생성
+                let profileImgUrl = `/member/download/${obj.memberId}`;
+
+                // HTML 생성
+                let html = `
+                    <tr>
+                        <th>${i + 1}</th>
+                        <th>${favoriteYn}</th>
+                        <td><img class="profile-picture" alt="Profile Picture" src="${profileImgUrl}" /></td>
+                        <td>${obj.memberId}</td>
+                        <td>${obj.nickname}</td>
+                        <td>${gender}</td>
+                        <td>${nationality}</td>
+                        <td class="receiver" data-id="${obj.memberId}">➕</td>
+                    </tr>
+                `;
+
+                // 생성된 HTML을 테이블에 추가
+                $('#output').append(html);
+
+                // 방금 추가된 이미지에 CSS 속성 적용
+                $('#output img').last().css({
+                    'border-radius': '50%',
+                    'width': '40px',
+                    'height': '40px'
+                });
+            });
         },
         error: function(e){
             alert('조회 실패');
         }
-    })
+    });
 }
+
+
