@@ -122,12 +122,12 @@
     box-sizing: border-box;
 }
 
-/* 채팅 목록 스타일 */
-#commentList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
+/*!* 채팅 목록 스타일 *!*/
+/*#commentList {*/
+/*    list-style: none;*/
+/*    padding: 0;*/
+/*    margin: 0;*/
+/*}*/
 
 /* 댓글 입력창 */
 #comment-input-section {
@@ -230,66 +230,67 @@
     transition: all 0.3s ease; !* 애니메이션 효과 *!
     z-index: 1000;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
 
-#realtime_comment.open {
-    left: 120px;
-    opacity: 1;
-}
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: space-between;*/
+/*}*/
 
-#realtime_comment.close {
-    left: -300px;
-    opacity: 0;
-}
+/*#realtime_comment.open {*/
+/*    left: 120px;*/
+/*    opacity: 1;*/
+/*}*/
 
-#comment-input-section {
-    display: flex;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-}
+/*#realtime_comment.close {*/
+/*    left: -300px;*/
+/*    opacity: 0;*/
+/*}*/
 
-#comment-input-section input {
-    margin-right: 5px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    flex: 1;
-}
+/*#comment-input-section {*/
+/*    display: flex;*/
+/*    padding: 10px;*/
+/*    background-color: #f9f9f9;*/
+/*    border: 1px solid #ddd;*/
+/*}*/
 
-#sendCommentButton {
-    padding: 5px 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
+/*#comment-input-section input {*/
+/*    margin-right: 5px;*/
+/*    padding: 5px;*/
+/*    border: 1px solid #ccc;*/
+/*    flex: 1;*/
+/*}*/
 
-#sendCommentButton:hover {
-    background-color: #45a049;
-}
+/*#sendCommentButton {*/
+/*    padding: 5px 10px;*/
+/*    background-color: #4CAF50;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    cursor: pointer;*/
+/*}*/
 
-!* 미디어 쿼리 추가 *!
+/*#sendCommentButton:hover {*/
+/*    background-color: #45a049;*/
+/*}*/
+
 @media (max-width: 768px) {
     #realtime_comment {
-        width: 300px; !* 화면이 좁아질 때 게시판 너비를 50%로 조정 *!
+        width: 300px; /*화면이 좁아질 때 게시판 너비를 50%로 조정 */
     }
 
     #toggleCommentButton {
-        left: 300px; !* 화면이 좁아질 때 버튼 위치 조정 *!
+        left: 300px; /* 화면이 좁아질 때 버튼 위치 조정 */
     }
 }
 
-!*!* 인피니트 스크롤 트리거 *!
+/*
+ !* 인피니트 스크롤 트리거 *!
 #infinite-scroll-trigger {
     height: 1px;
     background-color: transparent;
     position: absolute;
     bottom: 0;
     width: 100%;
-}*!
+}
 */
 
 /* ========================================================================== */
