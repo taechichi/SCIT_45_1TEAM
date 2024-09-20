@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const footerHeight = 25; // 이건 예시값 나중에 새로 적용해야함.
 
         // 게시판 높이 설정 (너비는 고정)
-        commentSection.style.height = `${windowHeight - 50 - footerHeight}px`;  // 창 높이에 따라 조정
+        commentSection.style.height = `${windowHeight - 45 - footerHeight}px`;  // 창 높이에 따라 조정
 
         // 게시판 상태에 따라 위치 설정
         if (commentSection.classList.contains("open")) {
