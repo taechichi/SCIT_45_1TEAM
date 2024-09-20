@@ -13,7 +13,7 @@
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
 
     <!-- google map script -->
-   <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places"></script>-->
+   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places"></script>
     <!-- 추가 할 라이브러리를 api의 libraries 부분 뒤에 추가 places,geometry -->
     <script th:src="@{/js/search_marker.js}"></script>
     <!-- Custom fonts for this template-->
@@ -48,6 +48,13 @@
             <div class="share-container">
                 <button id="shareBtn">공유</button>
             </div>
+            <!-- 글목록 -->
+            <div>
+                <a id="writeLink" th:href="@{/board/write/${palceID}}">글쓰기</a>
+                <button id="favMarker">
+                    <img th:src="@{/img/star2.png}">
+                </button>
+            </div>
         </ul>
 
     <!-- Content Wrapper -->
@@ -74,7 +81,7 @@
                     <button type="button" id="shelterfilterbutton" th:text="#{main.button.shelter}"></button>
 
                     <!-- 내 위치 버튼 -->
-                    <img th:src="@{/img/myLocation.png}" id="myLocation" class="img-40">
+                    <button><img th:src="@{/img/myLocation.png}" id="myLocation" class="img-40"></button>
                 </div>
 
                 <!-- 실시간 댓글 반응 창 -->

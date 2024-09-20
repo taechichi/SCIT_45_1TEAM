@@ -33,13 +33,13 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                    aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>관리자 페이지</span>
+                    <span th:text="#{menu.admin.page}">관리자 페이지</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">관리 목록</h6>
-                        <a class="collapse-item" th:href="@{/admin/board}">게시판 관리</a>
-                        <a class="collapse-item" th:href="@{/admin/member}">회원 관리</a>
+                        <h6 class="collapse-header" th:text="#{menu.admin.list}">관리 목록</h6>
+                        <a class="collapse-item" th:href="@{/admin/board}" th:text="#{menu.admin.board}">게시판 관리</a>
+                        <a class="collapse-item" th:href="@{/admin/member}" th:text="#{menu.admin.member}">회원 관리</a>
                     </div>
                 </div>
             </li>
@@ -59,17 +59,17 @@
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                aria-expanded="true" aria-controls="collapsePages">
                 <i class="fas fa-fw fa-user"></i>
-                <span>마이 페이지</span>
+                <span th:text="#{menu.mypage}">마이 페이지</span>
             </a>
             <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Login Screens:</h6>
-                    <a class="collapse-item" th:href="@{/member/info}">개인정보 관리</a>
-                    <a class="collapse-item" th:href="@{/my/friend}">친구 관리</a>
-                    <a class="collapse-item" th:href="@{/my/message}">쪽지함</a>
+                    <a class="collapse-item" th:href="@{/member/info}" th:text="#{menu.myinfo}">개인정보 관리</a>
+                    <a class="collapse-item" th:href="@{/my/friend}" th:text="#{menu.myfriend}">친구 관리</a>
+                    <a class="collapse-item" th:href="@{/my/message}" th:text="#{menu.messagebox}">쪽지함</a>
                     <div class="collapse-divider"></div>
                     <h6 class="collapse-header">Other Pages:</h6>
-                    <a class="collapse-item" th:href="@{/my/myMarkerFavorites}">즐겨찾기 한 장소</a>
+                    <a class="collapse-item" th:href="@{/my/myMarkerFavorites}" th:text="#{menu.favorite.place}">즐겨찾기 한 장소</a>
                     <a class="collapse-item" th:href="@{/404.html}">404 Page</a>
                     <a class="collapse-item" th:href="@{/blank.html}">Blank Page</a>
                 </div>
@@ -81,21 +81,21 @@
         <li class="nav-item">
             <a class="nav-link" th:href="@{/fileToTranslate}">
                 <i class="fas fa-fw fa-language"></i>
-                <span>파일 번역</span></a>
+                <span th:text="#{menu.translate.file}">파일 번역</span></a>
         </li>
 
         <!-- Nav Item - Charts -->
         <li class="nav-item">
             <a class="nav-link" th:href="@{/streamingToTranslate}">
                 <i class="fas fa-fw fa-microphone"></i>
-                <span>실시간 녹음 번역</span></a>
+                <span th:text="#{menu.translate.streaming}">실시간 음성 번역</span></a>
         </li>
 
         <!-- Nav Item - Charts -->
         <li class="nav-item">
             <a class="nav-link" th:href="@{/imageTranslate}">
                 <i class="fas fa-fw fa-camera"></i>
-                <span>이미지 번역</span></a>
+                <span th:text="#{menu.translate.image}">이미지 번역</span></a>
         </li>
 
 
@@ -103,7 +103,7 @@
         <li class="nav-item">
             <a class="nav-link" th:href="@{/video}">
                 <i class="fas fa-fw fa-video"></i>
-                <span>재난 방송 보기</span></a>
+                <span th:text="#{menu.disaster.boradcast}">재난 방송 보기</span></a>
         </li>
 
         <!-- Divider -->

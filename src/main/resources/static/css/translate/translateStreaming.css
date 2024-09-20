@@ -3,33 +3,6 @@
     text-align: center;
 }
 
-.language-selection {
-    display: flex;
-    justify-content: center;
-    gap: 20px; /* 이미지 간의 간격 조정 */
-    margin-bottom: 20px; /* 이미지와 다른 요소 간의 간격 조정 */
-}
-
-.language-selection img {
-    width: 100px; /* 이미지 너비를 두 배로 확대 */
-    height: auto; /* 비율을 유지하면서 높이 자동 조정 */
-    cursor: pointer; /* 클릭 가능한 커서 표시 */
-}
-
-/* 버튼과 텍스트 중앙 정렬 */
-h2, h4 {
-    text-align: center;
-}
-
-#stop-recording {
-    margin-top: 20px;
-}
-
-.divider {
-    border: 1px solid #ddd; /* 구분선을 연한 회색으로 설정 */
-    margin: 20px 0; /* 구분선 위와 아래에 여백 추가 */
-}
-
 /* 기본 스타일 설정 */
 .content-area {
     transition: background-color 0.3s ease;
