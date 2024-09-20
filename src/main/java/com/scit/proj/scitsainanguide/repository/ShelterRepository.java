@@ -16,7 +16,7 @@ public interface ShelterRepository extends JpaRepository<ShelterEntity, Integer>
             "cos(radians(longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(latitude)))) " +
             "AS distance " +
             "FROM shelter " +
-            "HAVING distance < 1 " +
+            "HAVING distance < 0.5 " +
             "ORDER BY distance", nativeQuery = true)
     List<ShelterEntity> findNearbyShelters(@Param("latitude") double latitude,
                                            @Param("longitude") double longitude);

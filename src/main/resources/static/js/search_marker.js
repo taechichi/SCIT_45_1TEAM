@@ -194,7 +194,7 @@
         const service = new google.maps.places.PlacesService(map);
         const request = {
             location: map.getCenter(),
-            radius: 500, // 반경 1km
+            radius: 500, // 반경 500m
             type: 'hospital' // 병원 타입으로 검색
         };
 
@@ -246,7 +246,7 @@
                         calculateBoundsForMarkers(markers);
                     });
                 } else {
-                    console.log('1km 내 대피소가 없습니다.');
+                    console.log('500m 내 대피소가 없습니다.');
                 }
             })
             .catch(error => {
