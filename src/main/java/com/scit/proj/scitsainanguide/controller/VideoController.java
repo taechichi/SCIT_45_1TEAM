@@ -11,7 +11,7 @@ public class VideoController {
     @GetMapping("video")
     public ModelAndView video(HttpServletRequest request) {
         ModelAndView modelAndView = (ModelAndView) request.getAttribute("modelAndView");
-        modelAndView.setViewName("video");
+        modelAndView.setViewName("menu/disasterBroadcast");
         return modelAndView;
     }
 
