@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 @Component // bean 객체
 public class StatusScheduler {
@@ -59,15 +61,17 @@ public class StatusScheduler {
         Duration duration = Duration.between(dateTime, LocalDateTime.now());
         long seconds = duration.getSeconds();
         long days = duration.toDays();
+        // Locale 클래스를 사용, 사용자의 언어 환경에 따라 현재 사용자 언어 확인해 적절한 메시지를 가져오도록
+        Locale locale = LocaleContextHolder.getLocale();
 
         if (seconds < 60) {
-            return seconds + messageSource.getMessage("main.myStatus.seconds", null, null);
+            return seconds + messageSource.getMessage("main.myStatus.seconds", null, locale);
         } else if (seconds < 3600) {
-            return (seconds / 60) + messageSource.getMessage("main.myStatus.minutes", null, null);
+            return (seconds / 60) + messageSource.getMessage("main.myStatus.minutes", null, locale);
         } else if (seconds < 86400) {
-            return (seconds / 3600) + messageSource.getMessage("main.myStatus.hours", null, null);
+            return (seconds / 3600) + messageSource.getMessage("main.myStatus.hours", null, locale);
         } else if (days < 3) {
-            return days + messageSource.getMessage("main.myStatus.days", null, null);
+            return days + messageSource.getMessage("main.myStatus.days", null, locale);
         } else {
             // 3일 이상인 경우, formatTime 메서드 사용
             return formatTime(dateTime);
