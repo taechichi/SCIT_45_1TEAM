@@ -64,7 +64,7 @@
 
 
                         <!-- 페이지 번호 navigator -->
-                        <div th:replace="fragments/pagination :: pagination"></div>
+                        <div th:replace="~{fragments/pagination :: pagination}"></div>
                         <!-- 검색 폼 -->
                         <div class="searchForm-container">
                             <form id="pagingForm" th:action="@{/my/message}" method="get">
