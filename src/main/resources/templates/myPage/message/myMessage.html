@@ -11,6 +11,7 @@
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
     <link rel="stylesheet" th:href="@{/css/topbar.css}">
     <link rel="stylesheet" th:href="@{/css/index/index.css}">
+    <link rel="stylesheet" th:href="@{/css/message/mymessage.css}">
 </head>
 <body>
 <!-- Page Wrapper -->
@@ -25,62 +26,59 @@
 
         <!-- Main Content -->
         <div id="content">
-
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
+            <div>
+                <div>
                     <div th:replace="~{fragments/topbar :: topbar}"></div>
-                    <h6 class="m-0 font-weight-bold text-primary">테이블 이름을 여기에</h6>
+                    <h4>쪽지</h4>
                 </div>
                 <div class="card-body">
+                    <!-- 검색 폼 -->
+                    <div class="searchForm-container">
+                        <form id="pagingForm" th:action="@{/my/message}" method="get" class="search-form">
+                            <input type="hidden" name="page" id="page"/>
+                            <select id="type" name="searchType">
+                                <option value="senderId" th:text="#{board.searchType.memberId}"
+                                        th:selected="${searchType == 'senderId'}"></option>
+                                <option value="content" th:text="#{my.message.searchType.content}"
+                                        th:selected="${searchType == 'content'}"></option>
+                            </select>
+                            <input type="text" name="searchWord" id="searchWord" th:value="${searchWord}"/>
+                            <button type="submit" id="searchBtn" th:text="#{board.button.search}" onclick="pagingFormSubmit(1)" class="toggle-button"></button>
+                            <button type="button" id="writeMessageBtn" th:text="#{my.message.button.write}" class="brown-button"></button>
+                            <button type="button" id="deleteMessageBtn" th:text="#{board.button.delete}" class="red-button"></button>
+                        </form>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable">
                             <thead>
-                                <tr>
-                                    <th th:text="#{board.column.memberId}"></th>
-                                    <th th:text="#{my.message.column.content}"></th>
-                                    <th th:text="#{board.column.createDt}"></th>
-                                    <th>
-                                        <input type="checkbox" id="selectAll">
-                                    </th>
-                                </tr>
+                            <tr>
+                                <th th:text="#{board.column.memberId}"></th>
+                                <th th:text="#{my.message.column.content}"></th>
+                                <th th:text="#{board.column.createDt}"></th>
+                                <th>
+                                    <input type="checkbox" id="selectAll">
+                                </th>
+                            </tr>
                             </thead>
                             <tbody th:each="message : ${pageData}" th:object="${message}">
-                                <tr>
-                                    <td>
-                                        <img class="rounded-circle" alt="Profile Picture"
-                                             th:src="@{/member/download/{senderId}(senderId=*{senderId})}"/>
-                                        <span th:text="*{senderId}"></span>
-                                    </td>
-                                    <td>
-                                        <a th:href="@{/my/message/{messageId}(messageId=*{messageId})}" th:text="*{content}"></a>
-                                    </td>
-                                    <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
-                                    <td>
-                                        <input type="checkbox" class="messageCheckbox" name="messageIdList" th:value="*{messageId}">
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>
+                                    <img class="rounded-circle img-40" alt="Profile Picture"
+                                         th:src="@{/member/download/{senderId}(senderId=*{senderId})}"/>
+                                    <span th:text="*{senderId}"></span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/my/message/{messageId}(messageId=*{messageId})}" th:text="*{content}"></a>
+                                </td>
+                                <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
+                                <td>
+                                    <input type="checkbox" class="messageCheckbox" name="messageIdList" th:value="*{messageId}">
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
-
-
                         <!-- 페이지 번호 navigator -->
-                        <div th:replace="~{fragments/pagination :: pagination}"></div>
-                        <!-- 검색 폼 -->
-                        <div class="searchForm-container">
-                            <form id="pagingForm" th:action="@{/my/message}" method="get">
-                                <input type="hidden" name="page" id="page"/>
-                                <select id="type" name="searchType">
-                                    <option value="senderId" th:text="#{board.searchType.memberId}"
-                                            th:selected="${searchType == 'senderId'}">/option>
-                                    <option value="content" th:text="#{my.message.searchType.content}"
-                                            th:selected="${searchType == 'content'}"></option>
-                                </select>
-                                <input type="text" name="searchWord" th:value="${searchWord}"/>
-                                <input type="submit" onclick="pagingFormSubmit(1)" th:value="#{board.button.search}"/>
-                                <input type="button" id="writeMessageBtn" th:value="#{my.message.button.write}">
-                                <input type="button" id="deleteMessageBtn" th:value="#{board.button.delete}">
-                            </form>
-                        </div>
+                        <div th:replace="fragments/pagination :: pagination"></div>
                     </div>
                 </div>
             </div>
@@ -91,12 +89,10 @@
 
 </div>
 <!-- End of Page Wrapper -->
-</body>
 <!-- 게시판 페이지에 필요한 script 모음 -->
 <!-- Bootstrap core JavaScript-->
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
 <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.js}"></script>
-z
 <!-- Core plugin JavaScript-->
 <script th:src="@{/vendor/jquery-easing/jquery.easing.js}"></script>
 
