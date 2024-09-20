@@ -1,0 +1,59 @@
+.translateCard{
+    width: 95%;
+    height: 100px;
+    margin: 2%;
+}
+
+.btnBlue {
+    background: #0070BB;
+}
+
+.btnSkyblue {
+    background: #81D8D0;
+}
+
+.btnSpace{
+    margin-left: 10%;
+}
+
+.btnPush {
+    box-shadow: 0px 5px 0px 0px #AFDBF5;
+}
+
+.button, #labelOfFile {
+    display: inline-block;
+    width: 80px;
+    position: relative;
+    padding: 0;
+    margin: 10px 20px 10px 10px;
+    font-weight: 600;
+    text-align: center;
+    line-height: 40px;
+    color: #FFF;
+    border-radius: 5px;
+    transition: all 0.2s ;  /*애니메이션 효과*/
+    text-decoration: none; /* 밑줄 제거 */
+}
+
+#selectLan{
+    width: 150px;
+    border-radius: 4px;
+    padding: 5px 30px 5px 10px;
+    background-color: #1C39BB;
+    color: white;
+}
+
+#selectLan option{
+    background: #B0E0E6;
+    color: black;
+    padding: 3px 0;
+}
+
+#audioFile{
+    display: none;
+}
+
+#fileName{
+    padding-left: 25%;
+    visibility: hidden;
+}

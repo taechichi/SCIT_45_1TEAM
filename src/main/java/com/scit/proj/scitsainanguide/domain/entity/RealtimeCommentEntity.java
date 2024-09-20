@@ -35,5 +35,6 @@ public class RealtimeCommentEntity {
     private String contents;
 
     @Column(name = "create_dt", nullable = false)
-    private LocalDateTime createDt;
+    @Builder.Default
+    private LocalDateTime createDt = LocalDateTime.now();
 }

@@ -6,6 +6,8 @@ import com.scit.proj.scitsainanguide.repository.MemberJpaRepository;
 import com.scit.proj.scitsainanguide.repository.StatusJpaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +23,9 @@ public class StatusScheduler {
     private MemberJpaRepository memberJpaRepository;
     @Autowired
     private StatusJpaRepository statusJpaRepository;
+    @Qualifier("messageSource")
+    @Autowired
+    private MessageSource messageSource;
 
     // 1분마다 실행 -> DB 반영까지 몇초~몇십초 지연있으나 초마다 실행보다 부하 적고 웬만한 어플은 기본 1분 단위
     @Scheduled(fixedRate = 60000)
@@ -56,13 +61,13 @@ public class StatusScheduler {
         long days = duration.toDays();
 
         if (seconds < 60) {
-            return seconds + "초 전";
+            return seconds + messageSource.getMessage("main.myStatus.seconds", null, null);
         } else if (seconds < 3600) {
-            return (seconds / 60) + "분 전";
+            return (seconds / 60) + messageSource.getMessage("main.myStatus.minutes", null, null);
         } else if (seconds < 86400) {
-            return (seconds / 3600) + "시간 전";
+            return (seconds / 3600) + messageSource.getMessage("main.myStatus.hours", null, null);
         } else if (days < 3) {
-            return days + "일 전";
+            return days + messageSource.getMessage("main.myStatus.days", null, null);
         } else {
             // 3일 이상인 경우, formatTime 메서드 사용
             return formatTime(dateTime);

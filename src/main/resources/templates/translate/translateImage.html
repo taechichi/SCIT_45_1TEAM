@@ -6,8 +6,8 @@
     <title>real-time Streaming translation</title>
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
+    <link rel="stylesheet" th:href="@{/css/translate/translateImage.css}">
     <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
-    <script th:src="@{/js/translateImage.js}"></script>
     <link rel="stylesheet" th:href="@{/css/index/index.css}">
     <script th:src="@{/js/translate/translateImage.js}"></script>
 
@@ -38,25 +38,43 @@
             <div th:replace="~{fragments/topbar :: topbar}"></div>
             <!-- End of topbar -->
 
-<!--            <h2 th:text="#{translate.fileTranslate}"></h2>-->
-            <h2> 이미지 번역 </h2>
-            <form id="uploadForm" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)">
-                <input type="file" name="file" id="file" accept="image/*" required>
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h3 class="m-0 font-weight-bold text-primary" th:text="#{translate.image}">이미지 번역</h3>
+            </div>
+
+            <div class="card-body">
+            <form id="uploadForm" enctype="multipart/form-data">
+                <label for="sourceLanguage" th:text="#{translate.selectLan}">이미지 언어:</label>
                 <select id="sourceLanguage">
                     <option value="en-US" th:text="#{translate.en}">영어</option>
                     <option value="ja-JP" th:text="#{translate.ja}" selected>일본어</option>
                     <option value="ko-KR" th:text="#{translate.ko}">한국어</option>
                 </select>
-                <button type="submit" th:text="#{translate.uploadAndTranslate}">업로드 및 번역</button>
-            </form><br>
-            <div>
-                <h3 th:text="#{translate.extracted.text}">추출된 텍스트:</h3>
-                <div id="extractedText"></div>
-            </div><br>
-            <div>
-                <h3 th:text="#{translate.translated.text}">번역된 텍스트:</h3>
-                <div id="translatedText"></div>
+                <input type="file" name="file" id="file" accept="image/*" required onchange="displayFileName()">
+                <label for="file" class="button btnPush btnSkyblue" id="labelOfFile" th:text="#{translate.select.microFile}">select File</label>
+                <span id="fileName">파일 업로드 시 파일명 나타남</span>
+                <a href="#" class="button btnPush btnBlue" onclick="handleFormSubmit(event)" th:text="#{translate.microFileUpload}">업로드</a>
+            </form>
             </div>
+
+            <div class="card shadow mb-4 mx-auto">
+                <div class="card-header py-3">
+                    <h5 th:text="#{translate.extracted.text}" class="m-0 font-weight-bold text-primary">텍스트</h5>
+                </div>
+                <div class="card-body">
+                    <div id="extractedText"></div>
+                </div>
+            </div>
+
+            <div class="card shadow mb-4 mx-auto">
+                <div class="card-header py-3">
+                    <h5 th:text="#{translate.translated.text}" class="m-0 font-weight-bold text-primary">텍스트</h5>
+                </div>
+                <div class="card-body">
+                    <div id="translatedText"></div>
+                </div>
+            </div>
+
         </div>
         <!-- End of Main Content -->
     </div>

@@ -1,3 +1,18 @@
+// css를 위해 disabled된 input type="file" 요소에 대해, 사용자가 파일을 선택했을 시 선택된 파일명을 표시
+function displayFileName() {
+    let fileInput = document.getElementById('file');
+    let fileNameDisplay = document.getElementById('fileName');
+
+    if (fileInput.files.length > 0) {
+        // 선택된 파일의 이름을 가져옴
+        let fileName = fileInput.files[0].name;
+        fileNameDisplay.textContent = fileName; // 파일명을 표시
+        fileNameDisplay.style.visibility = "visible";
+    } else {
+        fileNameDisplay.textContent = ''; // 파일이 선택되지 않으면 빈 문자열
+    }
+}
+
 // 1. 이미지를 업로드할 때 실행되는 함수, 사용자가 선택한 원문 언어값 추출된 텍스트를 가지고 번역함수 호출
 function handleFormSubmit(event) {
     event.preventDefault(); // 폼 제출 시 페이지 새로 고침 방지
