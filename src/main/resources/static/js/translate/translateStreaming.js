@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => {
                 console.error('텍스트로 변환 실패:', error);
-                document.getElementById('voiceTexted').innerHTML = `<span th:text="#{translate.textedError}"></span>`;
+                document.getElementById('voiceTexted').innerHTML = `${textedError}`;
             });
     }
 
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .then(data => {
                     // 현재의 텍스트에 새 번역 결과를 추가하고 개행 문자를 추가
-                    document.getElementById('voiceTranslated').innerHTML += `<br>${data.translatedText}`;
+                    document.getElementById('voiceTranslated').innerHTML += `${transError}`;
                 })
                 .catch(error => {
                     console.error('번역 실패:', error);

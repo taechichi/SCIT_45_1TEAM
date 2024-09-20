@@ -374,7 +374,7 @@
         favBtn.addEventListener('click', function () {
             // 이미지 변경
             if (favImg.src.includes('star2.png')) {
-                favImg.src = '/img/star1.png'; 
+                favImg.src = '/img/star1.png';
                 favMarker(currentMarker.placeId);// 즐겨찾기 추가
             } else {
                 favImg.src = '/img/star2.png';
@@ -559,7 +559,8 @@
         const walkingRequest = {
             origin: {lat: lat, lng: long}, // 출발 위치
             destination: {lat: arrivalLat, lng: arrivalLong}, // 도착 위치
-            travelMode: google.maps.TravelMode.WALKING // 도보
+            travelMode: google.maps.TravelMode.WALKING, // 도보
+            language: 'en' // 소요시간 '분/시간'을 국제화할 수 없으므로 영어로 표시
         };
 
         walkingService.route(walkingRequest, function(result, status) {
@@ -581,12 +582,12 @@
                 const walkingLeg = result.routes[0].legs[0];
                 const walkingInfoWindow = new google.maps.InfoWindow({
                     content: `
-                    <div>
-                        <h4 th:text="#{walkingRoot}">도보 경로 정보</h4>
-                        <p th:text="#{distance}">거리: ${walkingLeg.distance.text}</p>
-                        <p th:text="#{duration}">소요 시간: ${walkingLeg.duration.text}</p>
-                    </div>
-                `
+                      <div>
+                        <h4>${walkingRoot}</h4>
+                        <p>${distanceLabel}: ${walkingLeg.distance.text}</p>
+                        <p>${durationLabel}: ${walkingLeg.duration.text}</p>
+                      </div>
+                    `
                 });
                 walkingInfoWindow.open(map, walkingMarker);
             } else {
@@ -598,7 +599,8 @@
         const bicyclingRequest = {
             origin: {lat: lat, lng: long}, // 출발 위치
             destination: {lat: arrivalLat, lng: arrivalLong}, // 도착 위치
-            travelMode: google.maps.TravelMode.BICYCLING // 자전거
+            travelMode: google.maps.TravelMode.BICYCLING, // 자전거
+            language: 'en' // 소요시간 '분/시간'을 국제화할 수 없으므로 영어로 표시
         };
 
         bicyclingService.route(bicyclingRequest, function(result, status) {
@@ -622,9 +624,9 @@
                 const bicyclingInfoWindow = new google.maps.InfoWindow({
                     content: `
                     <div>
-                        <h4 th:text="#{bicycleRoot}">자전거 경로 정보</h4>
-                        <p th:text="#{distance}">거리: ${bicyclingLeg.distance.text}</p>
-                        <p th:text="#{duration}">소요 시간: ${bicyclingLeg.duration.text}</p>
+                        <h4>${walkingRoot}</h4>
+                        <p>${distanceLabel}: ${bicyclingLeg.distance.text}</p>
+                        <p>${durationLabel}: ${bicyclingLeg.duration.text}</p>
                     </div>
                 `
                 });
