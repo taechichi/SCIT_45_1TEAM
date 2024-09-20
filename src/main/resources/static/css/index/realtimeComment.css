@@ -47,6 +47,7 @@
     border: 1px solid #ccc;
     flex: 1;
     font-size: 12px;
+    width: 20%;
 }
 
 #comment-input-section button {
