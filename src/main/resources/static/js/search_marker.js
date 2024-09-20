@@ -260,15 +260,15 @@
     }
 
     //즐겨찾기 삭제
-    function favMarkerDel(placeID) {
-        fetch('/delFavorite/' + encodeURIComponent(placeID), {
+    function favMarkerRemove(placeID) {
+        fetch('/removeFavorite/' + encodeURIComponent(placeID), {
             method: 'POST'
         })
             .then(response => {
                 if (response.ok) {
-                    console.log('즐겨찾기에 추가되었습니다.');
+                    console.log('즐겨찾기가 삭제되었습니다..');
                 } else {
-                    console.error('즐겨찾기 추가에 실패했습니다.');
+                    console.error('즐겨찾기 삭제에 실패했습니다.');
                 }
             })
             .catch(error => {
@@ -378,6 +378,7 @@
                 favMarker(currentMarker.placeId);// 즐겨찾기 추가
             } else {
                 favImg.src = '/img/star2.png';
+                favMarkerRemove(currentMarker.placeId);
             }
         });
 
@@ -445,7 +446,7 @@
         document.getElementById("shareBtn").addEventListener('click', function() {
             if (currentMarker) {
 
-                console.log("markerid:",currentMarker.placeId);
+                console.log("markerId:",currentMarker.placeId);
                 //hash 기반 url 생성 encode로 placeid를 인코딩하고 id를 #으로 변환
                 shareUrl = `${window.location.origin}/#${encodeURIComponent(currentMarker.placeId)}`;
                 alert(shareUrl);

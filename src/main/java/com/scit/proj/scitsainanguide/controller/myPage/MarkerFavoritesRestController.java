@@ -16,6 +16,7 @@ public class MarkerFavoritesRestController {
 
     private final MarkerFavoritesService markerFavoritesService;
 
+    //즐겨찾기 추가
     @PostMapping("/addFavorite/{placeId}")
     public ResponseEntity<String> addFavorite(@PathVariable("placeId") String placeId,
                                               @AuthenticationPrincipal AuthenticatedUser user) {
@@ -38,6 +39,7 @@ public class MarkerFavoritesRestController {
         }
     }
 
+    //즐겨찾기 여부 확인
     @PostMapping("/isFavorite/{placeId}")
     public ResponseEntity<Boolean> checkFavorite(
             @PathVariable("placeId") String placeId,
@@ -53,6 +55,21 @@ public class MarkerFavoritesRestController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
+    }
+
+    // 즐겨찾기 삭제 
+    @PostMapping("/removeFavorite/{placeId}")
+    public ResponseEntity<String> removeFavorite(
+            @PathVariable("placeId") String placeId,
+            @AuthenticationPrincipal AuthenticatedUser user) {
+        try {
+            String memberId = user.getUsername();  // 인증된 사용자의 ID 가져오기
+            markerFavoritesService.removeFavorite(memberId, placeId);  // 삭제 요청 처리
+            return ResponseEntity.ok("즐겨찾기가 삭제되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("즐겨찾기 삭제에 실패했습니다.");
         }
     }
 

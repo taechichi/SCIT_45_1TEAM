@@ -1,6 +1,5 @@
 package com.scit.proj.scitsainanguide.service.myPage;
 
-import com.scit.proj.scitsainanguide.domain.dto.MarkerBoardDTO;
 import com.scit.proj.scitsainanguide.domain.dto.MarkerFavoritesDTO;
 import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.domain.entity.*;
@@ -8,22 +7,16 @@ import com.scit.proj.scitsainanguide.repository.*;
 import com.scit.proj.scitsainanguide.domain.entity.MarkerFavoritesEntity;
 import com.scit.proj.scitsainanguide.repository.MarkerFavoritesJPARepository;
 import com.scit.proj.scitsainanguide.repository.MarkerFavoritesRepository;
-import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.annotation.Persistent;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -42,7 +35,7 @@ public class MarkerFavoritesService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    //즐겨찾기마커 추가 기능
+    //즐겨찾기 마커 추가 기능
     public void AddFavMarker(MarkerFavoritesDTO markerFavoritesDTO) throws IOException {
         MemberEntity memberEntity = memberJpaRepository.findById(markerFavoritesDTO.getMemberId())
                 .orElseThrow(() -> new EntityNotFoundException("회원아이디가 없습니다."));
@@ -76,7 +69,7 @@ public class MarkerFavoritesService {
             log.debug("markerFavoritesEntity가 null이어서 저장하지 않았습니다.");
         }
     }
-
+    //즐겨찾기 여부 확인
     public boolean isFavorite(String memberId, String placeId) {
         // 먼저 병원 ID로 검색
         boolean isHospitalFavorite = markerFavoritesJPARepository.existsByMemberIdAndHospitalId(memberId, placeId);
@@ -87,6 +80,23 @@ public class MarkerFavoritesService {
 
         // 병원이 아닌 경우 쉘터 ID로 검색
         return markerFavoritesJPARepository.existsByMemberIdAndShelterId(memberId, placeId);
+    }
+
+    public void removeFavorite(String memberId, String placeId) {
+        // 병원 ID로 먼저 삭제 시도
+        if (markerFavoritesJPARepository.existsByMemberIdAndHospitalId(memberId, placeId)) {
+            markerFavoritesJPARepository.deleteByMemberIdAndHospitalId(memberId, placeId);  // 병원 ID로 삭제
+            System.out.println("즐겨찾기가 병원에서 삭제되었습니다.");
+        }
+        // 병원 ID가 아니라면 쉘터 ID로 삭제 시도
+        else if (markerFavoritesJPARepository.existsByMemberIdAndShelterId(memberId, placeId)) {
+            markerFavoritesJPARepository.deleteByMemberIdAndShelterId(memberId, placeId);  // 쉘터 ID로 삭제
+            System.out.println("즐겨찾기가 쉘터에서 삭제되었습니다.");
+        }
+        // 둘 다 없을 경우
+        else {
+            throw new EntityNotFoundException("해당 즐겨찾기가 존재하지 않습니다.");
+        }
     }
 
 
