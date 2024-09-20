@@ -68,10 +68,10 @@
                     <div id="map" style="height: 100%; width: 100%; z-index: 0;"></div>
 
                     <!-- 병원 버튼 -->
-                    <button type="button" id="hospitalfilterbutton">병원</button>
+                    <button type="button" id="hospitalfilterbutton" th:text="#{main.button.hospital}"></button>
 
                     <!-- 대피소 버튼 -->
-                    <button type="button" id="shelterfilterbutton">대피소</button>
+                    <button type="button" id="shelterfilterbutton" th:text="#{main.button.shelter}"></button>
 
                     <!-- 내 위치 버튼 -->
                     <img th:src="@{/img/myLocation.png}" id="myLocation" class="img-40">
