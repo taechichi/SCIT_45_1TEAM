@@ -1,0 +1,9 @@
+.card{
+    width: 600px; /* iframe 너비와 맞춤 */
+    margin: 10px; /* 카드 간의 여유 공간 */
+}
+
+#videoBox{
+    display: flex;
+    justify-content: space-around; /* 각 요소 사이에 공간을 배분 */
+}
