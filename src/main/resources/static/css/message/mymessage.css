@@ -28,6 +28,7 @@
     width: 5%; /* 네 번째 열 너비 */
 }
 h4 {
+    margin-top: 10px;
     margin-left: 10px;
     color: green;
 }
