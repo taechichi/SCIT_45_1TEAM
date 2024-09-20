@@ -39,10 +39,11 @@
 
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h3 class="m-0 font-weight-bold text-primary" th:text="#{translate.fileTranslate}">파일 번역</h3>
+                <h5 th:text="#{translate.guide}">언어 선택 설명</h5>
             </div>
 
             <div class="card-body">
-                    <label for="selectLan" th:text="#{translate.selectLan}">파일 언어:</label>
+                    <label for="selectLan" th:text="#{translate.file.selectLan}">파일 언어:</label>
                     <select id="selectLan">
                         <option value="en-US" th:text="#{translate.en}">영어</option>
                         <option value="ja-JP" th:text="#{translate.ja}" selected>일본어</option>

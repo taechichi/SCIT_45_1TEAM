@@ -8,13 +8,6 @@
     transition: background-color 0.3s ease;
 }
 
-/* 녹음 종료 버튼 스타일 */
-#stop-recording {
-    background-color: transparent;
-    border: 2px solid;
-    color: inherit;
-}
-
 .select{
     font-family: Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
     font-size: 1rem;
@@ -32,17 +25,37 @@
     border-radius: 10px; /* 둥근 모서리 */
 }
 
-#streamingLan option:first-child {
-    background-color: #6610f2; /* 첫 번째 옵션에 대한 배경색 */
-    color: #000; /* 첫 번째 옵션에 대한 글자색 */
+.translateContainer {
+    display: flex;
+    justify-content: space-between; /* 카드들 사이에 여유 공간 배치 */
 }
 
-#streamingLan option:nth-child(2) {
-    background-color: #e74a3b;
-    color: #000;
+.translateCard {
+    flex: 1; /* 카드가 남은 공간을 나누어 가짐 */
+    margin: 10px; /* 카드 간격을 위한 여백 */
 }
 
-#streamingLan option:nth-child(3) {
-    background-color: white;
-    color: #000;
+.card {
+    width: 100%;
+}
+
+
+#streamingLan{
+    width: 150px;
+    border-radius: 4px;
+    padding: 5px 30px 5px 10px;
+    background-color: #1C39BB;
+    color: white;
+}
+
+#streamingLan option{
+    background: #B0E0E6;
+    color: black;
+    padding: 3px 0;
+}
+
+#start-recording,
+#stop-recording,
+#audio-playback {
+    vertical-align: middle; /* 수평 정렬 */
 }
