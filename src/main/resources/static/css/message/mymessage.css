@@ -1,0 +1,95 @@
+/* dataTable 아이디가 지정된 테이블의 셀 내용이 너무 길어질 때 '...'으로 표시 */
+#dataTable td, #dataTable th {
+    white-space: nowrap; /* 내용이 한 줄로 표시되도록 */
+    overflow: hidden; /* 내용이 넘치면 숨기기 */
+    text-overflow: ellipsis; /* 넘친 내용에 '...' 표시 */
+}
+
+/* dataTable 아이디가 지정된 테이블의 레이아웃을 고정시킵니다 */
+#dataTable {
+    table-layout: fixed; /* 테이블의 열 너비를 고정 */
+    width: 100%; /* 테이블을 컨테이너의 너비에 맞게 조정 */
+}
+
+/* 각 열에 대한 너비를 개별적으로 설정 */
+#dataTable td:first-child, #dataTable th:first-child {
+    width: 15%; /* 첫 번째 열 너비 */
+}
+
+#dataTable td:nth-child(2), #dataTable th:nth-child(2) {
+    width: 65%; /* 두 번째 열 너비 */
+}
+
+#dataTable td:nth-child(3), #dataTable th:nth-child(3) {
+    width: 15%; /* 세 번째 열 너비 */
+}
+
+#dataTable td:nth-child(4), #dataTable th:nth-child(4) {
+    width: 5%; /* 네 번째 열 너비 */
+}
+h4 {
+    margin-top: 10px;
+    margin-left: 10px;
+    color: green;
+}
+
+/* 검색 폼 간격 조정 및 수평 정렬 */
+.searchForm-container {
+    margin-bottom: 10px; /* 테이블과의 간격을 10px로 설정 */
+}
+
+.search-form {
+    display: flex;
+    align-items: center; /* 수직 정렬 */
+    gap: 10px; /* 요소 간 간격 조정 */
+    width: 100%;
+}
+
+.search-form select,
+.search-form input[type="text"] {
+    margin-right: 10px; /* 버튼 간격 조정 */
+}
+
+/* 버튼 스타일 */
+.toggle-button {
+    border: 2px solid green;
+    background-color: transparent;
+    color: green;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-right: 10px; /* 버튼 간격 조정 */
+}
+
+.toggle-button.active {
+    background-color: lightgreen;
+    color: darkgreen;
+}
+
+.search-form input[type="submit"] {
+    margin-right: 10px; /* 버튼 간격 조정 */
+}
+
+/* 쪽지 쓰기 버튼 스타일 */
+#writeMessageBtn {
+    border: 2px solid brown;
+    background-color: transparent;
+    color: brown;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+/* 삭제 버튼 스타일 */
+#deleteMessageBtn {
+    border: 2px solid red;
+    background-color: transparent;
+    color: red;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+#writeMessageBtn , #deleteMessageBtn  {
+
+}

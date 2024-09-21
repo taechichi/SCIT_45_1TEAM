@@ -202,3 +202,11 @@ h1 {
 .model-15 .checkbox input:checked + label:after {
     left: 0;
 }
+/* 모달 백드롭 흐리게 */
+#passwordCheckModal {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+}
+#passwordCheckModal{
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}

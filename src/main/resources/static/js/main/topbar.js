@@ -1,5 +1,11 @@
-$(document).ready(function() {
+// 자식요소인 drop-down 메뉴 내 영역들을 클릭해도, 부모요소인 메뉴가 닫히지 않도록 이벤트 전파 중지
+document.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', function(event) {
+        event.stopPropagation(); // 이벤트 전파를 중지
+    });
+});
 
+$(document).ready(function () {
     // index에서 아이콘 요소를 클릭하면, 현재 로그인 중인 사용자 정보 불러옴
     let dropdown = document.getElementById('userDropdown');
     dropdown.addEventListener('click', myStatus);
@@ -8,8 +14,8 @@ $(document).ready(function() {
     let circles = document.querySelectorAll('.circle');
 
     // 상태 수정 원 요소들에 대한 클릭 이벤트 설정
-    circles.forEach(function(element) {
-        element.addEventListener('click', function() {
+    circles.forEach(function (element) {
+        element.addEventListener('click', function () {
 
             // 이전 타이머가 존재하면 정리
             if (timerInterval) {
@@ -35,11 +41,11 @@ $(document).ready(function() {
             $.ajax({
                 url: '/member/change/status',
                 method: 'PATCH',
-                data: { statusId: statusId, duration: hours },
-                success: function() {
+                data: {statusId: statusId, duration: hours},
+                success: function () {
                     myStatus(); // 상태 변경 후 최신 상태 다시 불러옴
                 },
-                error: function(error) {
+                error: function (error) {
                     console.error('상태 변경 실패:', error);
                 }
             });
@@ -57,7 +63,7 @@ $(document).ready(function() {
     let charCount = document.getElementById('charCount');
 
     // 수정 버튼 클릭 시
-    editButton.addEventListener('click', function() {
+    editButton.addEventListener('click', function () {
         // 기존 상태 메시지를 텍스트박스에 넣기 - 기존 것에서 수정 가능하도록
         statusMessageInput.value = statusMessageDiv.textContent.trim();
 
@@ -69,7 +75,7 @@ $(document).ready(function() {
     });
 
     // 입력 이벤트 리스너 등록
-    statusMessageInput.addEventListener('input', function() {
+    statusMessageInput.addEventListener('input', function () {
         // 현재 입력된 문자의 수를 계산
         let charCountValue = statusMessageInput.value.length;
         // 화면에 문자 수와 최대 문자 수를 업데이트
@@ -77,7 +83,7 @@ $(document).ready(function() {
     });
 
     // 저장 버튼 클릭 시
-    saveButton.addEventListener('click', function() {
+    saveButton.addEventListener('click', function () {
         // 사용자가 새로 입력한 상태메시지
         let newStatusMessage = statusMessageInput.value;
 
@@ -100,6 +106,7 @@ $(document).ready(function() {
                 statusMessageDiv.style.display = 'block';
                 statusMessageInput.style.display = 'none';
                 saveButton.style.display = 'none';
+                charCount.style.visibility = 'hidden';
                 myStatus();
             })
             .catch(error => {
@@ -111,12 +118,13 @@ $(document).ready(function() {
     const eventSource = new EventSource('/notification');
 
     // 친구 요청 수신, 친구 요청 수락, 메시지 수신 이벤트
-    $(eventSource).on('messageReceive friendRequestReceive friendRequestAccept', function(e) {
+    $(eventSource).on('messageReceive friendRequestReceive friendRequestAccept', function (e) {
         const eventType = e.type;
         selectAlarmList(eventType);
     });
 
 }); // end of $(document).ready(function() {})
+
 
 // 사용자 최신 상태를 읽어와 반영할 element
 let lastStUpdateDt = document.getElementById("lastStUpdateDt");
@@ -127,7 +135,7 @@ let remainingTime = document.getElementById("remainingTime");
 let timerInterval = null; // 전역 변수로 선언
 
 // 사용자 최신 상태 반환
-function myStatus(){
+function myStatus() {
     // 서버에 업데이트 요청 보내기
     fetch('/member/view/statuses', {
         method: 'GET',
@@ -162,13 +170,22 @@ function myStatus(){
 }
 
 // 프로필 이미지 업데이트 함수
-function updateStatusColor(statusId){
-    switch(statusId){
-        case 1: profileImg.style.border = '6px solid black'; break;
-        case 2: profileImg.style.border = '6px solid green'; break;
-        case 3: profileImg.style.border = '6px solid yellow'; break;
-        case 4: profileImg.style.border = '6px solid red'; break;
-        default: console.log("statusId 오류");
+function updateStatusColor(statusId) {
+    switch (statusId) {
+        case 1:
+            profileImg.style.border = '6px solid black';
+            break;
+        case 2:
+            profileImg.style.border = '6px solid green';
+            break;
+        case 3:
+            profileImg.style.border = '6px solid yellow';
+            break;
+        case 4:
+            profileImg.style.border = '6px solid red';
+            break;
+        default:
+            console.log("statusId 오류");
     }
 }
 
@@ -179,14 +196,15 @@ function startTimer(endTime) {
         let timeLeft = endTime - now;
 
         if (timeLeft <= 0) {
-            remainingTime.textContent = '상태가 만료되었습니다.';
+            remainingTime.innerHTML = `${expiredMessage}`;
             profileImg.style.border = '6px solid black'; // 상태 만료 시 프로필 사진 테두리 색상 변경
             clearInterval(timerInterval); // 타이머 중지
         } else {
             let hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
             let minutesLeft = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
             let secondsLeft = Math.floor((timeLeft % (1000 * 60)) / 1000);
-            remainingTime.textContent = `남은 시간: ${hoursLeft}시간 ${minutesLeft}분 ${secondsLeft}초`;
+            remainingTime.innerHTML = `
+            ${remainingMessage} ${hoursLeft}${hoursLabel} ${minutesLeft}${minutesLabel} ${secondsLeft}${secondsLabel}`;
         }
     }
 
@@ -202,13 +220,13 @@ function selectAlarmList(eventType) {
     $.ajax({
         url: '/notification/list',  // 알림 데이터 조회 URL
         data: {
-            eventType : eventType
+            eventType: eventType
         },
         method: 'GET',
-        success: function(response) {
+        success: function (response) {
             updateAlarmUI(response, eventType);
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.error('알림 데이터를 가져오는 중 오류 발생:', error);
         }
     });
@@ -320,7 +338,7 @@ function getStatusIndicatorClass(statusId) {
 
 function formatDate(dateString) {
     const date = new Date(dateString);
-    return date.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '.');
+    return date.toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\./g, '.');
 }
 
 function updateCnt($badgeCounter) {

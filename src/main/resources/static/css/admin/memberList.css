@@ -1,6 +1,5 @@
 /* 기본 테이블 스타일 */
 table {
-    width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
     font-size: 16px;
@@ -95,8 +94,15 @@ tbody tr:nth-child(even) {
 .pagination a:hover {
     background-color: #ddd;
 }
+/* dataTable 아이디가 지정된 테이블의 셀 내용이 너무 길어질 때 '...'으로 표시 */
+#dataTable td, #dataTable th {
+    white-space: nowrap; /* 내용이 한 줄로 표시되도록 */
+    overflow: hidden; /* 내용이 넘치면 숨기기 */
+    text-overflow: ellipsis; /* 넘친 내용에 '...' 표시 */
+}
+
+/* dataTable 아이디가 지정된 테이블의 레이아웃을 고정시킵니다 */
 #dataTable {
-    white-space: nowrap; /* 텍스트를 한 줄로 표시 */
-    overflow: hidden; /* 넘치는 텍스트를 숨김 */
-    text-overflow: ellipsis; /* 넘치는 텍스트를 ...으로 표시 */
+    table-layout: fixed; /* 테이블의 열 너비를 고정 */
+    width: 100%; /* 테이블을 컨테이너의 너비에 맞게 조정 */
 }

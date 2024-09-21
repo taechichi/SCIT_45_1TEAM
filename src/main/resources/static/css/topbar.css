@@ -31,9 +31,13 @@
     align-items: center;
 }
 
+#hours{
+    width: 50px;
+}
+
 #userInformation{
     width: 400px;
-    height: 540px;
+    height: 560px;
 }
 
 #statusProfileImg{
@@ -41,10 +45,6 @@
     height: 100px;
     margin-top: 5%;
     border: 6px solid black;
-}
-
-#userInformation{
-    /*해당 모달 영역 내부를 클릭해도 닫히지 않도록, 부분 코드 찾아서 수정하기*/
 }
 
 #circleNo2{
@@ -77,6 +77,7 @@
 
 #timeInputContainer{
     margin: 5px;
+    text-align: center;
 }
 
 #hours{
@@ -85,10 +86,6 @@
 
 #remainingTime{
     text-align: center;
-}
-
-#statusMessageDiv{
-    margin-left: 200px;
 }
 
 #statusMessage{
@@ -106,12 +103,12 @@
 }
 
 #charCount{
-    visibility: hidden; /* 기본적으로 보이지 않게 설정 */
-    margin-left: 230px;
+    visibility: hidden; /* 수정버튼 눌렀을 때만 보임 */
+    margin-left: 180px;
 }
 
 #saveStatusMessage{
-    visibility: hidden; /* 기본적으로 보이지 않게 설정 */
+    visibility: hidden; /* 수정버튼 눌렀을 때만 보임 */
     margin-left: 10px;
 }
 

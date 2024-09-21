@@ -40,11 +40,12 @@
 
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h3 class="m-0 font-weight-bold text-primary" th:text="#{translate.image}">이미지 번역</h3>
+                <h5 th:text="#{translate.guide}">언어 선택 설명</h5>
             </div>
 
             <div class="card-body">
             <form id="uploadForm" enctype="multipart/form-data">
-                <label for="sourceLanguage" th:text="#{translate.selectLan}">이미지 언어:</label>
+                <label for="sourceLanguage" th:text="#{translate.image.selectLan}">이미지 언어:</label>
                 <select id="sourceLanguage">
                     <option value="en-US" th:text="#{translate.en}">영어</option>
                     <option value="ja-JP" th:text="#{translate.ja}" selected>일본어</option>

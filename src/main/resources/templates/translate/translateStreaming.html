@@ -41,25 +41,68 @@
 
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h3 class="m-0 font-weight-bold text-primary" th:text="#{translate.realtime.streaming}">실시간 음성 번역</h3>
+                <h5 th:text="#{translate.guide}">언어 선택 설명</h5>
             </div>
 
+            <div class="card-body">
+                <label for="streamingLan" th:text="#{translate.streaming.selectLan}">스트리밍 언어: </label>
+                <select id="streamingLan">
+                    <option value="en-US" th:text="#{translate.en}">영어</option>
+                    <option value="ja-JP" th:text="#{translate.ja}" selected>일본어</option>
+                    <option value="ko-KR" th:text="#{translate.ko}">한국어</option>
+                </select>
 
-            <label for="streamingLan" id="language-label">스트리밍 언어 선택</label>
-            <select id="streamingLan">
-                <option value="en-US">영어</option>
-                <option value="ja-JP" selected>일본어</option>
-                <option value="ko-KR">한국어</option>
-            </select><br>
+                <!-- 녹음 시작 버튼 -->
+                <a href="#" id="start-recording" class="btn btn-success btn-circle btn-lg">
+                    <i class="fas fa-microphone"></i>
+                </a>
 
-            <audio id="audio-playback" controls></audio><br>
-            <button id="start-recording">녹음 시작</button>
-            <button id="stop-recording" th:text="#{translate.streaming.stopRec}" disabled>녹음 종료</button><br>
+                <!-- 녹음 종료 버튼 -->
+                <a href="#" id="stop-recording" class="btn btn-danger btn-circle btn-lg" disabled>
+                    <i class="fas fa-microphone-slash"></i>
+                </a>
 
-            <h4 th:text="#{translate.streaming.toText}">텍스트화: </h4>
-            <span id="voiceTexted"></span>
+                <!-- 녹음된 내용 다시 듣기 -->
+                <audio id="audio-playback" controls></audio>
+            </div>
 
-            <h4 th:text="#{translate.streamingTrans}">번역: </h4>
-            <span id="voiceTranslated"></span>
+            <div class="translateContainer">
+            <div class="translateCard">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    TEXTED
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><span th:text="#{translate.streaming.toText}" id="voiceTexted"></span></div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-language fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="translateCard">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    TRANSLATED
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><span th:text="#{translate.streamingTrans}" id="voiceTranslated"></span></div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-globe fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
 
         </div>
         <!-- End of Main Content -->

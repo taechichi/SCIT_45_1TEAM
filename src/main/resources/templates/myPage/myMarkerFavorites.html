@@ -1,101 +1,154 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.w3.org/1999/xhtml">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
+
     <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
     <title>[ scitSainanGuide.html]</title>
-    <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
-    <script th:src="@{/js/myPage/myMarkerFavorites.js}"></script>
-    <script th:src="@{/js/myPage/myMarkerFavorites_distance.js}"></script>
+        <!-- 라이브러리 CSS -->
+        <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
+        <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
+        <!-- 커스텀 CSS -->
+        <link rel="stylesheet" th:href="@{/css/topbar.css}">
+        <link rel="stylesheet" th:href="@{/css/index/index.css}">
+        <link rel="stylesheet" th:href="@{/css/myMarkerFavorites.css}">
 </head>
-<body>
-    <h1> [ scitSainanGuide ] </h1>
-    <h3> [ myFavoriteMarker.html ] </h3>
-    <hr>
-    <div>
-        <h3>즐겨찾기 마커의 목록을 조회</h3>
-        <h3>계정에 따른 리스트업은 아직 미구현</h3>
-    </div>
 
-    <div>
-        <!-- 현재 접속한 사람의 정보 -->
-    </div>
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
 
-    <div>
-        <!-- 검색 폼 -->
-        <div class="searchForm-container">
-            <form id="pagingForm" th:action="@{/my/myMarkerFavorites}" method="get">
-                <input type="hidden" name="page" id="page" value="1" />
-                <input type="hidden" name="filter" id="filter" th:value="${filter}" />
-                <input type="hidden" name="sortBy" id="sortBy" th:value="${sortBy}" />
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/menu :: menu}"></div>
+    <!-- End of Sidebar -->
 
-                <!-- 검색어 입력 필드 -->
-                <input  type="text" name="searchWord" id="searchWord" th:value="${searchWord}" placeholder="검색어를 입력하세요." />
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
 
-                <a>필터: </a>
-                <button id="filterAll">모두 보기</button>
-                <button id="filterHospital">병원</button>
-                <button id="filterShelter">대피소</button>
-                <a>/ 정렬: </a>
-                <button id="sortByDistance">거리순</button>
-                <button id="sortByName">이름순</button>
-                <!--<input type="submit" onclick="pagingFormSubmit(1)" value="검색"/>-->
-            </form>
-        </div>
+        <!-- Main Content -->
+        <div id="content">
 
-        <!-- 즐겨찾기 데이터 표시하는 공간 전체를 form으로 감싸 삭제할 수 있도록 함 -->
-        <form th:action="@{/my/myMarkerFavorites/delete}" method="post" id="deleteForm">
-            <button type="submit">선택된 항목 삭제</button>
+            <!-- topbar -->
+            <div th:replace="~{fragments/topbar :: topbar}"></div>
+            <!-- End of topbar -->
 
-            <!-- list 출력 id는 'tsh0828'인 경우로 한정해서 작성했습니다. (test용)-->
-            <!-- 삭제 성공 실패 출력하는 공간 -->
-            <div th:if="${errorMessage}" style="color: red;">
-                <p th:text="${errorMessage}"></p>
+            <!-- Begin Page Content -->
+
+            <h4 class="page-title" >내가 즐겨찾기 한 장소</h4>
+
+            <div>
+                <!-- 현재 접속한 사람의 정보 -->
             </div>
 
-            <div th:if="${successMessage}" style="color: green;">
-                <p th:text="${successMessage}"></p>
-            </div>
-            <!-- 삭제 성공 실패 출력하는 공간 -->
+            <div>
+                <!-- 검색 폼 -->
+                <div class="searchForm-container">
+                    <form id="pagingForm" th:action="@{/my/myMarkerFavorites}" method="get">
+                        <input type="hidden" name="page" id="page" value="1"/>
+                        <input type="hidden" name="filter" id="filter" th:value="${filter}"/>
+                        <input type="hidden" name="sortBy" id="sortBy" th:value="${sortBy}"/>
+
+                        <!-- 검색어 입력 필드 -->
+                        <input type="text" name="searchWord" id="searchWord" th:value="${searchWord}"
+                               placeholder="검색어를 입력하세요."/>
+
+                        <a>필터: </a>
+                        <button id="filterAll">모두 보기</button>
+                        <button id="filterHospital">병원</button>
+                        <button id="filterShelter">대피소</button>
+                        <a>/ 정렬: </a>
+                        <button id="sortByDistance">거리순</button>
+                        <button id="sortByName">이름순</button>
+                        <!--<input type="submit" onclick="pagingFormSubmit(1)" value="검색"/>-->
+                    </form>
+                </div>
+
+                <!-- 즐겨찾기 데이터 표시하는 공간 전체를 form으로 감싸 삭제할 수 있도록 함 -->
+                <form th:action="@{/my/myMarkerFavorites/delete}" method="post" id="deleteForm">
+                        <button type="submit" class="unfavorite-button">즐겨찾기 삭제</button>
+
+
+
+                    <!-- list 출력 id는 'tsh0828'인 경우로 한정해서 작성했습니다. (test용)-->
+                    <!-- 삭제 성공 실패 출력하는 공간 -->
+                    <div th:if="${errorMessage}" style="color: red;">
+                        <p th:text="${errorMessage}"></p>
+                    </div>
+
+                    <div th:if="${successMessage}" style="color: green;">
+                        <p th:text="${successMessage}"></p>
+                    </div>
+                    <!-- 삭제 성공 실패 출력하는 공간 -->
 
             <!-- 즐겨찾기 마커 데이터 출력하는 공간 -->
-            <table style="text-align: center">
-                <thead>
-                    <tr>
-                        <th>Select</th>
-                        <th>Name</th>
-                        <th>Type</th>
-                    </tr>
-                </thead>
-
-                <tbody id="markerTableBody">
-                    <tr th:each="marker : ${pageData.content}">
-                        <td><input type="checkbox" name="favoriteId" th:value="${marker.favoriteId}"></td>
-                        <td>
-                            <span th:if="${marker.nickname != null and !marker.nickname.isEmpty()}">
-                                <a th:text="${marker.nickname}" class="nickname-exists"></a>
-                                <a>(</a>
-                                <a th:text="${marker.name}"></a>
-                                <a>)</a>
-                            </span>
-                            <span th:if="${marker.nickname == null or marker.nickname.isEmpty()}">
-                                <a th:text="${marker.name}" class="nickname-missing"></a>
-                            </span>
-                        </td>
-
-                        <!-- 병원과 데이터를 구분해서 표시 -->
-                        <td><span th:if="${marker.hospitalId != null}">병원</span><span th:if="${marker.hospitalId == null}">대피소</span></td>
-                    </tr>
-                </tbody>
-
-            </table>
+                    <table style="text-align: center">
+                        <colgroup>
+                            <col class="col-select">
+                            <col class="col-name">
+                            <col class="col-type">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>즐겨찾기</th>
+                            <th>이름</th>
+                            <th>병원/대피소</th>
+                        </tr>
+                        </thead>
+                        <tbody id="markerTableBody">
+                        <tr th:each="marker : ${pageData.content}">
+                            <td> <input type="checkbox" name="favoriteId" th:value="${marker.favoriteId}"></td>
+                            <td>
+            <span th:if="${marker.nickname != null and !marker.nickname.isEmpty()}">
+                <a th:text="${marker.nickname}" class="nickname-exists"></a>
+                <a>(</a>
+                <a th:text="${marker.name}"></a>
+                <a>)</a>
+            </span>
+                                <span th:if="${marker.nickname == null or marker.nickname.isEmpty()}">
+                <a th:text="${marker.name}" class="nickname-missing"></a>
+            </span>
+                            </td>
+                            <td>
+                                <span th:if="${marker.hospitalId != null}">병원</span>
+                                <span th:if="${marker.hospitalId == null}">대피소</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
         </form>
+                <!-- pagination 부분 -->
+                <div th:replace="~{fragments/pagination :: pagination}"></div>
+            </div>
+        </div>
+        <!-- End of Main Content -->
 
-        <!-- pagination 부분 -->
-        <div th:replace="~{fragments/pagination :: pagination}"></div>
     </div>
-</body>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<div th:replace="~{fragments/logoutModal :: logoutModel}"></div>
 
 <!-- 페이징 기능을 위한 js -->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+
+<!-- Bootstrap JavaScript 로딩 -->
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- jQuery Easing Plugin 로딩 -->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+<!-- sb-admin-2.js 로딩 -->
+<script th:src="@{/js/sb-admin-2.js}"></script>
+
+<!-- topbar.js 로딩 -->
+<script th:src="@{/js/main/topbar.js}"></script>
+
+<!-- 기타 스크립트 로딩 -->
 <script th:src="@{/js/paging.js}"></script>
+<script th:src="@{/js/myPage/myMarkerFavorites.js}"></script>
+<script th:src="@{/js/myPage/myMarkerFavorites_distance.js}"></script>
+</body>
 </html>

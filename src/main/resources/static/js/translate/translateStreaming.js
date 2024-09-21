@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 서버에서 반환된 값
             .then(data => {
                 console.log('9. 서버 응답:', data);
-                document.getElementById('voiceTexted').innerHTML = `${data.transcription}`;
+                document.getElementById('voiceTexted').innerHTML += `<br>${data.transcription}`;
 
                 // 번역 요청 함수 호출(texted 글, 어떤 언어인지)
                 let whatLan = data.languageCode;
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => {
                 console.error('텍스트로 변환 실패:', error);
-                document.getElementById('voiceTexted').innerHTML = `<span th:text="#{translate.textedError}"></span>`;
+                document.getElementById('voiceTexted').innerHTML = `${textedError}`;
             });
     }
 
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .then(data => {
                     // 현재의 텍스트에 새 번역 결과를 추가하고 개행 문자를 추가
-                    document.getElementById('voiceTranslated').innerHTML += `${data.translatedText}<br>`;
+                    document.getElementById('voiceTranslated').innerHTML += `${transError}`;
                 })
                 .catch(error => {
                     console.error('번역 실패:', error);
