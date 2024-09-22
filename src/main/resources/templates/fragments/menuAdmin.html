@@ -9,7 +9,7 @@
 			<div class="sidebar-brand-icon rotate-n-15">
 				<i class="fas fa-home"></i>
 			</div>
-			<div class="sidebar-brand-text mx-3">홈 화면 가기</div>
+			<div class="sidebar-brand-text mx-3" th:text="#{menu.admin.gotohome}">홈 화면 가기</div>
 		</a>
 
 		<!-- Divider -->
@@ -17,19 +17,19 @@
 
 		<!-- Heading -->
 		<div class="sidebar-heading">
-			관리자
+			ADMIN
 		</div>
 
 		<li class="nav-item">
 			<a class="nav-link" th:href="@{/admin/board}">
 				<i class="fas fa-fw fa-cog"></i>
-				<span>게시판 관리</span></a>
+				<span th:text="#{menu.admin.board}">게시판 관리</span></a>
 		</li>
 
 		<li class="nav-item">
 			<a class="nav-link" th:href="@{/admin/member}">
 				<i class="fas fa-fw fa-cog"></i>
-				<span>회원 관리</span></a>
+				<span th:text="#{menu.admin.member}">회원 관리</span></a>
 		</li>
 
 		<!-- Divider -->
