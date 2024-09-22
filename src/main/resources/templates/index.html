@@ -32,7 +32,7 @@
           형식을 사용해야 Thymeleaf 구문이 JavaScript 내부에서 정상적으로 해석되고, JS 내에서 타임리프 사용 가능
           서버에서 Thymeleaf 표현식을 처리한 후, 그 값을 JavaScript 변수로 전달! JS에서는 ${변수} 형태로 사용 -->
     <script th:inline="javascript">
-        <!-- 번역용 변수 -->
+        /* 상태용 변수 */
         let textedError = /*[[#{translate.textedError}]]*/ '텍스트화 실패';
         let transError = /*[[#{translate.transError}]]*/ '번역 실패';
         <!-- 상태용 변수 -->
