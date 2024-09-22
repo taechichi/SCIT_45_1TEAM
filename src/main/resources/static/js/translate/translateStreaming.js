@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('languageCode', streamingLanguage);
 
         // 서버에 POST 요청을 보내 실시간 스트리밍 오디오 파일을 업로드
-        fetch('voiceConvertText', {
+        fetch('/voiceConvertText', {
             method: 'POST',
             body: formData
         })
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 번역되어야 할 타겟 언어 배열의 요소들을 반복
         targetLanguages.forEach(targetLanguage => {
-            fetch('translateText', {
+            fetch('/translateText', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -143,28 +143,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .then(data => {
                     // 현재의 텍스트에 새 번역 결과를 추가하고 개행 문자를 추가
-                    document.getElementById('voiceTranslated').innerHTML += `${transError}`;
+                    document.getElementById('voiceTranslated').innerHTML += `<br>${data.translatedText}<br>`;
                 })
                 .catch(error => {
                     console.error('번역 실패:', error);
-                    document.getElementById('voiceTranslated').innerHTML = `<span th:text="#{translate.transError}"></span>`;
+                    document.getElementById('voiceTranslated').innerHTML = `${transError}`;
                 });
         });
     }
 })
 
-$(document).ready(function() {
-    // 이미지 클릭 시 언어 선택 및 녹음 시작
-    $('.language-selection img').on('click', function() {
-        var lang = $(this).data('lang');
 
-        // 언어를 select 요소에 설정
-        $('#streamingLan').val(lang);
-
-        // 녹음 시작 버튼을 클릭 상태로 설정
-        $('#start-recording').click();
-
-        // 선택한 언어의 녹음 시작 메시지
-        $('#language-label').text('녹음이 시작되었습니다: ' + $(this).attr('alt'));
-    });
-});

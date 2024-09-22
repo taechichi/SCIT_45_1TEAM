@@ -36,7 +36,7 @@ function upload() {
     formData.append('audio', file);
 
     // 파일을 서버로 보내 변환된 텍스트 받아오기
-    fetch('fileConvertText', {
+    fetch('/fileConvertText', {
         method: 'POST',
         body: formData
     })
@@ -53,8 +53,7 @@ function upload() {
         // 실패시
         .catch(error => {
             console.error('Error converting audio to text:', error);
-            document.getElementById('texted').innerHTML = `<span th:text="#{translate.textedError}"></span>`;
-            document.getElementById('translated').innerHTML = `<span th:text="#{translate.transError}"></span>`;
+            document.getElementById('texted').innerHTML = `${textedError}`;
         });
 }
 
@@ -80,7 +79,7 @@ function requestTranslation(text, whatLan) {
 
     // 번역되어야 할 타겟 언어 배열의 요소들을 반복
     targetLanguages.forEach(targetLanguage => {
-        fetch('translateText', {
+        fetch('/translateText', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -98,7 +97,7 @@ function requestTranslation(text, whatLan) {
             })
             .catch(error => {
                 console.error('번역 실패:', error);
-                document.getElementById('translated').append(`#{translate.transError}`);
+                document.getElementById('translated').append(`${transError}`);
             });
     });
 }

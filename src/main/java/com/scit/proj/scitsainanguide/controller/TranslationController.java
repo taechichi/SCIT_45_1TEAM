@@ -38,7 +38,7 @@ public class TranslationController {
      * 홈화면에서 좌측 탭 메뉴 > FileToTranslate 버튼을 클릭하면 이동
      * @return
      */
-    @GetMapping("fileToTranslate")
+    @GetMapping("translate/file")
     public ModelAndView fileTrans(HttpServletRequest request) {
         return getModelAndView(request, "translate/translateUploadedFile");
     }
@@ -47,7 +47,7 @@ public class TranslationController {
      * 홈화면에서 좌측 탭 메뉴 > StreamingToTranslate 버튼을 클릭하면 이동
      * @return
      */
-    @GetMapping("streamingToTranslate")
+    @GetMapping("translate/streaming")
     public ModelAndView streamingTrans(HttpServletRequest request){
         return getModelAndView(request, "translate/translateStreaming");
     }
@@ -56,7 +56,7 @@ public class TranslationController {
      * 홈화면에서 좌측 탭 메뉴 > TranaslateImage 버튼을 클릭하면 이동
      * @return
      */
-    @GetMapping("imageTranslate")
+    @GetMapping("translate/image")
     public ModelAndView imageTranslate(HttpServletRequest request){
         return getModelAndView(request, "translate/translateImage");
     }

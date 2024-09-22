@@ -1,7 +1,10 @@
 // 자식요소인 drop-down 메뉴 내 영역들을 클릭해도, 부모요소인 메뉴가 닫히지 않도록 이벤트 전파 중지
 document.querySelectorAll('.dropdown-item').forEach(item => {
     item.addEventListener('click', function(event) {
-        event.stopPropagation(); // 이벤트 전파를 중지
+        // 로그아웃 버튼이 아닐 경우에만 이벤트 전파를 중지
+        if (!event.target.closest('a[data-toggle="modal"]')) {
+            event.stopPropagation(); // 부모 요소로 이벤트 전파를 막음
+        }
     });
 });
 
