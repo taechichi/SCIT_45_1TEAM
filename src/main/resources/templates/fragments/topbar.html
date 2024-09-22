@@ -29,7 +29,7 @@
     <ul sec:authorize="isAuthenticated()" class="navbar-nav ml-auto">
 
       <!-- 프로필 사진 (모달 열기) -->
-      <li class="nav-item">
+      <li style="margin-top: 10px" class="nav-item">
         <div class="d-flex align-items-center">
           <!-- 반복문으로 친구 프로필 사진 항목들 생성 -->
           <div th:each="friend : ${favoriteFriendList}" class="nav-link profile-picture-wrapper">
@@ -74,10 +74,13 @@
                 <img id="modalProfileImage" class="img-profile rounded-circle" src="" alt="Profile Picture" />
                 <div class="status-indicator"></div>
               </div>
-              <span><a href="my/message/write">쪽지 보내기</a></span>
-              <span>즐겨찾기 추가 예정</span>
+
+              <div class="modal-links">
+                <p><a href="my/message/write">쪽지 보내기</a></p>
+                <span>즐겨찾기 추가 예정</span>
+              </div>
+
               <!-- 회원 정보 -->
-<!--              <p><strong>Member ID:</strong> <span id="modalMemberId">No ID</span></p>-->
               <p><strong>마지막 상태 업데이트:</strong> <span id="modalLastUpdate">No update available</span></p>
               <p><strong>상태 메시지:</strong> <span id="modalStMessage">No status message</span></p>
             </div>
@@ -87,6 +90,7 @@
           </div>
         </div>
       </div>
+
 
 
 
