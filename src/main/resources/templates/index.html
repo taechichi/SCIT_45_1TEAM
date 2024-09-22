@@ -13,7 +13,7 @@
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
 
     <!-- google map script -->
-<!--   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places"></script>-->
+   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places"></script>
     <!-- 추가 할 라이브러리를 api의 libraries 부분 뒤에 추가 places,geometry -->
     <script th:src="@{/js/search_marker.js}"></script>
     <!-- Custom fonts for this template-->
@@ -95,10 +95,10 @@
                     <div id="map" style="height: 100%; width: 100%; z-index: 0;"></div>
 
                     <!-- 병원 버튼 -->
-                    <button type="button" id="hospitalfilterbutton" th:text="#{main.button.hospital}"></button>
+                    <button type="button" id="hospitalFilterButton" th:text="#{main.button.hospital}">병원</button>
 
                     <!-- 대피소 버튼 -->
-                    <button type="button" id="shelterfilterbutton" th:text="#{main.button.shelter}"></button>
+                    <button type="button" id="shelterFilterButton" th:text="#{main.button.shelter}">대피소</button>
 
                     <!-- 내 위치 버튼 -->
                     <button><img th:src="@{/img/myLocation.png}" id="myLocation" class="img-40"></button>
@@ -108,6 +108,7 @@
                 <div th:replace="~{fragments/realtimeComment :: realtimeCommentFragment}"></div>
 
             </div>
+
             <!-- End of Main Content -->
 
         </div>

@@ -368,11 +368,11 @@
         });
 
         //병원 버튼 클릭 시 근처 500m 검색
-        document.getElementById('hospitalfilterbutton').addEventListener('click', function() {
+        document.getElementById('hospitalFilterButton').addEventListener('click', function() {
             searchNearbyHospitals(); // 병원 검색 함수 호출
         });
         //대피소 클릭 시 검색
-        document.getElementById('shelterfilterbutton').addEventListener('click', function (){
+        document.getElementById('shelterFilterButton').addEventListener('click', function (){
             fetchNearbyShelters();
         });
         // 현재 위치 중심으로 줌 조정
