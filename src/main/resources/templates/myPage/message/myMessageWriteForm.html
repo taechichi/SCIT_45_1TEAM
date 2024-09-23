@@ -4,9 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script ></script>
+    <link rel="stylesheet" th:href="@{/css/message/myMessageWriteForm.css}">
 </head>
 <body>
+<h2>쪽지 쓰기</h2>
+
     <form action="/my/message" method="post">
         <input type="hidden" name="senderId" th:value="${#authentication.name}">
         <table>

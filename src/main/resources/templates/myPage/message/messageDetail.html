@@ -4,41 +4,46 @@
 <head>
     <meta charset="UTF-8">
     <title>쪽지 상세 보기</title>
+    <!-- Custom CSS -->
     <link rel="stylesheet" th:href="@{/css/message/messageDetail.css}">
 </head>
 <body>
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h4 class="m-0 font-weight-bold text-primary">쪽지 상세 보기</h4>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable">
-                <tbody th:object="${message}">
-                <tr>
-                    <th th:text="#{board.column.memberId}"></th>
-                    <td th:text="*{senderId}"></td>
-                </tr>
-                <tr>
-                    <th th:text="#{board.column.createDt}"></th>
-                    <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
-                </tr>
-                <tr>
-                    <th th:text="#{admin.board.column.content}"></th>
-                    <td th:text="*{content}"></td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <button type="button" id="deleteMessageBtn" th:data-id="*{messageId}" th:text="#{board.button.delete}"></button>
-                        <button type="button" id="viewMessageListBtn" th:text="#{board.button.toList}"></button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="custom-card">
+        <div class="custom-card-header">
+            <h4 class="m-0 font-weight-bold">쪽지 상세 보기</h4>
+        </div>
+        <div class="custom-card-content">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable">
+                    <tbody th:object="${message}">
+                    <tr>
+                        <th th:text="#{board.column.memberId}"></th>
+                        <td th:text="*{senderId}"></td>
+                    </tr>
+                    <tr>
+                        <th th:text="#{board.column.createDt}"></th>
+                        <td th:text="*{#temporals.format(createDt, 'yyyy.MM.dd HH:mm')}"></td>
+                    </tr>
+                    <tr>
+                        <th th:text="#{admin.board.column.content}"></th>
+                        <td th:text="*{content}"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button type="button" id="deleteMessageBtn" th:data-id="*{messageId}" th:text="#{board.button.delete}"></button>
+                            <button type="button" id="viewMessageListBtn" th:text="#{board.button.toList}"></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
-</body>
+
+<!-- jQuery and JS -->
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
 <script th:src="@{/js/myPage/message/messageDetail.js}"></script>
+</body>
 </html>
