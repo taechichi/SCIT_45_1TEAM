@@ -1,7 +1,7 @@
 /* 전체 페이지 스타일 */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f8ff; /* AliceBlue 배경 */
+    background-color: #f8f9fc;
     color: #333;
     padding: 20px;
     text-align: center;
@@ -33,7 +33,7 @@ table {
 
 /* 테이블 헤더 스타일 */
 th {
-    background-color: #d3d3d3; /* 연한 회색 */
+    background-color: #f0f8ff; /* 연한 회색 */
     padding: 10px;
     text-align: left;
     color: #333;

@@ -22,12 +22,13 @@
 
 /* 카드 헤더 스타일 */
 .custom-card-header {
-    background-color: #d3d3d3;
+    background-color: #e0ffe0;
     color: black;
     font-size: 20px;
     font-weight: bold;
     border-radius: 10px 10px 0 0;
-    padding: 15px;
+    padding: 10px;
+    height: 50px;
 }
 
 /* 카드 내용 스타일 */
@@ -72,5 +73,5 @@
     transition: background-color 0.3s ease;
 }
 body {
-    background: #f0f8ff;
+    background: #f8f9fc
 }
