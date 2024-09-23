@@ -37,14 +37,10 @@
                         <input type="hidden" name="page" id="page"/>
                         <div class="search-form-group">
                             <!-- 숨겨진 셀렉트 박스 -->
-                            <select id="typeSelect" name="searchType" style="display: none;">
+                            <select id="typeSelect" name="searchType">
                                 <option value="friendId" th:text="#{my.friend.searchType.friendId}"></option>
                                 <option value="nickname" th:text="#{my.friend.searchType.nickname}"></option>
                             </select>
-
-                            <!-- 버튼으로 스타일링 -->
-                            <button type="button" id="btnFriendId" class="filter-btn" data-value="friendId">아이디</button>
-                            <button type="button" id="btnNickname" class="filter-btn" data-value="nickname">닉네임</button>
 
                             <!-- 검색 입력창 -->
                             <input type="text" id="searchInput" name="searchWord" placeholder="아이디를 입력하세요"/>
