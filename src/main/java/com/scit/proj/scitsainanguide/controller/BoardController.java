@@ -40,7 +40,7 @@ public class BoardController {
 
         try {
             boardService.write(boardDTO);
-            return "index";
+            return "redirect:/";
         }
         catch (Exception e) {
             e.printStackTrace();
