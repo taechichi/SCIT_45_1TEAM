@@ -1,5 +1,6 @@
-package com.scit.proj.scitsainanguide.domain.dto;
+package com.scit.proj.scitsainanguide.domain.dto.alarm;
 
+import com.scit.proj.scitsainanguide.domain.dto.MessageDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +12,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AlarmResponseDTO {
+public class SelectAlarmResponseDTO {
 
     private List<AlarmDTO> alarmList;
 
@@ -21,7 +22,7 @@ public class AlarmResponseDTO {
 
     private Long messageCnt;
 
-    public AlarmResponseDTO(List<AlarmDTO> alarmList, Long alarmCnt) {
+    public SelectAlarmResponseDTO(List<AlarmDTO> alarmList, Long alarmCnt) {
         this.alarmList = alarmList;
         this.alarmCnt = alarmCnt;
     }

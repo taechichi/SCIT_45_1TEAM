@@ -1,7 +1,7 @@
 package com.scit.proj.scitsainanguide.util;
 
-import com.scit.proj.scitsainanguide.domain.dto.AlarmRequestDTO;
-import com.scit.proj.scitsainanguide.domain.dto.AlarmResponseDTO;
+import com.scit.proj.scitsainanguide.domain.dto.alarm.SelectAlarmRequestDTO;
+import com.scit.proj.scitsainanguide.domain.dto.alarm.SelectAlarmResponseDTO;
 import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.dto.MessageDTO;
 import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
@@ -53,9 +53,9 @@ public class TopbarUtils {
             modelAndView.addObject("favoriteFriendList", friendDTOList);
 
             // 내가 읽지않은 알람 목록 정보 세팅
-            AlarmRequestDTO alarmRequestDTO = new AlarmRequestDTO();
+            SelectAlarmRequestDTO alarmRequestDTO = new SelectAlarmRequestDTO();
             alarmRequestDTO.setMemberId(memberId);
-            AlarmResponseDTO alarmResponseDTO = alarmService.selectAlarmList(alarmRequestDTO);
+            SelectAlarmResponseDTO alarmResponseDTO = alarmService.selectAlarmList(alarmRequestDTO);
             modelAndView.addObject("alarmList", alarmResponseDTO.getAlarmList());
             modelAndView.addObject("alarmCnt", alarmResponseDTO.getAlarmCnt());
         }

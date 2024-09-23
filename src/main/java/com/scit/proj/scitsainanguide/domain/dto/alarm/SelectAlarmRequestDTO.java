@@ -1,4 +1,4 @@
-package com.scit.proj.scitsainanguide.domain.dto;
+package com.scit.proj.scitsainanguide.domain.dto.alarm;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AlarmRequestDTO {
+public class SelectAlarmRequestDTO {
 
     private String memberId;
     private String eventType;
