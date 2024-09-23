@@ -54,21 +54,3 @@ function toRequestList() {
     // 나에게 온 친구 신청 목록 페이지로 연결
     location.href = './friend/request';
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    const btnFriendId = document.getElementById('btnFriendId');
-    const btnNickname = document.getElementById('btnNickname');
-    const typeSelect = document.getElementById('typeSelect');
-    const searchInput = document.getElementById('searchInput');
-
-    btnFriendId.addEventListener('click', function() {
-        typeSelect.value = 'friendId';
-        searchInput.placeholder = '아이디를 입력하세요';
-    });
-
-    btnNickname.addEventListener('click', function() {
-        typeSelect.value = 'nickname';
-        searchInput.placeholder = '닉네임을 입력하세요';
-    });
-});
-
