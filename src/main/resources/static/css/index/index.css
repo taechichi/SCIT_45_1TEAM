@@ -221,8 +221,11 @@ body {
     right: 10px;         /* 오른쪽 여백 */
     bottom: 180px;       /* 아래쪽으로부터 170px 띄우기 */
     position: absolute;  /* 지도 위에 고정시키기 위해 사용 */
-    z-index: 1000;       /* 버튼을 지도 위로 올리기 */
-}
+    z-index: 1;       /* 버튼을 지도 위로 올리기 */
+    background-color: transparent; /* 배경색 투명 */
+    border: none; /* 테두리 없음 */
+    }
+
 
 /* 전체 정보 패널 스타일링 */
 #info-panel {

@@ -1,6 +1,7 @@
 .profile-picture-container {
     position: relative;
     display: inline-block; /* 인라인 블록으로 설정하여 다른 요소들과 같은 줄에 배치 */
+    margin-bottom: 20px;
 }
 
 .status-indicator {
@@ -111,4 +112,24 @@
     visibility: hidden; /* 수정버튼 눌렀을 때만 보임 */
     margin-left: 10px;
 }
+.modal-links {
+    display: flex;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    align-items: center; /* 수평 중앙 정렬 */
+    margin-bottom: 10px; /* 원하는 여백 */
+}
+
+.modal-links p {
+    margin: 0; /* 기본 margin 제거 */
+    padding: 0; /* 기본 padding 제거 */
+    margin-right: 20px; /* 링크와 즐겨찾기 사이 간격 */
+    display: inline-block; /* 인라인 블록으로 설정 */
+}
+
+.modal-links span {
+    margin: 0; /* 기본 margin 제거 */
+    padding: 0; /* 기본 padding 제거 */
+}
+
+
 

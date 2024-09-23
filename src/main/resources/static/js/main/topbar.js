@@ -1,6 +1,6 @@
 // 자식요소인 drop-down 메뉴 내 영역들을 클릭해도, 부모요소인 메뉴가 닫히지 않도록 이벤트 전파 중지
 document.querySelectorAll('.dropdown-item').forEach(item => {
-    item.addEventListener('click', function(event) {
+    item.addEventListener('click', function (event) {
         // 로그아웃 버튼이 아닐 경우에만 이벤트 전파를 중지
         if (!event.target.closest('a[data-toggle="modal"]')) {
             event.stopPropagation(); // 부모 요소로 이벤트 전파를 막음
@@ -348,3 +348,57 @@ function updateCnt($badgeCounter) {
     let cnt = parseInt($badgeCounter.text()) || 0;
     $badgeCounter.text(cnt + 1);
 }
+document.addEventListener('DOMContentLoaded', function () {
+    $('#profileModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // 모달을 트리거한 버튼
+        var memberId = button.data('memberid'); // data-memberid
+        var nickname = button.data('nickname'); // data-nickname
+        var statusId = button.data('statusid'); // data-statusid
+        var statusName = button.data('statusname'); // data-statusname
+        var lastUpdate = button.data('lastupdate'); // data-lastupdate
+        var stMessage = button.data('stmessage'); // data-stmessage
+        var imgUrl = button.data('imgurl'); // data-imgurl
+
+        // 모달 내부에 데이터 설정
+        var modal = $(this);
+
+        // 헤더와 본문에 정보 설정
+        modal.find('.modal-header #headerNickname').text(nickname ? nickname : 'No nickname');
+        modal.find('.modal-header #headerStatusName').text(statusName ? statusName : 'Unknown status');
+        modal.find('.modal-body #modalMemberId').text(memberId ? memberId : 'No ID');
+        modal.find('.modal-body #modalNickname').text(nickname ? nickname : 'No nickname');
+        modal.find('.modal-body #modalStatusName').text(statusName ? statusName : 'Unknown status');
+        modal.find('.modal-body #modalLastUpdate').text(lastUpdate ? lastUpdate : 'No update available');
+        modal.find('.modal-body #modalProfileImage').attr('src', imgUrl ? imgUrl : '/default-profile.png');
+        modal.find('.modal-body #modalStMessage').text(stMessage ? stMessage : 'No status message');
+
+        // 상태 표시기 색상 변경 (헤더와 본문에 적용)
+        var statusIndicator = modal.find('.modal-body .status-indicator');
+        var statusText = modal.find('.modal-body #modalStatusName');
+        var headerStatusText = modal.find('.modal-header #headerStatusName');
+        statusIndicator.removeClass('bg-success bg-warning bg-gradient-danger');
+        statusText.removeClass('text-success text-warning text-danger');
+        headerStatusText.removeClass('text-success text-warning text-danger');
+
+        // Close 버튼 색상 변경
+        var closeButton = modal.find('.modal-footer .btn-secondary');
+        closeButton.removeClass('btn-success btn-warning btn-danger'); // 기존 색상 제거
+
+        if (statusId == 2) {
+            statusIndicator.addClass('bg-success');
+            statusText.addClass('text-success');
+            headerStatusText.addClass('text-success');
+            closeButton.addClass('btn-success'); // 상태에 맞게 Close 버튼 색상 변경
+        } else if (statusId == 3) {
+            statusIndicator.addClass('bg-warning');
+            statusText.addClass('text-warning');
+            headerStatusText.addClass('text-warning');
+            closeButton.addClass('btn-warning'); // 상태에 맞게 Close 버튼 색상 변경
+        } else if (statusId == 4) {
+            statusIndicator.addClass('bg-gradient-danger');
+            statusText.addClass('text-danger');
+            headerStatusText.addClass('text-danger');
+            closeButton.addClass('btn-danger'); // 상태에 맞게 Close 버튼 색상 변경
+        }
+    });
+});
