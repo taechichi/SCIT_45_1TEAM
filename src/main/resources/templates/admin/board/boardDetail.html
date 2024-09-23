@@ -3,17 +3,23 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>회원 목록</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>삭제 글 상세 페이지</title>
+    <!-- Bootstrap CSS -->
+    <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link th:href="@{/css/admin/boardDetail.css}" rel="stylesheet">
 </head>
 <body>
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">테이블 이름을 여기에</h6>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable">
-                <tbody th:object="${deletedBoard}">
+<div class="container">
+    <div class="custom-card">
+        <div class="custom-card-header">
+            <h2 class="m-0 font-weight-bold">삭제 글 상세 페이지</h2>
+        </div>
+        <div class="custom-card-content">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable">
+                    <tbody th:object="${deletedBoard}">
                     <tr>
                         <th th:text="#{board.column.memberId}"></th>
                         <td th:text="*{memberId}"></td>
@@ -45,12 +51,15 @@
                             <button type="button" id="viewBoardListBtn" th:text="#{board.button.toList}"></button>
                         </td>
                     </tr>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
-</body>
+
+<!-- jQuery and JS -->
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
 <script th:src="@{/js/admin/boardDetail.js}"></script>
+</body>
 </html>
