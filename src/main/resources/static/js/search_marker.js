@@ -624,7 +624,7 @@
                 const bicyclingInfoWindow = new google.maps.InfoWindow({
                     content: `
                     <div>
-                        <h4>${walkingRoot}</h4>
+                        <h4>${bicycleRoot}</h4>
                         <p>${distanceLabel}: ${bicyclingLeg.distance.text}</p>
                         <p>${durationLabel}: ${bicyclingLeg.duration.text}</p>
                     </div>

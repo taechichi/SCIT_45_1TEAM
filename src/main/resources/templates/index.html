@@ -13,9 +13,12 @@
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
 
     <!-- google map script -->
-<!--   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places"></script>-->
+<!--
+   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places"></script>
+-->
     <!-- 추가 할 라이브러리를 api의 libraries 부분 뒤에 추가 places,geometry -->
     <script th:src="@{/js/search_marker.js}"></script>
+    <script th:src="@{/js/loading.js}"></script>
     <!-- Custom fonts for this template-->
     <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
     <link
@@ -23,6 +26,10 @@
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Kosugi+Maru&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap" rel="stylesheet">
     <!-- Custom styles for this template-->
     <link rel="stylesheet" th:href="@{/css/index/index.css}">
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
@@ -47,6 +54,26 @@
         let durationLabel = /*[[#{map.duration}]]*/ '소요 시간:';
     </script>
 </head>
+
+<div id="loading">
+    <div class="custom-spinner">
+        <div class="icon-section">
+            <div class="icon friend-status"></div>
+            <div class="icon shelter-guide"></div>
+            <div class="icon chat-sharing"></div>
+            <div class="icon translation-service"></div>
+        </div>
+        <h3 style="position: relative;">
+            <span class="furigana"> さ い が い ず</span> <!-- 후리가나 추가 -->
+            <br>
+            <span th:text="#{load.site.text}">ページローディング中...</span>
+            <br><br>
+            <h4 th:text="#{load.site.subtext}">내일을 위한 대비</h4>
+        </h3>
+
+    </div> <!-- end of custom-spinner -->
+</div>  <!-- end of loading div -->
+
 
 <body id="page-top">
 
