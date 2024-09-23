@@ -153,7 +153,9 @@ rt{
     letter-spacing: 0.5em;
 }
 
-
+ruby{
+    font-size: 20px;
+}
 
 /* 지도 스타일 */
 #map {

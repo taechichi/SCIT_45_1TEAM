@@ -106,4 +106,3 @@ function requestTranslation(text, whatLan) {
             });
     });
 }
-

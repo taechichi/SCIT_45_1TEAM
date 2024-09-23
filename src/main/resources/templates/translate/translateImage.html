@@ -51,7 +51,7 @@
             </div>
 
             <div class="card-body">
-            <form id="uploadForm" enctype="multipart/form-data">
+                <form id="uploadForm" enctype="multipart/form-data">
                 <label for="sourceLanguage" th:text="#{translate.image.selectLan}">이미지 언어:</label>
                 <select id="sourceLanguage">
                     <option value="en-US" th:text="#{translate.en}">영어</option>
@@ -63,6 +63,7 @@
                 <span id="fileName">파일 업로드 시 파일명 나타남</span>
                 <a href="#" class="button btnPush btnBlue" onclick="handleFormSubmit(event)" th:text="#{translate.microFileUpload}">업로드</a>
             </form>
+
             </div>
 
             <div class="card shadow mb-4 mx-auto">
