@@ -21,6 +21,8 @@
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
     <!-- Custom styles for this template-->
     <link rel="stylesheet" th:href="@{/css/index/index.css}">
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
@@ -32,9 +34,6 @@
           형식을 사용해야 Thymeleaf 구문이 JavaScript 내부에서 정상적으로 해석되고, JS 내에서 타임리프 사용 가능
           서버에서 Thymeleaf 표현식을 처리한 후, 그 값을 JavaScript 변수로 전달! JS에서는 ${변수} 형태로 사용 -->
     <script th:inline="javascript">
-        /* 상태용 변수 */
-        let textedError = /*[[#{translate.textedError}]]*/ '텍스트화 실패';
-        let transError = /*[[#{translate.transError}]]*/ '번역 실패';
         <!-- 상태용 변수 -->
         let expiredMessage = /*[[#{main.myStatus.expiredTime}]]*/ '만료된 기본 메시지';
         let remainingMessage = /*[[#{main.myStatus.time.remaining}]]*/ '남은 시간:';

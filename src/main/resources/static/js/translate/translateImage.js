@@ -50,7 +50,7 @@ function handleFormSubmit(event) {
         })
         .catch(error => {
             console.error('Error:', error);
-            document.getElementById('extractedText').innerText = 'Error extracting text';
+            document.getElementById('extractedText').innerText = `${textedError}`;
         });
 }
 
@@ -77,7 +77,7 @@ function requestTranslation(text, whatLan) {
 
     // 번역되어야 할 타겟 언어 배열의 요소들을 반복
     targetLanguages.forEach(targetLanguage => {
-        fetch('translateText', {
+        fetch('/translateText', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -102,7 +102,7 @@ function requestTranslation(text, whatLan) {
             })
             .catch(error => {
                 console.error('번역 실패:', error);
-                document.getElementById('translatedText').innerHTML = `<span th:text="#{translate.transError}"></span>`;
+                document.getElementById('translatedText').innerHTML = `${transError}`;
             });
     });
 }
