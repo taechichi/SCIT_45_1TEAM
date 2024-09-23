@@ -1,6 +1,13 @@
 // ==== 댓글 표시 기능 ======================================================
 document.addEventListener("DOMContentLoaded", function () {
+    // 사용자의 위치 정보를 저장할 변수
     let userLocation = "Unknown";
+    /*let connectionTime = new Date().toISOString();*/
+    let currentDate = new Date();
+    currentDate.setHours(currentDate.getHours()+9); // 동경시간 보정
+    let connectionTime = currentDate.toISOString();
+
+    console.log(connectionTime);
 
     // 외부 API를 통해 사용자의 위치 정보 얻기 (ipinfo.io 예시)
     // API 쓸라면 주석 해제
@@ -15,31 +22,35 @@ document.addEventListener("DOMContentLoaded", function () {
             userLocation = "Unknown";   // 위치 정보가 없을 때 기본값
         });*/
 
-    // SSE 연결 설정
-    const eventSource = new EventSource("/comments/stream");
+    // 댓글 목록을 보여줄 ul 요소
     const commentList = document.getElementById("commentList");
+    // 1. SSE 연결 설정 (실시간 채팅 수신)
+    // SSE로 서버와 연결하여 실시간 채팅 수신 설정
+    const eventSource = new EventSource(`/comments/stream?since=${connectionTime}`);
 
     // 서버로부터 새로운 메시지가 올 때마다 실행
     eventSource.onmessage = function (event) {
-        const comments = JSON.parse(event.data);
-        commentList.innerHTML = ''; // 기존 메시지 목록 초기화
+        const comments = JSON.parse(event.data); // 서버에서 받은 데이터를 JSON 형식으로 파싱
+        //commentList.innerHTML = ''; // 기존 메시지 목록 초기화
 
-        comments.forEach(comment => {
-            const li = document.createElement("li");
-            li.textContent = `[${comment.nickname}] ${comment.contents}`;
-            commentList.appendChild(li);
+        comments.forEach(comment => {   // 새로운 채팅 메시지들을 반복 처리
+            const li = document.createElement("li");    // 새로운 li 요소 생성
+            li.textContent = `[${comment.nickname}] ${comment.contents}`;       // 닉네임과 내용을 설정
+            commentList.appendChild(li);    // 댓글 목록에 li 요소를 추가하여 화면에 표시
         });
     };
 
-    // 댓글 전송하는 함수
+    // 2. 댓글 전송하는 함수
     document.getElementById("sendCommentButton").addEventListener("click", function () {
-        const nickname = document.getElementById("nicknameInput").value;
-        const contents = document.getElementById("commentInput").value;
+        const nickname = document.getElementById("nicknameInput").value;    // 닉네임 입력 필드의 값을 가져옴
+        const contents = document.getElementById("commentInput").value; // 댓글 내용 입력 필드의 값을 가져옴
 
+
+        // 서버에 새로운 댓글을 전송하는 POST 요청
         fetch("/comments", {
-            method: "POST",
+            method: "POST", // HTTP 메소드는 POST로 설정
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json"  // 요청 데이터 타입은 JSON으로 설정
             },
             body: JSON.stringify({
                 nickname: nickname,
