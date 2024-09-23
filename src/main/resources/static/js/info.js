@@ -64,7 +64,7 @@ $(document).ready(function () {
             $('#resultMessage').html(''); // resultMessage 영역 초기화
         });
 
-        // 엔터 키로 폼 제출을 방지
+        // 엔터 키로 폼 제출을 방지하고 비밀번호 확인 처리
         $('#passwordForm').on('keypress', function (e) {
             if (e.which === 13) { // 13은 엔터 키의 키 코드입니다
                 e.preventDefault(); // 기본 동작 방지
@@ -72,6 +72,7 @@ $(document).ready(function () {
             }
         });
 
+        // 비밀번호 확인 버튼 클릭 시 동작
         $('#searchButton').on('click', function () {
             var searchPw = $('#searchPw').val();
 
@@ -88,15 +89,12 @@ $(document).ready(function () {
                 data: {searchPw: searchPw},
                 success: function (response) {
                     // 서버에서 반환된 결과에 따라 메시지 표시
-                    if (response.result) {
+                    if (response.result) { // 비밀번호가 일치하는 경우
                         $('#resultMessage').html('<p style="color:green;">비밀번호가 일치합니다.</p>');
-
-                        // 비밀번호가 일치하면 확인 버튼을 활성화
-                        $('#confirmButton').show().on('click', function () {
-                            $('#passwordCheckModal').modal('hide'); // 모달을 닫음
-                            // 추가로 수정 페이지로 이동하거나 다른 작업을 수행할 수 있습니다.
-                        });
+                        // 비밀번호가 맞으면 모달을 닫음
+                        $('#passwordCheckModal').modal('hide');
                     } else {
+                        // 비밀번호가 일치하지 않는 경우
                         $('#resultMessage').html('<p style="color:red;">비밀번호가 일치하지 않습니다.</p>');
                     }
                 },
@@ -106,6 +104,7 @@ $(document).ready(function () {
             });
         });
     });
+
 
     $('#joinForm').on('submit', function () {
         var isChecked = $('#withdrawCheckbox').is(':checked');

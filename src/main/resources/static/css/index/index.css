@@ -62,31 +62,6 @@ h5{
     background-repeat: no-repeat;
 }
 
-/* 기능별 아이콘 및 삼원색 */
-.friend-status {
-    background-image: url('/img/map.png');
-    background-color: #28a745; /* 초록 */
-    animation-delay: 0s;
-}
-
-.shelter-guide {
-    background-image: url('/img/chat.png');
-    background-color: #ffc107; /* 노랑 */
-    animation-delay: 0.3s;
-}
-
-.chat-sharing {
-    background-image: url('/img/exit.png');
-    background-color: #dc3545; /* 빨강 */
-    animation-delay: 0.6s;
-}
-
-.translation-service {
-    background-image: url('/img/translation.png');
-    background-color: #f2f2f2ff; /* 흰 */
-    animation-delay: 0.9s;
-}
-
 /* 아이콘 애니메이션 */
 @keyframes pulseIcon {
     0% { transform: scale(1); opacity: 0.6; }
@@ -257,14 +232,19 @@ ruby{
 }
 
 .img-64 {
-    width: 64px;
-    height: 64px;
+    width: 64px !important;
+    height: 64px !important;
     object-fit: cover; /* 이미지가 잘리지 않고 채워지도록 설정 */
 }
 
 .img-40 {
-    width: 40px;
-    height: 40px;
+    width: 40px !important;
+    height: 40px !important;
+    object-fit: cover;
+}
+.img-128 {
+    width: 128px !important;
+    height: 128px !important;
     object-fit: cover;
 }
 

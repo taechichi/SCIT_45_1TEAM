@@ -61,7 +61,7 @@
                   <div class="modal-body">
                     <!-- 바디 고유한 id를 사용 -->
                     <div class="profile-picture-container">
-                      <img id="modalProfileImage" class="img-profile rounded-circle" th:src="@{/member/download/{memberId}(memberId=${friend.memberId})}" alt="Profile Picture"/>
+                      <img id="modalProfileImage" class="img-profile rounded-circle img-64" th:src="@{/member/download/{memberId}(memberId=${friend.memberId})}" alt="Profile Picture"/>
                       <div class="status-indicator"></div>
                     </div>
 
@@ -128,6 +128,7 @@
             Alerts Center
           </h6>
           <a class="dropdown-item d-flex align-items-center" th:each="alarm : ${alarmList}">
+            <input id="alarmIdInput" type="hidden" th:value="${alarm.alarmId}">
             <div class="mr-3">
               <div th:if="${alarm.categoryId == 1}" class="icon-circle bg-primary">
                 <i class="fas fa-file-alt text-white"></i>
