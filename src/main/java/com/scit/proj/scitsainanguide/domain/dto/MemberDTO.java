@@ -37,12 +37,14 @@ public class MemberDTO {
         this.statusName = statusName;
     }
 
-    public MemberDTO(String memberId, String nickname, String fileName, Integer statusId, String statusName) {
+    public MemberDTO(String memberId, String nickname, String fileName, Integer statusId, String statusName, LocalDateTime lastStUpdateDt, String stMessage) {
         this.memberId = memberId;
         this.nickname = nickname;
         this.fileName = fileName;
         this.statusId = statusId;
         this.statusName = statusName;
+        this.lastStUpdateDt = lastStUpdateDt;
+        this.stMessage = stMessage;
     }
 
     public MemberDTO(String memberId, String nickname, String fileName, String gender, String nationality, Boolean favoriteYn) {

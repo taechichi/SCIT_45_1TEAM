@@ -270,7 +270,9 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                         member.nickname,
                         member.fileName,
                         member.status.statusId,
-                        member.status.statusName
+                        member.status.statusName,
+                        member.lastStUpdateDt,
+                        member.stMessage
                 )
         )
         .from(member)
