@@ -39,6 +39,10 @@ public class RealtimeCommentService {
         realtimeCommentJpaRepository.save(entity);
     }
 
+    public List<RealtimeCommentDTO> findRealtimeCommentsAfterSince(String since) {
+        return realtimeCommentRepository.selectRealtimeCommentAfterSince(since);
+    }
+
     public List<RealtimeCommentDTO> findAllRealtimeComments() {
         List<RealtimeCommentEntity> realtimeCommentEntityList = realtimeCommentJpaRepository.findAll();
 

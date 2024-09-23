@@ -20,7 +20,7 @@ table td, table th {
 
 table thead tr {
     height: 60px;
-    background: #d3d3d3;
+    background: #f0f8ff;
     font-size: 16px;
 }
 
@@ -106,7 +106,7 @@ table td.r, table th.r {
 
 /* 본문 스타일 */
 body {
-    background: #f0f8ff;
+    background: #f8f9fc;
     font: 400 14px "Calibri", "Arial";
     padding: 20px;
 }
