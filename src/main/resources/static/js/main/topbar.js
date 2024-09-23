@@ -126,6 +126,51 @@ $(document).ready(function () {
         selectAlarmList(eventType);
     });
 
+    // 알림 읽으면 목록에서 제거
+    // 드롭다운이 열렸는지 여부를 확인하는 플래그
+    let dropdownOpened = false;
+
+    // 드롭다운 클릭 시 알림 목록을 표시하지만, 아직 삭제하지 않음
+    $('#alertsDropdown').on('click', function(event) {
+        dropdownOpened = true;    // 드롭다운이 열렸음을 표시
+    });
+
+    // 외부 클릭 감지
+    $(document).on('click', function(event) {
+        if (dropdownOpened && !$(event.target).closest('.dropdown-list').length && !$(event.target).closest('#alertsDropdown').length) {
+            // 외부 클릭 시에만 알림 목록 삭제 및 카운트 0 설정
+            let alarmIds = [];
+
+            // .dropdown-item에서 hidden input에 있는 alarmId 수집
+            $('.dropdown-item').each(function() {
+                let alarmId = $('#alarmIdInput').val();
+                if (alarmId) {
+                    alarmIds.push(alarmId);
+                }
+            });
+
+            if (alarmIds.length > 0) {
+                $.ajax({
+                    url: '/notification/list',
+                    type: 'PATCH',
+                    contentType: 'application/json',
+                    data: JSON.stringify(alarmIds),
+                    success: function(response) {
+                        // 목록 제거
+                        $('.dropdown-item').remove();
+                        // 알림 카운트 0으로 설정
+                        $('.alarm-badge').text('0');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('알림 목록 업데이트 중 오류 발생:', error);
+                    }
+                });
+            }
+
+            dropdownOpened = false;  // 드롭다운이 닫혔음을 표시
+        }
+    });
+
 }); // end of $(document).ready(function() {})
 
 
@@ -259,6 +304,7 @@ function updateAlarmDropdown(alarm) {
 
     const newAlarm = $(`
         <a class="dropdown-item d-flex align-items-center">
+            <input id="alarmIdInput" type="hidden" value="${alarm.alarmId}">
             <div class="mr-3">
                 <div class="icon-circle ${getIconBgClass(alarm.categoryId)}">
                     <i class="fas ${getIconClass(alarm.categoryId)} text-white"></i>

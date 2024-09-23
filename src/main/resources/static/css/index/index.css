@@ -149,41 +149,11 @@ body {
 }
 
 /* 삼원색 아이콘 표현 */
-.primary-colors-icon {
-    position: relative; /* 부모 요소를 기준으로 절대 위치를 설정 */
-    width: 40px; /* 아이콘 전체 크기 조정 */
-    height: 40px; /* 아이콘 전체 크기 조정 */
-    display: flex; /* flexbox 사용 */
-    justify-content: center; /* 가운데 정렬 */
-    align-items: center; /* 세로 가운데 정렬 */
+rt{
+    letter-spacing: 0.5em;
 }
 
-.primary-colors-icon .fa-circle {
-    position: absolute; /* 절대 위치 지정 */
-    font-size: 16px; /* 개별 원 크기 조정 */
-    opacity: 0.45; /* 투명도 조정 */
-}
 
-.red-circle {
-    color: red;
-    top: 10%; /* 기본 위치 */
-    left: 50%; /* 가운데 정렬 */
-    transform: translate(-50%, -50%); /* 중앙 정렬 */
-}
-
-.blue-circle {
-    color: blue;
-    top: 50%; /* 삼각형의 두 번째 꼭짓점 */
-    left: 20%; /* 왼쪽 정렬 */
-    transform: translate(-50%, -50%); /* 중앙 정렬 */
-}
-
-.green-circle {
-    color: green;
-    top: 50%; /* 삼각형의 세 번째 꼭짓점 */
-    left: 80%; /* 오른쪽 정렬 */
-    transform: translate(-50%, -50%); /* 중앙 정렬 */
-}
 
 /* 지도 스타일 */
 #map {

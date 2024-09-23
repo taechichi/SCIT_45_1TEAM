@@ -47,7 +47,7 @@ public class AlarmController {
      * @param alarmIdList 읽음 처리할 알림 번호 목록
      */
     @PatchMapping("list")
-    public void updateAlarmReadYn(@AuthenticationPrincipal AuthenticatedUser user, List<Integer> alarmIdList) {
+    public void updateAlarmReadYn(@AuthenticationPrincipal AuthenticatedUser user, @RequestBody List<Integer> alarmIdList) {
         alarmService.updateAlarmReadYn(user.getId(), alarmIdList);
     }
 }
