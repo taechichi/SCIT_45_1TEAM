@@ -124,6 +124,31 @@ body {
 }
 
 /* 삼원색 아이콘 표현 */
+/* 기능별 아이콘 및 삼원색 */
+.friend-status {
+    background-image: url('/img/map.png');
+    background-color: #28a745; /* 초록 */
+    animation-delay: 0s;
+}
+
+.shelter-guide {
+    background-image: url('/img/chat.png');
+    background-color: #ffc107; /* 노랑 */
+    animation-delay: 0.3s;
+}
+
+.chat-sharing {
+    background-image: url('/img/exit.png');
+    background-color: #dc3545; /* 빨강 */
+    animation-delay: 0.6s;
+}
+
+.translation-service {
+    background-image: url('/img/translation.png');
+    background-color: #f2f2f2ff; /* 흰 */
+    animation-delay: 0.9s;
+}
+
 rt{
     letter-spacing: 0.5em;
 }
