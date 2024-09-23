@@ -285,14 +285,19 @@ body {
 }
 
 .img-64 {
-    width: 64px;
-    height: 64px;
+    width: 64px !important;
+    height: 64px !important;
     object-fit: cover; /* 이미지가 잘리지 않고 채워지도록 설정 */
 }
 
 .img-40 {
-    width: 40px;
-    height: 40px;
+    width: 40px !important;
+    height: 40px !important;
+    object-fit: cover;
+}
+.img-128 {
+    width: 128px !important;
+    height: 128px !important;
     object-fit: cover;
 }
 

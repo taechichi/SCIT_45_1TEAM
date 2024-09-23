@@ -296,7 +296,7 @@ public class MemberService {
         // 회원 정보 업데이트
         existingMember.setNickname(memberDTO.getNickname());
         existingMember.setEmail(memberDTO.getEmail());
-        existingMember.setGender(memberDTO.getGender());
+//        existingMember.setGender(memberDTO.getGender());
         existingMember.setPhone(memberDTO.getPhone());
         existingMember.setNationality(memberDTO.getNationality());
         existingMember.setFileName(profileImage); // 프로필 사진 변경
