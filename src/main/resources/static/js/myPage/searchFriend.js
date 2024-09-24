@@ -79,9 +79,9 @@ function list(){
             $('#output').empty();
 
             $(list).each(function(i, obj){
-                let favoriteYn = obj.favoriteYn ? '즐겨찾기' : '일반';
-                let gender = obj.gender == 'F' ? '여성' : '남성';
-                let nationality = obj.nationality == 'JP' ? '일본' : '한국';
+                let favoriteYn = obj.favoriteYn ? favoriteY : favoriteN;
+                let gender = obj.gender == 'F' ? woman : man;
+                let nationality = obj.nationality == 'JP' ? japanese : korean;
 
                 // 프로필 사진 경로 생성
                 let profileImgUrl = `/member/download/${obj.memberId}`;
