@@ -262,11 +262,16 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
 
     @Override
     public List<MemberDTO> selectMyFavoriteList(String memberId) {
+        BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(friend.memberId.eq(memberId))
+                .and(friend.friendYn.eq(true))
+                .and(friend.favoriteYn.eq(true))
+                .and(friend.friend.withdraw.eq(false))
+                .and(friend.friend.adminYn.eq(false));
+
         // 로그인한 회원의 즐겨찾기한 친구 목록 조회
         List<FriendEntity> friendEntityList = queryFactory.selectFrom(friend)
-                .where(friend.memberId.eq(memberId)
-                    .and(friend.favoriteYn.eq(true))
-                )
+                .where(whereClause)
                 .fetch();
 
         // 친구 Entity 에서 id 를 추출해서 List 로 만든다.
