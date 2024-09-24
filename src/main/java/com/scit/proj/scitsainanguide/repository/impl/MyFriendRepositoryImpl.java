@@ -321,7 +321,7 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                 .from(member)
                 .leftJoin(friend).on(friend.friendId.eq(member.memberId))
                 .where(member.memberId.in(myFriendList))
-                .orderBy(friend.friendYn.desc(),(member.memberId.asc()))
+                .orderBy(friend.favoriteYn.desc(),(member.memberId.asc()))
                 .fetch();
     }
 
