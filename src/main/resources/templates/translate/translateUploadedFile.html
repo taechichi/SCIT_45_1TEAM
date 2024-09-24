@@ -49,7 +49,7 @@
                 <h5 th:text="#{translate.guide}">언어 선택 설명</h5>
             </div>
 
-            <div class="card-body">
+            <div class="card-body" style="position: relative;">
                     <label for="selectLan" th:text="#{translate.file.selectLan}">파일 언어:</label>
                     <select id="selectLan">
                         <option value="en-US" th:text="#{translate.en}">영어</option>
@@ -60,6 +60,11 @@
                     <label for="audioFile" class="button btnPush btnSkyblue" id="labelOfFile" th:text="#{translate.select.microFile}">select File</label>
                     <span id="fileName">파일 업로드 시 파일명 나타남</span>
                     <a class="button btnPush btnBlue" onclick="upload()" th:text="#{translate.microFileUpload}">push to upload</a>
+
+                    <div id="loadingOverlay" style="display: none;">
+                        <img src="/img/translate/loading.png" alt="Loading..." id="loadingImage" />
+                    </div>
+
             </div>
 
             <div class="translateCard">

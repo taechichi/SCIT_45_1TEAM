@@ -13,11 +13,21 @@ function displayFileName() {
     }
 }
 
+// 텍스트화와 번역이 진행되는 동안 로딩
+function showLoading() {
+    $('#loadingOverlay').show(); // 로딩 오버레이 보이기
+}
+
+function hideLoading() {
+    $('#loadingOverlay').hide(); // 로딩 오버레이 숨기기
+}
+
 // 사용자가 선택한 언어 담을 변수
 let whatLan;
 
 // 1. 사용자가 업로드한 flac 오디오 파일을 텍스트화
 function upload() {
+    showLoading(); // 로딩 시작
     // 사용자가 업로드한 파일 요소
     let fileInput = document.getElementById('audioFile');
     // 파일을 담을 배열 선언
@@ -52,6 +62,7 @@ function upload() {
         })
         // 실패시
         .catch(error => {
+            hideLoading(); // 오류 발생 시 로딩 종료
             console.error('Error converting audio to text:', error);
             document.getElementById('texted').innerHTML = `${textedError}`;
         });
@@ -92,10 +103,12 @@ function requestTranslation(text, whatLan) {
         })
             .then(response => response.json())
             .then(data => {
+                hideLoading(); // 번역 완료 후 로딩 종료
                 // 현재의 텍스트에 새 번역 결과를 추가하고 개행 문자를 추가
                 document.getElementById('translated').innerHTML += `${data.translatedText}<br>`;
             })
             .catch(error => {
+                hideLoading(); // 오류 발생 시 로딩 종료
                 console.error('번역 실패:', error);
                 document.getElementById('translated').append(`${transError}`);
             });
