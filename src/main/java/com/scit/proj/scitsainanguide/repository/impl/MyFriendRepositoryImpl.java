@@ -287,6 +287,7 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                         member.fileName,
                         member.status.statusId,
                         member.status.statusName,
+                        member.status.statusNameJa,
                         member.lastStUpdateDt,
                         member.stMessage
                 )

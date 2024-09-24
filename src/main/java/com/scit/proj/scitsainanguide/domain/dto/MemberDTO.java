@@ -29,6 +29,7 @@ public class MemberDTO {
 
     // Status 명을 직접 구해서 넣을 경우
     private String statusName;
+    private String statusNameJa;
 
     public MemberDTO(String memberId, String nickname, LocalDateTime lastStUpdateDt, String statusName) {
         this.memberId = memberId;
@@ -37,12 +38,14 @@ public class MemberDTO {
         this.statusName = statusName;
     }
 
-    public MemberDTO(String memberId, String nickname, String fileName, Integer statusId, String statusName, LocalDateTime lastStUpdateDt, String stMessage) {
+    public MemberDTO(String memberId, String nickname, String fileName, Integer statusId
+            , String statusName, String statusNameJa, LocalDateTime lastStUpdateDt, String stMessage) {
         this.memberId = memberId;
         this.nickname = nickname;
         this.fileName = fileName;
         this.statusId = statusId;
         this.statusName = statusName;
+        this.statusNameJa = statusNameJa;
         this.lastStUpdateDt = lastStUpdateDt;
         this.stMessage = stMessage;
     }
