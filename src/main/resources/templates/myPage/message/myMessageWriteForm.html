@@ -7,7 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/message/myMessageWriteForm.css}">
 </head>
 <body>
-<h2>쪽지 쓰기</h2>
+<h2 th:text="#{my.message.button.write}">쪽지 쓰기</h2>
 
     <form action="/my/message" method="post">
         <input type="hidden" name="senderId" th:value="${#authentication.name}">
@@ -15,7 +15,7 @@
             <tr>
                 <th th:text="#{my.message.row.receiverId}"></th>
                 <td>
-                    <input type="text" name="receiverId" id="receiverId" readonly placeholder="친구검색 버튼 이용">
+                    <input type="text" name="receiverId" id="receiverId" th:placeholder="#{my.message.search.placeholder}" readonly>
                 </td>
                 <td>
                     <button id="searchId" type="button" th:text="#{my.message.button.search.receiverId}"></button>

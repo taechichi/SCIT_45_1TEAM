@@ -5,23 +5,29 @@
     <meta charset="UTF-8">
     <title>search friends to send message!</title>
     <link rel="stylesheet" th:href="@{/css/message/searchFriend.css}">
+
+    <script th:inline="javascript">
+    // alert 창으로 경고할 메시지 - 국제화
+    let idAlreadyAddedMessage = /*[[#{my.message.already.added.id}]]*/ '이 아이디는 이미 추가되었습니다.'; // 기본값
+    </script>
 </head>
 <body>
-<h2>쪽지 보낼 친구 검색</h2>
-<input type="text" id="searchWord" placeholder="아이디를 입력하세요.">&nbsp;<button id="completeSelect">선택 완료</button>
+<h2 th:text="#{my.message.search.your.friend}">쪽지 보낼 친구 검색</h2>
+<input type="text" id="searchWord" th:placeholder="#{my.message.search.id}" readonly>&nbsp;<button id="completeSelect" th:text="#{my.message.search.complete}">선택 완료</button>
 <br><br>
 <div>
     <table>
         <thead>
         <tr>
             <th>No</th>
-            <th>즐겨찾기 여부</th>
-            <th>프로필사진</th>
+            <th th:text="#{my.message.friendlist.favorite}">즐겨찾기 여부</th>
+            <th th:text="#{my.message.friendlist.profile}">프로필사진</th>
             <th>ID</th>
-            <th>닉네임</th>
-            <th>국적</th>
-            <th>성별</th>
-            <th>보내기</th>
+            <th th:text="#{my.message.friendlist.profile}">닉네임</th>
+            <th th:text="#{my.message.friendlist.nationality}">국적</th>
+            <th th:text="#{my.message.friendlist.gender}">성별</th>
+            <th th:text="#{my.message.friendlist.send}">보내기</th>
+            <th th:text="#{my.message.friendlist.delete}">취소</th>
         </tr>
         </thead>
         <tbody id="output">
