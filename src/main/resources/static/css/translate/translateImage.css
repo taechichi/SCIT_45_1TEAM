@@ -52,7 +52,7 @@ body {
     box-shadow: 0 5px 0 0 #AFDBF5;
 }
 
-.button {
+.button , #labelOfFile{
     display: inline-block;
     width: 100px;
     position: relative;
