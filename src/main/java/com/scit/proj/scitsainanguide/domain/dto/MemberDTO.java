@@ -31,11 +31,13 @@ public class MemberDTO {
     private String statusName;
     private String statusNameJa;
 
-    public MemberDTO(String memberId, String nickname, LocalDateTime lastStUpdateDt, String statusName) {
+    public MemberDTO(String memberId, String nickname, LocalDateTime lastStUpdateDt
+            , String statusName, String statusNameJa) {
         this.memberId = memberId;
         this.nickname = nickname;
         this.lastStUpdateDt = lastStUpdateDt;
         this.statusName = statusName;
+        this.statusNameJa = statusNameJa;
     }
 
     public MemberDTO(String memberId, String nickname, String fileName, Integer statusId

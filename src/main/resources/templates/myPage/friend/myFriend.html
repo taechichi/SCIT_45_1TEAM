@@ -63,6 +63,7 @@
                                     <th th:text="#{my.friend.column.friendId}"></th>
                                     <th th:text="#{my.friend.column.nickname}"></th>
                                     <th th:text="#{my.friend.column.nationality}"></th>
+                                    <th th:text="#{my.friend.column.status}"></th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -75,6 +76,8 @@
                                     </td>
                                     <td th:text="*{nickname}"></td>
                                     <td th:text="*{nationality}"></td>
+                                    <td th:if="${session.lang != 'ja'}" th:text="*{statusName}"></td>
+                                    <td th:if="${session.lang == 'ja'}" th:text="*{statusNameJa}"></td>
                                     <td>
                                         <button th:if="*{favoriteYn == false}" class="updateFavoriteBtn" th:data-id="*{relationId}" th:data-favorite="*{favoriteYn}"
                                                 th:text="#{my.friend.button.favorite}"></button>
