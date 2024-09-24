@@ -76,23 +76,8 @@
                     title: "myLocation",
                     position : place,
                     icon: {
-                        url: '/img/myMarker.png', // 사용자 정의 아이콘 URL
+                        url: '/img/map/myMarker.png', // 사용자 정의 아이콘 URL
                         scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
-                        origin: new google.maps.Point(0, 0), // 아이콘의 원점
-                        anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
-                    }
-                };
-                break;
-            case "hospital":
-                markerOption = {
-                    placeId: place.place_id,
-                    map: map,
-                    position: place.geometry.location,
-                    title: place.name,
-                    placePhoto: place.photos ? place.photos[0].getUrl() : "",
-                    icon: {
-                        url: '/img/hospitalMarker.png', // 사용자 정의 아이콘 URL
-                        scaledSize: new google.maps.Size(40, 40), // 아이콘의 크기 조정
                         origin: new google.maps.Point(0, 0), // 아이콘의 원점
                         anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
                     }
@@ -110,6 +95,9 @@
         let marker = new google.maps.Marker(markerOption);
 
         switch (type) {
+            case "none":
+
+                break;
             case "myMarker":
                 marker.setAnimation(google.maps.Animation.BOUNCE);
                 break;
@@ -166,8 +154,7 @@
             infoPanel.style.display = 'block';
             isPanelVisible = true;
             document.getElementById('writeLink').setAttribute('href', `/board/write/${placeID}`);
-            favMarkerCheck(currentMarker.placeId);
-            getList(currentMarker.placeId);
+            favMarkerCheck(currentMarker.placeId)
         });
     }
 
@@ -182,10 +169,12 @@
 
         map.fitBounds(bounds);
     }
-    //현재 보고있는 화면 좌표기준으로 변경(내위치)
+    //현재 보고있는 화면 좌표기준으로 변경
     function setCurrentZoom(centerPosition){
+        const zoom = map.getZoom();
+
         map.setCenter(centerPosition);
-        map.setZoom(17);
+        map.setZoom(zoom);
     }
 
     // nearbySearch를 사용해 병원 검색
@@ -193,7 +182,7 @@
         const service = new google.maps.places.PlacesService(map);
         const request = {
             location: map.getCenter(),
-            radius: 1000, // 반경 500m
+            radius: 500, // 반경 500m
             type: 'hospital' // 병원 타입으로 검색
         };
 
@@ -206,7 +195,7 @@
 
                 // 검색된 병원 정보 마커로 표시
                 results.forEach(place => {
-                    let marker = createMarker(map, place,false,"hospital");
+                    let marker = createMarker(map, place);
                     markers.push(marker);
                 });
                 calculateBoundsForMarkers(markers);  // 마커들로 경계 설정
@@ -309,50 +298,6 @@
             });
     }
 
-    //게시글 목록 불러오기
-    function getList(placeID) {
-        fetch('/board/list/' + encodeURIComponent(placeID), {
-            method: 'GET'
-        })
-            .then(response => {
-                console.log(response.status);  // 응답 상태 코드 확인
-                if (response.ok) {
-                    return response.json();  // 응답이 정상일 경우 JSON 변환
-                } else {
-                    throw new Error(`HTTP 상태 코드: ${response.status}`);  // 오류 상태 코드 출력
-                }
-            })
-            .then(boardList => {
-                const board = document.getElementById('board-list');
-                board.innerHTML = '';  // 이전에 표시된 게시글 리스트를 지움
-                console.log(boardList);  // 가져온 데이터 출력
-
-                if (boardList && boardList.length > 0) {
-                    console.log("게시글이 있습니다.");
-                    let boardHtml = '<ul>';
-                    boardList.forEach(boardItem => {
-                        boardHtml += `<li>${boardItem.title} - ${boardItem.contents}<br>`;
-
-                        // 사진이 있는 경우
-                        if (boardItem.pictures && boardItem.pictures.length > 0) {
-                            boardItem.pictures.forEach(picture => {
-                                boardHtml += `<img src="${picture.path}" alt="${picture.oriFilename}" loading="lazy" width="100"><br>`;
-                            });
-                        }
-
-                        boardHtml += `</li>`;  // 게시글 제목과 내용 출력
-                    });
-                    boardHtml += '</ul>';
-                    board.innerHTML = boardHtml;  // 게시글 리스트를 board-list에 추가
-                } else {
-                    board.innerHTML = '<p>관련 게시글이 없습니다.</p>';  // 게시글이 없을 때의 처리
-                }
-            })
-            .catch(error => {
-                console.error('오류 발생:', error);
-            });
-    }
-
     //맵 생성
     function initMap() {
     //getCurrentPosition에서 값을 받으면 position으로 값이 들어간다.
@@ -410,7 +355,7 @@
             }
         });
 
-        //병원 버튼 클릭 시 근처 500m 검색
+        //병원 버튼 클릭 시 근처 1km 검색
         document.getElementById('hospitalFilterButton').addEventListener('click', function() {
             searchNearbyHospitals(); // 병원 검색 함수 호출
         });
@@ -526,7 +471,7 @@
                 placeId: currentMarker.placeId,                        //place의 장소번호 저장
                 placePhoto: currentMarker.placePhoto,
                 icon: {
-                    url: '/img/departureMarker.png', // 사용자 정의 아이콘 URL
+                    url: '/img/map/departureMarker.png', // 사용자 정의 아이콘 URL
                     scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
                     origin: new google.maps.Point(0, 0), // 아이콘의 원점(기본값, 아이콘 좌상단)
                     anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
@@ -556,7 +501,7 @@
                 placeId: currentMarker.placeId,                        //place의 장소번호 저장
                 placePhoto: currentMarker.placePhoto,
                 icon: {
-                    url: '/img/arrivalMarker.png', // 사용자 정의 아이콘 URL
+                    url: '/img/map/arrivalMarker.png', // 사용자 정의 아이콘 URL
                     scaledSize: new google.maps.Size(60, 60), // 아이콘의 크기 조정
                     origin: new google.maps.Point(0, 0), // 아이콘의 원점(기본값, 아이콘 좌상단)
                     anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
@@ -628,7 +573,7 @@
                     position: startLocation,
                     map: map,
                     icon: {
-                        url: '/img/walking.png', // 사용자 정의 아이콘 URL
+                        url: '/img/map/walking.png', // 사용자 정의 아이콘 URL
                         scaledSize: new google.maps.Size(60, 60) // 아이콘 크기 설정
                     },
                     title: '도보 경로 시작점'
@@ -668,7 +613,7 @@
                     position: startLocation,
                     map: map,
                     icon: {
-                        url: '/img/bicycle.png', // 사용자 정의 아이콘 URL
+                        url: '/img/map/bicycle.png', // 사용자 정의 아이콘 URL
                         scaledSize: new google.maps.Size(60, 60) // 아이콘 크기 설정
                     },
                     title: '자전거 경로 시작점'
