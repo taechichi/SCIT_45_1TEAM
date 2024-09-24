@@ -331,7 +331,16 @@
                     console.log("게시글이 있습니다.");
                     let boardHtml = '<ul>';
                     boardList.forEach(boardItem => {
-                        boardHtml += `<li>${boardItem.title} - ${boardItem.contents}</li>`;  // 게시글 제목과 내용 출력
+                        boardHtml += `<li>${boardItem.title} - ${boardItem.contents}<br>`;
+
+                        // 사진이 있는 경우
+                        if (boardItem.pictures && boardItem.pictures.length > 0) {
+                            boardItem.pictures.forEach(picture => {
+                                boardHtml += `<img src="${picture.path}" alt="${picture.oriFilename}" loading="lazy" width="100"><br>`;
+                            });
+                        }
+
+                        boardHtml += `</li>`;  // 게시글 제목과 내용 출력
                     });
                     boardHtml += '</ul>';
                     board.innerHTML = boardHtml;  // 게시글 리스트를 board-list에 추가

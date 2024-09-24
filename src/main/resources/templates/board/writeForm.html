@@ -15,15 +15,20 @@
 
 <section>
     <!-- 바이너리 데이터 포함되는 폼. enctype 반드시 정확히 지정 -->
-    <form id="writeForm" th:action="@{/board/write}"  method="post">
-
+    <form id="writeForm" th:action="@{/board/write}" method="post" enctype="multipart/form-data">
         <table>
             <tr>
-                <th><lable for="contents">내용</lable></th>
+                <th><label for="contents">내용</label></th>
                 <td>
                     <textarea name="contents" id="contents"></textarea>
                 </td>
                 <input type="hidden" name="hospitalName" th:value="${hospitalName}">
+            </tr>
+            <tr>
+                <th><label for="files">사진 첨부</label></th>
+                <td>
+                    <input type="file" name="files" id="files" multiple>
+                </td>
             </tr>
             <tr>
                 <td colspan="2" class="white center">
@@ -32,6 +37,7 @@
             </tr>
         </table>
     </form>
+
 
 </section>
 </body>
