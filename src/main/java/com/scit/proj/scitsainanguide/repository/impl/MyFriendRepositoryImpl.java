@@ -74,7 +74,9 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                             friend.friendId,
                             friend.friend.nickname,
                             friend.favoriteYn,
-                            friend.friend.nationality
+                            friend.friend.nationality,
+                            friend.friend.status.statusName,
+                            friend.friend.status.statusNameJa
                         )
                 ).from(friend)
                 //.join(member).on(friend.friendId.eq(member.memberId)) 조인 문 불필요
@@ -251,7 +253,8 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                                 member.memberId,
                                 member.nickname,
                                 member.lastStUpdateDt,
-                                member.status.statusName
+                                member.status.statusName,
+                                member.status.statusNameJa
                         )
                 )
                 .from(member)
@@ -287,6 +290,7 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                         member.fileName,
                         member.status.statusId,
                         member.status.statusName,
+                        member.status.statusNameJa,
                         member.lastStUpdateDt,
                         member.stMessage
                 )
