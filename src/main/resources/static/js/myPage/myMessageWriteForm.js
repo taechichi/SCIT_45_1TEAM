@@ -7,6 +7,6 @@ $(document).ready(function(){
             // http://localhost:8888/my/message/searchFriend -> 그치만 이렇게 열면, 부모창-자식창 관계가 성립되지 않음!
             'searchFriend',
             'searchFriend',
-            'top=150, left=550, width=600, height=450, location=no, titlebar=no');	// 시작 위치 & 크기
+            'top=150, left=550, width=620, height=450, location=no, titlebar=no');	// 시작 위치 & 크기
     })
 })
