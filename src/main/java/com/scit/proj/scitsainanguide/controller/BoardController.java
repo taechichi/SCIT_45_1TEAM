@@ -31,7 +31,8 @@ public class BoardController {
     @PostMapping("write")
     public String write(
             @ModelAttribute MarkerBoardDTO boardDTO
-            , @AuthenticationPrincipal AuthenticatedUser user
+            , @AuthenticationPrincipal AuthenticatedUser user,
+            @RequestParam("files") MultipartFile[] files
             ) {
 
         //작성한 글에 사용자 아이디 추가
@@ -39,7 +40,7 @@ public class BoardController {
         log.debug("저장할 글 정보 : {}", boardDTO);
 
         try {
-            boardService.write(boardDTO);
+            boardService.write(boardDTO, files);
             return "redirect:/";
         }
         catch (Exception e) {

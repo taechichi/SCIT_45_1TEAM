@@ -32,7 +32,7 @@ public class BoardService {
     private final ShelterRepository shelterRepository;
     private final HospitalRepository hospitalRepository;
 
-    public void write(MarkerBoardDTO boardDTO) throws IOException {
+    public void write(MarkerBoardDTO boardDTO, MultipartFile[] files) throws IOException {
         MemberEntity memberEntity = memberJpaRepository.findById(boardDTO.getMemberId())
                 .orElseThrow(() -> new EntityNotFoundException("회원아이디가 없습니다."));
 
@@ -69,18 +69,33 @@ public class BoardService {
         boardJPARepository.save(markerBoardEntity);
     }
 
-    public List<MarkerBoardDTO> getBoardsByPlaceId(String placeId){
-        List<MarkerBoardEntity> boardEntityList = boardJPARepository.findByPlaceIdAndDeleteYnFalse(placeId);
+    public List<MarkerBoardDTO> findByPlaceId(String placeId) {
+        log.debug("place아디확인:{}",placeId);
+        // 1. 병원 ID로 먼저 검색
+        List<MarkerBoardEntity> boardEntityList = boardJPARepository.findByHospitalIdAndDeleteYnFalse(placeId);
+
+        // 2. 결과가 없으면 대피소 ID로 검색
+        if (boardEntityList.isEmpty()) {
+            log.debug("대피소검색");
+            try {
+                boardEntityList = boardJPARepository.findByShelterIdAndDeleteYnFalse(Integer.valueOf(placeId));
+            } catch (NumberFormatException e) {
+                // placeId가 Integer로 변환할 수 없으면 대피소 검색 생략
+                return new ArrayList<>(); // 빈 리스트 반환
+            }
+        }
+        log.debug("검색:{}", boardEntityList);
 
         List<MarkerBoardDTO> boardDTOList = new ArrayList<>();
-        for(MarkerBoardEntity boardEntity : boardEntityList){
-            MarkerBoardDTO dto = MarkerBoardDTO.builder()
+        for (MarkerBoardEntity boardEntity : boardEntityList) {
+            MarkerBoardDTO boardDTO = MarkerBoardDTO.builder()
                     .memberId(boardEntity.getMemberId())
                     .contents(boardEntity.getContents())
                     .createDt(boardEntity.getCreateDt())
                     .build();
-            boardDTOList.add(dto);
+            boardDTOList.add(boardDTO);
         }
         return boardDTOList;
     }
+
 }

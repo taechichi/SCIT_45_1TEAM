@@ -34,7 +34,7 @@
           형식을 사용해야 Thymeleaf 구문이 JavaScript 내부에서 정상적으로 해석되고, JS 내에서 타임리프 사용 가능
           서버에서 Thymeleaf 표현식을 처리한 후, 그 값을 JavaScript 변수로 전달! JS에서는 ${변수} 형태로 사용 -->
     <script th:inline="javascript">
-        <!-- 상태용 변수 -->
+        /*상태용 변수*/
         let expiredMessage = /*[[#{main.myStatus.expiredTime}]]*/ '만료된 기본 메시지';
         let remainingMessage = /*[[#{main.myStatus.time.remaining}]]*/ '남은 시간:';
         let hoursLabel = /*[[#{main.myStatus.time.hoursLeft}]]*/ '시간';
@@ -68,7 +68,7 @@
                         <button id="shareBtn">공유</button>
                     </div>
                     <!-- 글목록 -->
-                    <div>[[${boardList}]]</div>
+                    <div id="board-list"></div>
                     <div>
                         <a id="writeLink" th:href="@{/board/write/${palceID}}">글쓰기</a>
                         <button id="favMarker">

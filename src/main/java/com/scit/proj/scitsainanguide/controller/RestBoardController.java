@@ -1,6 +1,7 @@
 package com.scit.proj.scitsainanguide.controller;
 
 import com.scit.proj.scitsainanguide.domain.dto.MarkerBoardDTO;
+import com.scit.proj.scitsainanguide.domain.entity.MarkerBoardEntity;
 import com.scit.proj.scitsainanguide.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ public class RestBoardController {
     private final BoardService boardService;
 
     @GetMapping("/list/{placeId}")
-    public List<MarkerBoardDTO> getBoardsByPlaceId(@PathVariable String placeId) {
-        return boardService.getBoardsByPlaceId(placeId);
+    public List<MarkerBoardDTO> findByPlaceId(@PathVariable String placeId) {
+        return boardService.findByPlaceId(placeId);
     }
 }

@@ -9,8 +9,10 @@ import java.util.List;
 
 public interface BoardJPARepository extends JpaRepository<MarkerBoardEntity, Integer> {
 
-    @Query("SELECT * FROM MarkerBoardEntity m " +
-            "WHERE (m.shelter.shelterId = :placeId OR m.hospital.hospitalId = :placeId) " +
-            "AND m.deleteYn = false")
-    List<MarkerBoardEntity> findByPlaceIdAndDeleteYnFalse(@Param("placeId") String placeId);
+    @Query("SELECT m FROM MarkerBoardEntity m WHERE m.hospital.hospitalId = :placeId AND m.deleteYn = false")
+    List<MarkerBoardEntity> findByHospitalIdAndDeleteYnFalse(@Param("placeId") String placeId);
+
+    @Query("SELECT m FROM MarkerBoardEntity m WHERE m.shelter.shelterId = :placeId AND m.deleteYn = false")
+    List<MarkerBoardEntity> findByShelterIdAndDeleteYnFalse(@Param("placeId") Integer placeId);
+
 }

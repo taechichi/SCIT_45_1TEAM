@@ -166,7 +166,8 @@
             infoPanel.style.display = 'block';
             isPanelVisible = true;
             document.getElementById('writeLink').setAttribute('href', `/board/write/${placeID}`);
-            favMarkerCheck(currentMarker.placeId)
+            favMarkerCheck(currentMarker.placeId);
+            getList(currentMarker.placeId);
         });
     }
 
@@ -309,29 +310,37 @@
     }
 
     //게시글 목록 불러오기
-    function getList(placeID){
+    function getList(placeID) {
         fetch('/board/list/' + encodeURIComponent(placeID), {
             method: 'GET'
         })
+            .then(response => {
+                console.log(response.status);  // 응답 상태 코드 확인
+                if (response.ok) {
+                    return response.json();  // 응답이 정상일 경우 JSON 변환
+                } else {
+                    throw new Error(`HTTP 상태 코드: ${response.status}`);  // 오류 상태 코드 출력
+                }
+            })
             .then(boardList => {
-                const infoList = document.getElementById('info_list');
-                infoList.innerHTML = '';  // 이전에 표시된 게시글 리스트를 지움
+                const board = document.getElementById('board-list');
+                board.innerHTML = '';  // 이전에 표시된 게시글 리스트를 지움
+                console.log(boardList);  // 가져온 데이터 출력
 
                 if (boardList && boardList.length > 0) {
+                    console.log("게시글이 있습니다.");
                     let boardHtml = '<ul>';
-                    boardList.forEach(board => {
-                        boardHtml += `<li>${board.title} - ${board.contents}</li>`;  // 게시글 제목과 내용 출력
+                    boardList.forEach(boardItem => {
+                        boardHtml += `<li>${boardItem.title} - ${boardItem.contents}</li>`;  // 게시글 제목과 내용 출력
                     });
                     boardHtml += '</ul>';
-                    infoList.innerHTML = boardHtml;  // 게시글 리스트를 infoPart에 추가
+                    board.innerHTML = boardHtml;  // 게시글 리스트를 board-list에 추가
                 } else {
-                    infoList.innerHTML = '<p>관련 게시글이 없습니다.</p>';  // 게시글이 없을 때의 처리
+                    board.innerHTML = '<p>관련 게시글이 없습니다.</p>';  // 게시글이 없을 때의 처리
                 }
             })
             .catch(error => {
-                const infoList = document.getElementById('info_list');
-                console.error('게시글 데이터를 불러오는 중 오류 발생:', error);
-                infoList.innerHTML = '<p>게시글을 불러오는 중 오류가 발생했습니다.</p>';  // 오류 메시지 표시
+                console.error('오류 발생:', error);
             });
     }
 
