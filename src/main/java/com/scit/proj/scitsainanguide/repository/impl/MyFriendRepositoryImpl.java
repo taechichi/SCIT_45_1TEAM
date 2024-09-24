@@ -319,8 +319,8 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                         )
                 )
                 .from(member)
-                .leftJoin(friend).on(friend.friendId.eq(member.memberId))
-                .where(member.memberId.in(myFriendList))
+                .join(friend).on(friend.friendId.eq(member.memberId))
+                .where(friend.memberId.eq(memberId).and(member.memberId.in(myFriendList)))
                 .orderBy(friend.favoriteYn.desc(),(member.memberId.asc()))
                 .fetch();
     }
