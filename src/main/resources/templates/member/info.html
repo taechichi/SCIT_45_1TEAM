@@ -24,10 +24,9 @@
 
         <div class="form-group password-container">
             <span>비밀번호</span>
-            <input type="password" id="password" th:field="*{password}" required/>
+            <input type="password" id="password" th:field="*{password}"/>
             <!-- 아이콘을 비밀번호 입력창 오른쪽에 추가 -->
-            <img src="/img/eyes.jpg" alt="비밀번호 표시" class="password-toggle-icon"/>
-
+            <img src="/img/hide_eye.ico" alt="비밀번호 표시" class="password-toggle-icon"/>
             <br>
             <!-- 유효성 검사 메시지 -->
             <div id="error-message"></div>
@@ -80,7 +79,7 @@
     </form>
 
     <!-- 비밀번호 확인 모달 -->
-    <div class="modal fade" id="passwordCheckModal" tabindex="-1" role="dialog" aria-labelledby="passwordCheckModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal show" id="passwordCheckModal" tabindex="-1" role="dialog" aria-labelledby="passwordCheckModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

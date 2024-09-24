@@ -1,9 +1,17 @@
 $(document).ready(function () {
     // 비밀번호 표시/숨기기 기능
-    $('.password-toggle-icon').on('mousedown', function () {
-        $('#password').attr('type', 'text');
-    }).on('mouseup mouseleave', function () {
-        $('#password').attr('type', 'password');
+    $('.password-toggle-icon').on('click', function () {
+        var passwordInput = $('#password');
+        var icon = $(this);
+
+        // 현재 비밀번호 입력의 타입이 "password"인 경우
+        if (passwordInput.attr('type') === 'password') {
+            passwordInput.attr('type', 'text'); // 비밀번호를 보여줌
+            icon.attr('src', '/img/eyes.jpg'); // 눈 아이콘으로 변경
+        } else {
+            passwordInput.attr('type', 'password'); // 비밀번호를 숨김
+            icon.attr('src', '/img/hide_eye.ico'); // 눈 가린 아이콘으로 변경
+        }
     });
 
     // 비밀번호 유효성 검사
@@ -11,22 +19,27 @@ $(document).ready(function () {
         let password = $('#password').val();
         let errorMessage = '';
 
-        // 비밀번호 길이와 특수문자 검사
-        if (password.length < 8 || password.length >= 20) {
-            errorMessage = '비밀번호는 8자 이상 20자 미만이어야 합니다.';
+        // 비밀번호 필드가 비어 있으면 비밀번호는 전송되지 않음
+        if (password.trim() === '') {
+            $('#password').removeAttr('name'); // 비밀번호 필드가 비어 있으면 폼에서 제거
         } else {
-            let regex = /[!@#$%^&*(),.?":{}|<>]/; // 허용하는 특수문자
-            if (!regex.test(password)) {
-                errorMessage = '비밀번호는 특수문자를 포함해야 합니다.';
+            // 비밀번호 길이와 특수문자 검사
+            if (password.length < 8 || password.length >= 20) {
+                errorMessage = '비밀번호는 8자 이상 20자 미만이어야 합니다.';
+            } else {
+                let regex = /[!@#$%^&*(),.?":{}|<>]/; // 허용하는 특수문자
+                if (!regex.test(password)) {
+                    errorMessage = '비밀번호는 특수문자를 포함해야 합니다.';
+                }
             }
-        }
 
-        // 유효성 검사 결과에 따라 메시지 표시
-        if (errorMessage) {
-            $('#error-message').text(errorMessage).addClass('error').removeClass('valid');
-            event.preventDefault(); // 폼 제출 방지
-        } else {
-            $('#error-message').text('').removeClass('error').addClass('valid');
+            // 유효성 검사 결과에 따라 메시지 표시
+            if (errorMessage) {
+                $('#error-message').text(errorMessage).addClass('error').removeClass('valid');
+                event.preventDefault(); // 폼 제출 방지
+            } else {
+                $('#error-message').text('').removeClass('error').addClass('valid');
+            }
         }
     });
 
