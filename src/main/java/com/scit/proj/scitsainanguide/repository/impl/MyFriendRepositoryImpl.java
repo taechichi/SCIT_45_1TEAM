@@ -2,6 +2,7 @@ package com.scit.proj.scitsainanguide.repository.impl;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
@@ -174,6 +175,16 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
 
         // friend_member entity 를 생성
         for (String fId : friendIdList) {
+            boolean exists = queryFactory.selectFrom(friend)
+                    .where(friend.memberId.eq(memberId)
+                            .and(friend.friendId.eq(fId)))
+                    .fetchOne() != null;  // fetchOne()로 존재 여부 확인
+
+            // 친구 관계가 이미 존재하면 에러 발생
+            if (exists) {
+                throw new IllegalArgumentException(fId + "님과 이미 친구사이이거나, 이미 친구 요청을 보낸 상태입니다.");
+            }
+
             FriendEntity friendEntity = FriendEntity.builder()
                     .memberId(memberId)
                     .friendId(fId)
