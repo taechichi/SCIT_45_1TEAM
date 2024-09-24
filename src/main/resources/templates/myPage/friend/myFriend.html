@@ -120,6 +120,8 @@
     let durationLabel = /*[[#{map.duration}]]*/ '소요 시간:';
 </script>
 
+<div th:replace="~{fragments/logoutModal :: logoutModel}"></div>
+
 <!-- Bootstrap core JavaScript-->
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
 <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
