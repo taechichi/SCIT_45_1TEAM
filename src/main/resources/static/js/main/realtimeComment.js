@@ -2,19 +2,30 @@
 document.addEventListener("DOMContentLoaded", function () {
     // 사용자의 위치 정보를 저장할 변수
     let userLocation = "Unknown";
-    /*let connectionTime = new Date().toISOString();*/
     let currentDate = new Date();
-    currentDate.setHours(currentDate.getHours()+9); // 동경시간 보정
+    currentDate.setHours(currentDate.getHours() + 9); // 동경시간 보정
     let connectionTime = currentDate.toISOString();
 
-    console.log(connectionTime);
+    // 로그인된 사용자 닉네임 가져오기
+    const metaUser = document.querySelector("meta[name='authenticatedUser']");
+    let userNickname = null;
+
+    if(metaUser) {
+        userNickname = metaUser.getAttribute('content');   // 로그인한 사용자의 닉네임
+    } else {
+        console.log("사용자가 로그인되지 않았습니다.");
+    }
+
+    console.log("연결 시간:", connectionTime);
+
+    // ============================
 
     // 외부 API를 통해 사용자의 위치 정보 얻기 (ipinfo.io 예시)
     // API 쓸라면 주석 해제
     /*fetch('https://ipinfo.io/json?token=8024395341b3f3')
         .then(response => response.json())
         .then(data => {
-            userLocation = data.city;   // 도시 정보 추출
+            userLocation = `${data.region}_${data.city}`;   // 도시 정보 추출
             console.log("User location: ", userLocation);
         })
         .catch(error => {
@@ -22,11 +33,10 @@ document.addEventListener("DOMContentLoaded", function () {
             userLocation = "Unknown";   // 위치 정보가 없을 때 기본값
         });*/
 
-    // 댓글 목록을 보여줄 ul 요소
-    const commentList = document.getElementById("commentList");
     // 1. SSE 연결 설정 (실시간 채팅 수신)
     // SSE로 서버와 연결하여 실시간 채팅 수신 설정
     const eventSource = new EventSource(`/comments/stream?since=${connectionTime}`);
+    const commentList = document.getElementById("commentList");
 
     // 서버로부터 새로운 메시지가 올 때마다 실행
     eventSource.onmessage = function (event) {
@@ -35,37 +45,47 @@ document.addEventListener("DOMContentLoaded", function () {
 
         comments.forEach(comment => {   // 새로운 채팅 메시지들을 반복 처리
             const li = document.createElement("li");    // 새로운 li 요소 생성
-            li.textContent = `[${comment.nickname}] ${comment.contents}`;       // 닉네임과 내용을 설정
+            li.innerHTML = `(${comment.location}) [${comment.nickname}]<br>${comment.contents}`;       // 닉네임과 내용을 설정
             commentList.appendChild(li);    // 댓글 목록에 li 요소를 추가하여 화면에 표시
         });
     };
 
-    // 2. 댓글 전송하는 함수
-    document.getElementById("sendCommentButton").addEventListener("click", function () {
-        const nickname = document.getElementById("nicknameInput").value;    // 닉네임 입력 필드의 값을 가져옴
-        const contents = document.getElementById("commentInput").value; // 댓글 내용 입력 필드의 값을 가져옴
+    // SSE 연결 오류 처리
+    eventSource.onerror = function(event) {
+        console.error("SSE 연결에서 오류가 발생했습니다.", event);
+        eventSource.close();  // 연결이 끊어졌을 때 연결 종료
+    };
 
 
-        // 서버에 새로운 댓글을 전송하는 POST 요청
-        fetch("/comments", {
-            method: "POST", // HTTP 메소드는 POST로 설정
-            headers: {
-                "Content-Type": "application/json"  // 요청 데이터 타입은 JSON으로 설정
-            },
-            body: JSON.stringify({
-                nickname: nickname,
-                contents: contents,
-                location: userLocation
-            })
-        }).then(response => {
-            if(response.ok) {
-                console.log(response);
-                console.log("댓글 전송 완료");
-            }
-        }).catch(error => {
-            console.log("댓글 전송 실패: ", error);
-        });
-    });
+    const sendButton = document.getElementById("sendCommentButton");
+    if(sendButton && userNickname) {
+        // 댓글 전송하는 함수
+        sendButton.addEventListener("click", function () {
+            const contents = document.getElementById("commentInput").value;
+
+            // 서버에 새로운 댓글을 전송하는 POST 요청
+            fetch("/comments", {
+                method: "POST", // HTTP 메소드는 POST로 설정
+                headers: {
+                    "Content-Type": "application/json"  // 요청 데이터 타입은 JSON으로 설정
+                },
+                body: JSON.stringify({
+                    nickname: userNickname,
+                    contents: contents,
+                    location: userLocation
+                })
+            }).then(response => {
+                if(response.ok) {
+                    console.log(response);
+                    console.log("댓글 전송 완료");
+                } else {
+                    console.log(`댓글 전송 실패: 상태코드 ${response.status}`);
+                }
+            }).catch(error => {
+                console.log("댓글 전송 실패: ", error);
+            });
+        })
+    }
 });
 
 // ==== 댓글창 열고 닫는 기능 ================================================

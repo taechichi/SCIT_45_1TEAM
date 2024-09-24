@@ -10,6 +10,7 @@ import com.scit.proj.scitsainanguide.service.myPage.MyFriendService;
 import com.scit.proj.scitsainanguide.service.myPage.MyMessageService;
 import com.scit.proj.scitsainanguide.service.sse.AlarmService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
