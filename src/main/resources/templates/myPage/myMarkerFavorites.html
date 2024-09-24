@@ -129,6 +129,24 @@
 </div>
 <!-- End of Page Wrapper -->
 
+<!-- JavaScript 내 Thymeleaf(HTML에서만 정상 동작) 표현식은 서버에서 렌더링된 후 클라이언트로 전달되어야 함
+      동적으로 추가되는 요소에 대해 JS로 국제화 th:text를 추가하기 위해서는, 반드시 th:inline="javascript"
+      형식을 사용해야 Thymeleaf 구문이 JavaScript 내부에서 정상적으로 해석되고, JS 내에서 타임리프 사용 가능
+      서버에서 Thymeleaf 표현식을 처리한 후, 그 값을 JavaScript 변수로 전달! JS에서는 ${변수} 형태로 사용 -->
+<script th:inline="javascript">
+    <!-- 상태용변수 -->
+    let expiredMessage = /*[[#{main.myStatus.expiredTime}]]*/ '만료된 기본 메시지';
+    let remainingMessage = /*[[#{main.myStatus.time.remaining}]]*/ '남은 시간:';
+    let hoursLabel = /*[[#{main.myStatus.time.hoursLeft}]]*/ '시간';
+    let minutesLabel = /*[[#{main.myStatus.time.minutesLeft}]]*/ '분';
+    let secondsLabel = /*[[#{main.myStatus.time.secondsLeft}]]*/ '초';
+    <!-- 경로표시용 변수 -->
+    let walkingRoot = /*[[#{map.walkingRoot}]]*/ '도보 경로 정보';
+    let bicycleRoot = /*[[#{map.bicycleRoot}]]*/ '도보 경로 정보';
+    let distanceLabel = /*[[#{map.distance}]]*/ '거리:';
+    let durationLabel = /*[[#{map.duration}]]*/ '소요 시간:';
+</script>
+
 <div th:replace="~{fragments/logoutModal :: logoutModel}"></div>
 
 <!-- 페이징 기능을 위한 js -->

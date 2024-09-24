@@ -1,3 +1,77 @@
+/* 로딩 화면 */
+#loading {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, #40E0D0, #fff);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: "Kosugi Maru", "Gowun Batang", serif;
+    font-style: normal;
+}
+
+h5{
+    font-weight: 900;
+}
+
+.furigana {
+    font-size: 0.6em; /* 글씨 크기 */
+    position: absolute;
+    top: 1em; /* 한자 위로 올리기 (10px 더 아래로 조정) */
+    left: 20%; /* 더 왼쪽으로 이동 (15%로 조정) */
+    transform: translateX(-50%); /* 정확히 가운데 위치시키기 */
+    color: #999; /* 색상 조정 (선택사항) */
+}
+
+.custom-spinner {
+    text-align: center;
+}
+
+/* 아이콘 섹션 */
+.icon-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* 각 기능에 맞는 아이콘 */
+.icon {
+    width: 80px; /* 아이콘 크기 키움 */
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: inline-block;
+    background-size: 50px 50px; /* 아이콘 크기 확대 */
+    background-position: center;
+    background-repeat: no-repeat;
+    animation: pulseIcon 1.5s ease-in-out infinite;
+}
+
+
+/* 공통 스타일 */
+.positioned-element {
+    position: absolute;
+    margin: 20px; /* 적당한 여백 */
+    background-size: 75%; /* 이미지 크기를 3/4로 */
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* 아이콘 애니메이션 */
+@keyframes pulseIcon {
+    0% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.6; }
+}
+
+
+
+
 /*마커 클릭 시 정보 패널*/
 #info-panel {
     top: 100px;
@@ -50,40 +124,37 @@ body {
 }
 
 /* 삼원색 아이콘 표현 */
-.primary-colors-icon {
-    position: relative; /* 부모 요소를 기준으로 절대 위치를 설정 */
-    width: 40px; /* 아이콘 전체 크기 조정 */
-    height: 40px; /* 아이콘 전체 크기 조정 */
-    display: flex; /* flexbox 사용 */
-    justify-content: center; /* 가운데 정렬 */
-    align-items: center; /* 세로 가운데 정렬 */
+/* 기능별 아이콘 및 삼원색 */
+.friend-status {
+    background-image: url('/img/map.png');
+    background-color: #28a745; /* 초록 */
+    animation-delay: 0s;
 }
 
-.primary-colors-icon .fa-circle {
-    position: absolute; /* 절대 위치 지정 */
-    font-size: 16px; /* 개별 원 크기 조정 */
-    opacity: 0.45; /* 투명도 조정 */
+.shelter-guide {
+    background-image: url('/img/chat.png');
+    background-color: #ffc107; /* 노랑 */
+    animation-delay: 0.3s;
 }
 
-.red-circle {
-    color: red;
-    top: 10%; /* 기본 위치 */
-    left: 50%; /* 가운데 정렬 */
-    transform: translate(-50%, -50%); /* 중앙 정렬 */
+.chat-sharing {
+    background-image: url('/img/exit.png');
+    background-color: #dc3545; /* 빨강 */
+    animation-delay: 0.6s;
 }
 
-.blue-circle {
-    color: blue;
-    top: 50%; /* 삼각형의 두 번째 꼭짓점 */
-    left: 20%; /* 왼쪽 정렬 */
-    transform: translate(-50%, -50%); /* 중앙 정렬 */
+.translation-service {
+    background-image: url('/img/translation.png');
+    background-color: #f2f2f2ff; /* 흰 */
+    animation-delay: 0.9s;
 }
 
-.green-circle {
-    color: green;
-    top: 50%; /* 삼각형의 세 번째 꼭짓점 */
-    left: 80%; /* 오른쪽 정렬 */
-    transform: translate(-50%, -50%); /* 중앙 정렬 */
+rt{
+    letter-spacing: 0.5em;
+}
+
+ruby{
+    font-size: 20px;
 }
 
 /* 지도 스타일 */
@@ -122,8 +193,11 @@ body {
     right: 10px;         /* 오른쪽 여백 */
     bottom: 180px;       /* 아래쪽으로부터 170px 띄우기 */
     position: absolute;  /* 지도 위에 고정시키기 위해 사용 */
-    z-index: 1000;       /* 버튼을 지도 위로 올리기 */
-}
+    z-index: 1;       /* 버튼을 지도 위로 올리기 */
+    background-color: transparent; /* 배경색 투명 */
+    border: none; /* 테두리 없음 */
+    }
+
 
 /* 전체 정보 패널 스타일링 */
 #info-panel {
@@ -183,14 +257,19 @@ body {
 }
 
 .img-64 {
-    width: 64px;
-    height: 64px;
+    width: 64px !important;
+    height: 64px !important;
     object-fit: cover; /* 이미지가 잘리지 않고 채워지도록 설정 */
 }
 
 .img-40 {
-    width: 40px;
-    height: 40px;
+    width: 40px !important;
+    height: 40px !important;
+    object-fit: cover;
+}
+.img-128 {
+    width: 128px !important;
+    height: 128px !important;
     object-fit: cover;
 }
 

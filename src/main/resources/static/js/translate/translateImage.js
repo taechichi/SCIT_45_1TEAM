@@ -13,9 +13,19 @@ function displayFileName() {
     }
 }
 
+// 텍스트화와 번역이 진행되는 동안 로딩
+function showLoading() {
+    $('#loadingOverlay').show(); // 로딩 오버레이 보이기
+}
+
+function hideLoading() {
+    $('#loadingOverlay').hide(); // 로딩 오버레이 숨기기
+}
+
 // 1. 이미지를 업로드할 때 실행되는 함수, 사용자가 선택한 원문 언어값 추출된 텍스트를 가지고 번역함수 호출
 function handleFormSubmit(event) {
     event.preventDefault(); // 폼 제출 시 페이지 새로 고침 방지
+    showLoading(); // 로딩 시작
 
     let fileInput = document.getElementById('file');
     let file = fileInput.files[0];
@@ -49,6 +59,7 @@ function handleFormSubmit(event) {
             requestTranslation(data.extractedText, sourceLanguage);
         })
         .catch(error => {
+            hideLoading(); // 오류 발생 시 로딩 종료
             console.error('Error:', error);
             document.getElementById('extractedText').innerText = `${textedError}`;
         });
@@ -99,11 +110,12 @@ function requestTranslation(text, whatLan) {
             .then(data => {
                 // 현재의 텍스트에 새 번역 결과를 추가하고 개행 문자를 추가
                 document.getElementById('translatedText').innerHTML += `${data.translatedText}<br>`;
+                hideLoading(); // 번역 완료 후 로딩 종료
             })
             .catch(error => {
+                hideLoading(); // 오류 발생 시 로딩 종료
                 console.error('번역 실패:', error);
                 document.getElementById('translatedText').innerHTML = `${transError}`;
             });
     });
 }
-

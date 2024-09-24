@@ -24,14 +24,19 @@ public class FriendDTO {
     // 내 친구 목록 출력에 필요한 필드
     private String nickname;
     private String nationality;
+    private String statusName;
+    private String statusNameJa;
 
     // 내 친구 목록 출력에 필요한 DTO 생성자
-    public FriendDTO(Integer relationId, String friendId, String nickname, boolean favoriteYn, String nationality) {
+    public FriendDTO(Integer relationId, String friendId, String nickname, boolean favoriteYn, String nationality
+            , String statusName, String statusNameJa) {
         this.relationId = relationId;
         this.friendId = friendId;
         this.nickname = nickname;
         this.favoriteYn = favoriteYn;
         this.nationality = nationality;
+        this.statusName = statusName;
+        this.statusNameJa = statusNameJa;
     }
 
     // 내 친구 신청 목록 출력에 필요한 DTO 생성자

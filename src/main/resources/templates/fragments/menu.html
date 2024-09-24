@@ -8,20 +8,18 @@
         <div class="bg-gradient-info">
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
                 <div class="sidebar-brand-icon">
-                    <div class="primary-colors-icon">
-                        <i class="fas fa-circle red-circle"></i>
-                        <i class="fas fa-circle blue-circle"></i>
-                        <i class="fas fa-circle green-circle"></i>
-                    </div>
+                    <ruby>
+                        災ガイ図<rt>Saigaido</rt>
+                    </ruby>
+                        <img src="/img/saigaidoLogo.png" alt="Saigaido Icon" style="width: 90px; height: auto;">
                 </div>
-                <div class="sidebar-brand-text mx-3">primary colors</div>
             </a>
         </div>
 
         <!-- Divider -->
         <hr class="sidebar-divider">
 
-        <div>
+        <div sec:authorize="isAuthenticated()">
 
             <!-- Heading -->
             <div class="sidebar-heading">

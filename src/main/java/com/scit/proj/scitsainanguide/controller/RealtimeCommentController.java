@@ -1,14 +1,15 @@
 package com.scit.proj.scitsainanguide.controller;
 
 import com.scit.proj.scitsainanguide.domain.dto.RealtimeCommentDTO;
+import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.RealtimeCommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
@@ -25,29 +26,74 @@ public class RealtimeCommentController {
 
     // SSE 연결을 통해 메시지를 실시간으로 클라이언트에 전송
     @GetMapping(value = "/comments/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter streamComments() {
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
+    public SseEmitter streamComments(
+            @RequestParam("since") String since
+    ) {
+        SseEmitter emitter = new SseEmitter(60000L);
         emitters.add(emitter);
 
-        emitter.onCompletion(() -> emitters.remove(emitter));
-        emitter.onTimeout(() -> emitters.remove(emitter));
+        // SSE 연결 관리 로직
+        emitter.onCompletion(() -> {
+            emitters.remove(emitter);
+            log.info("SSE 연결이 완료되었습니다.");
+        });
+        emitter.onTimeout(() -> {
+            emitters.remove(emitter);
+            log.warn("SSE 연결이 시간 초과로 종료되었습니다.");
+        });
+        emitter.onError((e) -> {
+            emitters.remove(emitter);
+            log.error("SSE 연결에서 오류가 발생했습니다.", e);
+        });
+
+        /*emitter.onCompletion(() -> emitters.remove(emitter));
+        emitter.onTimeout(() -> emitters.remove(emitter));*/
+
+        // 접속한 시점 이후의 댓글만 가져옴
+        List<RealtimeCommentDTO> recentComments = realtimeCommentService.findRealtimeCommentsAfterSince(since);
+
+        try {
+            emitter.send(recentComments);
+        } catch (IOException e) {
+            emitters.remove(emitter);
+            log.error("SSE 데이터를 전송하는 중 오류 발생", e);
+        }
 
         return emitter;
     }
 
     // 메시지를 저장하고 모든 클라이언트에게 메시지 전송
     @PostMapping("/comments")
-    public void postComments(
-            @RequestBody RealtimeCommentDTO comment
-    ) throws IOException {
+    public ResponseEntity<String> postComments(
+            @RequestBody RealtimeCommentDTO comment,
+            @AuthenticationPrincipal AuthenticatedUser user
+            ) {
+        // 로그인한 사용자만 댓글 작성 가능
+        if(user == null) {
+            log.debug("로그인되지 않은 사용자의 요청");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 후 댓글을 작성할 수 있습니다.");
+        }
 
+        // 디버깅을 위해 로그 추가
+        log.debug("Received comment from user: {}", user.getNickname());
+        log.debug("Comment contents: {}", comment.getContents());
+
+
+        comment.setNickname(user.getNickname());
+        log.debug("DB에 댓글 저장: {}", comment);
         realtimeCommentService.saveRealtimeComment(comment);    // DB에 메시지 저장
-
-        List<RealtimeCommentDTO> comments = realtimeCommentService.findAllRealtimeComments();
+        List<RealtimeCommentDTO> comments = List.of(comment);
 
         // 연결된 모든 클라이언트에게 메시지 전송
         for(SseEmitter emitter : emitters) {
-            emitter.send(comments);
+            try {
+                emitter.send(comments);
+            } catch (IOException e) {
+                emitters.remove(emitter);
+                log.error("SSE 데이터를 클라이언트에게 전송하는 중 오류 발생", e);
+            }
         }
+
+        return ResponseEntity.ok("댓글이 성공적으로 저장되었습니다.");
     }
 }

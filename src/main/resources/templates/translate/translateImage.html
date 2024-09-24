@@ -50,8 +50,8 @@
                 <h5 th:text="#{translate.guide}">언어 선택 설명</h5>
             </div>
 
-            <div class="card-body">
-            <form id="uploadForm" enctype="multipart/form-data">
+            <div class="card-body" style="position: relative;">
+                <form id="uploadForm" enctype="multipart/form-data">
                 <label for="sourceLanguage" th:text="#{translate.image.selectLan}">이미지 언어:</label>
                 <select id="sourceLanguage">
                     <option value="en-US" th:text="#{translate.en}">영어</option>
@@ -63,6 +63,10 @@
                 <span id="fileName">파일 업로드 시 파일명 나타남</span>
                 <a href="#" class="button btnPush btnBlue" onclick="handleFormSubmit(event)" th:text="#{translate.microFileUpload}">업로드</a>
             </form>
+
+            <div id="loadingOverlay" style="display: none;">
+                <img src="/img/translate/loading.png" alt="Loading..." id="loadingImage" />
+            </div>
             </div>
 
             <div class="card shadow mb-4 mx-auto">

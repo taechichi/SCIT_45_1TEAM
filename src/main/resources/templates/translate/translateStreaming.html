@@ -51,7 +51,7 @@
                 <h5 th:text="#{translate.guide}">언어 선택 설명</h5>
             </div>
 
-            <div class="card-body">
+            <div class="card-body" style="position: relative;">
                 <label for="streamingLan" th:text="#{translate.streaming.selectLan}">스트리밍 언어: </label>
                 <select id="streamingLan">
                     <option value="en-US" th:text="#{translate.en}">영어</option>
@@ -71,6 +71,10 @@
 
                 <!-- 녹음된 내용 다시 듣기 -->
                 <audio id="audio-playback" controls></audio>
+
+                <div id="loadingOverlay" style="display: none;">
+                    <img src="/img/translate/loading.png" alt="Loading..." id="loadingImage" />
+                </div>
             </div>
 
             <div class="translateContainer">

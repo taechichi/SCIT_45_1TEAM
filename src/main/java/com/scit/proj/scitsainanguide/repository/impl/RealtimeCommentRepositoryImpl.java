@@ -8,7 +8,6 @@ import com.scit.proj.scitsainanguide.domain.entity.RealtimeCommentEntity;
 import com.scit.proj.scitsainanguide.repository.RealtimeCommentRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,8 +15,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Repository
@@ -35,6 +38,24 @@ public class RealtimeCommentRepositoryImpl implements RealtimeCommentRepository 
     public RealtimeCommentRepositoryImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
         this.queryFactory = new JPAQueryFactory(entityManager);
+    }
+
+    public List<RealtimeCommentDTO> selectRealtimeCommentAfterSince(String since) {
+        // since 문자열을 LocalDateTime으로 변환
+        LocalDateTime sinceTime = LocalDateTime.parse(since, DateTimeFormatter.ISO_DATE_TIME);
+
+
+        // QueryDSL을 사용한 쿼리 작성
+        List<RealtimeCommentEntity> commentEntities = queryFactory
+                .selectFrom(realtimeCommentEntity)
+                .where(realtimeCommentEntity.createDt.after(sinceTime))
+                .orderBy(realtimeCommentEntity.createDt.asc())
+                .fetch();
+
+        // Entity 를 DTO로 변환
+        return commentEntities.stream()
+                .map(this::convertToRealtimeCommentDTO)
+                .collect(Collectors.toList());
     }
 
     public Page<RealtimeCommentDTO> selectAllPaging(SearchRequestDTO dto) {
@@ -72,6 +93,7 @@ public class RealtimeCommentRepositoryImpl implements RealtimeCommentRepository 
         return RealtimeCommentDTO.builder()
                 .commentNum(realtimeCommentEntity.getCommentNum())
                 .replyNum(realtimeCommentEntity.getReplyRealtimeComment() != null ? realtimeCommentEntity.getReplyRealtimeComment().getCommentNum() : null)
+                .nickname(realtimeCommentEntity.getNickname())
                 .location(realtimeCommentEntity.getLocation())
                 .contents(realtimeCommentEntity.getContents())
                 .createDt(realtimeCommentEntity.getCreateDt())

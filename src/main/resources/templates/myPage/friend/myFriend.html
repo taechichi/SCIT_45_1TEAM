@@ -37,14 +37,10 @@
                         <input type="hidden" name="page" id="page"/>
                         <div class="search-form-group">
                             <!-- 숨겨진 셀렉트 박스 -->
-                            <select id="typeSelect" name="searchType" style="display: none;">
+                            <select id="typeSelect" name="searchType">
                                 <option value="friendId" th:text="#{my.friend.searchType.friendId}"></option>
                                 <option value="nickname" th:text="#{my.friend.searchType.nickname}"></option>
                             </select>
-
-                            <!-- 버튼으로 스타일링 -->
-                            <button type="button" id="btnFriendId" class="filter-btn" data-value="friendId">아이디</button>
-                            <button type="button" id="btnNickname" class="filter-btn" data-value="nickname">닉네임</button>
 
                             <!-- 검색 입력창 -->
                             <input type="text" id="searchInput" name="searchWord" placeholder="아이디를 입력하세요"/>
@@ -67,6 +63,7 @@
                                     <th th:text="#{my.friend.column.friendId}"></th>
                                     <th th:text="#{my.friend.column.nickname}"></th>
                                     <th th:text="#{my.friend.column.nationality}"></th>
+                                    <th th:text="#{my.friend.column.status}"></th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -79,6 +76,8 @@
                                     </td>
                                     <td th:text="*{nickname}"></td>
                                     <td th:text="*{nationality}"></td>
+                                    <td th:if="${session.lang != 'ja'}" th:text="*{statusName}"></td>
+                                    <td th:if="${session.lang == 'ja'}" th:text="*{statusNameJa}"></td>
                                     <td>
                                         <button th:if="*{favoriteYn == false}" class="updateFavoriteBtn" th:data-id="*{relationId}" th:data-favorite="*{favoriteYn}"
                                                 th:text="#{my.friend.button.favorite}"></button>
@@ -105,9 +104,30 @@
 <!-- End of Page Wrapper -->
 </body>
 <!-- 게시판 페이지에 필요한 script 모음 -->
+
+<!-- JavaScript 내 Thymeleaf(HTML에서만 정상 동작) 표현식은 서버에서 렌더링된 후 클라이언트로 전달되어야 함
+      동적으로 추가되는 요소에 대해 JS로 국제화 th:text를 추가하기 위해서는, 반드시 th:inline="javascript"
+      형식을 사용해야 Thymeleaf 구문이 JavaScript 내부에서 정상적으로 해석되고, JS 내에서 타임리프 사용 가능
+      서버에서 Thymeleaf 표현식을 처리한 후, 그 값을 JavaScript 변수로 전달! JS에서는 ${변수} 형태로 사용 -->
+<script th:inline="javascript">
+    <!-- 상태용변수 -->
+    let expiredMessage = /*[[#{main.myStatus.expiredTime}]]*/ '만료된 기본 메시지';
+    let remainingMessage = /*[[#{main.myStatus.time.remaining}]]*/ '남은 시간:';
+    let hoursLabel = /*[[#{main.myStatus.time.hoursLeft}]]*/ '시간';
+    let minutesLabel = /*[[#{main.myStatus.time.minutesLeft}]]*/ '분';
+    let secondsLabel = /*[[#{main.myStatus.time.secondsLeft}]]*/ '초';
+    <!-- 경로표시용 변수 -->
+    let walkingRoot = /*[[#{map.walkingRoot}]]*/ '도보 경로 정보';
+    let bicycleRoot = /*[[#{map.bicycleRoot}]]*/ '도보 경로 정보';
+    let distanceLabel = /*[[#{map.distance}]]*/ '거리:';
+    let durationLabel = /*[[#{map.duration}]]*/ '소요 시간:';
+</script>
+
+<div th:replace="~{fragments/logoutModal :: logoutModel}"></div>
+
 <!-- Bootstrap core JavaScript-->
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
 <!-- Core plugin JavaScript-->
 <script th:src="@{/vendor/jquery-easing/jquery.easing.js}"></script>
@@ -120,4 +140,5 @@
 
 <!-- 친구 목록 페이지에 필요한 js -->
 <script th:src="@{/js/myPage/friend/myFriend.js}"></script>
+<script th:src="@{/js/main/topbar.js}"></script>
 </html>

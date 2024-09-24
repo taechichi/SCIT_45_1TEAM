@@ -1,4 +1,4 @@
-package com.scit.proj.scitsainanguide.domain.dto;
+package com.scit.proj.scitsainanguide.domain.dto.alarm;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

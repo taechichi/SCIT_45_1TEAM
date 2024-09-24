@@ -4,6 +4,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let audioChunks = []; // 쪼갠 조각을 담는 배열
 
 
+    // 텍스트화와 번역이 진행되는 동안 로딩
+    function showLoading() {
+        $('#loadingOverlay').show(); // 로딩 오버레이 보이기
+    }
+
+    function hideLoading() {
+        $('#loadingOverlay').hide(); // 로딩 오버레이 숨기기
+    }
+
     // 녹음 시작 버튼 클릭 시
     document.getElementById('start-recording').addEventListener('click', () => {
         console.log("1. 언어 선택 후 녹음 시작 버튼 클릭");
@@ -58,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('stop-recording').addEventListener('click', () => {
         // 녹음 중지
         mediaRecorder.stop();
+        showLoading(); // 로딩 시작
         console.log("6. 녹음 중지");
 
         // 버튼 상태 변경: 녹음 시작 버튼 활성화, 중지 버튼 비활성화
@@ -96,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 requestTranslation(data.transcription, whatLan);
             })
             .catch(error => {
+                hideLoading(); // 오류 발생 시 로딩 종료
                 console.error('텍스트로 변환 실패:', error);
                 document.getElementById('voiceTexted').innerHTML = `${textedError}`;
             });
@@ -144,8 +155,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(data => {
                     // 현재의 텍스트에 새 번역 결과를 추가하고 개행 문자를 추가
                     document.getElementById('voiceTranslated').innerHTML += `<br>${data.translatedText}<br>`;
+                    hideLoading(); // 번역 완료 후 로딩 종료
                 })
                 .catch(error => {
+                    hideLoading(); // 오류 발생 시 로딩 종료
                     console.error('번역 실패:', error);
                     document.getElementById('voiceTranslated').innerHTML = `${transError}`;
                 });

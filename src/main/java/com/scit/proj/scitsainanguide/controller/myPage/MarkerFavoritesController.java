@@ -4,6 +4,7 @@ package com.scit.proj.scitsainanguide.controller.myPage;
 import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.myPage.MarkerFavoritesService;
 import com.scit.proj.scitsainanguide.util.PaginationUtils;
+import com.scit.proj.scitsainanguide.util.TopbarUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -32,6 +33,7 @@ public class MarkerFavoritesController {
     // ============== 초기화 목록 ==============
     private final MarkerFavoritesService markerFavoritesService;
     private final PaginationUtils paginationUtils;
+    private final TopbarUtils topbarUtils;
 
     @Value("20")
     private int pageSize;
@@ -54,6 +56,8 @@ public class MarkerFavoritesController {
         ModelAndView modelAndView = paginationUtils.getPaginationData(markerFavoritesAllList, dto);
         modelAndView.addObject("pageData", markerFavoritesAllList);
         modelAndView.setViewName("myPage/myMarkerFavorites");
+        topbarUtils.setTopbarFragmentData(user, modelAndView);  // topbar 관련 데이터 설정
+
         return modelAndView;
     }
 

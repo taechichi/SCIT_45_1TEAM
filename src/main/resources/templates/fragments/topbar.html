@@ -33,14 +33,7 @@
         <div class="d-flex align-items-center">
           <!-- 반복문으로 친구 프로필 사진 항목들 생성 -->
           <div th:each="friend : ${favoriteFriendList}" class="nav-link profile-picture-wrapper">
-            <a href="#" data-toggle="modal" data-target="#profileModal"
-               th:data-memberid="${friend.memberId}"
-               th:data-nickname="${friend.nickname}"
-               th:data-statusid="${friend.statusId}"
-               th:data-statusname="${friend.statusName}"
-               th:data-lastupdate="${friend.lastStUpdateDt}"
-               th:data-stmessage="${friend.stMessage}"
-               th:data-imgurl="@{/member/download/{memberId}(memberId=${friend.memberId})}">
+            <a href="#" data-toggle="modal" th:data-target="'#profileModal' + ${friend.memberId}">
               <div class="profile-picture-container">
                 <img class="img-profile rounded-circle" th:src="@{/member/download/{memberId}(memberId=${friend.memberId})}" alt="Profile Picture"/>
                 <!-- 회원의 상태를 정해진 색으로 표시 -->
@@ -50,46 +43,46 @@
                 <div th:if="${friend.statusId == 4}" class="status-indicator bg-gradient-danger"></div>
               </div>
             </a>
+
+            <!-- Modal for Profile Picture -->
+            <div class="modal fade" th:id="'profileModal' + ${friend.memberId}" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="profileModalLabel">
+                      <!-- 헤더 고유한 id를 사용 -->
+                      <span id="headerNickname" th:text="${friend.nickname}"></span><span th:text="#{friend.status.span}"></span>
+                      <span id="headerStatusName" th:if="${session.lang != 'ja'}" th:text="${friend.statusName}">Status</span>
+                      <span id="headerStatusNameJa" th:if="${session.lang == 'ja'}" th:text="${friend.statusNameJa}">Status</span>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <!-- 바디 고유한 id를 사용 -->
+                    <div class="profile-picture-container">
+                      <img id="modalProfileImage" class="img-profile rounded-circle img-64" th:src="@{/member/download/{memberId}(memberId=${friend.memberId})}" alt="Profile Picture"/>
+                      <div class="status-indicator"></div>
+                    </div>
+
+                    <div class="modal-links">
+                      <span><a th:href="@{/my/message/write}" th:text="#{friend.send.message.button}"></a></span>
+                    </div>
+
+                    <!-- 회원 정보 -->
+                    <p><strong th:text="#{friend.last.update.strong}"></strong> <span id="modalLastUpdate" th:text="*{#temporals.format(friend.lastStUpdateDt, 'yyyy.MM.dd HH:mm')}">No update available</span></p>
+                    <p><strong th:text="#{friend.status.message.strong}"></strong> <span id="modalStMessage" th:text="${friend.stMessage}">No status message</span></p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="${board.button.close}">닫기</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </li>
-
-      <!-- Modal for Profile Picture -->
-      <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="profileModalLabel">
-                <!-- 헤더 고유한 id를 사용 -->
-                <span id="headerNickname">Nickname</span> 님의 상태는 :
-                <span id="headerStatusName">Status</span>
-              </h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <!-- 바디 고유한 id를 사용 -->
-              <div class="profile-picture-container">
-                <img id="modalProfileImage" class="img-profile rounded-circle" src="" alt="Profile Picture" />
-                <div class="status-indicator"></div>
-              </div>
-
-              <div class="modal-links">
-                <p><a href="my/message/write">쪽지 보내기</a></p>
-                <span>즐겨찾기 추가 예정</span>
-              </div>
-
-              <!-- 회원 정보 -->
-              <p><strong>마지막 상태 업데이트:</strong> <span id="modalLastUpdate">No update available</span></p>
-              <p><strong>상태 메시지:</strong> <span id="modalStMessage">No status message</span></p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-            </div>
-          </div>
-        </div>
-      </div>
 
 
 
@@ -135,6 +128,7 @@
             Alerts Center
           </h6>
           <a class="dropdown-item d-flex align-items-center" th:each="alarm : ${alarmList}">
+            <input id="alarmIdInput" type="hidden" th:value="${alarm.alarmId}">
             <div class="mr-3">
               <div th:if="${alarm.categoryId == 1}" class="icon-circle bg-primary">
                 <i class="fas fa-file-alt text-white"></i>
@@ -153,18 +147,6 @@
           </a>
           <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
         </div>
-      </li>
-      <!-- 언어 설정 변경 -->
-      <li id="abc" class="nav-item dropdown no-arrow mx-1">
-        <!-- 일본어가 설정된 경우 -->
-        <a th:if="${session.lang == 'ja'}" th:href="@{/language(lang='ko')}">
-          <img id="flagJa" th:src="@{/img/ja.png}" alt="한국어" />
-        </a>
-
-        <!-- 일본어가 설정되지 않은 경우 -->
-        <a th:if="${session.lang != 'ja'}" th:href="@{/language(lang='ja')}">
-          <img id="flagKo" th:src="@{/img/ko.png}" alt="日本語" />
-        </a>
       </li>
 
       <!-- 오른쪽 상단 네비게이션 - 메세지 알림 -->
@@ -199,6 +181,18 @@
           </a>
           <a class="dropdown-item text-center small text-gray-500" th:text="#{main.message.list}" th:href="@{/my/message}"></a>
         </div>
+      </li>
+      <!-- 언어 설정 변경 -->
+      <li id="abc" class="nav-item dropdown no-arrow mx-1">
+        <!-- 일본어가 설정된 경우 -->
+        <a th:if="${session.lang == 'ja'}" th:href="@{/language(lang='ko')}">
+          <img id="flagJa" th:src="@{/img/ja.png}" alt="한국어" />
+        </a>
+
+        <!-- 일본어가 설정되지 않은 경우 -->
+        <a th:if="${session.lang != 'ja'}" th:href="@{/language(lang='ja')}">
+          <img id="flagKo" th:src="@{/img/ko.png}" alt="日本語" />
+        </a>
       </li>
 
       <div class="topbar-divider d-none d-sm-block"></div>

@@ -2,12 +2,11 @@ package com.scit.proj.scitsainanguide.repository.impl;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.scit.proj.scitsainanguide.domain.dto.AlarmDTO;
-import com.scit.proj.scitsainanguide.domain.dto.AlarmResponseDTO;
+import com.scit.proj.scitsainanguide.domain.dto.alarm.AlarmDTO;
+import com.scit.proj.scitsainanguide.domain.dto.alarm.SelectAlarmResponseDTO;
 import com.scit.proj.scitsainanguide.domain.entity.AlarmEntity;
 import com.scit.proj.scitsainanguide.domain.entity.MemberEntity;
 import com.scit.proj.scitsainanguide.domain.entity.QAlarmEntity;
-import com.scit.proj.scitsainanguide.domain.entity.QMessageEntity;
 import com.scit.proj.scitsainanguide.repository.AlarmRepository;
 import com.scit.proj.scitsainanguide.repository.MemberJpaRepository;
 import jakarta.persistence.EntityManager;
@@ -55,7 +54,7 @@ public class AlarmRepositoryImpl implements AlarmRepository {
     }
 
     @Override
-    public AlarmResponseDTO selectAlarmList(String memberId) {
+    public SelectAlarmResponseDTO selectAlarmList(String memberId) {
         BooleanBuilder whereClause = new BooleanBuilder();
         whereClause.and(alarm.readYn.eq(false)
                 .and(alarm.member.memberId.eq(memberId)));
@@ -76,7 +75,18 @@ public class AlarmRepositoryImpl implements AlarmRepository {
                 .map(this::convertToAlarmDTO)
                 .toList();
 
-        return new AlarmResponseDTO(alarmDTOList, alarmCnt);
+        return new SelectAlarmResponseDTO(alarmDTOList, alarmCnt);
+    }
+
+    @Override
+    public void updateAlarmReadYn(String memberId, List<Integer> alarmIdList) {
+        // 읽은 것으로 처리한다. (readYn = true 설정)
+        queryFactory.update(alarm)
+                .set(alarm.readYn, true)
+                .where(alarm.readYn.eq(false)
+                        .and(alarm.member.memberId.eq(memberId))
+                )
+                .execute();
     }
 
     private AlarmDTO convertToAlarmDTO(AlarmEntity alarmEntity) {

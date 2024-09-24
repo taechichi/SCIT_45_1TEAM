@@ -2,6 +2,7 @@ package com.scit.proj.scitsainanguide.repository.impl;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.scit.proj.scitsainanguide.domain.dto.FriendDTO;
@@ -73,7 +74,9 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                             friend.friendId,
                             friend.friend.nickname,
                             friend.favoriteYn,
-                            friend.friend.nationality
+                            friend.friend.nationality,
+                            friend.friend.status.statusName,
+                            friend.friend.status.statusNameJa
                         )
                 ).from(friend)
                 //.join(member).on(friend.friendId.eq(member.memberId)) 조인 문 불필요
@@ -174,6 +177,16 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
 
         // friend_member entity 를 생성
         for (String fId : friendIdList) {
+            boolean exists = queryFactory.selectFrom(friend)
+                    .where(friend.memberId.eq(memberId)
+                            .and(friend.friendId.eq(fId)))
+                    .fetchOne() != null;  // fetchOne()로 존재 여부 확인
+
+            // 친구 관계가 이미 존재하면 에러 발생
+            if (exists) {
+                throw new IllegalArgumentException(fId + "님과 이미 친구사이이거나, 이미 친구 요청을 보낸 상태입니다.");
+            }
+
             FriendEntity friendEntity = FriendEntity.builder()
                     .memberId(memberId)
                     .friendId(fId)
@@ -240,7 +253,8 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                                 member.memberId,
                                 member.nickname,
                                 member.lastStUpdateDt,
-                                member.status.statusName
+                                member.status.statusName,
+                                member.status.statusNameJa
                         )
                 )
                 .from(member)
@@ -251,11 +265,16 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
 
     @Override
     public List<MemberDTO> selectMyFavoriteList(String memberId) {
+        BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(friend.memberId.eq(memberId))
+                .and(friend.friendYn.eq(true))
+                .and(friend.favoriteYn.eq(true))
+                .and(friend.friend.withdraw.eq(false))
+                .and(friend.friend.adminYn.eq(false));
+
         // 로그인한 회원의 즐겨찾기한 친구 목록 조회
         List<FriendEntity> friendEntityList = queryFactory.selectFrom(friend)
-                .where(friend.memberId.eq(memberId)
-                    .and(friend.favoriteYn.eq(true))
-                )
+                .where(whereClause)
                 .fetch();
 
         // 친구 Entity 에서 id 를 추출해서 List 로 만든다.
@@ -270,7 +289,10 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                         member.nickname,
                         member.fileName,
                         member.status.statusId,
-                        member.status.statusName
+                        member.status.statusName,
+                        member.status.statusNameJa,
+                        member.lastStUpdateDt,
+                        member.stMessage
                 )
         )
         .from(member)
@@ -306,9 +328,9 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                         )
                 )
                 .from(member)
-                .leftJoin(friend).on(friend.friendId.eq(member.memberId))
-                .where(member.memberId.in(myFriendList))
-                .orderBy(friend.friendYn.desc(),(member.memberId.asc()))
+                .join(friend).on(friend.friendId.eq(member.memberId))
+                .where(friend.memberId.eq(memberId).and(member.memberId.in(myFriendList)))
+                .orderBy(friend.favoriteYn.desc(),(member.memberId.asc()))
                 .fetch();
     }
 

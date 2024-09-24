@@ -1,19 +1,17 @@
 package com.scit.proj.scitsainanguide.controller.sse;
 
-import com.scit.proj.scitsainanguide.domain.dto.AlarmDTO;
-import com.scit.proj.scitsainanguide.domain.dto.AlarmRequestDTO;
-import com.scit.proj.scitsainanguide.domain.dto.AlarmResponseDTO;
+import com.scit.proj.scitsainanguide.domain.dto.alarm.SelectAlarmRequestDTO;
+import com.scit.proj.scitsainanguide.domain.dto.alarm.SelectAlarmResponseDTO;
 import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.sse.AlarmService;
 import com.scit.proj.scitsainanguide.service.sse.SseEmitterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -39,7 +37,17 @@ public class AlarmController {
      * @return 알림 정보 목록 객체
      */
     @GetMapping("list")
-    public AlarmResponseDTO selectAlarmList(@AuthenticationPrincipal AuthenticatedUser user, @RequestParam String eventType) {
-        return alarmService.selectAlarmList(new AlarmRequestDTO(user.getId(), eventType));
+    public SelectAlarmResponseDTO selectAlarmList(@AuthenticationPrincipal AuthenticatedUser user, @RequestParam String eventType) {
+        return alarmService.selectAlarmList(new SelectAlarmRequestDTO(user.getId(), eventType));
+    }
+
+    /**
+     * 알림 읽음 처리
+     * @param user 로그인한 유저 정보 객체
+     * @param alarmIdList 읽음 처리할 알림 번호 목록
+     */
+    @PatchMapping("list")
+    public void updateAlarmReadYn(@AuthenticationPrincipal AuthenticatedUser user, @RequestBody List<Integer> alarmIdList) {
+        alarmService.updateAlarmReadYn(user.getId(), alarmIdList);
     }
 }

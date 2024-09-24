@@ -1,7 +1,10 @@
 .profile-picture-container {
     position: relative;
-    display: inline-block; /* 인라인 블록으로 설정하여 다른 요소들과 같은 줄에 배치 */
+    display: inline-block;
+    text-align: center;       /* 가로 중앙 정렬 */
     margin-bottom: 20px;
+    width: 100%;              /* 부모 요소의 전체 너비를 사용 */
+    height: 100%;             /* 부모 요소의 전체 높이를 사용 */
 }
 
 .status-indicator {
@@ -130,6 +133,5 @@
     margin: 0; /* 기본 margin 제거 */
     padding: 0; /* 기본 padding 제거 */
 }
-
 
 

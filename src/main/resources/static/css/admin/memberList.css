@@ -74,6 +74,8 @@ tbody tr:nth-child(even) {
     display: flex;
     justify-content: center;
     margin-top: 20px;
+    z-index: 10; /* 높은 값으로 설정하여 링크가 위로 올라오게 만듦 */
+    position: relative; /* z-index가 동작하려면 position 속성이 필요 */
 }
 
 .pagination a {

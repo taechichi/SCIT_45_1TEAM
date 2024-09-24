@@ -288,15 +288,19 @@ public class MemberService {
         // 설정된 파일명이나 기본 이미지 파일명을 DTO에 저장
         memberDTO.setFileName(profileImage);
 
-        // 비밀번호가 입력된 경우에만 비밀번호 변경
-        if (memberDTO.getPassword() != null && !memberDTO.getPassword().isEmpty()) {
-            existingMember.setPassword(passwordEncoder.encode(memberDTO.getPassword())); // 비밀번호 인코딩 후 저장
+        // 새로운 비밀번호가 빈 문자열인지 확인
+        if (memberDTO.getPassword() == null || memberDTO.getPassword().trim().isEmpty()) {
+            // 새 비밀번호가 없으면 기존 비밀번호 유지
+            memberDTO.setPassword(existingMember.getPassword());
+        } else {
+            // 새 비밀번호가 있으면 암호화해서 저장
+            memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
         }
 
         // 회원 정보 업데이트
         existingMember.setNickname(memberDTO.getNickname());
         existingMember.setEmail(memberDTO.getEmail());
-        existingMember.setGender(memberDTO.getGender());
+//        existingMember.setGender(memberDTO.getGender());
         existingMember.setPhone(memberDTO.getPhone());
         existingMember.setNationality(memberDTO.getNationality());
         existingMember.setFileName(profileImage); // 프로필 사진 변경
