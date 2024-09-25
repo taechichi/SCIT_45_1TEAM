@@ -48,7 +48,7 @@ body {
 
 
 .btnBlue {
-    background: #0070BB;
+    background: #007bff;
 }
 
 .btnSkyblue {
@@ -82,10 +82,10 @@ body {
     cursor: pointer;
 }
 
-.button:hover {
-    background-color: #0056b3; /* 호버 시 배경색 변경 */
-    box-shadow: 0 7px 0 0 #003580; /* 호버 시 그림자 조금 더 진하게 */
-}
+/*.button , #labelOfFile:hover {*/
+/*    background-color: #0056b3; !* 호버 시 배경색 변경 *!*/
+/*    box-shadow: 0 7px 0 0 #003580; !* 호버 시 그림자 조금 더 진하게 *!*/
+/*}*/
 
 .button:active {
     background-color: #004080; /* 클릭 시 배경색 변경 */

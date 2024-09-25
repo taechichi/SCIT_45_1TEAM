@@ -1,4 +1,7 @@
 $(document).ready(function(){
+    $('#submitBtn').click(function(){
+        window.close();
+    })
     
     // 친구 검색 버튼을 눌렀을 때 새 창을 열어 친구 목록 검색 창 띄움
     $('#searchId').click(function(){
