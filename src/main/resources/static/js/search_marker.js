@@ -76,7 +76,8 @@
                     placeId: place.shelterId,
                     map: map,
                     position: shelterPosition,
-                    title: place.shelterName
+                    title: place.shelterName,
+                    type: 'shelter'
                 };
                 break;
             case "myMarker":
@@ -88,8 +89,9 @@
                         url: '/img/map/myMarker.png', // 사용자 정의 아이콘 URL
                         scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
                         origin: new google.maps.Point(0, 0), // 아이콘의 원점
-                        anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
-                    }
+                        anchor: new google.maps.Point(25, 50), // 아이콘의 앵커 포인트
+                    },
+                    type: 'myMarker'
                 };
                 break;
             case "hospital":
@@ -98,13 +100,14 @@
                     map: map,
                     position: place.geometry.location,
                     title: place.name,
-                    placePhoto: place.photos ? place.photos[0].getUrl() : "",
+                    placePhoto: place.photos ? place.photos[0].getUrl() : "/img/map/noImageAvailable.jpg",
                     icon: {
                         url: '/img/hospitalMarker.png', // 사용자 정의 아이콘 URL
                         scaledSize: new google.maps.Size(40, 40), // 아이콘의 크기 조정
                         origin: new google.maps.Point(0, 0), // 아이콘의 원점
-                        anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
-                    }
+                        anchor: new google.maps.Point(25, 50), // 아이콘의 앵커 포인트
+                    },
+                    type: 'hospital'
                 };
                 break;
             default:
@@ -168,11 +171,15 @@
         const pageSize = 10;  // 한 번에 가져올 게시글 개수
         let isFetching = false;  // 데이터를 불러오는 중인지 여부
         geocodeLatLng(marker.position, function (placeAdress){
-            let placeInfo = `<h3>${placeName}</h3>                  <!--- infopanel에 넣을 값 ---!>  
-                                              <div style="width: 100%;height: 200px">
-                                              <img src="${photoUrl}" style="width: 100%; height: 100%;"></div>
-                                              <p>${placeAdress}</p>
-                                              <p>추가입력예정</p>`;
+            let placeInfo =     `<h3>${placeName}</h3>
+                                        <div style="width: 100%;height: 200px">
+                                        <img src="${photoUrl}" style="width: 100%; height: 100%;"></div>`;
+            if(['myMarker','shelter'].includes(marker.type)){
+                 placeInfo ='';
+                 placeInfo =            `<div style="width: 100%;height: 200px"></div>`;
+            }
+            placeInfo +=    `<p>${placeAdress}</p>`;
+
             let infoPanel = document.getElementById("info-panel");
             let infoPart = document.getElementById("info_part");
             infoPart.innerHTML = placeInfo;
