@@ -23,7 +23,7 @@
     let favImg;
     let board;
 
-    google.maps.event.addDomListener(window, 'load', initMap);      //domlistener initmap을 실행
+    window.addEventListener('load', initMap);
     // 페이지가 로드된 후 DOM 접근
     window.onload = function() {
         board = document.getElementById('board-list');  // DOM이 로드된 후에 요소를 찾음
