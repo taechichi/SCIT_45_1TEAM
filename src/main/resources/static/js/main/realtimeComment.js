@@ -11,11 +11,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const metaUser = document.querySelector("meta[name='authenticatedUser']");
     let userNickname = null;
 
-    if(metaUser) {
+    if (metaUser) {
         userNickname = metaUser.getAttribute('content');   // 로그인한 사용자의 닉네임
     } else {
         console.log("사용자가 로그인되지 않았습니다.");
     }
+
+    console.log("userNickname: ", userNickname);
     console.log("연결 시간:", connectionTime);
 
     // ============================
@@ -33,14 +35,18 @@ document.addEventListener("DOMContentLoaded", function () {
             userLocation = "Unknown";   // 위치 정보가 없을 때 기본값
         });*/
 
+    // 댓글 중복 방지용 set
+    let displayedCommentIds  = new Set();
+
     // 1. SSE 연결 설정 (실시간 채팅 수신)
     // SSE로 서버와 연결하여 실시간 채팅 수신 설정
     const eventSource = new EventSource(`/comments/stream?since=${connectionTime}`);
     const commentList = document.getElementById("commentList");
-    
+
     // 선택된 댓글 정보를 보여줄 곳
     const selectedCommentInfo  = document.getElementById("selected-comment-info");
     let selectedComment = null; // 선택된 댓글을 저장
+
 
     // 서버로부터 새로운 메시지가 올 때마다 실행
     eventSource.onmessage = function (event) {
@@ -48,15 +54,21 @@ document.addEventListener("DOMContentLoaded", function () {
         //commentList.innerHTML = ''; // 기존 메시지 목록 초기화
 
         comments.forEach(comment => {   // 새로운 채팅 메시지들을 반복 처리
-            const li = document.createElement("li");    // 새로운 li 요소 생성
-            li.innerHTML = `(${comment.location}) [${comment.nickname}]<br>${comment.contents}`;       // 닉네임과 내용을 설정
-            commentList.appendChild(li);    // 댓글 목록에 li 요소를 추가하여 화면에 표시
+            // 댓글 ID가 존재하고, 이미 표시되지 않은 경우에만 추가
+            if(!displayedCommentIds.has(comment.id)) {
+                const li = document.createElement("li");    // 새로운 li 요소 생성
+                li.innerHTML = `(${comment.location}) [${comment.nickname}]<br>${comment.contents}`;       // 닉네임과 내용을 설정
+                commentList.appendChild(li);    // 댓글 목록에 li 요소를 추가하여 화면에 표시
 
-            // 댓글 클릭 시 이벤트 추가
-            li.addEventListener("click", function () {
-                selectedComment = comment;  // 선택된 댓글 정보를 저장
-                selectedCommentInfo.innerHTML = `(${comment.location}) [${comment.nickname}]<br>${comment.contents}`; // 선택된 댓글 정보를 표시
-            });
+                // 댓글 ID를 Set에 추가하여 중복 표시 방지
+                displayedCommentIds.add(comment.id);
+
+                // 댓글 클릭 시 이벤트 추가
+                li.addEventListener("click", function () {
+                    selectedComment = comment;
+                    selectedCommentInfo.innerHTML =  `(${comment.location}) [${comment.nickname}]<br>${comment.contents}`;
+                });
+            }
         });
     };
 
@@ -83,10 +95,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 // 일반 댓글 작성
                 console.log("일반 댓글 작성");
                 const myComment = `(${myLocation}) [${myNickname}] <br> ${contents}`;
-                const newCommentElement = document.createElement("li");
+                commentList.innerHTML += `<li>${myComment}</li>`;
+                /*const newCommentElement = document.createElement("li");
                 newCommentElement.innerHTML = myComment;
-                commentList.appendChild(newCommentElement); // 새로운 댓글만 추가
-                //commentList.innerHTML += `<li>${myComment}</li>`;
+                commentList.appendChild(newCommentElement); // 새로운 댓글만 추가*/
             }
 
             // 댓글 입력 피드 초기화
@@ -127,8 +139,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 3000);    // 3초후 재연결 시도*/
     };
 });
-
-
 
 
 // ==== 댓글창 열고 닫는 기능 ================================================
