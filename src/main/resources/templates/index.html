@@ -89,15 +89,16 @@
                 <ul id="info-panel">
                     <div id="info_part"></div>
                     <div class="button-container">
-                        <button id="departureB" class="info-button" th:text="#{main.button.depart}"></button>
-                        <button id="arrivalB" class="info-button" th:text="#{main.button.arrival}"></button>
+                        <button id="departureB" class="info-button">출발</button>
+                        <button id="arrivalB" class="info-button">도착</button>
                     </div>
                     <div class="share-container">
-                        <button id="shareBtn" th:text="#{main.button.share}"></button>
+                        <button id="shareBtn">공유</button>
                     </div>
                     <!-- 글목록 -->
+                    <div id="board-list"></div>
                     <div>
-                        <a id="writeLink" th:href="@{/board/write/${palceID}}" th:text="#{main.link.comment}"></a>
+                        <a id="writeLink" th:href="@{/board/write/${palceID}}">글쓰기</a>
                         <button id="favMarker">
                             <img th:src="@{/img/star2.png}">
                         </button>
