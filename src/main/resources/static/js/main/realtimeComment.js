@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // ==== 사용자의 위치 정보를 저장할 변수 ====
     let userLocation = "Unknown";
     let currentDate = new Date();
     currentDate.setHours(currentDate.getHours() + 9); // 동경시간 보정
@@ -16,43 +15,61 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     console.log("연결 시간:", connectionTime);
 
-    // 댓글 목록을 가져오는 SSE 연결 설정
     let eventSource = null;
     const commentList = document.getElementById("commentList");
+    const sendButton = document.getElementById("sendCommentButton");
+    const inputField = document.getElementById("commentInput");
 
-    // SSE 연결 중복 방지 및 설정
-    if (!eventSource) {
-        eventSource = new EventSource(`/comments/stream?since=${connectionTime}`);
-        console.log("SSE 연결 설정됨");
+    // 초기 상태에서는 전송 버튼 및 입력창 비활성화
+    sendButton.disabled = true;
+    inputField.disabled = true;
+    inputField.placeholder = "채팅창 안정화 중...";  // 안내 문구 추가
 
-        eventSource.onmessage = function (event) {
-            const comments = JSON.parse(event.data); // 서버에서 받은 데이터를 JSON 형식으로 파싱
+    function startEventSource() {
+        if (!eventSource) {
+            eventSource = new EventSource(`/comments/stream?since=${connectionTime}`);
+            console.log("SSE 연결 설정됨");
 
-            comments.forEach(comment => { // 새로운 채팅 메시지들을 반복 처리
-                const li = document.createElement("li"); // 새로운 li 요소 생성
-                li.innerHTML = `(${comment.location}) [${comment.nickname}]<br>${comment.contents}`; // 닉네임과 내용을 설정
-                commentList.appendChild(li); // 댓글 목록에 li 요소를 추가하여 화면에 표시
-            });
-        };
+            eventSource.onopen = function () {
+                console.log("SSE 연결이 성공적으로 열렸습니다.");
+                // 연결이 성공하면 전송 버튼과 입력창 활성화
+                sendButton.disabled = false;
+                inputField.disabled = false;
+                inputField.placeholder = "댓글 입력";  // 안내 문구 삭제
+                commentList.innerHTML = ''; // 기존 댓글 목록 초기화
+            };
 
-        eventSource.onerror = function (event) {
-            console.error("SSE 연결에서 오류가 발생했습니다.", event);
-            eventSource.close();
-            eventSource = null; // SSE 연결을 닫음
-        };
+            eventSource.onmessage = function (event) {
+                const comments = JSON.parse(event.data); // 서버에서 받은 데이터를 JSON 형식으로 파싱
+                comments.forEach(comment => { // 새로운 채팅 메시지들을 반복 처리
+                    const li = document.createElement("li"); // 새로운 li 요소 생성
+                    li.innerHTML = `(${comment.location}) [${comment.nickname}]<br>${comment.contents}`; // 닉네임과 내용을 설정
+                    commentList.appendChild(li); // 댓글 목록에 li 요소를 추가하여 화면에 표시
+                });
+            };
+
+            eventSource.onerror = function (event) {
+                console.error("SSE 연결에서 오류가 발생했습니다.", event);
+                eventSource.close();
+                eventSource = null; // SSE 연결을 닫음
+                // 연결이 끊어지면 전송 버튼과 입력창 비활성화
+                sendButton.disabled = true;
+                inputField.disabled = true;
+                inputField.placeholder = "채팅창 안정화 중...";  // 다시 안내 문구 표시
+                // 3초 후에 재연결 시도
+                setTimeout(startEventSource, 3000);
+            };
+        }
     }
 
-    // 채팅 전송 버튼 클릭 이벤트
-    const sendButton = document.getElementById("sendCommentButton");
+    startEventSource(); // SSE 연결 시작
+
+    // 댓글 전송 버튼 클릭 이벤트
     if (sendButton && userNickname) {
         sendButton.addEventListener("click", function () {
-            const contents = document.getElementById("commentInput").value;
-
+            const contents = inputField.value;
             if (contents.trim() !== "") { // 빈 내용이 아닐 경우에만 전송
-                const myLocation = userLocation;
-                const myNickname = userNickname;
-
-                // 서버에 새로운 채팅 메시지를 전송하는 POST 요청
+                // 서버에 새로운 댓글을 전송하는 POST 요청
                 fetch("/comments", {
                     method: "POST", // HTTP 메소드는 POST로 설정
                     headers: {
@@ -65,19 +82,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     })
                 }).then(response => {
                     if (response.ok) {
-                        console.log("채팅 메시지 전송 완료");
-
-                        // 사용자가 보낸 메시지를 화면에 즉시 추가하지 않음
-                        // 서버에서 SSE로 수신한 메시지가 화면에 표시되도록 처리
-
-                        // 채팅 입력 필드 초기화
-                        document.getElementById("commentInput").value = "";
-
+                        console.log("댓글 전송 완료");
+                        inputField.value = ""; // 입력 필드 초기화
                     } else {
-                        console.log(`채팅 메시지 전송 실패: 상태코드 ${response.status}`);
+                        console.log(`댓글 전송 실패: 상태코드 ${response.status}`);
                     }
                 }).catch(error => {
-                    console.log("채팅 메시지 전송 실패: ", error);
+                    console.log("댓글 전송 실패: ", error);
                 });
             }
         });

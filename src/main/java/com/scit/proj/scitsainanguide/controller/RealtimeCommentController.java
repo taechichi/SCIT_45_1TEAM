@@ -46,9 +46,6 @@ public class RealtimeCommentController {
             log.error("SSE 연결에서 오류가 발생했습니다.", e);
         });
 
-        /*emitter.onCompletion(() -> emitters.remove(emitter));
-        emitter.onTimeout(() -> emitters.remove(emitter));*/
-
         // 접속한 시점 이후의 댓글만 가져옴
         List<RealtimeCommentDTO> recentComments = realtimeCommentService.findRealtimeCommentsAfterSince(since);
 
