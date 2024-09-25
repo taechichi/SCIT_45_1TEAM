@@ -56,43 +56,56 @@ document.addEventListener("DOMContentLoaded", function () {
                 sendButton.disabled = true;
                 inputField.disabled = true;
                 inputField.placeholder = "채팅창 안정화 중...";  // 다시 안내 문구 표시
-                // 3초 후에 재연결 시도
-                setTimeout(startEventSource, 3000);
+                // 2초 후에 재연결 시도
+                setTimeout(startEventSource, 2000);
             };
         }
     }
 
     startEventSource(); // SSE 연결 시작
 
-    // 댓글 전송 버튼 클릭 이벤트
-    if (sendButton && userNickname) {
-        sendButton.addEventListener("click", function () {
-            const contents = inputField.value;
-            if (contents.trim() !== "") { // 빈 내용이 아닐 경우에만 전송
-                // 서버에 새로운 댓글을 전송하는 POST 요청
-                fetch("/comments", {
-                    method: "POST", // HTTP 메소드는 POST로 설정
-                    headers: {
-                        "Content-Type": "application/json" // 요청 데이터 타입은 JSON으로 설정
-                    },
-                    body: JSON.stringify({
-                        nickname: userNickname,
-                        contents: contents,
-                        location: userLocation
-                    })
-                }).then(response => {
-                    if (response.ok) {
-                        console.log("댓글 전송 완료");
-                        inputField.value = ""; // 입력 필드 초기화
-                    } else {
-                        console.log(`댓글 전송 실패: 상태코드 ${response.status}`);
-                    }
-                }).catch(error => {
-                    console.log("댓글 전송 실패: ", error);
-                });
-            }
-        });
+    // 댓글 전송 버튼 이벤트 (버튼 클릭 또는 엔터키 입력 시)
+    function sendMessage() {
+        const contents = inputField.value;
+        if (contents.trim() !== "") { // 빈 내용이 아닐 경우에만 전송
+            // 서버에 새로운 댓글을 전송하는 POST 요청
+            fetch("/comments", {
+                method: "POST", // HTTP 메소드는 POST로 설정
+                headers: {
+                    "Content-Type": "application/json" // 요청 데이터 타입은 JSON으로 설정
+                },
+                body: JSON.stringify({
+                    nickname: userNickname,
+                    contents: contents,
+                    location: userLocation
+                })
+            }).then(response => {
+                if (response.ok) {
+                    console.log("댓글 전송 완료");
+                    inputField.value = ""; // 입력 필드 초기화
+                } else {
+                    console.log(`댓글 전송 실패: 상태코드 ${response.status}`);
+                }
+            }).catch(error => {
+                console.log("댓글 전송 실패: ", error);
+            });
+        }
     }
+
+    // 전송 버튼 클릭 및 엔터키 입력 이벤트 통합 처리
+    inputField.addEventListener("keydown", function (event) {
+        if(event.key === "Enter") {
+            event.preventDefault(); // 기본 엔터 동작 방지
+            sendMessage();  // 엔터키로도 전송
+        }
+    });
+
+    if(sendButton && userNickname) {
+        sendButton.addEventListener("click", function () {
+            sendMessage();  // 전송 버튼으로도 전송
+        })
+    }
+
 });
 
 // ==== 댓글창 열고 닫는 기능 ================================================
