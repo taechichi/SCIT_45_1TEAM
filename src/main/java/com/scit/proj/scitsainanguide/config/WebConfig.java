@@ -30,9 +30,13 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
         registry.addResourceHandler("/favicon.ico")
                 .addResourceLocations("classpath:/static/")
                 .resourceChain(false);
+
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:///C:/uploads/");
     }
 
     // interceptor 관련 설정

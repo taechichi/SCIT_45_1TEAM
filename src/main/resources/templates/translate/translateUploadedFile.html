@@ -60,7 +60,7 @@
                     <input type="file" id="audioFile" accept="audio/*" onchange="displayFileName()">
                     <label for="audioFile" class="button btnPush btnSkyblue" id="labelOfFile" th:text="#{translate.select.microFile}">select File</label>
                     <span id="fileName">파일 업로드 시 파일명 나타남</span>
-                    <a class="button btnPush btnBlue" onclick="upload()" th:text="#{translate.microFileUpload}">push to upload</a>
+                    <button class="button btnPush btnBlue" onclick="upload()" th:text="#{translate.microFileUpload}">push to upload</button>
 
                     <div id="loadingOverlay" style="display: none;">
                         <img src="/img/translate/loading.png" alt="Loading..." id="loadingImage" />

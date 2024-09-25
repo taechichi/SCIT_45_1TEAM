@@ -3,6 +3,7 @@ package com.scit.proj.scitsainanguide.domain.dto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -19,4 +20,5 @@ public class MarkerBoardDTO {
     private String deleteReason;
     private Boolean deleteYn;
     private LocalDateTime deleteDt;
+    private List<BoardPictureDTO> pictures;
 }

@@ -76,7 +76,7 @@
                     title: "myLocation",
                     position : place,
                     icon: {
-                        url: '/img/myMarker.png', // 사용자 정의 아이콘 URL
+                        url: '/img/map/myMarker.png', // 사용자 정의 아이콘 URL
                         scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
                         origin: new google.maps.Point(0, 0), // 아이콘의 원점
                         anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
@@ -356,11 +356,11 @@
         });
 
         //병원 버튼 클릭 시 근처 1km 검색
-        document.getElementById('hospitalfilterbutton').addEventListener('click', function() {
+        document.getElementById('hospitalFilterButton').addEventListener('click', function() {
             searchNearbyHospitals(); // 병원 검색 함수 호출
         });
         //대피소 클릭 시 검색
-        document.getElementById('shelterfilterbutton').addEventListener('click', function (){
+        document.getElementById('shelterFilterButton').addEventListener('click', function (){
             fetchNearbyShelters();
         });
         // 현재 위치 중심으로 줌 조정
@@ -471,7 +471,7 @@
                 placeId: currentMarker.placeId,                        //place의 장소번호 저장
                 placePhoto: currentMarker.placePhoto,
                 icon: {
-                    url: '/img/departureMarker.png', // 사용자 정의 아이콘 URL
+                    url: '/img/map/departureMarker.png', // 사용자 정의 아이콘 URL
                     scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
                     origin: new google.maps.Point(0, 0), // 아이콘의 원점(기본값, 아이콘 좌상단)
                     anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
@@ -501,7 +501,7 @@
                 placeId: currentMarker.placeId,                        //place의 장소번호 저장
                 placePhoto: currentMarker.placePhoto,
                 icon: {
-                    url: '/img/arrivalMarker.png', // 사용자 정의 아이콘 URL
+                    url: '/img/map/arrivalMarker.png', // 사용자 정의 아이콘 URL
                     scaledSize: new google.maps.Size(60, 60), // 아이콘의 크기 조정
                     origin: new google.maps.Point(0, 0), // 아이콘의 원점(기본값, 아이콘 좌상단)
                     anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
@@ -573,7 +573,7 @@
                     position: startLocation,
                     map: map,
                     icon: {
-                        url: '/img/walking.png', // 사용자 정의 아이콘 URL
+                        url: '/img/map/walking.png', // 사용자 정의 아이콘 URL
                         scaledSize: new google.maps.Size(60, 60) // 아이콘 크기 설정
                     },
                     title: '도보 경로 시작점'
@@ -613,7 +613,7 @@
                     position: startLocation,
                     map: map,
                     icon: {
-                        url: '/img/bicycle.png', // 사용자 정의 아이콘 URL
+                        url: '/img/map/bicycle.png', // 사용자 정의 아이콘 URL
                         scaledSize: new google.maps.Size(60, 60) // 아이콘 크기 설정
                     },
                     title: '자전거 경로 시작점'

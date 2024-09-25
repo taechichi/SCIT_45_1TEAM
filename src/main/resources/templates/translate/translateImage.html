@@ -62,7 +62,7 @@
                 <input type="file" name="file" id="file" accept="image/*" required onchange="displayFileName()">
                 <label for="file" class="button btnPush btnSkyblue" id="labelOfFile" th:text="#{translate.select.microFile}">select File</label>
                 <span id="fileName">파일 업로드 시 파일명 나타남</span>
-                <a href="#" class="button btnPush btnBlue" onclick="handleFormSubmit(event)" th:text="#{translate.microFileUpload}">업로드</a>
+                <button href="#" class="button btnPush btnBlue" onclick="handleFormSubmit(event)" th:text="#{translate.microFileUpload}">업로드</button>
             </form>
 
             <div id="loadingOverlay" style="display: none;">
