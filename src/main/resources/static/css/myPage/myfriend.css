@@ -40,10 +40,11 @@
 
 /* 검색 입력창 스타일 */
 #searchInput {
-    padding: 5px;
-    border: 1px solid #ccc;
+    padding: 8px;
+    border: solid 1px #ccc;
     border-radius: 4px;
     font-size: 14px;
+    background-color: #f8f9fc;
 }
 
 /* 검색 버튼 스타일 */
@@ -110,4 +111,12 @@
 /* 버튼 hover 시 효과 */
 .updateFavoriteBtn:hover, .deleteFriendBtn:hover {
     opacity: 0.4;
+}
+
+#typeSelect{
+    width: 150px;
+    border-radius: 4px;
+    padding: 5px 30px 5px 10px;
+    background-color: #1C39BB;
+    color: white;
 }
