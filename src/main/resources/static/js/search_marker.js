@@ -23,6 +23,7 @@
     let favImg;
     let board;
 
+
     google.maps.event.addDomListener(window, 'load', initMap);      //domlistener initmap을 실행
     // 페이지가 로드된 후 DOM 접근
     window.onload = function() {
@@ -40,9 +41,11 @@
 
     //placeId를 받아 재검색 하여 place 객체에 필드값을 저장하는 함수
     function searchPlaceByPlaceId(placeId) {
+        let userLanguage = navigator.language || navigator.userLanguage;
         const request = {
             placeId: placeId,
-            fields: ['name', 'geometry', 'photo', 'place_id', 'formatted_address', 'rating']// 원하는 필드
+            fields: ['name', 'geometry', 'photo', 'place_id', 'formatted_address', 'rating'],// 원하는 필드
+            language: userLanguage  // 언어설정
         };
         const service = new google.maps.places.PlacesService(map);
 
@@ -83,7 +86,7 @@
                     title: "myLocation",
                     position : place,
                     icon: {
-                        url: '/img/myMarker.png', // 사용자 정의 아이콘 URL
+                        url: '/img/map/myMarker.png', // 사용자 정의 아이콘 URL
                         scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
                         origin: new google.maps.Point(0, 0), // 아이콘의 원점
                         anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
