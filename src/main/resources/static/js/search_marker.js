@@ -23,8 +23,6 @@
     let favImg;
     let board;
 
-    let walkingRenderer, bicyclingRenderer;  // 경로 렌더러
-
     google.maps.event.addDomListener(window, 'load', initMap);      //domlistener initmap을 실행
     // 페이지가 로드된 후 DOM 접근
     window.onload = function() {
@@ -596,13 +594,6 @@
 
     // 경로 요청 및 표시 함수 (도보와 자전거 2가지 경로 + 구글맵에 한국 지리가 잘 반영 안 되어 있어서, 확인용 대중교통 경로 추가)
     function calculateRoutes() {
-        // 기존 경로가 있으면 지운다.
-        if (walkingRenderer) {
-            walkingRenderer.setMap(null);
-        }
-        if (bicyclingRenderer) {
-            bicyclingRenderer.setMap(null);
-        }
 
         // 출발지나 도착지가 설정되지 않은 경우 경고 메시지 출력 후 종료
         if (!arrivalLat || !arrivalLong || !departLat || !departLong) {
