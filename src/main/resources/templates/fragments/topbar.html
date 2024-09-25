@@ -75,7 +75,7 @@
                     <p><strong th:text="#{friend.status.message.strong}"></strong> <span id="modalStMessage" th:text="${friend.stMessage}">No status message</span></p>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="${board.button.close}">닫기</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{board.button.close}">닫기</button>
                   </div>
                 </div>
               </div>
@@ -183,15 +183,15 @@
         </div>
       </li>
       <!-- 언어 설정 변경 -->
-      <li id="abc" class="nav-item dropdown no-arrow mx-1">
+      <li class="nav-item dropdown no-arrow mx-1 abc">
         <!-- 일본어가 설정된 경우 -->
         <a th:if="${session.lang == 'ja'}" th:href="@{/language(lang='ko')}">
-          <img id="flagJa" th:src="@{/img/ja.png}" alt="한국어" />
+          <img class="flagJa" th:src="@{/img/ja.png}" alt="한국어" />
         </a>
 
         <!-- 일본어가 설정되지 않은 경우 -->
         <a th:if="${session.lang != 'ja'}" th:href="@{/language(lang='ja')}">
-          <img id="flagKo" th:src="@{/img/ko.png}" alt="日本語" />
+          <img class="flagKo" th:src="@{/img/ko.png}" alt="日本語" />
         </a>
       </li>
 
@@ -267,6 +267,18 @@
     </ul>
     <!-- 로그인이 되어 있지 않은 경우 버튼을 표시 -->
     <th:block sec:authorize="not isAuthenticated()">
+      <!-- 언어 설정 변경 -->
+      <li class="nav-item dropdown no-arrow mx-1 abc">
+        <!-- 일본어가 설정된 경우 -->
+        <a th:if="${session.lang == 'ja'}" th:href="@{/language(lang='ko')}">
+          <img class="flagJa" th:src="@{/img/ja.png}" alt="한국어" />
+        </a>
+
+        <!-- 일본어가 설정되지 않은 경우 -->
+        <a th:if="${session.lang != 'ja'}" th:href="@{/language(lang='ja')}">
+          <img class="flagKo" th:src="@{/img/ko.png}" alt="日本語" />
+        </a>
+      </li>
       <a href="/member/login">
         <button class="btn btn-primary btn-jittery">
           Login

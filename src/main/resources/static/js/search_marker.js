@@ -23,6 +23,8 @@
     let favImg;
     let board;
 
+    let walkingRenderer, bicyclingRenderer;  // 경로 렌더러
+
     google.maps.event.addDomListener(window, 'load', initMap);      //domlistener initmap을 실행
     // 페이지가 로드된 후 DOM 접근
     window.onload = function() {
@@ -178,6 +180,7 @@
             isPanelVisible = true;
             document.getElementById('writeLink').setAttribute('href', `/board/write/${placeID}`);
             favMarkerCheck(currentMarker.placeId);
+            board.innerHTML = '';
             // 게시글 목록 초기 로드
             getList(placeID, currentPage, pageSize, isFetching);
             currentPage++;
@@ -317,11 +320,11 @@
                 if (isFavorite) {
                     // 이미 즐겨찾기에 추가된 경우
                     console.log("check:fav");
-                    favImg.src = '/img/star1.png';
+                    favImg.src = '/img/map/yellowStar.png';
                 } else {
                     // 즐겨찾기에 추가되지 않은 경우
                     console.log("check:not fav");
-                    favImg.src = '/img/star2.png';
+                    favImg.src = '/img/map/whiteStar.png';
                 }
             })
             .catch(error => {
@@ -442,11 +445,15 @@
 
         favBtn.addEventListener('click', function () {
             // 이미지 변경
-            if (favImg.src.includes('star2.png')) {
-                favImg.src = '/img/star1.png';
+            if (favImg.src.includes('whiteStar.png')) {
+                favImg.src = '/img/map/yellowStar.png';
+                favImg.style.width = "50px";  // 기존 크기 지정
+                favImg.style.height = "50px"; // 기존 크기 지정
                 favMarker(currentMarker.placeId);// 즐겨찾기 추가
             } else {
-                favImg.src = '/img/star2.png';
+                favImg.src = '/img/map/whiteStar.png';
+                favImg.style.width = "50px";  // 기존 크기 지정
+                favImg.style.height = "50px"; // 기존 크기 지정
                 favMarkerRemove(currentMarker.placeId);
             }
         });
@@ -525,6 +532,7 @@
                 alert("No marker selected!");
             }
         });
+
         // 출발버튼 클릭 시, 출발지 마커 생성
         document.getElementById("departureB").addEventListener('click', function(){
             // 출발 마커 생성
@@ -535,7 +543,7 @@
             // 출발마커를 생성하고 지도에 추가
             departmentMarker = new google.maps.Marker({
                 map: map,
-                title: "출발지: "+currentMarker.title,
+                title: "DEPARTURE: "+currentMarker.title,
                 position: currentMarker.position,
                 placeId: currentMarker.placeId,                        //place의 장소번호 저장
                 placePhoto: currentMarker.placePhoto,
@@ -565,7 +573,7 @@
             // 도착마커를 생성하고 지도에 추가
             arrivalMarker = new google.maps.Marker({
                 map: map,
-                title: "도착지: "+currentMarker.title,
+                title: "ARRIVAL: "+currentMarker.title,
                 position: currentMarker.position,
                 placeId: currentMarker.placeId,                        //place의 장소번호 저장
                 placePhoto: currentMarker.placePhoto,
@@ -581,13 +589,21 @@
             console.log("arrivalLat: " + arrivalLat);
             console.log("arrivalLong: " + arrivalLong);
 
-            calculateRoutes(); // 경로 계산 호출
-        });
+            if (departLat && departLong) {
+                calculateRoutes();  // 경로 계산 함수 호출
+            }        });
     }
-
 
     // 경로 요청 및 표시 함수 (도보와 자전거 2가지 경로 + 구글맵에 한국 지리가 잘 반영 안 되어 있어서, 확인용 대중교통 경로 추가)
     function calculateRoutes() {
+        // 기존 경로가 있으면 지운다.
+        if (walkingRenderer) {
+            walkingRenderer.setMap(null);
+        }
+        if (bicyclingRenderer) {
+            bicyclingRenderer.setMap(null);
+        }
+
         // 출발지나 도착지가 설정되지 않은 경우 경고 메시지 출력 후 종료
         if (!arrivalLat || !arrivalLong || !departLat || !departLong) {
             console.error("출발지 또는 도착지의 좌표가 올바르지 않습니다.");

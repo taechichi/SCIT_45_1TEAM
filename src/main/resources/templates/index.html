@@ -14,7 +14,8 @@
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
 
     <!-- google map script -->
-   <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places"></script>-->
+   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places"></script>
+
     <!-- 추가 할 라이브러리를 api의 libraries 부분 뒤에 추가 places,geometry -->
     <script th:src="@{/js/search_marker.js}"></script>
     <script th:src="@{/js/loading.js}"></script>
@@ -40,7 +41,7 @@
           형식을 사용해야 Thymeleaf 구문이 JavaScript 내부에서 정상적으로 해석되고, JS 내에서 타임리프 사용 가능
           서버에서 Thymeleaf 표현식을 처리한 후, 그 값을 JavaScript 변수로 전달! JS에서는 ${변수} 형태로 사용 -->
     <script th:inline="javascript">
-        /*상태용 변수*/
+        <!-- 상태용변수 -->
         let expiredMessage = /*[[#{main.myStatus.expiredTime}]]*/ '만료된 기본 메시지';
         let remainingMessage = /*[[#{main.myStatus.time.remaining}]]*/ '남은 시간:';
         let hoursLabel = /*[[#{main.myStatus.time.hoursLeft}]]*/ '시간';
@@ -87,16 +88,15 @@
                 <ul id="info-panel">
                     <div id="info_part"></div>
                     <div class="button-container">
-                        <button id="departureB" class="info-button">출발</button>
-                        <button id="arrivalB" class="info-button">도착</button>
+                        <button id="departureB" class="info-button" th:text="#{main.button.depart}"></button>
+                        <button id="arrivalB" class="info-button" th:text="#{main.button.arrival}"></button>
                     </div>
                     <div class="share-container">
-                        <button id="shareBtn">공유</button>
+                        <button id="shareBtn" th:text="#{main.button.share}"></button>
                     </div>
                     <!-- 글목록 -->
-                    <div id="board-list"></div>
                     <div>
-                        <a id="writeLink" th:href="@{/board/write/${palceID}}">글쓰기</a>
+                        <a id="writeLink" th:href="@{/board/write/${palceID}}" th:text="#{main.link.comment}"></a>
                         <button id="favMarker">
                             <img th:src="@{/img/star2.png}">
                         </button>
@@ -121,10 +121,10 @@
                     <div id="map" style="height: 100%; width: 100%; z-index: 0;"></div>
 
                     <!-- 병원 버튼 -->
-                    <button type="button" id="hospitalFilterButton" th:text="#{main.button.hospital}">병원</button>
+                    <button type="button" id="hospitalFilterButton" th:text="#{main.button.hospital}"></button>
 
                     <!-- 대피소 버튼 -->
-                    <button type="button" id="shelterFilterButton" th:text="#{main.button.shelter}">대피소</button>
+                    <button type="button" id="shelterFilterButton" th:text="#{main.button.shelter}"></button>
 
                     <!-- 내 위치 버튼 -->
                     <button id="myLocation"><img th:src="@{/img/map/myLocation.png}" class="img-40"></button>
@@ -134,7 +134,6 @@
                 <div th:replace="~{fragments/realtimeComment :: realtimeCommentFragment}"></div>
 
             </div>
-
             <!-- End of Main Content -->
 
         </div>
