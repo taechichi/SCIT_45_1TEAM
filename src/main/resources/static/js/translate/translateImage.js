@@ -25,7 +25,6 @@ function hideLoading() {
 // 1. 이미지를 업로드할 때 실행되는 함수, 사용자가 선택한 원문 언어값 추출된 텍스트를 가지고 번역함수 호출
 function handleFormSubmit(event) {
     event.preventDefault(); // 폼 제출 시 페이지 새로 고침 방지
-    showLoading(); // 로딩 시작
 
     let fileInput = document.getElementById('file');
     let file = fileInput.files[0];
@@ -36,9 +35,10 @@ function handleFormSubmit(event) {
 
     // 파일이 선택되지 않은 경우
     if (!file) {
-        console.error('파일이 선택되지 않았습니다.');
+        alert(noFileSelected);
         return;
     }
+    showLoading(); // 로딩 시작
 
     // FormData 객체 생성
     let formData = new FormData(document.getElementById('uploadForm'));
