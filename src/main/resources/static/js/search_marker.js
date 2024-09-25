@@ -21,6 +21,13 @@
 
     let favBtn;
     let favImg;
+    let board;
+
+    google.maps.event.addDomListener(window, 'load', initMap);      //domlistener initmap을 실행
+    // 페이지가 로드된 후 DOM 접근
+    window.onload = function() {
+        board = document.getElementById('board-list');  // DOM이 로드된 후에 요소를 찾음
+    };
 
     //해시 부분을 받아 placeId를 추출
     function getLatLngFromUrl() {
@@ -154,6 +161,10 @@
         let placeName = marker.title;
         let photoUrl = marker.placePhoto;    //place의 첫사진을 url을 받아 저장
         let placeID = marker.placeId;
+        // 각 마커에 대한 페이징 변수
+        let currentPage = 0;  // 현재 페이지 번호
+        const pageSize = 10;  // 한 번에 가져올 게시글 개수
+        let isFetching = false;  // 데이터를 불러오는 중인지 여부
         geocodeLatLng(marker.position, function (placeAdress){
             let placeInfo = `<h3>${placeName}</h3>                  <!--- infopanel에 넣을 값 ---!>  
                                               <div style="width: 100%;height: 200px">
@@ -167,7 +178,16 @@
             isPanelVisible = true;
             document.getElementById('writeLink').setAttribute('href', `/board/write/${placeID}`);
             favMarkerCheck(currentMarker.placeId);
-            getList(currentMarker.placeId);
+            // 게시글 목록 초기 로드
+            getList(placeID, currentPage, pageSize, isFetching);
+            currentPage++;
+            // 스크롤 이벤트로 추가 페이지 로드
+            window.addEventListener('scroll', function scrollHandler() {
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500 && !isFetching) {
+                    getList(placeID, currentPage, pageSize, isFetching);
+                    currentPage++;  // 다음 페이지로 이동
+                }
+            });
         });
     }
 
@@ -310,26 +330,20 @@
     }
 
     //게시글 목록 불러오기
-    function getList(placeID) {
-        fetch('/board/list/' + encodeURIComponent(placeID), {
+    function getList(placeID, currentPage, pageSize, isFetching) {
+        if (isFetching) return;  // 이미 데이터 요청 중이면 중단
+        isFetching = true;
+
+        fetch(`/board/list/${encodeURIComponent(placeID)}?page=${currentPage}&size=${pageSize}`, {
             method: 'GET'
         })
-            .then(response => {
-                console.log(response.status);  // 응답 상태 코드 확인
-                if (response.ok) {
-                    return response.json();  // 응답이 정상일 경우 JSON 변환
-                } else {
-                    throw new Error(`HTTP 상태 코드: ${response.status}`);  // 오류 상태 코드 출력
-                }
-            })
+            .then(response => response.json())
             .then(boardList => {
-                const board = document.getElementById('board-list');
-                board.innerHTML = '';  // 이전에 표시된 게시글 리스트를 지움
-                console.log(boardList);  // 가져온 데이터 출력
+
+                console.log(boardList);
 
                 if (boardList && boardList.length > 0) {
-                    console.log("게시글이 있습니다.");
-                    let boardHtml = '<ul>';
+                    let boardHtml = '';
                     boardList.forEach(boardItem => {
                         boardHtml += `<li>${boardItem.title} - ${boardItem.contents}<br>`;
 
@@ -340,16 +354,16 @@
                             });
                         }
 
-                        boardHtml += `</li>`;  // 게시글 제목과 내용 출력
+                        boardHtml += `</li>`;
                     });
-                    boardHtml += '</ul>';
-                    board.innerHTML = boardHtml;  // 게시글 리스트를 board-list에 추가
-                } else {
-                    board.innerHTML = '<p>관련 게시글이 없습니다.</p>';  // 게시글이 없을 때의 처리
+
+                    board.innerHTML += boardHtml;  // 게시글 추가
+
                 }
             })
-            .catch(error => {
-                console.error('오류 발생:', error);
+            .catch(error => console.error('오류 발생:', error))
+            .finally(() => {
+                isFetching = false;  // 데이터 로딩 완료
             });
     }
 
@@ -526,7 +540,7 @@
                 placeId: currentMarker.placeId,                        //place의 장소번호 저장
                 placePhoto: currentMarker.placePhoto,
                 icon: {
-                    url: '/img/departureMarker.png', // 사용자 정의 아이콘 URL
+                    url: '/img/map/departureMarker.png', // 사용자 정의 아이콘 URL
                     scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
                     origin: new google.maps.Point(0, 0), // 아이콘의 원점(기본값, 아이콘 좌상단)
                     anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
@@ -556,7 +570,7 @@
                 placeId: currentMarker.placeId,                        //place의 장소번호 저장
                 placePhoto: currentMarker.placePhoto,
                 icon: {
-                    url: '/img/arrivalMarker.png', // 사용자 정의 아이콘 URL
+                    url: '/img/map/arrivalMarker.png', // 사용자 정의 아이콘 URL
                     scaledSize: new google.maps.Size(60, 60), // 아이콘의 크기 조정
                     origin: new google.maps.Point(0, 0), // 아이콘의 원점(기본값, 아이콘 좌상단)
                     anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
@@ -570,7 +584,7 @@
             calculateRoutes(); // 경로 계산 호출
         });
     }
-    google.maps.event.addDomListener(window, 'load', initMap);      //domlistener initmap을 실행
+
 
     // 경로 요청 및 표시 함수 (도보와 자전거 2가지 경로 + 구글맵에 한국 지리가 잘 반영 안 되어 있어서, 확인용 대중교통 경로 추가)
     function calculateRoutes() {
@@ -628,7 +642,7 @@
                     position: startLocation,
                     map: map,
                     icon: {
-                        url: '/img/walking.png', // 사용자 정의 아이콘 URL
+                        url: '/img/map/walking.png', // 사용자 정의 아이콘 URL
                         scaledSize: new google.maps.Size(60, 60) // 아이콘 크기 설정
                     },
                     title: '도보 경로 시작점'
@@ -668,7 +682,7 @@
                     position: startLocation,
                     map: map,
                     icon: {
-                        url: '/img/bicycle.png', // 사용자 정의 아이콘 URL
+                        url: '/img/map/bicycle.png', // 사용자 정의 아이콘 URL
                         scaledSize: new google.maps.Size(60, 60) // 아이콘 크기 설정
                     },
                     title: '자전거 경로 시작점'
