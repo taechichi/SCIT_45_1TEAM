@@ -1,12 +1,13 @@
+
 // ==== 댓글 표시 기능 ======================================================
 document.addEventListener("DOMContentLoaded", function () {
-    // 사용자의 위치 정보를 저장할 변수
+    // ==== 사용자의 위치 정보를 저장할 변수 ====
     let userLocation = "Unknown";
     let currentDate = new Date();
     currentDate.setHours(currentDate.getHours() + 9); // 동경시간 보정
     let connectionTime = currentDate.toISOString();
 
-    // 로그인된 사용자 닉네임 가져오기
+    // ==== 로그인된 사용자 닉네임 가져오기 ====
     const metaUser = document.querySelector("meta[name='authenticatedUser']");
     let userNickname = null;
 
@@ -15,7 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
         console.log("사용자가 로그인되지 않았습니다.");
     }
-
     console.log("연결 시간:", connectionTime);
 
     // ============================
@@ -37,6 +37,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // SSE로 서버와 연결하여 실시간 채팅 수신 설정
     const eventSource = new EventSource(`/comments/stream?since=${connectionTime}`);
     const commentList = document.getElementById("commentList");
+    
+    // 선택된 댓글 정보를 보여줄 곳
+    const selectedCommentInfo  = document.getElementById("selected-comment-info");
+    let selectedComment = null; // 선택된 댓글을 저장
 
     // 서버로부터 새로운 메시지가 올 때마다 실행
     eventSource.onmessage = function (event) {
@@ -47,21 +51,48 @@ document.addEventListener("DOMContentLoaded", function () {
             const li = document.createElement("li");    // 새로운 li 요소 생성
             li.innerHTML = `(${comment.location}) [${comment.nickname}]<br>${comment.contents}`;       // 닉네임과 내용을 설정
             commentList.appendChild(li);    // 댓글 목록에 li 요소를 추가하여 화면에 표시
+
+            // 댓글 클릭 시 이벤트 추가
+            li.addEventListener("click", function () {
+                selectedComment = comment;  // 선택된 댓글 정보를 저장
+                selectedCommentInfo.innerHTML = `(${comment.location}) [${comment.nickname}]<br>${comment.contents}`; // 선택된 댓글 정보를 표시
+            });
         });
     };
-
-    // SSE 연결 오류 처리
-    eventSource.onerror = function(event) {
-        console.error("SSE 연결에서 오류가 발생했습니다.", event);
-        eventSource.close();  // 연결이 끊어졌을 때 연결 종료
-    };
-
 
     const sendButton = document.getElementById("sendCommentButton");
     if(sendButton && userNickname) {
         // 댓글 전송하는 함수
         sendButton.addEventListener("click", function () {
             const contents = document.getElementById("commentInput").value;
+
+            const myLocation = userLocation;
+            const myNickname = userNickname;
+
+            if(selectedComment) {
+                // 선택된 댓글이 있는 경우: 댓글의 댓글을 작성
+                const reply = `
+                    <div>
+                        <p>(${selectedComment.location}) [${selectedComment.nickname}] <br> ${selectedComment.contents}</p>
+                        <hr>
+                        <p>(${myLocation}) [${myNickname}] <br> ${contents}</p>
+                    </div>
+                `;
+                commentList.innerHTML += reply;
+            } else {
+                // 일반 댓글 작성
+                console.log("일반 댓글 작성");
+                const myComment = `(${myLocation}) [${myNickname}] <br> ${contents}`;
+                const newCommentElement = document.createElement("li");
+                newCommentElement.innerHTML = myComment;
+                commentList.appendChild(newCommentElement); // 새로운 댓글만 추가
+                //commentList.innerHTML += `<li>${myComment}</li>`;
+            }
+
+            // 댓글 입력 피드 초기화
+            document.getElementById("commentInput").value = "";
+            selectedCommentInfo.innerHTML = '';
+            selectedComment = null;
 
             // 서버에 새로운 댓글을 전송하는 POST 요청
             fetch("/comments", {
@@ -86,7 +117,19 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         })
     }
+
+    // SSE 연결 오류 처리
+    eventSource.onerror = function(event) {
+        console.error("SSE 연결에서 오류가 발생했습니다.", event);
+        eventSource.close();  // 연결이 끊어졌을 때 연결 종료
+        /*setTimeout(()=> {
+            eventSource = new EventSource(`/comments/stream?since=${connectionTime}`);
+        }, 3000);    // 3초후 재연결 시도*/
+    };
 });
+
+
+
 
 // ==== 댓글창 열고 닫는 기능 ================================================
 document.addEventListener("DOMContentLoaded", function() {
