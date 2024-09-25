@@ -1,14 +1,4 @@
 $(document).ready(function () {
-// 검색 유형이 변경될 때 placeholder 업데이트
-    $('#type').on('change', function() {
-        var selectedType = $(this).val();
-
-        if (selectedType === 'senderId') {
-            $('#searchWord').attr('placeholder', '작성자로 검색하세요');
-        } else if (selectedType === 'content') {
-            $('#searchWord').attr('placeholder', '내용으로 검색하세요');
-        }
-    });
 
     // 검색 버튼 클릭 시 폼 제출
     $('#searchBtn').on('click', function() {

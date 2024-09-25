@@ -3,10 +3,12 @@
 <div th:fragment="realtimeCommentFragment">
     <div id="realtime_comment">
         <div id="commentListContainer">
-            <ul id="commentList">
-            </ul>
+            <ul id="commentList"></ul>
         </div>
 
+
+        <!-- 답글 달때 댓글 잠깐 나올 영역 -->
+        <div id="selected-comment-info"></div>
         <!-- 댓글 입력 -->
         <div id="comment-input-section">
             <div th:if="${member.memberId}">

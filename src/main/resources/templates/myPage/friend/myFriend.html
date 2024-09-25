@@ -11,7 +11,7 @@
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
     <link rel="stylesheet" th:href="@{/css/topbar.css}">
     <link rel="stylesheet" th:href="@{/css/index/index.css}">
-    <link rel="stylesheet" th:href="@{/css/myPage/myFriend.css}">
+    <link rel="stylesheet" th:href="@{/css/myPage/myfriend.css}">
 </head>
 <body>
 <!-- Page Wrapper -->
@@ -36,14 +36,15 @@
                     <form id="pagingForm" th:action="@{/my/friend}" method="get">
                         <input type="hidden" name="page" id="page"/>
                         <div class="search-form-group">
-                            <!-- 숨겨진 셀렉트 박스 -->
-                            <select id="typeSelect" name="searchType">
-                                <option value="friendId" th:text="#{my.friend.searchType.friendId}"></option>
-                                <option value="nickname" th:text="#{my.friend.searchType.nickname}"></option>
+                            <select id="typeSelect" name="searchType" >
+                                <!-- 각 옵션마다 고유의 값을 설정합니다 -->
+                                <option value="friendId" th:text="#{my.friend.searchType.friendId}">친구 ID</option>
+                                <option value="nickname" th:text="#{my.friend.searchType.nickname}">닉네임</option>
                             </select>
 
                             <!-- 검색 입력창 -->
-                            <input type="text" id="searchInput" name="searchWord" placeholder="아이디를 입력하세요"/>
+                            <input type="text" id="searchInput" name="searchWord"/>
+
                             <input type="submit" onclick="pagingFormSubmit(1)" th:value="#{board.button.search}"/>
                         </div>
                     </form>
