@@ -120,8 +120,8 @@ CREATE TABLE board_picture
     board_id     INTEGER NULL,
     guidebook_id INTEGER NULL,
     path         VARCHAR(5000) NOT NULL,
-    ori_filename VARCHAR(30)   NOT NULL,
-    new_filename VARCHAR(30)   NOT NULL,
+    ori_filename VARCHAR(255)   NOT NULL,
+    new_filename VARCHAR(255)   NOT NULL,
     PRIMARY KEY (file_id),
     FOREIGN KEY (board_id) REFERENCES marker_board (board_id),
     FOREIGN KEY (guidebook_id) REFERENCES guidebook_board (guidebook_id)
