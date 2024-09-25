@@ -1,5 +1,3 @@
-
-// ==== 댓글 표시 기능 ======================================================
 document.addEventListener("DOMContentLoaded", function () {
     // ==== 사용자의 위치 정보를 저장할 변수 ====
     let userLocation = "Unknown";
@@ -12,134 +10,79 @@ document.addEventListener("DOMContentLoaded", function () {
     let userNickname = null;
 
     if (metaUser) {
-        userNickname = metaUser.getAttribute('content');   // 로그인한 사용자의 닉네임
+        userNickname = metaUser.getAttribute('content'); // 로그인한 사용자의 닉네임
     } else {
         console.log("사용자가 로그인되지 않았습니다.");
     }
-
-    console.log("userNickname: ", userNickname);
     console.log("연결 시간:", connectionTime);
 
-    // ============================
-
-    // 외부 API를 통해 사용자의 위치 정보 얻기 (ipinfo.io 예시)
-    // API 쓸라면 주석 해제
-    /*fetch('https://ipinfo.io/json?token=8024395341b3f3')
-        .then(response => response.json())
-        .then(data => {
-            userLocation = `${data.region}_${data.city}`;   // 도시 정보 추출
-            console.log("User location: ", userLocation);
-        })
-        .catch(error => {
-            console.error("Error fetching location: ", error);
-            userLocation = "Unknown";   // 위치 정보가 없을 때 기본값
-        });*/
-
-    // 댓글 중복 방지용 set
-    let displayedCommentIds  = new Set();
-
-    // 1. SSE 연결 설정 (실시간 채팅 수신)
-    // SSE로 서버와 연결하여 실시간 채팅 수신 설정
-    const eventSource = new EventSource(`/comments/stream?since=${connectionTime}`);
+    // 댓글 목록을 가져오는 SSE 연결 설정
+    let eventSource = null;
     const commentList = document.getElementById("commentList");
 
-    // 선택된 댓글 정보를 보여줄 곳
-    const selectedCommentInfo  = document.getElementById("selected-comment-info");
-    let selectedComment = null; // 선택된 댓글을 저장
+    // SSE 연결 중복 방지 및 설정
+    if (!eventSource) {
+        eventSource = new EventSource(`/comments/stream?since=${connectionTime}`);
+        console.log("SSE 연결 설정됨");
 
+        eventSource.onmessage = function (event) {
+            const comments = JSON.parse(event.data); // 서버에서 받은 데이터를 JSON 형식으로 파싱
 
-    // 서버로부터 새로운 메시지가 올 때마다 실행
-    eventSource.onmessage = function (event) {
-        const comments = JSON.parse(event.data); // 서버에서 받은 데이터를 JSON 형식으로 파싱
-        //commentList.innerHTML = ''; // 기존 메시지 목록 초기화
+            comments.forEach(comment => { // 새로운 채팅 메시지들을 반복 처리
+                const li = document.createElement("li"); // 새로운 li 요소 생성
+                li.innerHTML = `(${comment.location}) [${comment.nickname}]<br>${comment.contents}`; // 닉네임과 내용을 설정
+                commentList.appendChild(li); // 댓글 목록에 li 요소를 추가하여 화면에 표시
+            });
+        };
 
-        comments.forEach(comment => {   // 새로운 채팅 메시지들을 반복 처리
-            // 댓글 ID가 존재하고, 이미 표시되지 않은 경우에만 추가
-            if(!displayedCommentIds.has(comment.id)) {
-                const li = document.createElement("li");    // 새로운 li 요소 생성
-                li.innerHTML = `(${comment.location}) [${comment.nickname}]<br>${comment.contents}`;       // 닉네임과 내용을 설정
-                commentList.appendChild(li);    // 댓글 목록에 li 요소를 추가하여 화면에 표시
+        eventSource.onerror = function (event) {
+            console.error("SSE 연결에서 오류가 발생했습니다.", event);
+            eventSource.close();
+            eventSource = null; // SSE 연결을 닫음
+        };
+    }
 
-                // 댓글 ID를 Set에 추가하여 중복 표시 방지
-                displayedCommentIds.add(comment.id);
-
-                // 댓글 클릭 시 이벤트 추가
-                li.addEventListener("click", function () {
-                    selectedComment = comment;
-                    selectedCommentInfo.innerHTML =  `(${comment.location}) [${comment.nickname}]<br>${comment.contents}`;
-                });
-            }
-        });
-    };
-
+    // 채팅 전송 버튼 클릭 이벤트
     const sendButton = document.getElementById("sendCommentButton");
-    if(sendButton && userNickname) {
-        // 댓글 전송하는 함수
+    if (sendButton && userNickname) {
         sendButton.addEventListener("click", function () {
             const contents = document.getElementById("commentInput").value;
 
-            const myLocation = userLocation;
-            const myNickname = userNickname;
+            if (contents.trim() !== "") { // 빈 내용이 아닐 경우에만 전송
+                const myLocation = userLocation;
+                const myNickname = userNickname;
 
-            if(selectedComment) {
-                // 선택된 댓글이 있는 경우: 댓글의 댓글을 작성
-                const reply = `
-                    <div>
-                        <p>(${selectedComment.location}) [${selectedComment.nickname}] <br> ${selectedComment.contents}</p>
-                        <hr>
-                        <p>(${myLocation}) [${myNickname}] <br> ${contents}</p>
-                    </div>
-                `;
-                commentList.innerHTML += reply;
-            } else {
-                // 일반 댓글 작성
-                console.log("일반 댓글 작성");
-                const myComment = `(${myLocation}) [${myNickname}] <br> ${contents}`;
-                commentList.innerHTML += `<li>${myComment}</li>`;
-                /*const newCommentElement = document.createElement("li");
-                newCommentElement.innerHTML = myComment;
-                commentList.appendChild(newCommentElement); // 새로운 댓글만 추가*/
+                // 서버에 새로운 채팅 메시지를 전송하는 POST 요청
+                fetch("/comments", {
+                    method: "POST", // HTTP 메소드는 POST로 설정
+                    headers: {
+                        "Content-Type": "application/json" // 요청 데이터 타입은 JSON으로 설정
+                    },
+                    body: JSON.stringify({
+                        nickname: userNickname,
+                        contents: contents,
+                        location: userLocation
+                    })
+                }).then(response => {
+                    if (response.ok) {
+                        console.log("채팅 메시지 전송 완료");
+
+                        // 사용자가 보낸 메시지를 화면에 즉시 추가하지 않음
+                        // 서버에서 SSE로 수신한 메시지가 화면에 표시되도록 처리
+
+                        // 채팅 입력 필드 초기화
+                        document.getElementById("commentInput").value = "";
+
+                    } else {
+                        console.log(`채팅 메시지 전송 실패: 상태코드 ${response.status}`);
+                    }
+                }).catch(error => {
+                    console.log("채팅 메시지 전송 실패: ", error);
+                });
             }
-
-            // 댓글 입력 피드 초기화
-            document.getElementById("commentInput").value = "";
-            selectedCommentInfo.innerHTML = '';
-            selectedComment = null;
-
-            // 서버에 새로운 댓글을 전송하는 POST 요청
-            fetch("/comments", {
-                method: "POST", // HTTP 메소드는 POST로 설정
-                headers: {
-                    "Content-Type": "application/json"  // 요청 데이터 타입은 JSON으로 설정
-                },
-                body: JSON.stringify({
-                    nickname: userNickname,
-                    contents: contents,
-                    location: userLocation
-                })
-            }).then(response => {
-                if(response.ok) {
-                    console.log(response);
-                    console.log("댓글 전송 완료");
-                } else {
-                    console.log(`댓글 전송 실패: 상태코드 ${response.status}`);
-                }
-            }).catch(error => {
-                console.log("댓글 전송 실패: ", error);
-            });
-        })
+        });
     }
-
-    // SSE 연결 오류 처리
-    eventSource.onerror = function(event) {
-        console.error("SSE 연결에서 오류가 발생했습니다.", event);
-        eventSource.close();  // 연결이 끊어졌을 때 연결 종료
-        /*setTimeout(()=> {
-            eventSource = new EventSource(`/comments/stream?since=${connectionTime}`);
-        }, 3000);    // 3초후 재연결 시도*/
-    };
 });
-
 
 // ==== 댓글창 열고 닫는 기능 ================================================
 document.addEventListener("DOMContentLoaded", function() {
