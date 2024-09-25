@@ -88,18 +88,22 @@
                 <ul id="info-panel">
                     <div id="info_part"></div>
                     <div class="button-container">
-                        <button id="departureB" class="info-button" th:text="#{main.button.depart}"></button>
-                        <button id="arrivalB" class="info-button" th:text="#{main.button.arrival}"></button>
+                        <button id="departureB" class="info-button" th:text="#{main.button.depart}">출발</button>
+                        <button id="arrivalB" class="info-button" th:text="#{main.button.arrival}">도착</button>
+                    </div>
+                    <div class="button-container">
+                        <button id="walkingB" class="info-button" th:text="#{main.route.walking}">도보경로</button>
+                        <button id="bicycleB" class="info-button" th:text="#{main.route.bicycle}">자전거경로</button>
                     </div>
                     <div class="share-container">
-                        <button id="shareBtn" th:text="#{main.button.share}"></button>
+                        <button id="shareBtn" th:text="#{main.button.share}">친구에게 공유</button>
+                        <div id="favMarker">
+                            <img id="star" th:src="@{/img/map/whiteStar.png}" th:alt="#{menu.favorite.place}">
+                        </div>
                     </div>
                     <!-- 글목록 -->
-                    <div>
-                        <a id="writeLink" th:href="@{/board/write/${palceID}}" th:text="#{main.link.comment}"></a>
-                        <button id="favMarker">
-                            <img th:src="@{/img/star2.png}">
-                        </button>
+                    <div class="share-container">
+                        <a id="writeLink" th:href="@{/board/write/${palceID}}" th:text="#{main.link.comment}">글쓰기</a>
                     </div>
                 </ul>
 
