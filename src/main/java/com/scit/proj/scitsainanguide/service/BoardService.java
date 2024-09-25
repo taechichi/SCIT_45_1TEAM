@@ -8,6 +8,9 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -86,29 +89,30 @@ public class BoardService {
         }
     }
 
-    public List<MarkerBoardDTO> findByPlaceId(String placeId) {
-        log.debug("place아디확인:{}",placeId);
-        // 병원 ID로 먼저 검색
-        List<MarkerBoardEntity> boardEntityList = boardJPARepository.findByHospitalIdAndDeleteYnFalse(placeId);
+    public List<MarkerBoardDTO> findByPlaceIdWithPaging(String placeId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        // 병원 ID로 검색
+        Page<MarkerBoardEntity> boardPage = boardJPARepository.findByHospitalIdAndDeleteYnFalse(placeId, pageable);
 
         // 결과가 없으면 대피소 ID로 검색
-        if (boardEntityList.isEmpty()) {
-            log.debug("대피소검색");
+        if (boardPage.isEmpty()) {
             try {
-                boardEntityList = boardJPARepository.findByShelterIdAndDeleteYnFalse(Integer.valueOf(placeId));
+                boardPage = boardJPARepository.findByShelterIdAndDeleteYnFalse(Integer.valueOf(placeId), pageable);
             } catch (NumberFormatException e) {
-                // placeId가 Integer로 변환할 수 없으면 대피소 검색 생략
                 return new ArrayList<>(); // 빈 리스트 반환
             }
         }
 
+        // 게시글 리스트를 DTO로 변환하고 반환
         List<MarkerBoardDTO> boardDTOList = new ArrayList<>();
 
-        for (MarkerBoardEntity boardEntity : boardEntityList) {
+        for (MarkerBoardEntity boardEntity : boardPage) {
             // 각 게시글의 boardId로 사진 검색
             List<BoardPictureEntity> pictureEntities = boardPictureRepository.findByBoard_BoardId(boardEntity.getBoardId());
-            List<BoardPictureDTO> pictureDTOList = new ArrayList<>();
+
             // 사진 정보를 DTO로 변환
+            List<BoardPictureDTO> pictureDTOList = new ArrayList<>();
             for (BoardPictureEntity picture : pictureEntities) {
                 BoardPictureDTO pictureDTO = BoardPictureDTO.builder()
                         .path(picture.getPath())
@@ -118,6 +122,7 @@ public class BoardService {
                 pictureDTOList.add(pictureDTO);
             }
 
+            // MarkerBoardDTO 빌더를 사용해 게시글 정보와 이미지를 DTO에 추가
             MarkerBoardDTO boardDTO = MarkerBoardDTO.builder()
                     .memberId(boardEntity.getMemberId())
                     .boardId(boardEntity.getBoardId())
@@ -125,8 +130,10 @@ public class BoardService {
                     .createDt(boardEntity.getCreateDt())
                     .pictures(pictureDTOList)
                     .build();
+
             boardDTOList.add(boardDTO);
         }
+
         return boardDTOList;
     }
 

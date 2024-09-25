@@ -27,7 +27,6 @@ let whatLan;
 
 // 1. 사용자가 업로드한 flac 오디오 파일을 텍스트화
 function upload() {
-    showLoading(); // 로딩 시작
     // 사용자가 업로드한 파일 요소
     let fileInput = document.getElementById('audioFile');
     // 파일을 담을 배열 선언
@@ -37,9 +36,11 @@ function upload() {
 
     // 파일이 비어있는데 버튼을 눌렀을 시,
     if (!file) {
-        alert('하나 이상의 음성 파일을 업로드하세요');
+        alert(noFileSelected);
         return;
     }
+
+    showLoading(); // 로딩 시작
 
     // 오디오 파일 데이터를 담을 FormData 객체 생성
     let formData = new FormData();
