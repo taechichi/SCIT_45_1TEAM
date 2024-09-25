@@ -180,6 +180,7 @@
             isPanelVisible = true;
             document.getElementById('writeLink').setAttribute('href', `/board/write/${placeID}`);
             favMarkerCheck(currentMarker.placeId);
+            board.innerHTML = '';
             // 게시글 목록 초기 로드
             getList(placeID, currentPage, pageSize, isFetching);
             currentPage++;

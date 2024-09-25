@@ -280,12 +280,12 @@ ruby{
     object-fit: cover;
 }
 
-#abc {
+.abc {
     display: flex;
     align-items: center;
 }
 
-#flagJa {
+.flagJa {
     width: 40px;
     height: 40px;
     display: flex;               /* 플렉스 박스를 사용하여 정렬 */
@@ -293,7 +293,7 @@ ruby{
     align-items: center;
 }
 
- #flagKo {
+ .flagKo {
     width: 45px;
     height: 45px;
      display: flex;               /* 플렉스 박스를 사용하여 정렬 */
