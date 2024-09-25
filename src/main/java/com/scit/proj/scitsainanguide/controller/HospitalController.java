@@ -11,7 +11,7 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/Data/hospital")
+@RequestMapping("/data/hospital")
 @Controller
 public class HospitalController {
 

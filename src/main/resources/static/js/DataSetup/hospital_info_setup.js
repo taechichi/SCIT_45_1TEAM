@@ -30,7 +30,7 @@ function uploadFile() {
 
     startProgress();
 
-    fetch('http://localhost:8888/Data/hospital/import-file', {
+    fetch('http://localhost:8888/data/hospital/import-file', {
         method: 'POST',
         body: formData
     })
