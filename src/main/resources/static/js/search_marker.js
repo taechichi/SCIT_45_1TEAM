@@ -179,7 +179,8 @@
             let placeInfo =     `<div id="panel-image" class="panel-imgDiv">
                                        <img src="${photoUrl}"></div>
                                         <h3 id="panel-title">${placeName}</h3>
-                                        <p id="panel-adress">${placeAdress}</p>`;
+                                        <hr>
+                                        <p id="panel-adress"> ${detailaddress} : ${placeAdress}</p>`;
 
             let infoPanel = document.getElementById("info-panel");
             let infoPart = document.getElementById("info_part");
