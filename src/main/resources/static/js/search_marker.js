@@ -53,7 +53,7 @@
             //콜백 함수로 status 요청성공이면 createMarker
             if (status === google.maps.places.PlacesServiceStatus.OK) {
                 //url 접속시 마커생성
-                createMarker(map, place, true);
+                createMarker(map, place, true, "share");
             } else {
                 console.error('Place details request failed');
             }
@@ -125,6 +125,10 @@
         switch (type) {
             case "myMarker":
                 marker.setAnimation(google.maps.Animation.BOUNCE);
+                break;
+            case "share":
+                currentMarker = marker;
+                setCurrentZoom(marker.position);
                 break;
             default:
                 markers.push(marker);
