@@ -142,10 +142,11 @@ public class MyFriendController {
     @ResponseBody
     @PostMapping("accept/{relationId}")
     public void acceptFriend(@AuthenticationPrincipal AuthenticatedUser user, @PathVariable Integer relationId) {
-        myFriendService.acceptFriend(user.getId(), relationId);
+        // 나에게 친구신청을 보낸 회원의 id 를 리턴받는다.
+        String targetId = myFriendService.acceptFriend(user.getId(), relationId);
 
         // 친구수락 대상회원에게 SSE 를 통해 알림을 전송한다.
-        sseEmitterService.sendFriendAcceptNotification(user.getId());
+        sseEmitterService.sendFriendAcceptNotification(user.getId(), targetId);
     }
 
     /**

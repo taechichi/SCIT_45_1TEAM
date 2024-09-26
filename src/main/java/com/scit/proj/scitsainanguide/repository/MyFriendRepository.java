@@ -20,7 +20,7 @@ public interface MyFriendRepository {
 
     void insertFriend(String memberId, String friendId, boolean friendYn);
 
-    void acceptFriend(String memberId, Integer relationId);
+    String acceptFriend(String memberId, Integer relationId);
 
     void rejectFriend(String memberId, Integer relationId);
 

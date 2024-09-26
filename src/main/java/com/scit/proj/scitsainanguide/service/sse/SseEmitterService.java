@@ -42,9 +42,10 @@ public class SseEmitterService {
         }
     }
 
-    public void sendFriendAcceptNotification(String memberId) {
+    public void sendFriendAcceptNotification(String memberId, String targetId) {
         String message = memberId + " 님이 친구요청을 수락했습니다.";
-        executeAlarm(memberId, message, "friendRequestAccept", AlarmCategory.FRIEND_REQUEST_ACCEPT.getValue());
+        // 친구 신청 수락했다는 알림을 친구에게 보낸다.
+        executeAlarm(targetId, message, "friendRequestAccept", AlarmCategory.FRIEND_REQUEST_ACCEPT.getValue());
     }
 
     public void sendMessageReceiveNotification(String senderId, String receiverId) {
