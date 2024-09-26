@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 외부 API를 통해 사용자의 위치 정보 얻기 (ipinfo.io 예시)
     // 서울의 경우 Seoul_Seoul이라고 나오는데, 일본의 경우에는 Tokyo_akihabara 처럼 나옴 (<-국제화 필요)
-    fetch('https://ipinfo.io/json?token=8024395341b3f3')
+    /*fetch('https://ipinfo.io/json?token=8024395341b3f3')
         .then(response => response.json())
         .then(data => {
             userLocation = `${data.region}_${data.city}`;   // 도시 정보 추출
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => {
             console.error("Error fetching location: ", error);
             userLocation = "Unknown";   // 위치 정보가 없을 때 기본값
-        });
+        });*/
 
 
     if (metaUser) {
@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const commentList = document.getElementById("commentList");
     const sendButton = document.getElementById("sendCommentButton");
     const inputField = document.getElementById("commentInput");
+    const commentListContainer = document.getElementById("commentListContainer");
 
     // 초기 상태에서는 전송 버튼 및 입력창 비활성화
     sendButton.disabled = true;
@@ -55,6 +56,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             eventSource.onmessage = function (event) {
                 const comments = JSON.parse(event.data); // 서버에서 받은 데이터를 JSON 형식으로 파싱
+                const isAtBottom = commentListContainer.scrollTop + commentListContainer.clientHeight >= commentListContainer.scrollHeight;
+
                 comments.forEach(comment => { // 새로운 채팅 메시지들을 반복 처리
 
                     // HTML 태그 생성
@@ -67,8 +70,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     img.classList.add("img-profile", "rounded-circle");
                     img.src = `/member/download`; // 서버에서 닉네임으로 이미지를 받아옴
                     img.alt = "Profile Picture";
-                    img.width = 30;
-                    img.height = 30;
 
                     // 댓글 내용 추가
                     const commentContent = document.createElement("div");
@@ -82,12 +83,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     // 댓글 목록에 추가
                     commentList.appendChild(li);
 
-                    /*const li = document.createElement("li"); // 새로운 li 요소 생성
-                    li.innerHTML = `
-                        <img class="img-profile rounded-circle" th:src="@{member/download}" alt="Profile Picture" width="30" height="30"/>
-                        (${comment.location}) [${comment.nickname}]<br>${comment.contents}
-                    `; // 닉네임과 내용을 설정
-                    commentList.appendChild(li); // 댓글 목록에 li 요소를 추가하여 화면에 표시*/
+                    if(isAtBottom) { // 스크롤이 맨 아래에 있을 때만 자동으로 하단으로 이동
+                        // 스크롤을 맨 아래로 이동
+                        commentListContainer.scrollTop = commentListContainer.scrollHeight;
+                    }
                 });
             };
 
@@ -126,6 +125,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (response.ok) {
                     console.log("댓글 전송 완료");
                     inputField.value = ""; // 입력 필드 초기화
+
+                    // 채팅을 입력할 때는 항상 스크롤을 맨 아래로 이동
+                    commentListContainer.scrollTop = commentListContainer.scrollHeight;
                 } else {
                     console.log(`댓글 전송 실패: 상태코드 ${response.status}`);
                 }
