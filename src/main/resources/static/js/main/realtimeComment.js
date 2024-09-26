@@ -8,6 +8,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const metaUser = document.querySelector("meta[name='authenticatedUser']");
     let userNickname = null;
 
+    // 외부 API를 통해 사용자의 위치 정보 얻기 (ipinfo.io 예시)
+    // 서울의 경우 Seoul_Seoul이라고 나오는데, 일본의 경우에는 Tokyo_akihabara 처럼 나옴 (<-국제화 필요)
+    fetch('https://ipinfo.io/json?token=8024395341b3f3')
+        .then(response => response.json())
+        .then(data => {
+            userLocation = `${data.region}_${data.city}`;   // 도시 정보 추출
+            console.log("User location: ", userLocation);
+        })
+        .catch(error => {
+            console.error("Error fetching location: ", error);
+            userLocation = "Unknown";   // 위치 정보가 없을 때 기본값
+        });
+
+
     if (metaUser) {
         userNickname = metaUser.getAttribute('content'); // 로그인한 사용자의 닉네임
     } else {
@@ -42,9 +56,38 @@ document.addEventListener("DOMContentLoaded", function () {
             eventSource.onmessage = function (event) {
                 const comments = JSON.parse(event.data); // 서버에서 받은 데이터를 JSON 형식으로 파싱
                 comments.forEach(comment => { // 새로운 채팅 메시지들을 반복 처리
-                    const li = document.createElement("li"); // 새로운 li 요소 생성
-                    li.innerHTML = `(${comment.location}) [${comment.nickname}]<br>${comment.contents}`; // 닉네임과 내용을 설정
-                    commentList.appendChild(li); // 댓글 목록에 li 요소를 추가하여 화면에 표시
+
+                    // HTML 태그 생성
+                    const li = document.createElement("li");
+                    // 댓글에 클래스 추가
+                    li.classList.add("chat-comment");
+
+                    // 이미지 태그 추가
+                    const img = document.createElement("img");
+                    img.classList.add("img-profile", "rounded-circle");
+                    img.src = `/member/download`; // 서버에서 닉네임으로 이미지를 받아옴
+                    img.alt = "Profile Picture";
+                    img.width = 30;
+                    img.height = 30;
+
+                    // 댓글 내용 추가
+                    const commentContent = document.createElement("div");
+                    commentContent.classList.add("comment-content");
+                    commentContent.innerHTML = `(${comment.location}) [${comment.nickname}]<br>${comment.contents}`;
+
+                    // li 요소에 이미지와 댓글 내용을 추가
+                    li.appendChild(img);
+                    li.appendChild(commentContent);
+
+                    // 댓글 목록에 추가
+                    commentList.appendChild(li);
+
+                    /*const li = document.createElement("li"); // 새로운 li 요소 생성
+                    li.innerHTML = `
+                        <img class="img-profile rounded-circle" th:src="@{member/download}" alt="Profile Picture" width="30" height="30"/>
+                        (${comment.location}) [${comment.nickname}]<br>${comment.contents}
+                    `; // 닉네임과 내용을 설정
+                    commentList.appendChild(li); // 댓글 목록에 li 요소를 추가하여 화면에 표시*/
                 });
             };
 
@@ -77,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: JSON.stringify({
                     nickname: userNickname,
                     contents: contents,
-                    location: userLocation
+                    location: userLocation,
                 })
             }).then(response => {
                 if (response.ok) {

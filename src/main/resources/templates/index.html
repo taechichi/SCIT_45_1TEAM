@@ -13,7 +13,7 @@
     <title>SB Admin 2 - Dashboard</title>
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
 
-    <!-- google map script -->
+    <!--&lt;!&ndash; google map script &ndash;&gt;
     <script th:inline="javascript">
         // 브라우저 언어 감지 (ko, en, ja 등)
         let userLanguage = /*[[#{main.lang.country}]]*/ 'ko';
@@ -25,7 +25,7 @@
         script.async = true; // 비동기 로드 설정
         script.defer = true; // 파싱 후 실행 설정
         document.head.appendChild(script);
-    </script>
+    </script>-->
 
     <!-- 추가 할 라이브러리를 api의 libraries 부분 뒤에 추가 places,geometry -->
     <script th:src="@{/js/search_marker.js}"></script>
