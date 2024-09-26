@@ -171,14 +171,14 @@
         const pageSize = 10;  // 한 번에 가져올 게시글 개수
         let isFetching = false;  // 데이터를 불러오는 중인지 여부
         geocodeLatLng(marker.position, function (placeAdress){
-            let placeInfo =     `<h3>${placeName}</h3>
-                                        <div style="width: 100%;height: 200px">
-                                        <img src="${photoUrl}" style="width: 100%; height: 100%;"></div>`;
+            let placeInfo =     `<div id="panel-image" class="panel-imgDiv">
+                                       <img src="${photoUrl}"></div>`;
             if(['myMarker','shelter'].includes(marker.type)){
                  placeInfo ='';
-                 placeInfo =            `<div style="width: 100%;height: 200px"></div>`;
+                 placeInfo =            `<div class="panel-imgDiv"></div>`;
             }
-            placeInfo +=    `<p>${placeAdress}</p>`;
+            placeInfo +=    `<h3 id="panel-title">${placeName}</h3>
+                            <p id="panel-adress">${placeAdress}</p>`;
 
             let infoPanel = document.getElementById("info-panel");
             let infoPart = document.getElementById("info_part");
@@ -434,6 +434,15 @@
             }
         });
 
+        //x 버튼클릭 이벤트 (패널정보 none)
+        document.getElementById('closeBtn').addEventListener('click', function(){
+            if(isPanelVisible){
+                let infoPanel = document.getElementById("info-panel");
+                infoPanel.style.display = 'none';
+                isPanelVisible = false;
+            }
+        });
+
         //병원 버튼 클릭 시 근처 500m 검색
         document.getElementById('hospitalFilterButton').addEventListener('click', function() {
             searchNearbyHospitals(); // 병원 검색 함수 호출
@@ -449,6 +458,8 @@
         // 즐겨찾기 버튼
         favBtn = document.getElementById('favMarker');
         favImg = favBtn.querySelector('img'); // 버튼 내부의 이미지 요소 선택
+
+
 
         favBtn.addEventListener('click', function () {
             // 이미지 변경
