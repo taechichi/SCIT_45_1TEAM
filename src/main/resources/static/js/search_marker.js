@@ -77,6 +77,7 @@
                     map: map,
                     position: shelterPosition,
                     title: place.shelterName,
+                    placePhoto: place.photos ? place.photos[0].getUrl() : "/img/map/noImageAvailable.jpg",
                     type: 'shelter'
                 };
                 break;
@@ -171,14 +172,10 @@
         const pageSize = 10;  // 한 번에 가져올 게시글 개수
         let isFetching = false;  // 데이터를 불러오는 중인지 여부
         geocodeLatLng(marker.position, function (placeAdress){
-            let placeInfo =     `<div id="panel-image" class="panel-imgDiv">
-                                       <img src="${photoUrl}"></div>`;
-            if(['myMarker','shelter'].includes(marker.type)){
-                 placeInfo ='';
-                 placeInfo =            `<div class="panel-imgDiv"></div>`;
-            }
-            placeInfo +=    `<h3 id="panel-title">${placeName}</h3>
-                            <p id="panel-adress">${placeAdress}</p>`;
+            let placeInfo =     `<div id="panel-image" class="panel-imgDiv" style="width: 200px; height: 100px">
+                                       <img src="${photoUrl}" style="width: 100%; height: 100%"></div>
+                                        <h3 id="panel-title">${placeName}</h3>
+                                        <p id="panel-adress">${placeAdress}</p>`;
 
             let infoPanel = document.getElementById("info-panel");
             let infoPart = document.getElementById("info_part");
