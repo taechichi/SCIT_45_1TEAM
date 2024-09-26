@@ -176,8 +176,8 @@
         const pageSize = 10;  // 한 번에 가져올 게시글 개수
         let isFetching = false;  // 데이터를 불러오는 중인지 여부
         geocodeLatLng(marker.position, function (placeAdress){
-            let placeInfo =     `<div id="panel-image" class="panel-imgDiv" style="width: 200px; height: 100px">
-                                       <img src="${photoUrl}" style="width: 100%; height: 100%"></div>
+            let placeInfo =     `<div id="panel-image" class="panel-imgDiv">
+                                       <img src="${photoUrl}"></div>
                                         <h3 id="panel-title">${placeName}</h3>
                                         <p id="panel-adress">${placeAdress}</p>`;
 
