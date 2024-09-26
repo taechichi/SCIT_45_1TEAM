@@ -5,7 +5,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let connectionTime = currentDate.toISOString();
 
     // ==== 로그인된 사용자 닉네임 가져오기 ====
-    const metaUser = document.querySelector("meta[name='authenticatedUser']");
+    const metaUserId = document.querySelector("meta[name='authenticatedUserId']");
+    const metaUserNickname = document.querySelector("meta[name='authenticatedUserNickname']");
+    let userId = null;
     let userNickname = null;
 
     // 외부 API를 통해 사용자의 위치 정보 얻기 (ipinfo.io 예시)
@@ -22,8 +24,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });*/
 
 
-    if (metaUser) {
-        userNickname = metaUser.getAttribute('content'); // 로그인한 사용자의 닉네임
+    if (metaUserId) {
+        userId = metaUserId.getAttribute('content'); // 로그인한 사용자의 id
+        userNickname = metaUserNickname.getAttribute('content'); // 로그인한 사용자의 닉네임
     } else {
         console.log("사용자가 로그인되지 않았습니다.");
     }
@@ -68,7 +71,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     // 이미지 태그 추가
                     const img = document.createElement("img");
                     img.classList.add("img-profile", "rounded-circle");
-                    img.src = `/member/download`; // 서버에서 닉네임으로 이미지를 받아옴
+                    img.src = `/member/download/${comment.filename}`; // 서버에서 닉네임으로 이미지를 받아옴
+                    /*img.src = `/member/download`; // 서버에서 닉네임으로 이미지를 받아옴*/
                     img.alt = "Profile Picture";
 
                     // 댓글 내용 추가
