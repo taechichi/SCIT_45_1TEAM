@@ -53,7 +53,7 @@
             //콜백 함수로 status 요청성공이면 createMarker
             if (status === google.maps.places.PlacesServiceStatus.OK) {
                 //url 접속시 마커생성
-                createMarker(map, place, true);
+                createMarker(map, place, true, "share");
             } else {
                 console.error('Place details request failed');
             }
@@ -76,7 +76,9 @@
                     placeId: place.shelterId,
                     map: map,
                     position: shelterPosition,
-                    title: place.shelterName
+                    title: place.shelterName,
+                    placePhoto: place.photos ? place.photos[0].getUrl() : "/img/map/noImageAvailable.jpg",
+                    type: 'shelter'
                 };
                 break;
             case "myMarker":
@@ -88,8 +90,9 @@
                         url: '/img/map/myMarker.png', // 사용자 정의 아이콘 URL
                         scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
                         origin: new google.maps.Point(0, 0), // 아이콘의 원점
-                        anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
-                    }
+                        anchor: new google.maps.Point(25, 50), // 아이콘의 앵커 포인트
+                    },
+                    type: 'myMarker'
                 };
                 break;
             case "hospital":
@@ -98,13 +101,14 @@
                     map: map,
                     position: place.geometry.location,
                     title: place.name,
-                    placePhoto: place.photos ? place.photos[0].getUrl() : "",
+                    placePhoto: place.photos ? place.photos[0].getUrl() : "/img/map/noImageAvailable.jpg",
                     icon: {
                         url: '/img/hospitalMarker.png', // 사용자 정의 아이콘 URL
                         scaledSize: new google.maps.Size(40, 40), // 아이콘의 크기 조정
                         origin: new google.maps.Point(0, 0), // 아이콘의 원점
-                        anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
-                    }
+                        anchor: new google.maps.Point(25, 50), // 아이콘의 앵커 포인트
+                    },
+                    type: 'hospital'
                 };
                 break;
             default:
@@ -121,6 +125,10 @@
         switch (type) {
             case "myMarker":
                 marker.setAnimation(google.maps.Animation.BOUNCE);
+                break;
+            case "share":
+                currentMarker = marker;
+                setCurrentZoom(marker.position);
                 break;
             default:
                 markers.push(marker);
@@ -168,11 +176,12 @@
         const pageSize = 10;  // 한 번에 가져올 게시글 개수
         let isFetching = false;  // 데이터를 불러오는 중인지 여부
         geocodeLatLng(marker.position, function (placeAdress){
-            let placeInfo = `<h3>${placeName}</h3>                  <!--- infopanel에 넣을 값 ---!>  
-                                              <div style="width: 100%;height: 200px">
-                                              <img src="${photoUrl}" style="width: 100%; height: 100%;"></div>
-                                              <p>${placeAdress}</p>
-                                              <p>추가입력예정</p>`;
+            let placeInfo =     `<div id="panel-image" class="panel-imgDiv">
+                                       <img src="${photoUrl}"></div>
+                                        <h3 id="panel-title">${placeName}</h3>
+                                        <hr>
+                                        <p id="panel-adress"> ${detailaddress} : ${placeAdress}</p>`;
+
             let infoPanel = document.getElementById("info-panel");
             let infoPart = document.getElementById("info_part");
             infoPart.innerHTML = placeInfo;
@@ -427,6 +436,15 @@
             }
         });
 
+        //x 버튼클릭 이벤트 (패널정보 none)
+        document.getElementById('closeBtn').addEventListener('click', function(){
+            if(isPanelVisible){
+                let infoPanel = document.getElementById("info-panel");
+                infoPanel.style.display = 'none';
+                isPanelVisible = false;
+            }
+        });
+
         //병원 버튼 클릭 시 근처 500m 검색
         document.getElementById('hospitalFilterButton').addEventListener('click', function() {
             searchNearbyHospitals(); // 병원 검색 함수 호출
@@ -442,6 +460,8 @@
         // 즐겨찾기 버튼
         favBtn = document.getElementById('favMarker');
         favImg = favBtn.querySelector('img'); // 버튼 내부의 이미지 요소 선택
+
+
 
         favBtn.addEventListener('click', function () {
             // 이미지 변경

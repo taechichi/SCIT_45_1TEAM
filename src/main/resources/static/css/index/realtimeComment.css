@@ -24,12 +24,34 @@
     box-sizing: border-box;
 }
 
-/*!* 채팅 목록 스타일 *!*/
-/*#commentList {*/
-/*    list-style: none;*/
-/*    padding: 0;*/
-/*    margin: 0;*/
-/*}*/
+/* 채팅 목록 스타일 */
+#commentList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* 댓글 항목 */
+.chat-comment {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px; /* 이미지와 텍스트 사이의 간격 */
+}
+
+/* 프로필 이미지 */
+.chat-comment img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%; /* 원형 이미지 */
+}
+
+/* 댓글 내용 */
+.chat-comment div {
+    display: flex;
+    flex-direction: column;
+}
+
 
 /* 댓글 입력창 */
 #comment-input-section {

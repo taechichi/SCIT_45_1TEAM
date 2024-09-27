@@ -29,7 +29,7 @@ public class RealtimeCommentController {
     public SseEmitter streamComments(
             @RequestParam("since") String since
     ) {
-        SseEmitter emitter = new SseEmitter(60000L);
+        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
         emitters.add(emitter);
 
         // SSE 연결 관리 로직

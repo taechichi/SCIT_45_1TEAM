@@ -205,7 +205,7 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
     }
 
     @Override
-    public void acceptFriend(String memberId, Integer relationId) {
+    public String acceptFriend(String memberId, Integer relationId) {
         BooleanBuilder whereClause = new BooleanBuilder();
         whereClause.and(friend.relationId.eq(relationId));
 
@@ -225,7 +225,10 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                 .execute();
 
         // 양방향 관계를 맺기 위해 memberId, friendId 를 반대로한 새로운 관계를 생성
-        insertFriend(memberId, friendEntity.getMemberId(), true);
+        insertFriend(friendEntity.getFriend().getMemberId(), memberId, true);
+
+        // 친구에게 알림을 보내야하기 때문에 친구의 아이디를 리턴한다.
+        return friendEntity.getFriend().getMemberId();
     }
 
     @Override

@@ -42,8 +42,8 @@ public class MyFriendService {
         myFriendRepository.insertFriend(memberId, friendId, false);
     }
 
-    public void acceptFriend(String memberId, Integer relationId) {
-        myFriendRepository.acceptFriend(memberId, relationId);
+    public String acceptFriend(String memberId, Integer relationId) {
+        return myFriendRepository.acceptFriend(memberId, relationId);
     }
 
     public void rejectFriend(String memberId, Integer relationId) {
