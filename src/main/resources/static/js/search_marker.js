@@ -518,6 +518,15 @@
         });
     });
 
+         // 경로버튼 클릭 시
+        document.getElementById("routeB").addEventListener('click', function(){
+            let routePanel = document.getElementById('route-panel');
+            if (routePanel.style.display === 'none' || routePanel.style.display === '') {
+                routePanel.style.display = 'block';  // route-panel을 보여줌
+            }
+        })
+
+
         // 공유버튼 클릭 시
         document.getElementById("shareBtn").addEventListener('click', function() {
             if (currentMarker) {
@@ -611,8 +620,6 @@
     let bicyclingRenderer = null;
     let walkingMarker = null;
     let bicyclingMarker = null;
-    let walkingInfoWindow = null;
-    let bicyclingInfoWindow = null;
 
     // document 또는 특정 상위 요소에 이벤트 위임
     document.addEventListener('click', function(event) {
@@ -626,10 +633,6 @@
                 if (bicyclingMarker) {
                     bicyclingMarker.setMap(null); // 기존 자전거 경로 마커 제거
                     bicyclingMarker = null; // 변수 초기화
-                }
-                if (bicyclingInfoWindow) {
-                    bicyclingInfoWindow.close(); // 기존 자전거 경로 정보창 닫기
-                    bicyclingInfoWindow = null; // 변수 초기화
                 }
                 calculateWalkingRoute();  // 도보 경로 계산 함수 호출
             } else {
@@ -648,10 +651,6 @@
                     walkingMarker.setMap(null);
                     walkingMarker = null; // 변수 초기화
                 }
-                if (walkingInfoWindow) {
-                    walkingInfoWindow.close(); // 기존 도보 경로 정보창 닫기
-                    walkingInfoWindow = null; // 변수 초기화
-                }
                 calculateBicyclingRoute();  // 자전거 경로 계산 함수 호출
             } else {
                 alert(markerFirst);
@@ -661,6 +660,10 @@
 
     // 경로 요청 및 표시 함수 - 도보
     function calculateWalkingRoute() {
+        // 선택된 경로 버튼 색 더 진하게
+        document.getElementById("walkingB").style.backgroundColor = "#ffa013";
+        document.getElementById("bicycleB").style.backgroundColor = "#FFC72C";
+
         const walkingService = new google.maps.DirectionsService();
 
         // 매번 새로운 DirectionsRenderer 생성
@@ -681,11 +684,14 @@
             };
 
             walkingService.route(walkingRequest, function (result, status) {
+                console.log(result); // result를 확인해 응답 데이터가 제대로 들어오는지 확인
+
                 if (status === google.maps.DirectionsStatus.OK) {
                     walkingRenderer.setDirections(result);
 
                     // 도보 경로 시작점에 아이콘 추가
                     const startLocation = result.routes[0].legs[0].start_location;
+                    console.log(startLocation);  // distance와 duration이 포함된 데이터를 로그로 확인
 
                     // 기존 마커 제거
                     if (walkingMarker) {
@@ -706,22 +712,16 @@
                     // 도보 경로의 거리와 소요 시간 출력
                     const walkingLeg = result.routes[0].legs[0];
 
-                    // 기존 정보창 제거
-                    if (walkingInfoWindow) {
-                        walkingInfoWindow.close();
-                    }
-
-                    // 전역 변수 업데이트
-                    walkingInfoWindow = new google.maps.InfoWindow({
-                        content: `
+                    // HTML info-panel 내 요소에 직접 경로 정보 출력
+                   document.getElementById('routeInfo').innerHTML
+                    = `
                           <div>
                             <h4>${walkingRoot}</h4>
                             <p>${distanceLabel}: ${walkingLeg.distance.text}</p>
                             <p>${durationLabel}: ${walkingLeg.duration.text}</p>
                           </div>
-                        `
-                    });
-                    walkingInfoWindow.open(map, walkingMarker);
+                        `;
+
                 } else {
                     console.error('도보 경로를 찾을 수 없습니다.', status);
                 }
@@ -731,7 +731,10 @@
 
     // 경로 요청 및 표시 함수 - 자전거
     function calculateBicyclingRoute() {
+
         const bicyclingService = new google.maps.DirectionsService();
+        console.log(result); // result를 확인해 응답 데이터가 제대로 들어오는지 확인
+
         // 매번 새로운 DirectionsRenderer 생성
         if (bicyclingRenderer) {
             bicyclingRenderer.setMap(null);  // 이전 경로 제거
@@ -772,26 +775,20 @@
                     title: '자전거 경로 시작점'
                 });
 
+                // 선택된 경로 버튼 색 더 진하게
+                document.getElementById("bicycleB").style.backgroundColor = "#ffa013";
+                document.getElementById("walkingB").style.backgroundColor = "#FFC72C";
+
                 // 자전거 경로의 거리와 소요 시간 출력
                 const bicyclingLeg = result.routes[0].legs[0];
 
-                // 기존 정보창 제거
-                if (bicyclingInfoWindow) {
-                    bicyclingInfoWindow.close();
-                }
-
-                // 전역 변수 업데이트
-                bicyclingInfoWindow = new google.maps.InfoWindow({
-                    content: `
-                      <div>
+                // HTML info-panel 내 요소에 직접 경로 정보 출력
+                document.getElementById('routeInfo').innerHTML = `
+                       <div>
                         <h4>${bicycleRoot}</h4>
                         <p>${distanceLabel}: ${bicyclingLeg.distance.text}</p>
                         <p>${durationLabel}: ${bicyclingLeg.duration.text}</p>
-                      </div>
-                    `
-                });
-                bicyclingInfoWindow.open(map, bicyclingMarker);
-
+                      </div>`;
             } else {
                 console.error('자전거 경로를 찾을 수 없습니다.', status);
             }

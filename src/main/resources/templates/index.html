@@ -100,24 +100,43 @@
                 <ul id="info-panel">
                     <div id="info_part"></div>
                     <div class="button-container">
-                        <button id="hereToD" class="info-button" th:text="#{main.button.here.to.depart}">여기서 출발</button>
-                        <button id="departureB" class="info-button" th:text="#{main.button.depart}">출발지</button>
-                        <button id="arrivalB" class="info-button" th:text="#{main.button.arrival}">도착지</button>
+                        <button id="routeB" class="info-button" th:text="#{main.button.route}">경로</button>
+                        <button id="shareBtn" th:text="#{main.button.share}">친구에게 공유</button><br>
                     </div>
-                    <div class="button-container">
-                        <button id="walkingB" class="info-button" th:text="#{main.route.walking}">도보경로</button>
-                        <button id="bicycleB" class="info-button" th:text="#{main.route.bicycle}">자전거경로</button>
+                    <div id="favMarker">
+                        <img id="star" th:src="@{/img/map/whiteStar.png}" th:alt="#{menu.favorite.place}">
                     </div>
-                    <div class="share-container">
-                        <button id="shareBtn" th:text="#{main.button.share}">친구에게 공유</button>
-                        <div id="favMarker">
-                            <img id="star" th:src="@{/img/map/whiteStar.png}" th:alt="#{menu.favorite.place}">
-                        </div>
-                    </div>
+
 
                     <!-- 글목록 -->
                     <div>
                         <a id="writeLink" th:href="@{/board/write/${palceID}}" th:text="#{main.link.comment}">글쓰기</a>
+                    </div>
+                </ul>
+
+                <ul id="route-panel">
+                    <div class="button-container">
+                        <div class="route-button" style="width: 50px;">
+                            <img th:src="@{/img/map/infoB.png}" alt="info" id="imgI">
+                        </div>
+                        <div id="walkingB" class="route-button">
+                            <img th:src="@{/img/map/routeW.png}" alt="walking" id="imgW">
+                            <span th:text="#{main.route.walking}">도보경로</span>
+                        </div>
+                        <div id="bicycleB" class="route-button">
+                            <img th:src="@{/img/map/routeB.png}" alt="bicycle" id="imgB">
+                            <span th:text="#{main.route.bicycle}">자전거경로</span>
+                        </div>
+                    </div>
+                    <div class="button-container">
+                        <i class="fas fa-location-arrow fa-2x"></i>
+                        <span id="hereToD" th:text="#{main.button.here.to.depart}">여기서 출발</span>
+                        <button id="departureB" class="info-button" th:text="#{main.button.depart}">출발지</button>
+                        <i class="fas fa-arrow-right fa-2x"></i>
+                        <button id="arrivalB" class="info-button" th:text="#{main.button.arrival}">도착지</button><br>
+                    </div>
+                    <div class="route-container" id="routeInfo">
+                        여기에 경로에 대한 정보 표시!!!@~!@~!@~!@~!@
                     </div>
                 </ul>
 
