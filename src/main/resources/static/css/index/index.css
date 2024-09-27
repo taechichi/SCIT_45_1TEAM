@@ -143,6 +143,8 @@ ruby{
     font-size: 20px;
 }
 
+
+
 /* 지도 스타일 */
 #map {
     position: absolute;
@@ -188,25 +190,29 @@ ruby{
 #info-panel {
     top: 100px;
     left: 10px;
-    width: 40%;
     background: white;
     padding: 10px;
     box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
     display: none;
     list-style: none; /* 리스트 스타일 제거 */
-    margin: 0; /* 마진 제거 */
+    position: relative;
+    margin: 5px;
+    width: 50%;
 }
 
-/*마커 클릭 시 정보 패널*/
+/*정보 패널 > 경로 패널*/
 #route-panel {
     top: 100px;
     left: 10px;
-    width: 40%;
     background: white;
     padding: 10px;
     box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
     list-style: none; /* 리스트 스타일 제거 */
-    margin: 0; /* 마진 제거 */
+    position: relative;
+    display: none;
+    margin: 5px;
+    width: 30%;
+    height: 50%;
 }
 
 /* 버튼 컨테이너 스타일링 */
@@ -299,7 +305,6 @@ ruby{
 #toB{
     height: 40px;
     width: 40px;
-
 }
 
 /* 공유 버튼 스타일링 */
@@ -359,14 +364,6 @@ ruby{
      align-items: center;
  }
 
-/*마커 클릭 시 정보 패널*/
-#info-panel {
-    position: relative;
-    margin: 5px;
-    width: 40%;
-    background: white;
-    display: none;
-}
 
 /* 패널 내 이미지 스타일 */
 #panel-image {
@@ -381,7 +378,7 @@ ruby{
 }
 
 /* 닫기 버튼 스타일 */
-#closeBtn {
+#closeBtn, #closeRouteBtn {
     background-color: white;
     color: black;
     cursor: pointer;

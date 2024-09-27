@@ -544,8 +544,32 @@
             if (routePanel.style.display === 'none' || routePanel.style.display === '') {
                 routePanel.style.display = 'block';  // route-panel을 보여줌
             }
+            let infoPanel = document.getElementById("info-panel");
+            infoPanel.style.display = 'none';
+            isPanelVisible = false;
         })
 
+        //x 경로 패널 버튼클릭 이벤트 (패널정보 none)
+        document.getElementById('closeRouteBtn').addEventListener('click', function(){
+            let routePanel = document.getElementById("route-panel");
+            routePanel.style.display = 'none';
+            let infoPanel = document.getElementById("info-panel");
+            infoPanel.style.display = 'block';
+            isPanelVisible = true;
+        });
+
+        document.getElementById('infoB').addEventListener('click', function() {
+            let infoPanel = document.getElementById("info-panel");
+
+            // 패널이 열려 있으면 닫고, 닫혀 있으면 열기
+            if (infoPanel.style.display === 'block') {
+                infoPanel.style.display = 'none';  // 패널을 닫음
+                isPanelVisible = false;  // 패널 상태 업데이트
+            } else {
+                infoPanel.style.display = 'block';  // 패널을 엶
+                isPanelVisible = true;  // 패널 상태 업데이트
+            }
+        });
 
         // 공유버튼 클릭 시
         document.getElementById("shareBtn").addEventListener('click', function() {
@@ -638,38 +662,29 @@
     // 전역 변수로 선언(출발/도착지 재설정 및 경로표시 리로드를 위해)
     let walkingRenderer = null;
     let bicyclingRenderer = null;
-    let walkingMarker = null;
-    let bicyclingMarker = null;
 
-    // document 또는 특정 상위 요소에 이벤트 위임
+    // 이벤트 위임을 사용하여 클릭 이벤트 처리
     document.addEventListener('click', function(event) {
-        // 도보 경로 버튼이 클릭되었는지 확인
-        if (event.target && event.target.id === 'walkingB') {
+        let target = event.target;
+
+        // 도보 경로 버튼 클릭 시
+        if (target.closest('#walkingB')) {
             if (departLat && departLong && arrivalLat && arrivalLong) {
                 // 기존 자전거 경로, 마커, 정보창 제거
                 if (bicyclingRenderer) {
                     bicyclingRenderer.setMap(null);
-                }
-                if (bicyclingMarker) {
-                    bicyclingMarker.setMap(null); // 기존 자전거 경로 마커 제거
-                    bicyclingMarker = null; // 변수 초기화
                 }
                 calculateWalkingRoute();  // 도보 경로 계산 함수 호출
             } else {
                 alert(markerFirst);
             }
         }
-
-        // 자전거 경로 버튼이 클릭되었는지 확인
-        if (event.target && event.target.id === 'bicycleB') {
+        // 자전거 경로 버튼 클릭 시
+        else if (target.closest('#bicycleB')) {
             if (departLat && departLong && arrivalLat && arrivalLong) {
                 // 기존 도보 경로, 마커, 정보창 제거
                 if (walkingRenderer) {
                     walkingRenderer.setMap(null);
-                }
-                if (walkingMarker) {
-                    walkingMarker.setMap(null);
-                    walkingMarker = null; // 변수 초기화
                 }
                 calculateBicyclingRoute();  // 자전거 경로 계산 함수 호출
             } else {
@@ -700,7 +715,8 @@
                 origin: {lat: departLat, lng: departLong},
                 destination: {lat: arrivalLat, lng: arrivalLong},
                 travelMode: google.maps.TravelMode.WALKING,
-                language: 'en'
+                language: 'en',
+                optimizeWaypoints: true // 경로 최적화 옵션 추가 - 빠르게 표시
             };
 
             walkingService.route(walkingRequest, function (result, status) {
@@ -709,26 +725,6 @@
                 if (status === google.maps.DirectionsStatus.OK) {
                     walkingRenderer.setDirections(result);
 
-                    // 도보 경로 시작점에 아이콘 추가
-                    const startLocation = result.routes[0].legs[0].start_location;
-                    console.log(startLocation);  // distance와 duration이 포함된 데이터를 로그로 확인
-
-                    // 기존 마커 제거
-                    if (walkingMarker) {
-                        walkingMarker.setMap(null);
-                    }
-
-                    // 전역 변수 업데이트
-                    walkingMarker = new google.maps.Marker({
-                        position: startLocation,
-                        map: map,
-                        icon: {
-                            url: '/img/map/walking.png', // 사용자 정의 아이콘 URL
-                            scaledSize: new google.maps.Size(60, 60) // 아이콘 크기 설정
-                        },
-                        title: '도보 경로 시작점'
-                    });
-
                     // 도보 경로의 거리와 소요 시간 출력
                     const walkingLeg = result.routes[0].legs[0];
 
@@ -736,7 +732,7 @@
                    document.getElementById('routeInfo').innerHTML
                     = `
                           <div>
-                            <h4>${walkingRoot}</h4>
+                            <h5>${walkingRoot} <img src="/img/map/walking.png" style="width: 40px; height: 40px;"></h5>
                             <p>${distanceLabel}: ${walkingLeg.distance.text}</p>
                             <p>${durationLabel}: ${walkingLeg.duration.text}</p>
                           </div>
@@ -753,7 +749,6 @@
     function calculateBicyclingRoute() {
 
         const bicyclingService = new google.maps.DirectionsService();
-        console.log(result); // result를 확인해 응답 데이터가 제대로 들어오는지 확인
 
         // 매번 새로운 DirectionsRenderer 생성
         if (bicyclingRenderer) {
@@ -769,31 +764,13 @@
             origin: { lat: departLat, lng: departLong },
             destination: { lat: arrivalLat, lng: arrivalLong },
             travelMode: google.maps.TravelMode.BICYCLING,
-            language: 'en'
+            language: 'en',
+            optimizeWaypoints: true // 경로 최적화 옵션 추가 - 빠르게 표시
         };
 
         bicyclingService.route(bicyclingRequest, function(result, status) {
             if (status === google.maps.DirectionsStatus.OK) {
                 bicyclingRenderer.setDirections(result);
-
-                // 자전거 경로 시작점에 아이콘 추가
-                const startLocation = result.routes[0].legs[0].start_location;
-
-                // 기존 마커 제거
-                if (bicyclingMarker) {
-                    bicyclingMarker.setMap(null);
-                }
-
-                // 전역 변수 업데이트
-                bicyclingMarker = new google.maps.Marker({
-                    position: startLocation,
-                    map: map,
-                    icon: {
-                        url: '/img/map/bicycle.png', // 사용자 정의 아이콘 URL
-                        scaledSize: new google.maps.Size(60, 60) // 아이콘 크기 설정
-                    },
-                    title: '자전거 경로 시작점'
-                });
 
                 // 선택된 경로 버튼 색 더 진하게
                 document.getElementById("bicycleB").style.backgroundColor = "#ffa013";
@@ -805,7 +782,7 @@
                 // HTML info-panel 내 요소에 직접 경로 정보 출력
                 document.getElementById('routeInfo').innerHTML = `
                        <div>
-                        <h4>${bicycleRoot}</h4>
+                        <h5>${bicycleRoot} <img src='/img/map/bicycle.png' style="width: 40px; height: 40px;"></h5>                       
                         <p>${distanceLabel}: ${bicyclingLeg.distance.text}</p>
                         <p>${durationLabel}: ${bicyclingLeg.duration.text}</p>
                       </div>`;
