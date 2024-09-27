@@ -64,6 +64,7 @@
     box-sizing: border-box;
 }
 
+/* 댓글 입력창 - input 부분 */
 #comment-input-section input {
     margin-right: 10px; /* 버튼과의 간격을 좀 더 넓힘 */
     padding: 8px;
@@ -77,6 +78,7 @@
     flex-grow: 1;*/
 }
 
+/* 댓글 입력창 - button 부분 */
 #comment-input-section button {
     padding: 8px 15px;
     background-color: #4CAF50;

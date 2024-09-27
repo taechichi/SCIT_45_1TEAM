@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const memberId = document.getElementById('loginMemberId').value;
     const nickname = document.getElementById('loginNickname').value;
     console.log("Id, nickname", memberId, nickname);
-
+    console.log("연결 시간:", connectionTime);
 
     // 외부 API를 통해 사용자의 위치 정보 얻기 (ipinfo.io 예시)
     // 서울의 경우 Seoul_Seoul이라고 나오는데, 일본의 경우에는 Tokyo_akihabara 처럼 나옴 (<-국제화 필요)
@@ -23,8 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
             userLocation = "Unknown";   // 위치 정보가 없을 때 기본값
         });*/
 
-    console.log("연결 시간:", connectionTime);
-
     let eventSource = null;
     const commentList = document.getElementById("commentList");
     const sendButton = document.getElementById("sendCommentButton");
@@ -35,6 +33,26 @@ document.addEventListener("DOMContentLoaded", function () {
     sendButton.disabled = true;
     inputField.disabled = true;
     inputField.placeholder = "채팅창 안정화 중...";  // 안내 문구 추가
+
+    // UTC 시간을 KST 시간으로 변환하는 함수
+    function convertToKST(utcTime) {
+        const date = new Date(utcTime);
+        date.setHours(date.getHours() + 9); // 9시간 더해서 한국 시간으로 변환
+        return date;
+    }
+
+    function formatTimeDifference(createDt) {
+        const now = new Date();
+        const createdTime = convertToKST(createDt); // 한국시간으로 보정
+        const diffInMinutes = Math.floor((now - createdTime) / (1000*60));
+
+        if(diffInMinutes < 60) {
+            return `${diffInMinutes}분 전`;
+        } else {
+            const diffInHours = Math.floor(diffInMinutes / 60);
+            return `${diffInHours}시간 전`;
+        }
+    }
 
     function startEventSource() {
         if (!eventSource) {
@@ -55,28 +73,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 const isAtBottom = commentListContainer.scrollTop + commentListContainer.clientHeight >= commentListContainer.scrollHeight;
 
                 comments.forEach(comment => { // 새로운 채팅 메시지들을 반복 처리
-
+                    // 댓글에 클래스 추가
                     // HTML 태그 생성
                     const li = document.createElement("li");
-                    // 댓글에 클래스 추가
                     li.classList.add("chat-comment");
+                    li.setAttribute("data-created-at", comment.createDt);
 
                     // 이미지 태그 추가
                     const img = document.createElement("img");
                     img.classList.add("img-profile", "rounded-circle");
                     img.src = `/member/download/${comment.memberId}`; // 서버에서 닉네임으로 이미지를 받아옴
-                    /*img.src = `/member/download`; // 서버에서 닉네임으로 이미지를 받아옴*/
                     img.alt = "Profile Picture";
 
                     // 댓글 내용 추가
                     const commentContent = document.createElement("div");
                     commentContent.classList.add("comment-content");
-                    commentContent.innerHTML = `(${comment.location}) [${comment.nickname}]<br>${comment.contents}`;
+                    const timeDifference = formatTimeDifference(comment.createDt);
+                    commentContent.innerHTML = `(${comment.location}) [${comment.nickname}]<br>${comment.contents} <br><small>${timeDifference}</small>`;
 
                     // li 요소에 이미지와 댓글 내용을 추가
                     li.appendChild(img);
                     li.appendChild(commentContent);
-
                     // 댓글 목록에 추가
                     commentList.appendChild(li);
 
@@ -106,6 +123,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // 댓글 전송 버튼 이벤트 (버튼 클릭 또는 엔터키 입력 시)
     function sendMessage() {
         const contents = inputField.value;
+        const currentTime = new Date().toISOString(); // 현재 시간을 전송할 때 포함
+
         if (contents.trim() !== "") { // 빈 내용이 아닐 경우에만 전송
             // 서버에 새로운 댓글을 전송하는 POST 요청
             fetch("/comments", {
@@ -118,12 +137,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     nickname: nickname,
                     contents: contents,
                     location: userLocation,
+                    createDt: currentTime,
                 })
             }).then(response => {
                 if (response.ok) {
                     console.log("댓글 전송 완료");
                     inputField.value = ""; // 입력 필드 초기화
-
                     // 채팅을 입력할 때는 항상 스크롤을 맨 아래로 이동
                     commentListContainer.scrollTop = commentListContainer.scrollHeight;
                 } else {
@@ -149,9 +168,22 @@ document.addEventListener("DOMContentLoaded", function () {
         })
     }
 
+    // 1분마다 댓글 시간을 업데이트하는 함수
+    function updateCommentTimes() {
+        const commentItems = document.querySelectorAll(".chat-comment"); // 댓글 리스트 선택
+        commentItems.forEach(commentItem => {
+            const timeElement = commentItem.querySelector(".comment-time"); // 시간 표시 요소 선택
+            const createdAt = commentItem.getAttribute("data-created-at"); // 댓글 생성 시간 속성에서 가져오기
+            timeElement.innerText = formatTimeDifference(createdAt); // 계산된 시간 차이로 업데이트
+        });
+    }
+
+// 주기적으로 실행 (1분마다)
+    setInterval(updateCommentTimes, 60000);
 });
 
-// ==== 댓글창 열고 닫는 기능 ================================================
+
+// ==== 댓글창 열고 닫는 기능 ================================================================================
 document.addEventListener("DOMContentLoaded", function() {
     const commentSection = document.getElementById("realtime_comment");
     const toggleButton = document.getElementById("toggleCommentButton");
