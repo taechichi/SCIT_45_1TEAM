@@ -5,8 +5,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let connectionTime = currentDate.toISOString();
 
     // ==== 로그인된 사용자 닉네임 가져오기 ====
-    const metaUser = document.querySelector("meta[name='authenticatedUser']");
-    let userNickname = null;
+    const memberId = document.getElementById('loginMemberId').value;
+    const nickname = document.getElementById('loginNickname').value;
+    console.log("Id, nickname", memberId, nickname);
+
 
     // 외부 API를 통해 사용자의 위치 정보 얻기 (ipinfo.io 예시)
     // 서울의 경우 Seoul_Seoul이라고 나오는데, 일본의 경우에는 Tokyo_akihabara 처럼 나옴 (<-국제화 필요)
@@ -21,12 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
             userLocation = "Unknown";   // 위치 정보가 없을 때 기본값
         });*/
 
-
-    if (metaUser) {
-        userNickname = metaUser.getAttribute('content'); // 로그인한 사용자의 닉네임
-    } else {
-        console.log("사용자가 로그인되지 않았습니다.");
-    }
     console.log("연결 시간:", connectionTime);
 
     let eventSource = null;
@@ -68,7 +64,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     // 이미지 태그 추가
                     const img = document.createElement("img");
                     img.classList.add("img-profile", "rounded-circle");
-                    img.src = `/member/download`; // 서버에서 닉네임으로 이미지를 받아옴
+                    img.src = `/member/download/${comment.memberId}`; // 서버에서 닉네임으로 이미지를 받아옴
+                    /*img.src = `/member/download`; // 서버에서 닉네임으로 이미지를 받아옴*/
                     img.alt = "Profile Picture";
 
                     // 댓글 내용 추가
@@ -117,7 +114,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Content-Type": "application/json" // 요청 데이터 타입은 JSON으로 설정
                 },
                 body: JSON.stringify({
-                    nickname: userNickname,
+                    memberId: memberId,
+                    nickname: nickname,
                     contents: contents,
                     location: userLocation,
                 })
@@ -145,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    if(sendButton && userNickname) {
+    if(sendButton && nickname) {
         sendButton.addEventListener("click", function () {
             sendMessage();  // 전송 버튼으로도 전송
         })
