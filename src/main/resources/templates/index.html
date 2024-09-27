@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <meta name="authenticatedUser" th:content="${member.nickname}">
 
     <title>SB Admin 2 - Dashboard</title>
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
@@ -94,7 +93,8 @@
 
             <!-- Page Wrapper -->
             <div id="wrapper">
-
+                <input id="loginMemberId" type="hidden" th:value="${member.memberId}" />
+                <input id="loginNickname" type="hidden" th:value="${member.nickname}" />
                 <!-- Sidebar -->
                 <div th:replace="~{fragments/menu :: menu}"></div>
                 <!-- End of Sidebar -->

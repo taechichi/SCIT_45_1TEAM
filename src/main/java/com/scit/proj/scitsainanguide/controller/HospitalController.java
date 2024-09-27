@@ -30,7 +30,7 @@ public class HospitalController {
             @RequestParam("file") MultipartFile file
     ) {
         try {
-            log.debug("File uploaded: " + file.getOriginalFilename());
+            //log.debug("File uploaded: " + file.getOriginalFilename());
             service.importDataFromJsonFile(file);  // 메서드 호출
             return "데이터가 성공적으로 추가되었습니다.";
         } catch (IOException e) {

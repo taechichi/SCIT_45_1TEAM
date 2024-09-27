@@ -1,6 +1,12 @@
 $(document).ready(function(){
-    $('#submitBtn').click(function(){
-        window.close();
+    $('#submitBtn').click(function(event){
+        event.preventDefault();  // 기본 submit 동작을 막음
+        // 폼 데이터를 전송
+        $('form').submit();
+        setTimeout(function(){
+            // 전송 후에 window 가 닫히도록.
+            window.close();
+        },0);
     })
     
     // 친구 검색 버튼을 눌렀을 때 새 창을 열어 친구 목록 검색 창 띄움

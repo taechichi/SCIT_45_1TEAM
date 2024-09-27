@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class RealtimeCommentDTO {
+    private String memberId;
     private Integer commentNum;
     private Integer replyNum;
     private String nickname;
