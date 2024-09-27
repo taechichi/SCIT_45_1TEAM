@@ -112,7 +112,7 @@ public class MyMessageRepositoryImpl implements MyMessageRepository {
     @Override
     public void insertMyMessage(MessageDTO dto) {
         // 받는이가 여러 명일 수도 있는, 콤마로 구분된 receiverIds를 String list에 담기
-        List<String> receiverIdList = Arrays.asList(dto.getReceiverId().split("\\s*,\\s*"));
+        String[] receiverIdList = dto.getReceiverId().split("\\s*,\\s*");
 
         // message entity 를 생성
         for (String receiverId : receiverIdList) {
