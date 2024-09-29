@@ -12,21 +12,21 @@
     <title>SB Admin 2 - Dashboard</title>
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
 
-<!--
-    &lt;!&ndash; google map script &ndash;&gt;
--->
-<!--    <script th:inline="javascript">-->
-<!--        // 브라우저 언어 감지 (ko, en, ja 등)-->
-<!--        let userLanguage = /*[[#{main.lang.country}]]*/ 'ko';-->
+<!--     google map script -->
 
 
-<!--        // 구글 맵 API 동적 로드-->
-<!--        let script = document.createElement('script');-->
-<!--        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places&language=${userLanguage}&loading=async`;-->
-<!--        script.async = true; // 비동기 로드 설정-->
-<!--        script.defer = true; // 파싱 후 실행 설정-->
-<!--        document.head.appendChild(script);-->
-<!--    </script>-->
+    <script th:inline="javascript">
+       // 브라우저 언어 감지 (ko, en, ja 등)
+        let userLanguage = /*[[#{main.lang.country}]]*/ 'ko';
+
+
+       // 구글 맵 API 동적 로드-->
+        let script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places&language=${userLanguage}&loading=async`;
+        script.async = true; // 비동기 로드 설정
+        script.defer = true; // 파싱 후 실행 설정
+        document.head.appendChild(script);
+    </script>
 
     <!-- 추가 할 라이브러리를 api의 libraries 부분 뒤에 추가 places,geometry -->
     <script th:src="@{/js/search_marker.js}"></script>
@@ -165,15 +165,22 @@
                         <!-- Begin Page Content -->
 
                 <!-- 지도 컨테이너 -->
-                <div id="map-container" style="position: relative; height: 95%; width: 100%;">
+                <div id="map-container" style="position: relative; height: 90%; width: 100%;">
                     <!-- 구글 지도 -->
                     <div id="map" style="height: 100%; width: 100%; z-index: 0;"></div>
 
                     <!-- 병원 버튼 -->
-                    <button type="button" id="hospitalFilterButton" th:text="#{main.button.hospital}"></button>
+                    <button type="button" id="hospitalFilterButton">
+                        <i class="fas fa-hospital"></i>
+                        <span th:text="#{main.button.hospital}"></span>
+                    </button>
 
                     <!-- 대피소 버튼 -->
-                    <button type="button" id="shelterFilterButton" th:text="#{main.button.shelter}"></button>
+                    <button type="button" id="shelterFilterButton">
+                        <i class="fas fa-house-user"></i>
+                        <span th:text="#{main.button.shelter}"></span>
+                    </button>
+
 
                     <!-- 내 위치 버튼 -->
                     <button id="myLocation"><img th:src="@{/img/map/myLocation.png}" class="img-40"></button>

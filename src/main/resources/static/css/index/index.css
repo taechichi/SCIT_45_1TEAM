@@ -157,11 +157,19 @@ ruby{
 #shelterFilterButton {
     position: absolute;  /* 지도 위에 고정시키기 위해 사용 */
     z-index: 1000;       /* 버튼을 지도 위로 올리기 */
-    padding: 10px 20px;
+    padding: 8px 16px;   /* 크기 조금 줄임 */
     background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border: none;        /* 태두리 제거 */
+    border-radius: 15px; /* 더 둥글게 */
     cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    font-size: 14px;     /* 글자 크기 약간 줄임 */
+    transition: box-shadow 0.3s ease; /* 그림자 변화에 부드러운 전환 효과 */
+}
+
+#hospitalFilterButton:hover,
+#shelterFilterButton:hover {
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 강화 */
 }
 
 /* 병원 버튼 */
@@ -178,7 +186,7 @@ ruby{
 
 /* 내 위치 버튼을 오른쪽 아래로부터 170px 띄우기 */
 #myLocation {
-    right: 10px;         /* 오른쪽 여백 */
+    right: 4px;         /* 오른쪽 여백 */
     bottom: 180px;       /* 아래쪽으로부터 170px 띄우기 */
     position: absolute;  /* 지도 위에 고정시키기 위해 사용 */
     z-index: 1;       /* 버튼을 지도 위로 올리기 */
@@ -186,34 +194,36 @@ ruby{
     border: none; /* 테두리 없음 */
     }
 
-/*마커 클릭 시 정보 패널*/
+/* 기존 info-panel 유지 */
 #info-panel {
-    top: 100px;
-    left: 10px;
-    background: white;
+    position: absolute;
+    top: 70px;
+    left: 224px;
+    background: rgba(255, 255, 255, 0.8);
     padding: 10px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     display: none;
-    list-style: none; /* 리스트 스타일 제거 */
-    position: relative;
-    margin: 5px;
-    width: 50%;
+    list-style: none;
+    width: 20%;
+    height: 100%;
+    z-index: 100;
 }
 
-/*정보 패널 > 경로 패널*/
 #route-panel {
-    top: 100px;
-    left: 10px;
-    background: white;
+    position: absolute;
+    top: 70px;
+    left: calc(224px + 20%);
+    background: rgba(255, 255, 255, 0.8);
     padding: 10px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-    list-style: none; /* 리스트 스타일 제거 */
-    position: relative;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    list-style: none;
     display: none;
-    margin: 5px;
-    width: 30%;
-    height: 50%;
+    margin: 0; /* 간격 제거 */
+    width: 25%; /* 경로 패널의 너비 */
+    height: 50%; /* 경로 패널의 높이 */
+    z-index: 100;
 }
+
 
 /* 버튼 컨테이너 스타일링 */
 .button-container {
@@ -372,8 +382,9 @@ ruby{
 }
 
 #panel-image img {
+    margin-top: 50px;
     width: 100%;
-    height: 100%;
+    height: 200px;
     margin-bottom: 10px;
 }
 
@@ -406,4 +417,7 @@ ruby{
     background-color: rgba(128, 128, 128, 0.1); /* 회색 배경 (연한 회색) */
 }
 
+html, body {
+    overflow-y: hidden;
+}
 

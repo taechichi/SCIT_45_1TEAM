@@ -395,7 +395,6 @@ function updateCnt($badgeCounter) {
     $badgeCounter.text(cnt + 1);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.nav-link.profile-picture-wrapper').forEach(function(friendElement) {
         let statusIndicator = friendElement.querySelector('.status-indicator');
         let statusId = statusIndicator.getAttribute('data-status-id');
@@ -424,7 +423,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 상태가 1일 경우 (평상시), 기본 상태로 유지
                 break;
         }
-    });
 });
 
 
