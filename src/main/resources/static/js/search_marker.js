@@ -166,21 +166,22 @@
     }
 
     //정보 패널을 보여주는 함수
-    function showInfoPanel(marker){
-        // 1. 기본 장소 정보 표시
+    function showInfoPanel(marker) {
         let placeName = marker.title;
-        let photoUrl = marker.placePhoto;    //place의 첫사진을 url을 받아 저장
+        let photoUrl = marker.placePhoto;
         let placeID = marker.placeId;
-        // 각 마커에 대한 페이징 변수
-        let currentPage = 0;  // 현재 페이지 번호
-        const pageSize = 10;  // 한 번에 가져올 게시글 개수
-        let isFetching = false;  // 데이터를 불러오는 중인지 여부
-        geocodeLatLng(marker.position, function (placeAdress){
-            let placeInfo =     `<div id="panel-image" class="panel-imgDiv">
-                                       <img src="${photoUrl}"></div>
-                                        <h3 id="panel-title">${placeName}</h3>
-                                        <hr>
-                                        <p id="panel-adress"> ${detailaddress} : ${placeAdress}</p>`;
+        let currentPage = 0;
+        const pageSize = 10;
+        let isFetching = false;
+
+        geocodeLatLng(marker.position, function(placeAdress) {
+            let placeInfo = `
+            <div id="panel-image" class="panel-imgDiv">
+                <img src="${photoUrl}">
+            </div>
+            <h3 id="panel-title">${placeName}</h3>
+            <hr>
+            <p id="panel-adress">주소: ${placeAdress}</p>`;
 
             let infoPanel = document.getElementById("info-panel");
             let infoPart = document.getElementById("info_part");
@@ -188,20 +189,27 @@
             infoPanel.style.display = 'block';
             isPanelVisible = true;
             document.getElementById('writeLink').setAttribute('href', `/board/write/${placeID}`);
-            favMarkerCheck(currentMarker.placeId);
+            if(marker.type !== 'myMarker'){
+                favMarkerCheck(currentMarker.placeId);
+            }
             board.innerHTML = '';
             // 게시글 목록 초기 로드
             getList(placeID, currentPage, pageSize, isFetching);
             currentPage++;
-            // 스크롤 이벤트로 추가 페이지 로드
-            window.addEventListener('scroll', function scrollHandler() {
-                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500 && !isFetching) {
+
+            // 스크롤 이벤트 추가
+            const infoPanelElement = document.getElementById('info-panel');
+            infoPanelElement.addEventListener('scroll', function() {
+                console.log('스크롤 진행 중:', infoPanelElement.scrollTop);
+                if (infoPanelElement.scrollTop + infoPanelElement.clientHeight >= infoPanelElement.scrollHeight - 100 && !isFetching) {
+                    console.log('스크롤 끝에 도달');
                     getList(placeID, currentPage, pageSize, isFetching);
-                    currentPage++;  // 다음 페이지로 이동
+                    currentPage++;
                 }
             });
         });
     }
+
 
     //마커배열을 확인해 마커들의 bound(경계값을 생성)
     function calculateBoundsForMarkers(markers) {
