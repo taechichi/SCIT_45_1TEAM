@@ -349,7 +349,7 @@
             });
     }
 
-    //게시글 목록 불러오기
+    // 게시글 목록 불러오기
     function getList(placeID, currentPage, pageSize, isFetching) {
         if (isFetching) return;  // 이미 데이터 요청 중이면 중단
         isFetching = true;
@@ -365,7 +365,15 @@
                 if (boardList && boardList.length > 0) {
                     let boardHtml = '';
                     boardList.forEach(boardItem => {
-                        boardHtml += `<li>${boardItem.title} - ${boardItem.contents}<br>`;
+                        let content = boardItem.contents;
+
+                        // 20글자마다 줄 바꿈 적용
+                        let formattedContent = insertLineBreaks(content, 20);
+
+                        // 100자 이상이면 '더 보기' 링크를 추가하고, 그렇지 않으면 전체 콘텐츠 표시
+                        let displayContent = formattedContent.slice(0, 100) + (content.length > 100 ? `... <a href="javascript:void(0);" class="toggle-link" onclick="toggleContent(this)">더 보기</a>` : '');
+
+                        boardHtml += `<div class="board-item">`;
 
                         // 사진이 있는 경우
                         if (boardItem.pictures && boardItem.pictures.length > 0) {
@@ -374,17 +382,39 @@
                             });
                         }
 
-                        boardHtml += `</li>`;
+                        boardHtml += `
+                        <p class="content" data-full="${formattedContent}" data-short="${displayContent}">${displayContent}</p>
+                    </div>`;
                     });
 
                     board.innerHTML += boardHtml;  // 게시글 추가
-
                 }
             })
             .catch(error => console.error('오류 발생:', error))
             .finally(() => {
                 isFetching = false;  // 데이터 로딩 완료
             });
+    }
+
+    // 접기/펼치기 기능
+    function toggleContent(link) {
+        let contentElement = link.previousElementSibling;
+        if (link.textContent === "더 보기") {
+            contentElement.innerHTML = contentElement.getAttribute('data-full');
+            link.textContent = "접기";
+        } else {
+            contentElement.innerHTML = contentElement.getAttribute('data-short');
+            link.textContent = "더 보기";
+        }
+    }
+
+    // 줄바꿈 함수
+    function insertLineBreaks(content, maxCharsPerLine) {
+        let result = '';
+        for (let i = 0; i < content.length; i += maxCharsPerLine) {
+            result += content.slice(i, i + maxCharsPerLine) + '<br>';
+        }
+        return result;
     }
 
     //맵 생성
