@@ -29,16 +29,21 @@ window.onload = function() {
     board = document.getElementById('board-list');  // DOM이 로드된 후에 요소를 찾음
 };
 
-//해시 부분을 받아 placeId를 추출
+// 해시 부분에서 인코딩된 placeId와 type을 디코딩
 function getLatLngFromUrl() {
-    const hash = window.location.hash; //#~~~ 처럼 해시 부분 추출
+    const hash = window.location.hash; // 예: #Base64인코딩된문자열
     if (hash) {
-        return decodeURIComponent(hash.substring(1)); // '#' 이후의 값을 추출 및 디코딩
+        // Base64로 인코딩된 문자열을 디코딩
+        const decodedData = atob(decodeURIComponent(hash.substring(1)));
+        const parts = decodedData.split('/');  // '/' 기준으로 나눔
+        const shareId = parts[0];
+        const type = parts[1] || 'default'; // type이 없을 경우 기본값 설정
+        return { shareId, type };
     }
     return null;
 }
 
-//placeId를 받아 재검색 하여 place 객체에 필드값을 저장하는 함수
+//placeId를 받아 재검색 하여 place 객체에 필드값을 저장하는 함수(hospital)
 function searchPlaceByPlaceId(placeId) {
     let userLanguage = navigator.language || navigator.userLanguage;
     const request = {
@@ -53,12 +58,31 @@ function searchPlaceByPlaceId(placeId) {
         //콜백 함수로 status 요청성공이면 createMarker
         if (status === google.maps.places.PlacesServiceStatus.OK) {
             //url 접속시 마커생성
-            createMarker(map, place, true, "share");
+            createMarker(map, place, true, "shareHospital");
         } else {
             console.error('Place details request failed');
         }
     });
 }
+
+//placeId를 받아 재검색 하여 place 객체에 필드값을 저장하는 함수(shelter)
+function searchShelterByPlaceId(placeId) {
+    // 서버로 요청을 보내 대피소 데이터를 가져옴
+    fetch(`/api/shelter/${placeId}`)
+        .then(response => response.json())
+        .then(place => {
+            if (place) {
+                // 데이터를 기반으로 대피소 위치에 마커 생성
+                createMarker(map, place, true, "shareShelter");
+            } else {
+                console.error('Shelter details not found');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching shelter details:', error);
+        });
+}
+
 
 //마커제거
 function  delMarker(){
@@ -70,7 +94,7 @@ function  delMarker(){
 function createMarker(map, place, visible=false, type = "none"){
     let markerOption;
     switch (type) {
-        case "dbShelter":
+        case "dbShelter": case "shareShelter":
             let shelterPosition = { lat: parseFloat(place.latitude), lng: parseFloat(place.longitude) };
             markerOption = {
                 placeId: place.shelterId,
@@ -126,7 +150,11 @@ function createMarker(map, place, visible=false, type = "none"){
         case "myMarker":
             marker.setAnimation(google.maps.Animation.BOUNCE);
             break;
-        case "share":
+        case "shareHospital":
+            currentMarker = marker;
+            setCurrentZoom(marker.position);
+            break;
+        case"shareShelter":
             currentMarker = marker;
             setCurrentZoom(marker.position);
             break;
@@ -378,18 +406,18 @@ function getList(placeID, currentPage, pageSize, isFetching) {
                     let isTruncated = contents.length > 60;
 
                     boardHtml += `
-                    <div>
-                        <p id="content-${boardItem.id}">${truncatedContents}</p>
-                        ${isTruncated ? `<a href="#" id="toggle-${boardItem.id}" onclick="toggleContent(${boardItem.id}, '${boardItem.contents}')">더보기</a>` : ''}
-                    </div>
-                `;
-
+                    <hr>
+                    <div class="board">
+                        <p class="board-content">${truncatedContents}</p>
+                        ${isTruncated ? `<a href="#" id="toggle-${boardItem.id}" class="board-more" onclick="toggleContent(${boardItem.id}, '${boardItem.contents}')">더보기</a>` : ''}
+                    `;
                     // 사진이 있는 경우
                     if (boardItem.pictures && boardItem.pictures.length > 0) {
                         boardItem.pictures.forEach(picture => {
-                            boardHtml += `<img src="${picture.path}" alt="${picture.oriFilename}" loading="lazy" width="100"><br>`;
+                            boardHtml += `<img src="${picture.path}" class="board-image" alt="${picture.oriFilename}" loading="lazy" width="100"><br>`;
                         });
                     }
+                    boardHtml +=`</div>`;
                 });
 
                 board.innerHTML += boardHtml;  // 게시글 추가
@@ -443,26 +471,19 @@ function initMap() {
             // minZoom:15,                 //지도 200m까지 축소
         });   //맵 지정 및 맵 옵션 설정
 
-        const shareId = getLatLngFromUrl();
-        if(shareId){
-            //alert(shareId);
-            searchPlaceByPlaceId(shareId);
+        //공유 url 확인
+        const shareData = getLatLngFromUrl();
+        if (shareData) {
+            const { shareId, type } = shareData;
+
+            if (type === "shelter") {
+                searchShelterByPlaceId(shareId);
+            } else if (type === "hospital") {
+                searchPlaceByPlaceId(shareId);
+            }
         }
-
-        // myMarker = new google.maps.Marker({
-        //     map: map,
-        //     title: "myLocation",
-        //     position : centerPosition,
-        //     icon: {
-        //         url: '/img/myMarker.png', // 사용자 정의 아이콘 URL
-        //         scaledSize: new google.maps.Size(50, 50), // 아이콘의 크기 조정
-        //         origin: new google.maps.Point(0, 0), // 아이콘의 원점
-        //         anchor: new google.maps.Point(25, 50) // 아이콘의 앵커 포인트
-        //     }
-        // });
-        // 현위치 바운스 애니메이션 설정
+        //내마커 생성
         createMarker(map,centerPosition,false,"myMarker");
-
 
         //맵 클릭 이벤트 (패널정보 none)
         google.maps.event.addListener(map,'click',function(){
@@ -541,17 +562,6 @@ function initMap() {
             //기존 마커 제거
             delMarker();
 
-            // 지도의 경계를 받아 마커표시 시 지도 바깥이면 숨김
-            // const bounds = map.getBounds(); // 현재 지도 경계 가져오기
-            //
-            // markers.forEach(marker => {
-            //     if (bounds.contains(marker.getPosition())) {     //마커가 현재 경계 안에 있는지 확인
-            //         marker.setMap(map); // 경계 내에 있으면 표시
-            //     } else {
-            //         marker.setMap(null); // 경계 밖에 있으면 숨김
-            //     }
-            // });
-
             // 지도 중심과 마커를 새 장소로 이동
             const bounds = new google.maps.LatLngBounds();              //LatLngBounds는 지도의 경계를 얻는 객체 bounds 초기화
             places.forEach((place) => {                                                 //places배열을 place로
@@ -609,13 +619,19 @@ function initMap() {
     // 공유버튼 클릭 시
     document.getElementById("shareBtn").addEventListener('click', function() {
         if (currentMarker) {
+            // placeId와 type을 인코딩
+            const placeId = currentMarker.placeId;
+            const type = currentMarker.type;
 
-            console.log("markerId:",currentMarker.placeId);
-            //hash 기반 url 생성 encode로 placeid를 인코딩하고 id를 #으로 변환
-            shareUrl = `${window.location.origin}/#${encodeURIComponent(currentMarker.placeId)}`;
+            // placeId와 type을 Base64로 인코딩
+            const encodedData = btoa(`${placeId}/${type}`);
+
+            // hash 기반 url 생성 - 인코딩된 데이터를 포함
+            shareUrl = `${window.location.origin}/#${encodedData}`;
             alert(shareUrl);
-            navigator.clipboard.writeText(shareUrl);
 
+            // URL을 클립보드에 복사
+            navigator.clipboard.writeText(shareUrl);
         } else {
             alert("No marker selected!");
         }
