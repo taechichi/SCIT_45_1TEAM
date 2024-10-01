@@ -194,11 +194,12 @@ function showInfoPanel(marker) {
         // 글쓰기 모달에 장소 제목 설정
         document.getElementById('writeModalPlaceTitle').innerText = placeName;
 
-        // 글쓰기 링크에 장소 ID 설정 (필요 없으면 생략 가능)
-        document.getElementById('writeLink').setAttribute('data-target', '#writeModal');
-
-        if(marker.type !== 'myMarker'){
+        const writeLink = document.getElementById('writeLink');
+        if(writeLink){
+            writeLink.setAttribute('data-target', '#writeModal');
+            // writeLink.setAttribute('href', `/board/write/${placeID}`);
             favMarkerCheck(currentMarker.placeId);
+        }
         board.innerHTML = '';
         // 게시글 목록 초기 로드
         getList(placeID, currentPage, pageSize, isFetching);
@@ -284,7 +285,7 @@ function fetchNearbyShelters() {
             if (data && data.length > 0) {
                 // 대피소 데이터가 있으면 지도에 표시
                 data.forEach(place => {
-                    console.log("확인데이터",place);
+                    // console.log("장소 확인데이터",place);
                     let marker = createMarker(map, place,false,"dbShelter"); // 대피소 마커 생성 함수
                     markers.push(marker);
                     calculateBoundsForMarkers(markers);
@@ -493,24 +494,25 @@ function initMap() {
         });
         // 즐겨찾기 버튼
         favBtn = document.getElementById('favMarker');
-        favImg = favBtn.querySelector('img'); // 버튼 내부의 이미지 요소 선택
+        if(favBtn){
+            favImg = favBtn.querySelector('img'); // 버튼 내부의 이미지 요소 선택
+            favBtn.addEventListener('click', function () {
+                // 이미지 변경
+                if (favImg.src.includes('whiteStar.png')) {
+                    favImg.src = '/img/map/yellowStar.png';
+                    favImg.style.width = "50px";  // 기존 크기 지정
+                    favImg.style.height = "50px"; // 기존 크기 지정
+                    favMarker(currentMarker.placeId);// 즐겨찾기 추가
+                } else {
+                    favImg.src = '/img/map/whiteStar.png';
+                    favImg.style.width = "50px";  // 기존 크기 지정
+                    favImg.style.height = "50px"; // 기존 크기 지정
+                    favMarkerRemove(currentMarker.placeId);
+                }
+            });
+        }
 
 
-
-        favBtn.addEventListener('click', function () {
-            // 이미지 변경
-            if (favImg.src.includes('whiteStar.png')) {
-                favImg.src = '/img/map/yellowStar.png';
-                favImg.style.width = "50px";  // 기존 크기 지정
-                favImg.style.height = "50px"; // 기존 크기 지정
-                favMarker(currentMarker.placeId);// 즐겨찾기 추가
-            } else {
-                favImg.src = '/img/map/whiteStar.png';
-                favImg.style.width = "50px";  // 기존 크기 지정
-                favImg.style.height = "50px"; // 기존 크기 지정
-                favMarkerRemove(currentMarker.placeId);
-            }
-        });
 
         // 검색창 search-input 에서 사용자가 입력한 값을 받아 저장
         const input = document.getElementById('search-input');              //search-input 에서 값을 받아 저장

@@ -107,15 +107,15 @@
                     <div id="info_part"></div>
                     <div class="button-container">
                         <button id="routeB" class="info-button" th:text="#{main.button.route}">경로</button>
-                        <button id="shareBtn" th:text="#{main.button.share}">친구에게 공유</button><br>
+                        <button id="shareBtn" th:text="#{main.button.share}">공유</button><br>
                     </div>
-                    <div id="favMarker">
+                    <div id="favMarker" sec:authorize="isAuthenticated()">
                         <img id="star" th:src="@{/img/map/whiteStar.png}" th:alt="#{menu.favorite.place}">
                     </div>
 
 
                     <!-- 글목록 -->
-                    <div>
+                    <div sec:authorize="isAuthenticated()">
                         <a id="writeLink" href="#" data-toggle="modal" data-target="#writeModal" th:text="#{main.link.comment}">글쓰기</a>                    </div>
                     <div id="board-list">
 
