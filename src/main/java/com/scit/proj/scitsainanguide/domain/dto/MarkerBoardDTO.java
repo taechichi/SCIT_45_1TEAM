@@ -21,4 +21,6 @@ public class MarkerBoardDTO {
     private Boolean deleteYn;
     private LocalDateTime deleteDt;
     private List<BoardPictureDTO> pictures;
+
+    private String placeId;
 }
