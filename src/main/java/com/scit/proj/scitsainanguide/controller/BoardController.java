@@ -19,15 +19,6 @@ public class BoardController {
 
     private final BoardService boardService;
 
-
-    @GetMapping("write/{placeID}")
-    public String write(@PathVariable("placeID") String hospitalName, Model model) {
-
-        model.addAttribute("hospitalName", hospitalName);
-
-        return "board/writeForm";
-    }
-
     @PostMapping("write")
     public String write(
             @ModelAttribute MarkerBoardDTO boardDTO,
