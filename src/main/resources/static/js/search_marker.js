@@ -503,7 +503,7 @@
             //places_changed는 검색창에 엔터나 목록에서 장소 선택시 이벤트 발생
             const places = searchBox.getPlaces();       //places에는 검색장소 목록이 배열로 저장됨
 
-            if (places.length == 0) {                   //places.length는 검색결과로 반환된 장소의 수
+            if (places.length === 0) {                   //places.length는 검색결과로 반환된 장소의 수
                 return;                                 //검색장소가 0개 일 경우 return을 통해 아래 함수는 실행이 안된다.
             }
             alert("result"+places[0].name)              //검색장소의 첫번째로 나오는 장소 알림
@@ -552,9 +552,6 @@
             if (routePanel.style.display === 'none' || routePanel.style.display === '') {
                 routePanel.style.display = 'block';  // route-panel을 보여줌
             }
-            let infoPanel = document.getElementById("info-panel");
-            infoPanel.style.display = 'none';
-            isPanelVisible = false;
         })
 
         //x 경로 패널 버튼클릭 이벤트 (패널정보 none)
