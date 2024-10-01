@@ -1,27 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // === 전역 변수 정의 ===
     let userLocation = "Unknown";
     let currentDate = new Date();
     currentDate.setHours(currentDate.getHours() + 9); // 동경시간 보정
     let connectionTime = currentDate.toISOString();
 
-    // ==== 로그인된 사용자 닉네임 가져오기 ====
+    // ==== 로그인된 사용자 닉네임과 ID 가져오기 ====
     const memberId = document.getElementById('loginMemberId').value;
     const nickname = document.getElementById('loginNickname').value;
     console.log("Id, nickname", memberId, nickname);
     console.log("연결 시간:", connectionTime);
-
-    // 외부 API를 통해 사용자의 위치 정보 얻기 (ipinfo.io 예시)
-    // 서울의 경우 Seoul_Seoul이라고 나오는데, 일본의 경우에는 Tokyo_akihabara 처럼 나옴 (<-국제화 필요)
-    /*fetch('https://ipinfo.io/json?token=8024395341b3f3')
-        .then(response => response.json())
-        .then(data => {
-            userLocation = `${data.region}_${data.city}`;   // 도시 정보 추출
-            console.log("User location: ", userLocation);
-        })
-        .catch(error => {
-            console.error("Error fetching location: ", error);
-            userLocation = "Unknown";   // 위치 정보가 없을 때 기본값
-        });*/
 
     let eventSource = null;
     const commentList = document.getElementById("commentList");
@@ -34,26 +22,26 @@ document.addEventListener("DOMContentLoaded", function () {
     inputField.disabled = true;
     inputField.placeholder = "채팅창 안정화 중...";  // 안내 문구 추가
 
-    // UTC 시간을 KST 시간으로 변환하는 함수
-    function convertToKST(utcTime) {
-        const date = new Date(utcTime);
-        date.setHours(date.getHours() + 9); // 9시간 더해서 한국 시간으로 변환
-        return date;
-    }
+    // SSE 연결 시작
+    startEventSource();
 
-    function formatTimeDifference(createDt) {
-        const now = new Date();
-        const createdTime = convertToKST(createDt); // 한국시간으로 보정
-        const diffInMinutes = Math.floor((now - createdTime) / (1000*60));
-
-        if(diffInMinutes < 60) {
-            return `${diffInMinutes}분 전`;
-        } else {
-            const diffInHours = Math.floor(diffInMinutes / 60);
-            return `${diffInHours}시간 전`;
+    // 댓글 전송 버튼 이벤트 (버튼 클릭 또는 엔터키 입력 시)
+    inputField.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); // 기본 엔터 동작 방지
+            sendMessage();  // 엔터키로도 전송
         }
+    });
+
+    if (sendButton && nickname) {
+        sendButton.addEventListener("click", function () {
+            sendMessage();  // 전송 버튼으로도 전송
+        });
     }
 
+    // ======== 함수 정의 영역 =========
+
+    // SSE 연결 시작하는 함수
     function startEventSource() {
         if (!eventSource) {
             eventSource = new EventSource(`/comments/stream?since=${connectionTime}`);
@@ -61,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             eventSource.onopen = function () {
                 console.log("SSE 연결이 성공적으로 열렸습니다.");
-                // 연결이 성공하면 전송 버튼과 입력창 활성화
                 sendButton.disabled = false;
                 inputField.disabled = false;
                 inputField.placeholder = "댓글 입력";  // 안내 문구 삭제
@@ -72,65 +59,36 @@ document.addEventListener("DOMContentLoaded", function () {
                 const comments = JSON.parse(event.data); // 서버에서 받은 데이터를 JSON 형식으로 파싱
                 const isAtBottom = commentListContainer.scrollTop + commentListContainer.clientHeight >= commentListContainer.scrollHeight;
 
-                comments.forEach(comment => { // 새로운 채팅 메시지들을 반복 처리
-                    // 댓글에 클래스 추가
-                    // HTML 태그 생성
-                    const li = document.createElement("li");
-                    li.classList.add("chat-comment");
-                    li.setAttribute("data-created-at", comment.createDt);
+                // 전체 댓글 다시 그리기
+                renderComments(comments);
 
-                    // 이미지 태그 추가
-                    const img = document.createElement("img");
-                    img.classList.add("img-profile", "rounded-circle");
-                    img.src = `/member/download/${comment.memberId}`; // 서버에서 닉네임으로 이미지를 받아옴
-                    img.alt = "Profile Picture";
-
-                    // 댓글 내용 추가
-                    const commentContent = document.createElement("div");
-                    commentContent.classList.add("comment-content");
-                    const timeDifference = formatTimeDifference(comment.createDt);
-                    commentContent.innerHTML = `(${comment.location}) [${comment.nickname}]<br>${comment.contents} <br><small>${timeDifference}</small>`;
-
-                    // li 요소에 이미지와 댓글 내용을 추가
-                    li.appendChild(img);
-                    li.appendChild(commentContent);
-                    // 댓글 목록에 추가
-                    commentList.appendChild(li);
-
-                    if(isAtBottom) { // 스크롤이 맨 아래에 있을 때만 자동으로 하단으로 이동
-                        // 스크롤을 맨 아래로 이동
-                        commentListContainer.scrollTop = commentListContainer.scrollHeight;
-                    }
-                });
+                if (isAtBottom) { // 스크롤이 맨 아래에 있을 때만 자동으로 하단으로 이동
+                    commentListContainer.scrollTop = commentListContainer.scrollHeight;
+                }
             };
 
             eventSource.onerror = function (event) {
                 console.error("SSE 연결에서 오류가 발생했습니다.", event);
                 eventSource.close();
                 eventSource = null; // SSE 연결을 닫음
-                // 연결이 끊어지면 전송 버튼과 입력창 비활성화
                 sendButton.disabled = true;
                 inputField.disabled = true;
-                inputField.placeholder = "채팅창 안정화 중...";  // 다시 안내 문구 표시
-                // 2초 후에 재연결 시도
+                inputField.placeholder = "채팅창 안정화 중...";
                 setTimeout(startEventSource, 2000);
             };
         }
     }
 
-    startEventSource(); // SSE 연결 시작
-
-    // 댓글 전송 버튼 이벤트 (버튼 클릭 또는 엔터키 입력 시)
+    // 댓글 전송 함수
     function sendMessage() {
         const contents = inputField.value;
         const currentTime = new Date().toISOString(); // 현재 시간을 전송할 때 포함
 
-        if (contents.trim() !== "") { // 빈 내용이 아닐 경우에만 전송
-            // 서버에 새로운 댓글을 전송하는 POST 요청
+        if (contents.trim() !== "") {
             fetch("/comments", {
-                method: "POST", // HTTP 메소드는 POST로 설정
+                method: "POST",
                 headers: {
-                    "Content-Type": "application/json" // 요청 데이터 타입은 JSON으로 설정
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     memberId: memberId,
@@ -143,8 +101,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (response.ok) {
                     console.log("댓글 전송 완료");
                     inputField.value = ""; // 입력 필드 초기화
-                    // 채팅을 입력할 때는 항상 스크롤을 맨 아래로 이동
                     commentListContainer.scrollTop = commentListContainer.scrollHeight;
+                    updateCommentTimes();   // 채팅을 입력할 때 시간 업데이트
                 } else {
                     console.log(`댓글 전송 실패: 상태코드 ${response.status}`);
                 }
@@ -154,32 +112,70 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // 전송 버튼 클릭 및 엔터키 입력 이벤트 통합 처리
-    inputField.addEventListener("keydown", function (event) {
-        if(event.key === "Enter") {
-            event.preventDefault(); // 기본 엔터 동작 방지
-            sendMessage();  // 엔터키로도 전송
-        }
-    });
+    // 댓글 목록을 다시 그리는 함수
+    function renderComments(comments) {
+        comments.forEach(comment => {
+            const li = document.createElement("li");
+            li.classList.add("chat-comment");
+            li.setAttribute("data-created-at", comment.createDt); // 댓글 생성 시간 설정
 
-    if(sendButton && nickname) {
-        sendButton.addEventListener("click", function () {
-            sendMessage();  // 전송 버튼으로도 전송
-        })
-    }
+            // 이미지 태그 추가
+            const img = document.createElement("img");
+            img.classList.add("img-profile", "rounded-circle");
+            img.src = `/member/download/${comment.memberId}`; // 서버에서 닉네임으로 이미지를 받아옴
+            img.alt = "Profile Picture";
 
-    // 1분마다 댓글 시간을 업데이트하는 함수
-    function updateCommentTimes() {
-        const commentItems = document.querySelectorAll(".chat-comment"); // 댓글 리스트 선택
-        commentItems.forEach(commentItem => {
-            const timeElement = commentItem.querySelector(".comment-time"); // 시간 표시 요소 선택
-            const createdAt = commentItem.getAttribute("data-created-at"); // 댓글 생성 시간 속성에서 가져오기
-            timeElement.innerText = formatTimeDifference(createdAt); // 계산된 시간 차이로 업데이트
+            // 댓글 내용 추가
+            const commentContent = document.createElement("div");
+            commentContent.classList.add("comment-content");
+            const timeDifference = formatTimeDifference(comment.createDt);
+            commentContent.innerHTML = `(${comment.location}) [${comment.nickname}]<br>${comment.contents} <br><small class="comment-time">${timeDifference}</small>`;
+
+            li.appendChild(img);
+            li.appendChild(commentContent);
+            commentList.appendChild(li);
         });
     }
 
-// 주기적으로 실행 (1분마다)
-    setInterval(updateCommentTimes, 60000);
+    // 시간 차이를 계산하는 함수
+    function formatTimeDifference(createDt) {
+        const now = new Date();
+        const createdTime = convertToKST(createDt); // 한국시간으로 보정
+        const diffInSeconds = Math.floor((now - createdTime) / 1000);   // 초 단위 차이
+
+        if(diffInSeconds <= 1) {
+            return "방금 전";  // 1초 이하는 "방금 전"으로 표시
+        } else if(diffInSeconds < 60) {
+            return `${diffInSeconds}초 전`;   // 1분 미만은 초 단위로 표시
+        } else if(diffInSeconds < 3600) {
+            const diffInMinutes = Math.floor(diffInSeconds / 60);
+            return `${diffInMinutes}분 전`;
+        } else {
+            const diffInHours = Math.floor(diffInSeconds / 3600);
+            return `${diffInHours}시간 전`;
+        }
+    }
+
+
+    // UTC 시간을 KST로 변환하는 함수
+    function convertToKST(utcTime) {
+        const date = new Date(utcTime);
+        date.setHours(date.getHours() + 9); // 9시간 더해서 한국 시간으로 변환
+        return date;
+    }
+
+
+    // 댓글 시간 업데이트 함수
+    function updateCommentTimes() {
+        const commentItems = document.querySelectorAll(".chat-comment");
+        commentItems.forEach(commentItem => {
+            const timeElement = commentItem.querySelector(".comment-time");
+            const createdAt = commentItem.getAttribute("data-created-at");
+            if (timeElement && createdAt) {
+                timeElement.innerText = formatTimeDifference(createdAt);
+            }
+        });
+    }
 });
 
 

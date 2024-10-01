@@ -1,5 +1,6 @@
 package com.scit.proj.scitsainanguide.controller;
 
+import com.scit.proj.scitsainanguide.domain.CommentResponseDTO;
 import com.scit.proj.scitsainanguide.domain.dto.RealtimeCommentDTO;
 import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.RealtimeCommentService;
@@ -50,6 +51,7 @@ public class RealtimeCommentController {
         List<RealtimeCommentDTO> recentComments = realtimeCommentService.findRealtimeCommentsAfterSince(since);
 
         try {
+            // 댓글 데이터를 전송
             emitter.send(recentComments);
         } catch (IOException e) {
             emitters.remove(emitter);
@@ -64,25 +66,19 @@ public class RealtimeCommentController {
     public ResponseEntity<String> postComments(
             @RequestBody RealtimeCommentDTO comment,
             @AuthenticationPrincipal AuthenticatedUser user
-            ) {
+    ) {
         // 로그인한 사용자만 댓글 작성 가능
-        if(user == null) {
+        if (user == null) {
             log.debug("로그인되지 않은 사용자의 요청");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 후 댓글을 작성할 수 있습니다.");
         }
 
-        // 디버깅을 위해 로그 추가
-        log.debug("Received comment from user: {}", user.getNickname());
-        log.debug("Comment contents: {}", comment.getContents());
-
-
         comment.setNickname(user.getNickname());
-        log.debug("DB에 댓글 저장: {}", comment);
-        realtimeCommentService.saveRealtimeComment(comment);    // DB에 메시지 저장
+        realtimeCommentService.saveRealtimeComment(comment); // DB에 메시지 저장
         List<RealtimeCommentDTO> comments = List.of(comment);
 
         // 연결된 모든 클라이언트에게 메시지 전송
-        for(SseEmitter emitter : emitters) {
+        for (SseEmitter emitter : emitters) {
             try {
                 emitter.send(comments);
             } catch (IOException e) {
