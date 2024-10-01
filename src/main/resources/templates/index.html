@@ -116,8 +116,7 @@
 
                     <!-- 글목록 -->
                     <div>
-                        <a id="writeLink" th:href="@{/board/write/${palceID}}" th:text="#{main.link.comment}">글쓰기</a>
-                    </div>
+                        <a id="writeLink" href="#" data-toggle="modal" data-target="#writeModal" th:text="#{main.link.comment}">글쓰기</a>                    </div>
                     <div id="board-list">
 
                     </div>
@@ -148,7 +147,7 @@
                         <button id="arrivalB" class="info-button" th:text="#{main.button.arrival}">도착지</button><br>
                     </div>
                     <div class="route-container" id="routeInfo">
-                        여기에 경로에 대한 정보 표시!!!@~!@~!@~!@~!@
+                        <pre th:text="#{main.route.print}">이곳에 경로에 대한 정보가 출력됩니다.</pre>
                     </div>
                 </ul>
 
@@ -185,6 +184,8 @@
                     <!-- 내 위치 버튼 -->
                     <button id="myLocation"><img th:src="@{/img/map/myLocation.png}" class="img-40"></button>
                 </div>
+                <!-- 마커 글쓰기 모달 -->
+                <div th:replace="~{fragments/writeModal :: writeModal}"></div>
 
                 <!-- 실시간 댓글 반응 창 -->
                 <div th:replace="~{fragments/realtimeComment :: realtimeCommentFragment}"></div>

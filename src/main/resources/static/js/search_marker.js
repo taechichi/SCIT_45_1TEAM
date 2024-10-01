@@ -146,7 +146,6 @@ function createMarker(map, place, visible=false, type = "none"){
         showInfoPanel(marker);
     }
 
-
     return marker;
 }
 
@@ -191,7 +190,14 @@ function showInfoPanel(marker) {
         infoPart.innerHTML = placeInfo;
         infoPanel.style.display = 'block';
         isPanelVisible = true;
-        document.getElementById('writeLink').setAttribute('href', `/board/write/${placeID}`);
+
+        // 글쓰기 모달에 장소 제목 설정
+        document.getElementById('writeModalPlaceTitle').innerText = placeName;
+
+        // 글쓰기 링크에 장소 ID 설정 (필요 없으면 생략 가능)
+        document.getElementById('writeLink').setAttribute('data-target', '#writeModal');
+
+        if(marker.type !== 'myMarker'){
             favMarkerCheck(currentMarker.placeId);
         board.innerHTML = '';
         // 게시글 목록 초기 로드
@@ -572,9 +578,6 @@ function initMap() {
         if (routePanel.style.display === 'none' || routePanel.style.display === '') {
             routePanel.style.display = 'block';  // route-panel을 보여줌
         }
-        let infoPanel = document.getElementById("info-panel");
-        infoPanel.style.display = 'none';
-        isPanelVisible = false;
     })
 
     //x 경로 패널 버튼클릭 이벤트 (패널정보 none)
