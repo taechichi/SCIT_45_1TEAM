@@ -156,7 +156,7 @@ ruby{
 #hospitalFilterButton,
 #shelterFilterButton {
     position: absolute;  /* 지도 위에 고정시키기 위해 사용 */
-    z-index: 1000;       /* 버튼을 지도 위로 올리기 */
+    z-index: 10;       /* 버튼을 지도 위로 올리기 */
     padding: 8px 16px;   /* 크기 조금 줄임 */
     background-color: white;
     border: none;        /* 태두리 제거 */
@@ -199,7 +199,7 @@ ruby{
     position: absolute;
     top: 70px;
     left: 224px;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.9);
     padding: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     display: none;
@@ -214,7 +214,7 @@ ruby{
     position: absolute;
     top: 70px;
     left: calc(224px + 20%);
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.7);
     padding: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     list-style: none;
@@ -423,7 +423,7 @@ html, body {
 }
 
 #board-list{
-    width: 250px;                /* 50px 너비로 설정 */
+    width: 270px;                /* 50px 너비로 설정 */
     overflow-x: hidden;         /* 가로 넘침을 숨김 */
     word-wrap: break-word;      /* 단어가 길면 자동으로 잘라서 줄바꿈 */
     white-space: normal;        /* 기본 줄바꿈 허용 */
@@ -484,4 +484,16 @@ html, body {
 }
 #writeModalPlaceTitle {
     font-size: 25px;
+}
+
+#writeLink {
+    padding: 3px 14px;
+    border-radius: 30px;
+    border: solid 1px #007bff;
+    background-color: white;
+}
+
+#listHr {
+    border: 1px solid #0056b3;
+    width: 340px;
 }

@@ -406,7 +406,7 @@ function getList(placeID, currentPage, pageSize, isFetching) {
                     let isTruncated = contents.length > 60;
 
                     boardHtml += `
-                    <hr>
+                    <hr id="listHr">
                     <div class="board">
                         <p id="content-${boardItem.id}" class="board-content">${truncatedContents}</p>
                         ${isTruncated ? `<a href="#" id="toggle-${boardItem.id}" class="board-more" onclick="toggleContent(${boardItem.id}, '${boardItem.contents}')">더보기</a>` : ''}
