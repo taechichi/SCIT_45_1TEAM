@@ -59,8 +59,8 @@ CREATE TABLE shelter
 CREATE TABLE tag_category
 (
     tag_id   INTEGER     NOT NULL AUTO_INCREMENT,
-    contents VARCHAR(30) NOT NULL,
-    lang_cd  VARCHAR(2)  NOT NULL,
+    tag_content VARCHAR(30) NOT NULL,
+    tag_content_ja  VARCHAR(30)  NOT NULL,
     PRIMARY KEY (tag_id)
 );
 
