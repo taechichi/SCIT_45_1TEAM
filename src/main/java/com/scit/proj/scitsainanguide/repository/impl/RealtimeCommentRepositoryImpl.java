@@ -92,7 +92,6 @@ public class RealtimeCommentRepositoryImpl implements RealtimeCommentRepository 
     private RealtimeCommentDTO convertToRealtimeCommentDTO(RealtimeCommentEntity realtimeCommentEntity) {
         return RealtimeCommentDTO.builder()
                 .commentNum(realtimeCommentEntity.getCommentNum())
-                .replyNum(realtimeCommentEntity.getReplyRealtimeComment() != null ? realtimeCommentEntity.getReplyRealtimeComment().getCommentNum() : null)
                 .nickname(realtimeCommentEntity.getNickname())
                 .location(realtimeCommentEntity.getLocation())
                 .contents(realtimeCommentEntity.getContents())

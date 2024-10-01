@@ -56,7 +56,6 @@ public class RealtimeCommentService {
         return RealtimeCommentDTO.builder()
                 .commentNum(realtimeCommentEntity.getCommentNum())
                 .nickname(realtimeCommentEntity.getNickname())
-                .replyNum(realtimeCommentEntity.getReplyRealtimeComment() != null ? realtimeCommentEntity.getReplyRealtimeComment().getCommentNum() : null)
                 .location(realtimeCommentEntity.getLocation())
                 .contents(realtimeCommentEntity.getContents())
                 .createDt(realtimeCommentEntity.getCreateDt())
