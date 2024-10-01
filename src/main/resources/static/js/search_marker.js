@@ -135,14 +135,17 @@ function createMarker(map, place, visible=false, type = "none"){
     }
 
     //마커 클릭 이벤트
-    google.maps.event.addListener(marker, 'click', function (){
-        showInfoPanel(marker);
-        currentMarker = marker;             //현재 선택마커를 currentMarker에 저장
-    });
+    if(type !== "myMarker"){
+        google.maps.event.addListener(marker, 'click', function (){
+            showInfoPanel(marker);
+            currentMarker = marker;             //현재 선택마커를 currentMarker에 저장
+        });
+    }
     //visible = true 정보패널 표시
     if(visible){
         showInfoPanel(marker);
     }
+
 
     return marker;
 }
@@ -189,9 +192,7 @@ function showInfoPanel(marker) {
         infoPanel.style.display = 'block';
         isPanelVisible = true;
         document.getElementById('writeLink').setAttribute('href', `/board/write/${placeID}`);
-        if(marker.type !== 'myMarker'){
             favMarkerCheck(currentMarker.placeId);
-        }
         board.innerHTML = '';
         // 게시글 목록 초기 로드
         getList(placeID, currentPage, pageSize, isFetching);
@@ -200,9 +201,7 @@ function showInfoPanel(marker) {
         // 스크롤 이벤트 추가
         const infoPanelElement = document.getElementById('info-panel');
         infoPanelElement.addEventListener('scroll', function() {
-            console.log('스크롤 진행 중:', infoPanelElement.scrollTop);
             if (infoPanelElement.scrollTop + infoPanelElement.clientHeight >= infoPanelElement.scrollHeight - 100 && !isFetching) {
-                console.log('스크롤 끝에 도달');
                 getList(placeID, currentPage, pageSize, isFetching);
                 currentPage++;
             }
