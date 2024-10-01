@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scit.proj.scitsainanguide.domain.entity.ShelterEntity;
 import com.scit.proj.scitsainanguide.repository.ShelterRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -68,5 +69,16 @@ public class ShelterService {
         // Repository를 호출하여 데이터베이스에서 대피소 정보 가져오기
         return shelterRepository.findNearbyShelters(latitude, longitude);
     }
+
+    //쉘터 검색
+    public ShelterEntity findByPlaceId(String placeId) {
+        // placeId가 문자열일 경우, 정수로 변환
+        Integer shelterId = Integer.valueOf(placeId);
+
+        // 변환한 shelterId를 사용하여 데이터베이스에서 엔티티를 검색
+        return shelterRepository.findById(shelterId)
+                .orElseThrow(() -> new EntityNotFoundException("조회한 쉘터가 DB에 없습니다"));
+    }
+
 
 }

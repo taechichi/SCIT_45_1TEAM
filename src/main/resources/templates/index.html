@@ -110,13 +110,12 @@
                         <button id="shareBtn" th:text="#{main.button.share}">공유</button><br>
                     </div>
                     <div id="favMarker" sec:authorize="isAuthenticated()">
+                        <a id="writeLink" href="#" data-toggle="modal" data-target="#writeModal" th:text="#{main.link.comment}">글쓰기</a>
                         <img id="star" th:src="@{/img/map/whiteStar.png}" th:alt="#{menu.favorite.place}">
                     </div>
 
 
                     <!-- 글목록 -->
-                    <div sec:authorize="isAuthenticated()">
-                        <a id="writeLink" href="#" data-toggle="modal" data-target="#writeModal" th:text="#{main.link.comment}">글쓰기</a>                    </div>
                     <div id="board-list">
 
                     </div>
