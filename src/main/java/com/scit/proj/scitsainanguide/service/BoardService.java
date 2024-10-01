@@ -39,7 +39,7 @@ public class BoardService {
                 .orElseThrow(() -> new EntityNotFoundException("회원아이디가 없습니다."));
 
 
-        String placeId = boardDTO.getHospitalName();
+        String placeId = boardDTO.getPlaceId();
         MarkerBoardEntity markerBoardEntity = null;
         Optional<HospitalEntity> hospitalEntityOptional = hospitalRepository.findById(placeId);
         Optional<ShelterEntity> shelterEntityOptional= Optional.empty();

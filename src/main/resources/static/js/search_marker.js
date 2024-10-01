@@ -194,6 +194,8 @@ function showInfoPanel(marker) {
         // 글쓰기 모달에 장소 제목 설정
         document.getElementById('writeModalPlaceTitle').innerText = placeName;
 
+        document.getElementById('placeId').value = placeID;
+
         const writeLink = document.getElementById('writeLink');
         if(writeLink){
             writeLink.setAttribute('data-target', '#writeModal');

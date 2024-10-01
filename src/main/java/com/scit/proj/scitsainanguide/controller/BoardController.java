@@ -30,13 +30,11 @@ public class BoardController {
 
     @PostMapping("write")
     public String write(
-            @ModelAttribute MarkerBoardDTO boardDTO
-            , @AuthenticationPrincipal AuthenticatedUser user,
+            @ModelAttribute MarkerBoardDTO boardDTO,
+            @AuthenticationPrincipal AuthenticatedUser user,
             @RequestParam("files") MultipartFile[] files
-            ) {
-
-        log.debug("dto값 확인:{}", boardDTO);
-        //작성한 글에 사용자 아이디 추가
+    ) {
+        // 사용자 아이디 추가
         boardDTO.setMemberId(user.getUsername());
         log.debug("저장할 글 정보 : {}", boardDTO);
 
