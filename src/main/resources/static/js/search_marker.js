@@ -401,6 +401,7 @@ function getList(placeID, currentPage, pageSize, isFetching) {
                 let boardHtml = '';
                 boardList.forEach(boardItem => {
                     // 내용이 60글자를 넘을 때 더보기/접기 링크 추가
+                    let boardId = boardItem.boardId;
                     let contents = boardItem.contents;
                     let truncatedContents = contents.length > 60 ? contents.substring(0, 60) + '...' : contents;
                     let isTruncated = contents.length > 60;
@@ -417,7 +418,9 @@ function getList(placeID, currentPage, pageSize, isFetching) {
                             boardHtml += `<img src="${picture.path}" class="board-image" alt="${picture.oriFilename}" loading="lazy" width="100"><br>`;
                         });
                     }
-                    boardHtml +=`</div>`;
+                    boardHtml += `
+                        <button onclick="deleteBoard(${boardId})">삭제</button>
+                    </div>`;
                 });
 
                 board.innerHTML += boardHtml;  // 게시글 추가
@@ -442,6 +445,28 @@ function toggleContent(boardId, fullContent) {
         toggleElement.innerText = '더보기';
     }
 }
+
+// 삭제 버튼 클릭 시 deleteYn을 true로 바꾸는 함수
+function deleteBoard(boardId) {
+    if (!boardId || boardId === 'undefined') {
+        console.error('Invalid boardId:', boardId);
+        return;
+    }
+
+    fetch(`/board/delete/${boardId}`, {
+        method: 'POST'
+    })
+        .then(response => {
+            if (response.ok) {
+                alert('게시글이 삭제되었습니다.');
+                location.reload(); // 페이지를 새로고침해서 변경된 목록을 다시 로드
+            } else {
+                alert('삭제에 실패했습니다.');
+            }
+        })
+        .catch(error => console.error('오류 발생:', error));
+}
+
 
 
 //맵 생성

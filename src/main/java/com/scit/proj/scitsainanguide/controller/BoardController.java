@@ -5,6 +5,7 @@ import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,5 +39,18 @@ public class BoardController {
             return "redirect:/";
         }
     }
+
+    // 게시글 삭제(deleteYn 업데이트)
+    @PostMapping("delete/{boardId}")
+    public ResponseEntity<String> deleteBoard(@PathVariable Integer boardId) {
+        log.debug("게시글값 확인:{}",boardId);
+        MarkerBoardDTO boardDTO = boardService.findById(boardId);
+        boardDTO.setDeleteYn(true); // deleteYn을 true로 설정
+        boardService.updateBoard(boardDTO); // 수정된 내용 저장
+        return ResponseEntity.ok("게시글이 삭제되었습니다.");
+    }
+
+
+
 
 }

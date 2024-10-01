@@ -137,4 +137,30 @@ public class BoardService {
         return boardDTOList;
     }
 
+    // 게시글 업데이트
+    public void updateBoard(MarkerBoardDTO boardDTO) {
+        // boardId로 엔티티를 조회
+        MarkerBoardEntity markerBoardEntity = boardJPARepository.findById(boardDTO.getBoardId())
+                .orElseThrow(() -> new RuntimeException("Board not found"));
+
+        markerBoardEntity.setDeleteYn(boardDTO.getDeleteYn());
+        boardJPARepository.save(markerBoardEntity);  // 수정된 엔티티 저장
+    }
+    
+    // 게시글 번호 검색
+    public MarkerBoardDTO findById(Integer boardId) {
+        MarkerBoardEntity markerBoardEntity = boardJPARepository.findById(boardId)
+                .orElseThrow(() -> new RuntimeException("Board not found"));
+
+        // Entity를 DTO로 변환 (필요한 필드만 추출)
+        MarkerBoardDTO boardDTO = MarkerBoardDTO.builder()
+                .boardId(markerBoardEntity.getBoardId())
+                .contents(markerBoardEntity.getContents())
+                .deleteYn(markerBoardEntity.getDeleteYn())
+                .build();
+
+        return boardDTO;
+    }
+
+
 }
