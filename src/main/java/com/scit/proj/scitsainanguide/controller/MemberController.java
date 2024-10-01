@@ -201,7 +201,7 @@ public class MemberController {
         // 로그인된 사용자의 정보를 가져와서 MemberDTO로 변환
         MemberDTO memberDTO = memberService.findByMemberId(user.getUsername());
         model.addAttribute("memberDTO", memberDTO);
-        return "/member/info";
+        return "/myPage/info";
     }
 
     @PostMapping("/info")
