@@ -67,13 +67,11 @@ CREATE TABLE tag_category
 CREATE TABLE realtime_comment
 (
     comment_num INTEGER      NOT NULL AUTO_INCREMENT,
-    reply_num   INTEGER NULL,
     nickname    VARCHAR(20)  NOT NULL,
     location    VARCHAR(100) NOT NULL,
     contents    VARCHAR(200) NOT NULL,
     create_dt   TIMESTAMP    NOT NULL DEFAULT NOW(),
-    PRIMARY KEY (comment_num),
-    FOREIGN KEY (reply_num) REFERENCES realtime_comment (comment_num)
+    PRIMARY KEY (comment_num)
 );
 
 CREATE TABLE marker_board
