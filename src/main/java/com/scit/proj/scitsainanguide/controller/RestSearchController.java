@@ -39,6 +39,6 @@ public class RestSearchController {
 
         // 엔티티가 존재하면 DTO로 변환 후 반환
             return ResponseEntity.ok(shelter);  // 200 OK와 함께 DTO 반환
-        }
+    }
 
 }

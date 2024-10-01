@@ -408,7 +408,7 @@ function getList(placeID, currentPage, pageSize, isFetching) {
                     boardHtml += `
                     <hr>
                     <div class="board">
-                        <p class="board-content">${truncatedContents}</p>
+                        <p id="content-${boardItem.id}" class="board-content">${truncatedContents}</p>
                         ${isTruncated ? `<a href="#" id="toggle-${boardItem.id}" class="board-more" onclick="toggleContent(${boardItem.id}, '${boardItem.contents}')">더보기</a>` : ''}
                     `;
                     // 사진이 있는 경우
