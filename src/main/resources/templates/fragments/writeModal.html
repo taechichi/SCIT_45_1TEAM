@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="writeModal">
+  <div class="modal fade" id="writeModal" tabindex="-1" role="dialog" aria-labelledby="writeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <!-- 닫기 버튼 삭제, 제목 중앙 정렬 -->
+          <p><strong><span id="writeModalPlaceTitle"></span></strong></p>
+        </div>
+        <div class="modal-body">
+          <form id="writeForm" th:action="@{/board/write}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="contents" th:text="#{main.label.comment}">이 장소에 대한 내용을 적어주세요!</label>
+              <textarea name="contents" id="contents" class="form-control" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+              <!-- 파일 첨부 버튼 -->
+              <label for="files" class="custom-file-upload">사진 업로드 하기</label>
+              <input type="file" name="files" id="files" multiple>
+            </div>
+            <input type="hidden" name="hospitalName" th:value="${hospitalName}">
+
+            <!-- 버튼 영역 -->
+            <div class="btn-container">
+              <button type="submit" class="btn btn-primary" th:text="#{main.button.save}">저장</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -429,3 +429,59 @@ html, body {
     white-space: normal;        /* 기본 줄바꿈 허용 */
     word-break: keep-all;       /* 한글과 영어 모두 공백에서만 줄 바꿈 */
 }
+
+#writeModal .modal-dialog {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#writeModal .modal-content {
+    border-radius: 20px; /* 모서리 둥글게 */
+    padding: 20px;
+    text-align: center; /* 모든 요소 중앙 정렬 */
+}
+
+#writeModal .modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+}
+
+#writeModal .modal-body {
+    margin-top: 20px;
+}
+
+/* 파일 첨부 버튼 스타일 */
+#writeModal .custom-file-upload {
+    display: inline-block;
+    padding: 10px 20px;
+    border: solid 1px #007bff;
+    width: 300px;
+    cursor: pointer;
+    border-radius: 30px;
+    color: #007bff;
+    background-color: white;
+}
+
+/* 버튼들 스타일링 */
+#writeModal .btn-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* 버튼 간격 */
+}
+
+#writeModal .btn-primary, #writeModal .btn-secondary {
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+/* 숨긴 파일 input */
+#writeModal #files {
+    display: none;
+}
+#writeModalPlaceTitle {
+    font-size: 25px;
+}
