@@ -32,12 +32,12 @@
 
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">내게 친구 신청을 보낸 사람들</h6>
+                    <h6 class="m-0 font-weight-bold text-primary" th:text="#{my.friend.request.title}"></h6>
                 </div>
                 <!-- 검색 폼 -->
                 <div class="searchForm-container">
                     <div id="btnArea">
-                        <button id="toFriendList" class="request-list-btn" th:text="#{my.friend.request.button.friendList} + '으로 가기'"></button>
+                        <button id="toFriendList" class="request-list-btn" th:text="#{my.friend.request.button.friendList}"></button>
                     </div>
                 </div>
                 <div class="card-body">
