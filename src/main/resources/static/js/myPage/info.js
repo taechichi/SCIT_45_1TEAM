@@ -1,8 +1,9 @@
 $(document).ready(function () {
+
     // 비밀번호 표시/숨기기 기능
     $('.password-toggle-icon').on('click', function () {
-        var passwordInput = $('#password');
-        var icon = $(this);
+        let passwordInput = $('#password');
+        let icon = $(this);
 
         // 현재 비밀번호 입력의 타입이 "password"인 경우
         if (passwordInput.attr('type') === 'password') {
@@ -19,27 +20,26 @@ $(document).ready(function () {
         let password = $('#password').val();
         let errorMessage = '';
 
-        // 비밀번호 필드가 비어 있으면 비밀번호는 전송되지 않음
         if (password.trim() === '') {
             $('#password').removeAttr('name'); // 비밀번호 필드가 비어 있으면 폼에서 제거
+            errorMessage = messages.empty;
         } else {
-            // 비밀번호 길이와 특수문자 검사
             if (password.length < 8 || password.length >= 20) {
-                errorMessage = '비밀번호는 8자 이상 20자 미만이어야 합니다.';
+                errorMessage = messages.length;
             } else {
                 let regex = /[!@#$%^&*(),.?":{}|<>]/; // 허용하는 특수문자
                 if (!regex.test(password)) {
-                    errorMessage = '비밀번호는 특수문자를 포함해야 합니다.';
+                    errorMessage = messages.special;
                 }
             }
+        }
 
-            // 유효성 검사 결과에 따라 메시지 표시
-            if (errorMessage) {
-                $('#error-message').text(errorMessage).addClass('error').removeClass('valid');
-                event.preventDefault(); // 폼 제출 방지
-            } else {
-                $('#error-message').text('').removeClass('error').addClass('valid');
-            }
+        // 유효성 검사 결과에 따라 메시지 표시
+        if (errorMessage) {
+            $('#error-message').text(errorMessage).addClass('error').removeClass('valid');
+            event.preventDefault(); // 폼 제출 방지
+        } else {
+            $('#error-message').text('').removeClass('error').addClass('valid');
         }
     });
 
@@ -52,10 +52,10 @@ $(document).ready(function () {
             let allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
 
             if (file.size > maxSize) {
-                $('#fileError').text('프로필 사진은 5MB를 초과할 수 없습니다.').addClass('error').removeClass('valid');
+                $('#fileError').text(fileMessages.sizeError).addClass('error').removeClass('valid');
                 $(this).val(''); // 파일 입력 초기화
             } else if (!allowedExtensions.exec(filePath)) {
-                $('#fileError').text('허용된 파일 형식이 아닙니다. (.jpg, .jpeg, .png)').addClass('error').removeClass('valid');
+                $('#fileError').text(fileMessages.formatError).addClass('error').removeClass('valid');
                 $(this).val(''); // 파일 입력 초기화
             } else {
                 $('#fileError').text('').removeClass('error').addClass('valid');
@@ -68,6 +68,7 @@ $(document).ready(function () {
             }
         }
     });
+
     $(document).ready(function () {
         // 페이지 로드 시 모달 자동 표시
         $('#passwordCheckModal').modal('show');
@@ -91,7 +92,7 @@ $(document).ready(function () {
 
             // 비밀번호 입력 유효성 검사
             if (searchPw.trim() === '') {
-                $('#resultMessage').html('<p style="color:red;">비밀번호를 입력하세요.</p>');
+                $('#resultMessage').html('<p style="color:red;">' + passwordMessages.empty + '</p>');
                 return;
             }
 
@@ -103,16 +104,16 @@ $(document).ready(function () {
                 success: function (response) {
                     // 서버에서 반환된 결과에 따라 메시지 표시
                     if (response.result) { // 비밀번호가 일치하는 경우
-                        $('#resultMessage').html('<p style="color:green;">비밀번호가 일치합니다.</p>');
+                        $('#resultMessage').html('<p style="color:green;">' + passwordMessages.match + '</p>');
                         // 비밀번호가 맞으면 모달을 닫음
                         $('#passwordCheckModal').modal('hide');
                     } else {
                         // 비밀번호가 일치하지 않는 경우
-                        $('#resultMessage').html('<p style="color:red;">비밀번호가 일치하지 않습니다.</p>');
+                        $('#resultMessage').html('<p style="color:red;">' + passwordMessages.notMatch + '</p>');
                     }
                 },
                 error: function () {
-                    $('#resultMessage').html('<p style="color:red;">오류가 발생했습니다. 다시 시도하세요.</p>');
+                    $('#resultMessage').html('<p style="color:red;">' + passwordMessages.error + '</p>');
                 }
             });
         });

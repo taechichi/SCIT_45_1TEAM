@@ -35,6 +35,7 @@ public class BoardController {
             @RequestParam("files") MultipartFile[] files
             ) {
 
+        log.debug("dto값 확인:{}", boardDTO);
         //작성한 글에 사용자 아이디 추가
         boardDTO.setMemberId(user.getUsername());
         log.debug("저장할 글 정보 : {}", boardDTO);
@@ -45,7 +46,7 @@ public class BoardController {
         }
         catch (Exception e) {
             e.printStackTrace();
-            return "board/writeForm";
+            return "redirect:/";
         }
     }
 

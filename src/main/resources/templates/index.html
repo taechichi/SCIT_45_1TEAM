@@ -12,21 +12,21 @@
     <title>SB Admin 2 - Dashboard</title>
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
 
-<!--
-    &lt;!&ndash; google map script &ndash;&gt;
--->
-<!--    <script th:inline="javascript">-->
-<!--        // 브라우저 언어 감지 (ko, en, ja 등)-->
-<!--        let userLanguage = /*[[#{main.lang.country}]]*/ 'ko';-->
+<!--     google map script -->
 
 
-<!--        // 구글 맵 API 동적 로드-->
-<!--        let script = document.createElement('script');-->
-<!--        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places&language=${userLanguage}&loading=async`;-->
-<!--        script.async = true; // 비동기 로드 설정-->
-<!--        script.defer = true; // 파싱 후 실행 설정-->
-<!--        document.head.appendChild(script);-->
-<!--    </script>-->
+    <script th:inline="javascript">
+       // 브라우저 언어 감지 (ko, en, ja 등)
+        let userLanguage = /*[[#{main.lang.country}]]*/ 'ko';
+
+
+       // 구글 맵 API 동적 로드-->
+        let script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDH-jV5JFEoHWcKxqNlJ5bgluKYtDP4qxo&libraries=places&language=${userLanguage}&loading=async`;
+        script.async = true; // 비동기 로드 설정
+        script.defer = true; // 파싱 후 실행 설정
+        document.head.appendChild(script);
+    </script>
 
     <!-- 추가 할 라이브러리를 api의 libraries 부분 뒤에 추가 places,geometry -->
     <script th:src="@{/js/search_marker.js}"></script>
@@ -107,17 +107,16 @@
                     <div id="info_part"></div>
                     <div class="button-container">
                         <button id="routeB" class="info-button" th:text="#{main.button.route}">경로</button>
-                        <button id="shareBtn" th:text="#{main.button.share}">친구에게 공유</button><br>
+                        <button id="shareBtn" th:text="#{main.button.share}">공유</button><br>
                     </div>
-                    <div id="favMarker">
+                    <div id="favMarker" sec:authorize="isAuthenticated()">
                         <img id="star" th:src="@{/img/map/whiteStar.png}" th:alt="#{menu.favorite.place}">
                     </div>
 
 
                     <!-- 글목록 -->
-                    <div>
-                        <a id="writeLink" th:href="@{/board/write/${palceID}}" th:text="#{main.link.comment}">글쓰기</a>
-                    </div>
+                    <div sec:authorize="isAuthenticated()">
+                        <a id="writeLink" href="#" data-toggle="modal" data-target="#writeModal" th:text="#{main.link.comment}">글쓰기</a>                    </div>
                     <div id="board-list">
 
                     </div>
@@ -148,7 +147,7 @@
                         <button id="arrivalB" class="info-button" th:text="#{main.button.arrival}">도착지</button><br>
                     </div>
                     <div class="route-container" id="routeInfo">
-                        여기에 경로에 대한 정보 표시!!!@~!@~!@~!@~!@
+                        <pre th:text="#{main.route.print}">이곳에 경로에 대한 정보가 출력됩니다.</pre>
                     </div>
                 </ul>
 
@@ -165,19 +164,28 @@
                         <!-- Begin Page Content -->
 
                 <!-- 지도 컨테이너 -->
-                <div id="map-container" style="position: relative; height: 95%; width: 100%;">
+                <div id="map-container" style="position: relative; height: 90%; width: 100%;">
                     <!-- 구글 지도 -->
                     <div id="map" style="height: 100%; width: 100%; z-index: 0;"></div>
 
                     <!-- 병원 버튼 -->
-                    <button type="button" id="hospitalFilterButton" th:text="#{main.button.hospital}"></button>
+                    <button type="button" id="hospitalFilterButton">
+                        <i class="fas fa-hospital"></i>
+                        <span th:text="#{main.button.hospital}"></span>
+                    </button>
 
                     <!-- 대피소 버튼 -->
-                    <button type="button" id="shelterFilterButton" th:text="#{main.button.shelter}"></button>
+                    <button type="button" id="shelterFilterButton">
+                        <i class="fas fa-house-user"></i>
+                        <span th:text="#{main.button.shelter}"></span>
+                    </button>
+
 
                     <!-- 내 위치 버튼 -->
                     <button id="myLocation"><img th:src="@{/img/map/myLocation.png}" class="img-40"></button>
                 </div>
+                <!-- 마커 글쓰기 모달 -->
+                <div th:replace="~{fragments/writeModal :: writeModal}"></div>
 
                 <!-- 실시간 댓글 반응 창 -->
                 <div th:replace="~{fragments/realtimeComment :: realtimeCommentFragment}"></div>

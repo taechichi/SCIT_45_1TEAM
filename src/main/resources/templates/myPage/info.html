@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{my.info.update}">회원 정보 수정</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
+    <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+
+    <link rel="stylesheet" th:href="@{/css/register/info.css}"/>
+    <script th:src="@{/js/myPage/info.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
+</head>
+<body>
+<div id="RegisterContainer">
+    <h1 id="A1" th:text="#{my.info.update}">회원 정보 수정</h1>
+    <!-- 프로필 사진 미리보기 -->
+    <img id="profilePreview" src="#" alt="PreviewProfile" class="profile-preview" style="display: none;"/>
+
+    <form id="joinForm" th:action="@{/member/info}" th:object="${memberDTO}" method="post"
+          enctype="multipart/form-data">
+
+        <!-- 히든 필드로 아이디 추가 -->
+        <input type="hidden" th:field="*{memberId}" />
+
+        <div class="form-group password-container">
+            <span th:text="#{my.info.input.password}">비밀번호</span>
+            <input type="password" id="password" th:field="*{password}"/>
+            <!-- 아이콘을 비밀번호 입력창 오른쪽에 추가 -->
+            <img src="/img/hide_eye.ico" alt="ShowPassword" class="password-toggle-icon"/>
+            <br>
+            <!-- 유효성 검사 메시지 -->
+            <div id="error-message"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="nickname" th:text="#{my.info.update.nickname}">사용중인 닉네임 변경 : <span th:text="${memberDTO.nickname}"></span></label>
+            <input type="text" id="nickname" th:field="*{nickname}" required/>
+        </div>
+
+        <div class="form-group">
+            <label for="email" th:text="#{my.info.update.email}">이메일</label>
+            <input type="email" id="email" th:field="*{email}" required/>
+        </div>
+
+        <div class="form-group">
+            <label for="phone" th:text="#{my.info.update.phone}">전화번호</label>
+            <input type="text" id="phone" th:field="*{phone}" required/>
+        </div>
+
+        <div class="form-group">
+            <label for="nationality" th:text="#{my.info.update.nationality}">국적</label>
+            <select id="nationality" th:field="*{nationality}" required>
+                <option value="" th:text="#{my.info.update.select}">선택하세요</option>
+                <option value="KR" th:text="#{my.info.update.korea}">대한민국</option>
+                <option value="JP" th:text="#{my.info.update.japan}">일본</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="file" th:text="#{my.info.update.profile}">프로필 사진</label>
+            <input type="file" id="file" name="file" accept=".jpg,.jpeg,.png" th:text="#{my.info.select.file}"/>
+            <small id="fileError" class="error" style="display: none;" th:text="#{my.info.update.nvalid}">허용된 파일 형식이 아닙니다. (.jpg, .jpeg, .png)</small>
+        </div>
+
+        <p>
+            <strong th:text="${#authentication.principal.username}"></strong>
+            <span th:text="#{my.info.delete.user.alert1}">님 정말</span>
+            <strong>
+                <span th:text="#{my.info.delete.user.alert2}">회원 탈퇴</span>
+            </strong>
+            <span th:text="#{my.info.delete.user.alert3}">하실건가요?</span>
+        </p>
+        <div class="form-group">
+            <section class="model-15" id="withdrawSection" th:field="*{withdraw}">
+                <div class="checkbox">
+                    <input type="checkbox" id="withdrawCheckbox"/>
+                    <label></label>
+                </div>
+            </section>
+        </div>
+
+        <div class="form-group">
+            <button id="submitBtn" type="submit" th:text="#{my.info.update.button}">수정하기</button>
+        </div>
+    </form>
+
+    <!-- 비밀번호 확인 모달 -->
+    <div class="modal show" id="passwordCheckModal" tabindex="-1" role="dialog" aria-labelledby="passwordCheckModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="passwordCheckModalLabel" th:text="#{my.info.check.password}">비밀번호 확인</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="passwordForm" method="post">
+                        <span th:text="#{my.info.input.password}">비밀번호: </span><input type="password" id="searchPw" maxlength="20">
+                        <button type="button" id="searchButton" th:text="#{my.info.reinput.password}">확인</button>
+                    </form>
+                    <!-- 결과 메시지 표시 영역 -->
+                    <div id="resultMessage"></div>
+                </div>
+                <div class="modal-footer">
+                    <!-- 모달을 닫는 버튼은 확인 후 활성화 됩니다 -->
+                    <button type="button" class="btn btn-primary" id="confirmButton" style="display: none;" th:text="#{my.info.reinput.password}">확인</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:inline="javascript">
+    let messages = {
+        empty: /*[[${'my.info.error.msg.empty'}]]*/ '비밀번호를 입력해 주세요.',
+        length: /*[[${'my.info.error.msg.length'}]]*/ '비밀번호는 8자 이상 20자 미만이어야 합니다.',
+        special: /*[[${'my.info.error.msg.special'}]]*/ '비밀번호는 특수문자를 포함해야 합니다.'
+    };
+    let fileMessages = {
+        sizeError: /*[[${'my.info.file.error.size'}]]*/ '프로필 사진은 5MB를 초과할 수 없습니다.',
+        formatError: /*[[${'my.info.file.error.format'}]]*/ '허용된 파일 형식이 아닙니다. (.jpg, .jpeg, .png)'
+    };
+    let passwordMessages = {
+        empty: /*[[${'my.info.password.empty'}]]*/ '비밀번호를 입력하세요.',
+        match: /*[[${'my.info.password.match'}]]*/ '비밀번호가 일치합니다.',
+        notMatch: /*[[${'my.info.password.not.match'}]]*/ '비밀번호가 일치하지 않습니다.',
+        error: /*[[${'my.info.password.error'}]]*/ '오류가 발생했습니다. 다시 시도하세요.'
+    };
+</script>
+</body>
+</html>
