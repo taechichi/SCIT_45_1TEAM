@@ -17,7 +17,7 @@
             </div>
             <div class="form-group">
               <!-- 파일 첨부 버튼 -->
-              <label for="files" class="custom-file-upload">사진 업로드 하기</label>
+              <label for="files" class="custom-file-upload" th:text="#{main.label.picture}">사진 업로드 하기</label>
               <input type="file" name="files" id="files" multiple>
             </div>
 
@@ -26,7 +26,7 @@
             <!-- 버튼 영역 -->
             <div class="btn-container">
               <button type="submit" class="btn btn-primary" th:text="#{main.button.save}">저장</button>
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{main.button.delete}">취소</button>
             </div>
           </form>
         </div>
