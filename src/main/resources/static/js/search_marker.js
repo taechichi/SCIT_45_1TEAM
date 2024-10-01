@@ -573,9 +573,6 @@ function initMap() {
         if (routePanel.style.display === 'none' || routePanel.style.display === '') {
             routePanel.style.display = 'block';  // route-panel을 보여줌
         }
-        let infoPanel = document.getElementById("info-panel");
-        infoPanel.style.display = 'none';
-        isPanelVisible = false;
     })
 
     //x 경로 패널 버튼클릭 이벤트 (패널정보 none)
