@@ -119,12 +119,12 @@
 #toggleCommentButton {
     position: absolute;
     z-index: 1000;
-    top: 53%;
+    top: 56%;
     left: 300px;
     transform: translateY(-50%);
     width: 30px;
     height: 38px;
-    background-color: #fff;
+    background: rgba(255, 255, 255, 0.4);
     border: 1px solid #ccc;
     border-radius: 3px;
     transition: all 0.3s ease; /* 버튼 애니메이션 */

@@ -59,21 +59,19 @@ CREATE TABLE shelter
 CREATE TABLE tag_category
 (
     tag_id   INTEGER     NOT NULL AUTO_INCREMENT,
-    contents VARCHAR(30) NOT NULL,
-    lang_cd  VARCHAR(2)  NOT NULL,
+    tag_content VARCHAR(30) NOT NULL,
+    tag_content_ja  VARCHAR(30)  NOT NULL,
     PRIMARY KEY (tag_id)
 );
 
 CREATE TABLE realtime_comment
 (
     comment_num INTEGER      NOT NULL AUTO_INCREMENT,
-    reply_num   INTEGER NULL,
     nickname    VARCHAR(20)  NOT NULL,
     location    VARCHAR(100) NOT NULL,
     contents    VARCHAR(200) NOT NULL,
     create_dt   TIMESTAMP    NOT NULL DEFAULT NOW(),
-    PRIMARY KEY (comment_num),
-    FOREIGN KEY (reply_num) REFERENCES realtime_comment (comment_num)
+    PRIMARY KEY (comment_num)
 );
 
 CREATE TABLE marker_board

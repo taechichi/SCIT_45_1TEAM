@@ -21,10 +21,6 @@ public class RealtimeCommentEntity {
     @Column(name = "comment_num")
     private Integer commentNum;
 
-    @ManyToOne
-    @JoinColumn(name = "reply_num")
-    private RealtimeCommentEntity replyRealtimeComment; // 자기 참조 관계
-
     @Column(name = "nickname", nullable = false, length = 10)
     private String nickname;
 

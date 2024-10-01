@@ -19,10 +19,10 @@ public class TagCategoryEntity {
     @Column(name = "tag_id")
     private Integer tagId;
 
-    @Column(name = "contents", nullable = false, length = 30)
-    private String contents;
+    @Column(name = "tag_content", nullable = false, length = 30)
+    private String tag_content;
 
-    @Column(name = "lang_cd", nullable = false, length = 2)
-    private String langCd;
+    @Column(name = "tag_content_ja", nullable = false, length = 30)
+    private String tag_content_ja;
 
 }
