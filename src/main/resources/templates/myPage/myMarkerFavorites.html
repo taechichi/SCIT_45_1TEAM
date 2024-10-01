@@ -35,7 +35,7 @@
 
             <!-- Begin Page Content -->
 
-            <h4 class="page-title" >내가 즐겨찾기 한 장소</h4>
+            <h4 class="page-title" th:text="#{my.favorite.place}">내가 즐겨찾기 한 장소</h4>
 
             <div>
                 <!-- 현재 접속한 사람의 정보 -->
@@ -51,22 +51,22 @@
 
                         <!-- 검색어 입력 필드 -->
                         <input type="text" name="searchWord" id="searchWord" th:value="${searchWord}"
-                               placeholder="검색어를 입력하세요."/>
+                               th:placeholder="#{my.favorite.placeholder}"/>
 
-                        <a>필터: </a>
-                        <button id="filterAll">모두 보기</button>
-                        <button id="filterHospital">병원</button>
-                        <button id="filterShelter">대피소</button>
-                        <a>/ 정렬: </a>
-                        <button id="sortByDistance">거리순</button>
-                        <button id="sortByName">이름순</button>
+                        <a th:text="#{my.favorite.filter}">필터: </a>
+                        <button id="filterAll" th:text="#{my.favorite.view.all}">모두 보기</button>
+                        <button id="filterHospital" th:text="#{my.favorite.hospital}">병원</button>
+                        <button id="filterShelter" th:text="#{my.favorite.shelter}">대피소</button>
+                        <a th:text="#{my.favorite.array}">/ 정렬: </a>
+                        <button id="sortByDistance" th:text="#{my.favorite.distance}">거리순</button>
+                        <button id="sortByName" th:text="#{my.favorite.name}">이름순</button>
                         <!--<input type="submit" onclick="pagingFormSubmit(1)" value="검색"/>-->
                     </form>
                 </div>
 
                 <!-- 즐겨찾기 데이터 표시하는 공간 전체를 form으로 감싸 삭제할 수 있도록 함 -->
                 <form th:action="@{/my/myMarkerFavorites/delete}" method="post" id="deleteForm">
-                        <button type="submit" class="unfavorite-button">즐겨찾기 삭제</button>
+                        <button type="submit" class="unfavorite-button" th:text="#{my.favorite.delete}">즐겨찾기 삭제</button>
 
 
 
@@ -90,9 +90,9 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th>즐겨찾기</th>
-                            <th>이름</th>
-                            <th>병원/대피소</th>
+                            <th th:text="#{my.favorite.marker}">즐겨찾기</th>
+                            <th th:text="#{my.favorite.nameof}">이름</th>
+                            <th th:text="#{my.favorite.hors}">병원/대피소</th>
                         </tr>
                         </thead>
                         <tbody id="markerTableBody">
@@ -110,8 +110,8 @@
             </span>
                             </td>
                             <td>
-                                <span th:if="${marker.hospitalId != null}">병원</span>
-                                <span th:if="${marker.hospitalId == null}">대피소</span>
+                                <span th:if="${marker.hospitalId != null}" th:text="#{my.favorite.hospital}">병원</span>
+                                <span th:if="${marker.hospitalId == null}" th:text="#{my.favorite.shelter}">대피소</span>
                             </td>
                         </tr>
                         </tbody>

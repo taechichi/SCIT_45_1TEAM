@@ -169,7 +169,7 @@ h1 {
     overflow: hidden;
 }
 .model-15 .checkbox:after, .model-15 .checkbox label:before {
-    content: '유지';
+    content: 'NO';
     position: absolute;
     left: 10px;
     top: 8px;
@@ -178,7 +178,7 @@ h1 {
     color: #fff;
 }
 .model-15 .checkbox label:before {
-    content: '탈퇴';
+    content: 'YES';
     left: auto;
     top: 8px;
     right: 10px;
