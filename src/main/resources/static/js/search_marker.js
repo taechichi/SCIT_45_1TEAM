@@ -188,7 +188,13 @@ function showInfoPanel(marker) {
         infoPart.innerHTML = placeInfo;
         infoPanel.style.display = 'block';
         isPanelVisible = true;
-        document.getElementById('writeLink').setAttribute('href', `/board/write/${placeID}`);
+
+        // 글쓰기 모달에 장소 제목 설정
+        document.getElementById('writeModalPlaceTitle').innerText = placeName;
+
+        // 글쓰기 링크에 장소 ID 설정 (필요 없으면 생략 가능)
+        document.getElementById('writeLink').setAttribute('data-target', '#writeModal');
+
         if(marker.type !== 'myMarker'){
             favMarkerCheck(currentMarker.placeId);
         }
