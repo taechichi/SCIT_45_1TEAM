@@ -42,15 +42,16 @@ public class BoardController {
 
     // 게시글 삭제(deleteYn 업데이트)
     @PostMapping("delete/{boardId}")
-    public ResponseEntity<String> deleteBoard(@PathVariable Integer boardId) {
-        log.debug("게시글값 확인:{}",boardId);
+    public ResponseEntity<String> deleteBoard(@PathVariable Integer boardId,
+                                              @AuthenticationPrincipal AuthenticatedUser user) {
+        // 게시글 정보를 가져옴
         MarkerBoardDTO boardDTO = boardService.findById(boardId);
-        boardDTO.setDeleteYn(true); // deleteYn을 true로 설정
-        boardService.updateBoard(boardDTO); // 수정된 내용 저장
+        String loggedInUserId = user.getUsername();  // getUsername()으로 로그인한 사용자 ID를 가져옴
+
+        boardDTO.setDeleteYn(true);  // deleteYn을 true로 설정하여 논리적으로 삭제 처리
+        boardService.updateBoard(boardDTO);  // 수정된 게시글 정보 저장
+
         return ResponseEntity.ok("게시글이 삭제되었습니다.");
     }
-
-
-
 
 }

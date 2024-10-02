@@ -22,11 +22,23 @@ let currentMarker;
 let favBtn;
 let favImg;
 let board;
+let loggedInUserId;
 
 window.addEventListener('load', initMap);
 // 페이지가 로드된 후 DOM 접근
 window.onload = function() {
-    board = document.getElementById('board-list');  // DOM이 로드된 후에 요소를 찾음
+
+    const loginMemberInput = document.getElementById('loginMemberId');
+    board = document.getElementById('board-list');
+    if (loginMemberInput && loginMemberInput.value) {
+        // 로그인된 사용자
+        loggedInUserId = loginMemberInput.value;
+        console.log(`로그인된 사용자 ID: ${loggedInUserId}`);
+    } else {
+        // 비로그인 상태
+        console.log('로그인되지 않은 상태입니다.');
+        loggedInUserId = null; // 혹은 다른 기본값 설정 가능
+    }
 };
 
 // 해시 부분에서 인코딩된 placeId와 type을 디코딩
@@ -409,8 +421,8 @@ function getList(placeID, currentPage, pageSize, isFetching) {
                     boardHtml += `
                     <hr id="listHr">
                     <div class="board">
-                        <p id="content-${boardItem.id}" class="board-content">${truncatedContents}</p>
-                        ${isTruncated ? `<a href="#" id="toggle-${boardItem.id}" class="board-more" onclick="toggleContent(${boardItem.id}, '${boardItem.contents}')">더보기</a>` : ''}
+                        <p id="content-${boardItem.boardId}" class="board-content">${truncatedContents}</p>
+                        ${isTruncated ? `<a href="#" id="toggle-${boardItem.boardId}" class="board-more" onclick="toggleContent(${boardItem.boardId}, '${boardItem.contents}')">더보기</a>` : ''}
                     `;
                     // 사진이 있는 경우
                     if (boardItem.pictures && boardItem.pictures.length > 0) {
@@ -418,9 +430,11 @@ function getList(placeID, currentPage, pageSize, isFetching) {
                             boardHtml += `<img src="${picture.path}" class="board-image" alt="${picture.oriFilename}" loading="lazy" width="100"><br>`;
                         });
                     }
-                    boardHtml += `
-                        <button onclick="deleteBoard(${boardId})">삭제</button>
-                    </div>`;
+                    //로그인 아이디 게시글 작성자 확인
+                    if(boardItem.memberId === loggedInUserId){
+                        boardHtml += `<button onclick="deleteBoard(${boardId})">삭제</button>`;
+                    }
+                    boardHtml += `</div>`;
                 });
 
                 board.innerHTML += boardHtml;  // 게시글 추가
