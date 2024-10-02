@@ -128,7 +128,15 @@ document.addEventListener("DOMContentLoaded", function () {
             // 댓글 내용 추가
             const commentContent = document.createElement("div");
             commentContent.classList.add("comment-content");
-            const formattedTime = convertToKST(formatToTime(comment.createDt));
+
+            // createDt를 변환하고 로그로 확인
+            const createdTime = new Date(comment.createDt);
+            console.log("createDt:", comment.createDt);
+            console.log("Parsed createdTime:", createdTime);
+
+            // Invalid Date 일 경우 대체 처리
+            const formattedTime = isNaN(createdTime.getTime()) ? "시간 오류" : formatToTime(createdTime);
+            /*const formattedTime = convertToKST(formatToTime(comment.createDt));*/
             commentContent.innerHTML = `(${comment.location})<br>[${comment.nickname}]<br>${comment.contents} <br><small class="comment-time">${formattedTime}</small>`;
 
             li.appendChild(img);
