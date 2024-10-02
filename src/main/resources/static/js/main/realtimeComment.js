@@ -128,8 +128,8 @@ document.addEventListener("DOMContentLoaded", function () {
             // 댓글 내용 추가
             const commentContent = document.createElement("div");
             commentContent.classList.add("comment-content");
-            const timeDifference = formatTimeDifference(comment.createDt);
-            commentContent.innerHTML = `(${comment.location}) [${comment.nickname}]<br>${comment.contents} <br><small class="comment-time">${timeDifference}</small>`;
+            const formattedTime = convertToKST(formatToTime(comment.createDt));
+            commentContent.innerHTML = `(${comment.location})<br>[${comment.nickname}]<br>${comment.contents} <br><small class="comment-time">${formattedTime}</small>`;
 
             li.appendChild(img);
             li.appendChild(commentContent);
@@ -138,22 +138,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // 시간 차이를 계산하는 함수
-    function formatTimeDifference(createDt) {
-        const now = new Date();
-        const createdTime = convertToKST(createDt); // 한국시간으로 보정
-        const diffInSeconds = Math.floor((now - createdTime) / 1000);   // 초 단위 차이
+    function formatToTime(createDt) {
+        const createdTime = new Date(createDt);
+        const hours = createdTime.getHours().toString().padStart(2, "0");       // 2자리로 맞춤
+        const minutes = createdTime.getMinutes().toString().padStart(2, "0");   // 2자리로 맞춤
 
-        if(diffInSeconds <= 1) {
-            return "방금 전";  // 1초 이하는 "방금 전"으로 표시
-        } else if(diffInSeconds < 60) {
-            return `${diffInSeconds}초 전`;   // 1분 미만은 초 단위로 표시
-        } else if(diffInSeconds < 3600) {
-            const diffInMinutes = Math.floor(diffInSeconds / 60);
-            return `${diffInMinutes}분 전`;
-        } else {
-            const diffInHours = Math.floor(diffInSeconds / 3600);
-            return `${diffInHours}시간 전`;
-        }
+        return `${hours}:${minutes}`;
     }
 
 
@@ -172,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const timeElement = commentItem.querySelector(".comment-time");
             const createdAt = commentItem.getAttribute("data-created-at");
             if (timeElement && createdAt) {
-                timeElement.innerText = formatTimeDifference(createdAt);
+                timeElement.innerText = formatToTime(convertToKST(createdAt));
             }
         });
     }
