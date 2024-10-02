@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -73,6 +75,7 @@ public class RealtimeCommentController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 후 댓글을 작성할 수 있습니다.");
         }
 
+        comment.setCreateDt(LocalDateTime.now(ZoneOffset.UTC));
         comment.setNickname(user.getNickname());
         realtimeCommentService.saveRealtimeComment(comment); // DB에 메시지 저장
         List<RealtimeCommentDTO> comments = List.of(comment);

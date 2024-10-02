@@ -57,6 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             eventSource.onmessage = function (event) {
                 const comments = JSON.parse(event.data); // 서버에서 받은 데이터를 JSON 형식으로 파싱
+                console.log("받은 댓글 데이터:", comments);
                 const isAtBottom = commentListContainer.scrollTop + commentListContainer.clientHeight >= commentListContainer.scrollHeight;
 
                 // 전체 댓글 다시 그리기
@@ -134,8 +135,18 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("createDt:", comment.createDt);
             console.log("Parsed createdTime:", createdTime);
 
-            // Invalid Date 일 경우 대체 처리
-            const formattedTime = isNaN(createdTime.getTime()) ? "시간 오류" : formatToTime(createdTime);
+
+            // 시간 변환 (UTC에서 KST로 변환)
+            const kstTime = convertToKST(new Date(createdTime));
+            console.log("KST로 변환된 시간:", kstTime);
+
+            // 시간을 표시할 포맷으로 변환
+            const hours = kstTime.getHours().toString().padStart(2, '0');
+            const minutes = kstTime.getMinutes().toString().padStart(2, '0');
+            const formattedTime = `${hours}:${minutes}`;
+
+            /*// Invalid Date 일 경우 대체 처리
+            const formattedTime = isNaN(createdTime.getTime()) ? "시간 오류" : formatToTime(createdTime);*/
             /*const formattedTime = convertToKST(formatToTime(comment.createDt));*/
             commentContent.innerHTML = `(${comment.location})<br>[${comment.nickname}]<br>${comment.contents} <br><small class="comment-time">${formattedTime}</small>`;
 
@@ -148,6 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // 시간 차이를 계산하는 함수
     function formatToTime(createDt) {
         const createdTime = new Date(createDt);
+        console.log("KST로 변환된 시간:", createdTime);
         const hours = createdTime.getHours().toString().padStart(2, "0");       // 2자리로 맞춤
         const minutes = createdTime.getMinutes().toString().padStart(2, "0");   // 2자리로 맞춤
 
@@ -158,10 +170,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // UTC 시간을 KST로 변환하는 함수
     function convertToKST(utcTime) {
         const date = new Date(utcTime);
-        date.setHours(date.getHours() + 9); // 9시간 더해서 한국 시간으로 변환
+        date.setHours(date.getHours() + 9); // 9시간 더해서 한국 시간(KST)으로 변환
         return date;
     }
-
 
     // 댓글 시간 업데이트 함수
     function updateCommentTimes() {
