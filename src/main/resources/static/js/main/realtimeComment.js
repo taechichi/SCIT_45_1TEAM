@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("DOMContentLoaded 호출됨.");
     // === 전역 변수 정의 ===
     let userLocation = "Unknown";
     let currentDate = new Date();
@@ -6,8 +7,17 @@ document.addEventListener("DOMContentLoaded", function () {
     let connectionTime = currentDate.toISOString();
 
     // ==== 로그인된 사용자 닉네임과 ID 가져오기 ====
-    const memberId = document.getElementById('loginMemberId').value;
-    const nickname = document.getElementById('loginNickname').value;
+    const memberIdElement = document.getElementById('loginMemberId');
+    const nicknameElement = document.getElementById('loginNickname');
+
+    let memberId = "";
+    let nickname = "";
+
+    if(memberIdElement && nicknameElement) {
+        memberId = memberIdElement.value;
+        nickname = memberIdElement.value;
+    }
+
     console.log("Id, nickname", memberId, nickname);
     console.log("연결 시간:", connectionTime);
 
@@ -17,14 +27,31 @@ document.addEventListener("DOMContentLoaded", function () {
     const inputField = document.getElementById("commentInput");
     const commentListContainer = document.getElementById("commentListContainer");
 
-    // 초기 상태에서는 전송 버튼 및 입력창 비활성화
-    sendButton.disabled = true;
-    inputField.disabled = true;
-    inputField.placeholder = "채팅창 안정화 중...";  // 안내 문구 추가
-
     // SSE 연결 시작
     startEventSource();
 
+    if(sendButton && inputField) {
+        // 초기 상태에서는 전송 버튼 및 입력창 비활성화
+        sendButton.disabled = true;
+        inputField.disabled = true;
+        inputField.placeholder = "채팅창 안정화 중...";  // 안내 문구 추가
+
+
+        // 댓글 전송 버튼 이벤트 (버튼 클릭 또는 엔터키 입력 시)
+        inputField.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault(); // 기본 엔터 동작 방지
+                sendMessage();  // 엔터키로도 전송
+            }
+        });
+
+        sendButton.addEventListener("click", function () {
+            sendMessage();  // 전송 버튼으로도 전송
+        });
+    } else {
+        console.log("로그인되지 않은 사용자. 댓글 보지만, 전송은 못하지롱.")
+    }
+/*
     // 댓글 전송 버튼 이벤트 (버튼 클릭 또는 엔터키 입력 시)
     inputField.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
@@ -37,12 +64,13 @@ document.addEventListener("DOMContentLoaded", function () {
         sendButton.addEventListener("click", function () {
             sendMessage();  // 전송 버튼으로도 전송
         });
-    }
+    }*/
 
     // ======== 함수 정의 영역 =========
 
     // SSE 연결 시작하는 함수
     function startEventSource() {
+        console.log("startEventSource 호출됨."); // 이 로그 추가
         if (!eventSource) {
             eventSource = new EventSource(`/comments/stream?since=${connectionTime}`);
             console.log("SSE 연결 설정됨");
