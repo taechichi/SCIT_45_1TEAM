@@ -162,6 +162,14 @@ document.addEventListener("DOMContentLoaded", function () {
             img.src = `/member/download/${comment.memberId}`; // 서버에서 닉네임으로 이미지를 받아옴
             img.alt = "Profile Picture";
 
+
+            // 프로필 이미지에 모달을 연결
+            const imgWrapper = document.createElement("a");
+            imgWrapper.href = "#";
+            imgWrapper.setAttribute("data-toggle", "modal");
+            imgWrapper.setAttribute("data-target", `#profileModal${comment.memberId}`);
+            imgWrapper.appendChild(img);
+
             // 댓글 내용 추가
             const commentContent = document.createElement("div");
             commentContent.classList.add("comment-content");
@@ -170,7 +178,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const createdTime = new Date(comment.createDt);
             console.log("createDt:", comment.createDt);
             console.log("Parsed createdTime:", createdTime);
-
 
             // 시간 변환 (UTC에서 KST로 변환)
             const kstTime = convertToKST(new Date(createdTime));
@@ -186,10 +193,44 @@ document.addEventListener("DOMContentLoaded", function () {
             /*const formattedTime = convertToKST(formatToTime(comment.createDt));*/
             commentContent.innerHTML = `(${comment.location})<br>[${comment.nickname}]<br>${comment.contents} <br><small class="comment-time">${formattedTime}</small>`;
 
-            li.appendChild(img);
+            li.appendChild(imgWrapper);
             li.appendChild(commentContent);
             commentList.appendChild(li);
+            
+            // 모달 창 생성
+            createProfileModal(comment);
         });
+    }
+
+    // 프로필 모달을 생성하는 함수
+    function createProfileModal(comment) {
+        const modalHtml = `
+        <div class="modal fade" id="profileModal${comment.memberId}" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="profileModalLabel">${comment.nickname}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="profile-picture-container">
+                            <img class="img-profile rounded-circle img-64" src="/member/download/${comment.memberId}" alt="Profile Picture"/>
+                        </div>
+                        <p><strong>상태 메시지:</strong> ${comment.stMessage ? comment.stMessage : 'No status message'}</p>
+                        <p><strong>최근 활동:</strong> ${comment.lastStUpdateDt ? new Date(comment.lastStUpdateDt).toLocaleString() : 'No update available'}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+        // 모달 HTML을 body에 추가
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
     }
 
     // 시간 차이를 계산하는 함수
