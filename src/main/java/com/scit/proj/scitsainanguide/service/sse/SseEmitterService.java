@@ -1,13 +1,17 @@
 package com.scit.proj.scitsainanguide.service.sse;
 
+import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.domain.enums.AlarmCategory;
 import com.scit.proj.scitsainanguide.repository.AlarmRepository;
+import com.scit.proj.scitsainanguide.repository.StatusJpaRepository;
+import com.scit.proj.scitsainanguide.repository.impl.MyFriendRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -15,6 +19,8 @@ import java.util.Map;
 public class SseEmitterService {
 
     private final AlarmRepository alarmRepository;
+    private final MyFriendRepositoryImpl myFriendRepository;
+    private final StatusJpaRepository statusRepository;
 
     private final Map<String, SseEmitter> emitters = new HashMap<>();
 
@@ -53,7 +59,20 @@ public class SseEmitterService {
         executeAlarm(receiverId, message, "messageReceive", AlarmCategory.MESSAGE_RECEIVE.getValue());
     }
 
+    public void sendFriendStatusUpdateNotification(String senderId, Integer statusId) {
+        String statusName = statusRepository.findById(statusId).get().getStatusName();
+        List<MemberDTO> receiverIdList = myFriendRepository.selectFriendIdWhoFavoriteMember(senderId);
+        // 나를 즐겨찾기 친구 추가해준 회원이 있을 때만 알림을 보내면 된다.
+        if (!receiverIdList.isEmpty()) {
+            for (MemberDTO receiver : receiverIdList) {
+                String message = senderId + " 님의 상태가 " + statusName + "(으)로 변경되었습니다."; // 'senderId 님의 상태가 xxx로 변경되었습니다.'
+                executeAlarm(receiver.getMemberId(), message, "friendStatusUpdate", AlarmCategory.FRIEND_STATUS_UPDATE.getValue());
+            }
+        }
+    }
+
     private void executeAlarm(String memberId, String message, String eventName, Integer categoryId) {
+        // memberId = 알림을 받는사람의 아이디
         SseEmitter emitter = emitters.get(memberId);
 
         if (emitter != null) {

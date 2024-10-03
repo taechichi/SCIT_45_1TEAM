@@ -60,5 +60,9 @@ public class MemberDTO {
         this.nationality = nationality;
         this.favoriteYn = favoriteYn;
      }
+
+     public MemberDTO(String memberId) {
+        this.memberId = memberId;
+     }
 }
 
