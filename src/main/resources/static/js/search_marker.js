@@ -701,9 +701,9 @@ function initMap() {
         // 출발 마커의 위도경도를 저장 (경로 표시를 위해)
         departLat = departmentMarker.getPosition().lat();
         departLong = departmentMarker.getPosition().lng();
-        console.log("departureLat: " + departLat);
-        console.log("departureLong: " + departLong);
-        console.log("출발지 설정 완료: " + departLat + ", " + departLong);
+        //console.log("departureLat: " + departLat);
+        //console.log("departureLong: " + departLong);
+        //console.log("출발지 설정 완료: " + departLat + ", " + departLong);
     }
 
     // 기존 출발 버튼 클릭 시 호출되는 로직
@@ -743,9 +743,9 @@ function initMap() {
         });
         arrivalLat = arrivalMarker.getPosition().lat();
         arrivalLong = arrivalMarker.getPosition().lng();
-        console.log("arrivalLat: " + arrivalLat);
-        console.log("arrivalLong: " + arrivalLong);
-        console.log("도착지 설정 완료: " + arrivalLat + ", " + arrivalLong);
+        //console.log("arrivalLat: " + arrivalLat);
+        //console.log("arrivalLong: " + arrivalLong);
+        //console.log("도착지 설정 완료: " + arrivalLat + ", " + arrivalLong);
     });
 }
 
@@ -796,8 +796,10 @@ function calculateWalkingRoute() {
         walkingRenderer.setMap(null);  // 이전 경로 제거
     }
     walkingRenderer = new google.maps.DirectionsRenderer({
-        polylineOptions: {strokeColor: 'green'}
-    });
+        polylineOptions: {
+            strokeColor: 'blue',
+            strokeWeight: 5      // Adjust the stroke weight (thickness of the line)
+        }    });
 
     walkingRenderer.setMap(map);    // 지도에 경로 표시
 
@@ -810,7 +812,7 @@ function calculateWalkingRoute() {
     };
 
     walkingService.route(walkingRequest, function (result, status) {
-        console.log(result); // result를 확인해 응답 데이터가 제대로 들어오는지 확인
+        //console.log(result); // result를 확인해 응답 데이터가 제대로 들어오는지 확인
 
         if (status === google.maps.DirectionsStatus.OK) {
             walkingRenderer.setDirections(result);
@@ -821,15 +823,16 @@ function calculateWalkingRoute() {
             // HTML info-panel 내 요소에 직접 경로 정보 출력
             document.getElementById('routeInfo').innerHTML
                 = `
-                          <div>
-                            <h5>${walkingRoot} <img src="/img/map/walking.png" style="width: 40px; height: 40px;"></h5>
-                            <p>${distanceLabel}: ${walkingLeg.distance.text}</p>
-                            <p>${durationLabel}: ${walkingLeg.duration.text}</p>
-                          </div>
-                        `;
+                    <div class="route-info">
+                        <h2>${walkingRoot} <img src="/img/map/walking.png" class="walking-icon"></h2>
+                        <h3>${distanceLabel}: ${walkingLeg.distance.text}</h3>
+                        <h3>${durationLabel}: ${walkingLeg.duration.text}</h3>
+                    </div>
+                `;
 
         } else {
-            console.error('도보 경로를 찾을 수 없습니다.', status);
+            document.getElementById('routeInfo').innerHTML = notFoundedWalkingRoute;
+            //console.error('도보 경로를 찾을 수 없습니다.', status);
         }
     });
 }
@@ -845,7 +848,10 @@ function calculateBicyclingRoute() {
         bicyclingRenderer.setMap(null);  // 이전 경로 제거
     }
     bicyclingRenderer = new google.maps.DirectionsRenderer({
-        polylineOptions: { strokeColor: 'blue' }
+        polylineOptions: {
+            strokeColor: 'green',
+            strokeWeight: 5      // Adjust the stroke weight (thickness of the line)
+        }
     });
 
     bicyclingRenderer.setMap(map);  // 지도에 경로 표시
@@ -871,13 +877,14 @@ function calculateBicyclingRoute() {
 
             // HTML info-panel 내 요소에 직접 경로 정보 출력
             document.getElementById('routeInfo').innerHTML = `
-                       <div>
-                        <h5>${bicycleRoot} <img src='/img/map/bicycle.png' style="width: 40px; height: 40px;"></h5>                       
-                        <p>${distanceLabel}: ${bicyclingLeg.distance.text}</p>
-                        <p>${durationLabel}: ${bicyclingLeg.duration.text}</p>
-                      </div>`;
+                <div class="route-info">
+                    <h2>${bicycleRoot} <img src='/img/map/bicycle.png' class="bicycle-icon"></h2>
+                    <h3>${distanceLabel}: ${bicyclingLeg.distance.text}</h3>
+                    <h3>${durationLabel}: ${bicyclingLeg.duration.text}</h3>
+                </div>`;
         } else {
-            console.error('자전거 경로를 찾을 수 없습니다.', status);
+            document.getElementById('routeInfo').innerHTML = notFoundedBicycleRoute;
+            // console.error('자전거 경로를 찾을 수 없습니다.', status);
         }
     });
 }
