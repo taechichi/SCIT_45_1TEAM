@@ -13,32 +13,37 @@ document.addEventListener('DOMContentLoaded', () => {
         $('#loadingOverlay').hide(); // 로딩 오버레이 숨기기
     }
 
+    // 기존에 콘솔에 찍던 번역 진행상황을 로딩 영역에 출력하기
+    function updateLoadingStatus(message) {
+        $('#loadingStatus').text(message); // jQuery to update the loading status text
+    }
+
     // 녹음 시작 버튼 클릭 시
     document.getElementById('start-recording').addEventListener('click', () => {
-        console.log("1. 언어 선택 후 녹음 시작 버튼 클릭");
+        // console.log("1. 언어 선택 후 녹음 시작 버튼 클릭");
         // 녹음 시작 버튼 클릭 시 선택된 언어 업데이트
         streamingLanguage = document.getElementById('streamingLan').value;
         // 사용자의 마이크에 접근하기 위한 권한 요청을 참으로
         navigator.mediaDevices.getUserMedia({audio: true})
             .then(stream => {
-                console.log("2. 마이크 접근 허용");
+                // console.log("2. 마이크 접근 허용");
                 // MediaRecorder 객체를 생성하여 오디오 스트림 녹음
                 mediaRecorder = new MediaRecorder(stream, {mimeType: 'audio/webm'}); // 오디오 포맷 설정
 
                 // 녹음 시작 시 로그 출력
                 mediaRecorder.onstart = () => {
-                    console.log("4. 녹음이 시작되었습니다.");
+                   // console.log("4. 녹음이 시작되었습니다.");
                 };
 
                 // 녹음된 오디오 데이터 조각을 수집
                 mediaRecorder.ondataavailable = event => {
                     audioChunks.push(event.data); // 데이터 조각 배열에 저장
-                    console.log("5. 오디오 데이터 조각이 수집되었습니다.");
+                    //console.log("5. 오디오 데이터 조각이 수집되었습니다.");
                 };
 
                 // 녹음이 중지되면 호출되는 함수 미리 정의
                 mediaRecorder.onstop = () => {
-                    console.log("7. 녹음 중지");
+                    //console.log("7. 녹음 중지");
                     // 오디오 조각들을 하나의 Blob에 결합.
                     let audioBlob = new Blob(audioChunks, {type: 'audio/webm'}); // Blob 포맷 설정
                     // 옮겨 담고 나면, 다시 새로 녹음 가능하도록 배열 초기화
@@ -49,18 +54,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // 녹음된 오디오를 서버로 업로드합니다.
                     uploadAudio(audioBlob);
-                    console.log("8. 서버로 오디오 전송 중...");
+                    //console.log("8. 서버로 오디오 전송 중...");
+                    updateLoadingStatus(sendToServer);
                 };
 
                 // 녹음 시작!
                 mediaRecorder.start();
-                console.log("3. 녹음 시작");
+                //console.log("3. 녹음 시작");
 
                 // 버튼 상태 변경: 녹음 시작 버튼 비활성화, 중지 버튼 활성화
                 document.getElementById('start-recording').disabled = true;
                 document.getElementById('stop-recording').disabled = false;
             })
-            .catch(error => console.error('마이크 접근에 실패했습니다:', error)); // 마이크 접근 오류 처리
+            .catch(error => {
+                alert(micUnaccessible); // 미리 정의한 경고 메시지 표시
+                console.error('마이크 접근에 실패했습니다:', error); // 에러 로그 출력
+            });
     });
 
     // 녹음 중지 버튼 클릭 시
@@ -68,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 녹음 중지
         mediaRecorder.stop();
         showLoading(); // 로딩 시작
-        console.log("6. 녹음 중지");
+        //console.log("6. 녹음 중지");
 
         // 버튼 상태 변경: 녹음 시작 버튼 활성화, 중지 버튼 비활성화
         document.getElementById('start-recording').disabled = false;
@@ -98,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             // 서버에서 반환된 값
             .then(data => {
-                console.log('9. 서버 응답:', data);
+                //console.log('9. 서버 응답:', data);
                 document.getElementById('voiceTexted').innerHTML += `<br>${data.transcription}`;
 
                 // 번역 요청 함수 호출(texted 글, 어떤 언어인지)
@@ -107,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => {
                 hideLoading(); // 오류 발생 시 로딩 종료
-                console.error('텍스트로 변환 실패:', error);
+                // console.error('텍스트로 변환 실패:', error);
                 document.getElementById('voiceTexted').innerHTML = `${textedError}`;
             });
     }
@@ -127,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetLanguages = ['en-US', 'ko-KR'];
                 break;
             default:
-                console.error('알 수 없는 타겟 소스 언어:', whatLan);
+                alert(unknownLan);
                 return;
         }
 
@@ -159,7 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .catch(error => {
                     hideLoading(); // 오류 발생 시 로딩 종료
-                    console.error('번역 실패:', error);
                     document.getElementById('voiceTranslated').innerHTML = `${transError}`;
                 });
         });

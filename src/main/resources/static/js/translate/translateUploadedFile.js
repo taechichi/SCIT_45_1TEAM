@@ -22,6 +22,11 @@ function hideLoading() {
     $('#loadingOverlay').hide(); // 로딩 오버레이 숨기기
 }
 
+// 기존에 콘솔에 찍던 번역 진행상황을 로딩 영역에 출력하기
+function updateLoadingStatus(message) {
+    $('#loadingStatus').text(message); // jQuery to update the loading status text
+}
+
 // 사용자가 선택한 언어 담을 변수
 let whatLan;
 
@@ -41,6 +46,7 @@ function upload() {
     }
 
     showLoading(); // 로딩 시작
+    updateLoadingStatus(sendToServer); // 로딩 상황에 대한 안내
 
     // 오디오 파일 데이터를 담을 FormData 객체 생성
     let formData = new FormData();
@@ -56,15 +62,15 @@ function upload() {
         .then(data => { // 리턴되는 값]
             // 반환된 텍스트를 번역하기 위해 함수 호출
             let whatLan = document.getElementById('selectLan').value;
-            requestTranslation(data.text, whatLan);
             // 서버에서 반환된 객체 'data'의 text 값을 id가 'texted'인 요소에 입력
             document.getElementById('texted').innerHTML += `${data.text}<br>`;
-
+            updateLoadingStatus(translatingNow); // 번역 진행에 대한 안내
+            requestTranslation(data.text, whatLan);
         })
         // 실패시
         .catch(error => {
             hideLoading(); // 오류 발생 시 로딩 종료
-            console.error('Error converting audio to text:', error);
+            // console.error('Error converting audio to text:', error);
             document.getElementById('texted').innerHTML = `${textedError}`;
         });
 }
@@ -85,7 +91,7 @@ function requestTranslation(text, whatLan) {
             targetLanguages = ['en-US', 'ko-KR'];
             break;
         default:
-            console.error('알 수 없는 타겟 소스 언어:', whatLan);
+            alert(unknownLan);
             return;
     }
 
@@ -110,7 +116,7 @@ function requestTranslation(text, whatLan) {
             })
             .catch(error => {
                 hideLoading(); // 오류 발생 시 로딩 종료
-                console.error('번역 실패:', error);
+                // console.error('번역 실패:', error);
                 document.getElementById('translated').append(`${transError}`);
             });
     });

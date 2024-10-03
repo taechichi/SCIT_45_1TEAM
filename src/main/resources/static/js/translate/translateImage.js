@@ -22,6 +22,11 @@ function hideLoading() {
     $('#loadingOverlay').hide(); // 로딩 오버레이 숨기기
 }
 
+// 기존에 콘솔에 찍던 번역 진행상황을 로딩 영역에 출력하기
+function updateLoadingStatus(message) {
+    $('#loadingStatus').text(message); // jQuery to update the loading status text
+}
+
 // 1. 이미지를 업로드할 때 실행되는 함수, 사용자가 선택한 원문 언어값 추출된 텍스트를 가지고 번역함수 호출
 function handleFormSubmit(event) {
     event.preventDefault(); // 폼 제출 시 페이지 새로 고침 방지
@@ -39,6 +44,7 @@ function handleFormSubmit(event) {
         return;
     }
     showLoading(); // 로딩 시작
+    updateLoadingStatus(sendToServer); // 로딩 상황에 대한 안내
 
     // FormData 객체 생성
     let formData = new FormData(document.getElementById('uploadForm'));
@@ -55,12 +61,12 @@ function handleFormSubmit(event) {
         .then(data => {
             // 서버 응답 처리
             document.getElementById('extractedText').innerText = data.extractedText || 'No text extracted';
+            updateLoadingStatus(translatingNow); // 번역 진행에 대한 안내
             // 추출된 텍스트와, 사용자가 선택한 원문 언어 정보로 번역 함수 호출
             requestTranslation(data.extractedText, sourceLanguage);
         })
         .catch(error => {
             hideLoading(); // 오류 발생 시 로딩 종료
-            console.error('Error:', error);
             document.getElementById('extractedText').innerText = `${textedError}`;
         });
 }
@@ -82,7 +88,7 @@ function requestTranslation(text, whatLan) {
             targetLanguages = ['en-US', 'ko-KR'];
             break;
         default:
-            console.error('알 수 없는 타겟 소스 언어:', whatLan);
+            alert(unknownLan);
             return;
     }
 
@@ -114,7 +120,6 @@ function requestTranslation(text, whatLan) {
             })
             .catch(error => {
                 hideLoading(); // 오류 발생 시 로딩 종료
-                console.error('번역 실패:', error);
                 document.getElementById('translatedText').innerHTML = `${transError}`;
             });
     });

@@ -7,7 +7,6 @@
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
     <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
-    <script th:src="@{/js/translateStreaming.js}"></script>
     <link rel="stylesheet" th:href="@{/css/index/index.css}">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
@@ -16,6 +15,9 @@
         <!-- 번역용 변수 -->
         let textedError = /*[[#{translate.textedError}]]*/ '텍스트화 실패';
         let transError = /*[[#{translate.transError}]]*/ '번역 실패';
+        let unknownLan = /*[[#{translate.unknown.language}]]*/ '알 수 없는 타겟 언어';
+        let micUnaccessible = /*[[#{translate.mic.unaccessible}]]*/ '마이크에 접근할 수 없습니다.';
+        let sendToServer = /*[[#{translate.send.to.server}]]*/ '녹음 내용을 서버로 전송하고 있습니다...';
     </script>
     <!-- Custom fonts for this template-->
     <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
@@ -72,8 +74,10 @@
                 <!-- 녹음된 내용 다시 듣기 -->
                 <audio id="audio-playback" controls></audio>
 
+                <!-- 로딩 영역 -->
                 <div id="loadingOverlay" style="display: none;">
                     <img src="/img/translate/loading.png" alt="Loading..." id="loadingImage" />
+                    <div id="loadingStatus"></div>
                 </div>
             </div>
 
@@ -86,7 +90,7 @@
                                 <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                     TEXTED
                                 </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800"><span th:text="#{translate.streaming.toText}" id="voiceTexted"></span></div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><h4 th:text="#{translate.streaming.toText}"></h4> <span id="voiceTexted"></span></div>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-language fa-2x text-gray-300"></i>
@@ -104,7 +108,7 @@
                                 <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                     TRANSLATED
                                 </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800"><span th:text="#{translate.streamingTrans}" id="voiceTranslated"></span></div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><h4 th:text="#{translate.streamingTrans}"></h4> <span id="voiceTranslated"></span></div>
                             </div>
                             <div class="col-auto">
                                 <i class="fas fa-globe fa-2x text-gray-300"></i>
