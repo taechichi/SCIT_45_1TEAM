@@ -62,15 +62,17 @@
     border-top: 1px solid #ddd;
     width: 100%;  /* 채팅창의 폭과 동일하게 설정 */
     box-sizing: border-box;
+    justify-content: flex-start;
 }
 
 /* 댓글 입력창 - input 부분 */
 #comment-input-section input {
-    margin-right: 10px; /* 버튼과의 간격을 좀 더 넓힘 */
-    padding: 8px;
+    margin-right: 5px; /* 버튼과의 간격을 좀 더 넓힘 */
+    padding: 5px;
     border: 1px solid #ccc;
-    font-size: 12px;
+    font-size: 13px;
     flex-grow: 1;  /* 입력창이 더 많은 공간을 차지하게 설정 */
+    box-sizing: border-box;
     /*margin-right: 5px;
     padding: 5px;
     border: 1px solid #ccc;
@@ -80,7 +82,7 @@
 
 /* 댓글 입력창 - button 부분 */
 #comment-input-section button {
-    padding: 8px 15px;
+    padding: 4px 9px;
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -88,6 +90,8 @@
     font-size: 12px;
     white-space: nowrap;
     flex-shrink: 0; /* 버튼 크기가 줄지 않도록 설정 */
+    min-width: 60px;
+    width: auto;
     /*padding: 5px 10px;
     background-color: #4CAF50;
     color: white;
@@ -101,10 +105,12 @@
     background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 8px 15px;
+    padding: 4px 9px;
     cursor: pointer;
     white-space: nowrap;
     flex-shrink: 0;  /* 버튼 크기가 줄지 않게 설정 */
+    width: auto;
+    min-width: 90px;
     /*background-color: #4CAF50;
     color: white;
     border: none;

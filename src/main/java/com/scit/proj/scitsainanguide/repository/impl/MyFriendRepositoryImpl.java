@@ -337,6 +337,20 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                 .fetch();
     }
 
+    @Override
+    public List<MemberDTO> selectFriendIdWhoFavoriteMember(String senderId) {
+        return queryFactory.select(
+                        Projections.constructor(MemberDTO.class,
+                                friend.memberId
+                        )
+                )
+                .from(friend)
+                .where(friend.friendId.eq(senderId)
+                        .and(friend.favoriteYn.eq(true))
+                )
+                .fetch();
+    }
+
 
     private long getTotalCount(BooleanBuilder whereClause) {
         return queryFactory.selectFrom(friend)

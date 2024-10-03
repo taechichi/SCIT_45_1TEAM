@@ -29,4 +29,6 @@ public interface MyFriendRepository {
     List<MemberDTO> selectMyFavoriteList(String memberId);
 
     List<MemberDTO> selectMyFriendIdContainSearchWord(String memberId, String searchWord);
+
+    List<MemberDTO> selectFriendIdWhoFavoriteMember(String senderId);
 }

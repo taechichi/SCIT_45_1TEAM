@@ -121,7 +121,7 @@ $(document).ready(function () {
     const eventSource = new EventSource('/notification');
 
     // 친구 요청 수신, 친구 요청 수락, 메시지 수신 이벤트
-    $(eventSource).on('messageReceive friendRequestReceive friendRequestAccept', function (e) {
+    $(eventSource).on('messageReceive friendRequestReceive friendRequestAccept friendStatusUpdate', function (e) {
         const eventType = e.type;
         selectAlarmList(eventType);
     });
@@ -395,34 +395,34 @@ function updateCnt($badgeCounter) {
     $badgeCounter.text(cnt + 1);
 }
 
-    document.querySelectorAll('.nav-link.profile-picture-wrapper').forEach(function(friendElement) {
-        let statusIndicator = friendElement.querySelector('.status-indicator');
-        let statusId = statusIndicator.getAttribute('data-status-id');
-        let nicknameElement = friendElement.querySelector('#headerNickname');
-        let statusNameElement = friendElement.querySelector('#headerStatusName');
-        let statusNameJaElement = friendElement.querySelector('#headerStatusNameJa');
+document.querySelectorAll('.nav-link.profile-picture-wrapper').forEach(function(friendElement) {
+    let statusIndicator = friendElement.querySelector('.status-indicator');
+    let statusId = statusIndicator.getAttribute('data-status-id');
+    let nicknameElement = friendElement.querySelector('#headerNickname');
+    let statusNameElement = friendElement.querySelector('#headerStatusName');
+    let statusNameJaElement = friendElement.querySelector('#headerStatusNameJa');
 
-        // statusId에 따라 텍스트 색상 변경
-        switch (parseInt(statusId)) {
-            case 2: // 안전
-                nicknameElement.style.color = 'green';
-                statusNameElement.style.color = 'green';
-                statusNameJaElement.style.color = 'green';
-                break;
-            case 3: // 대피중
-                nicknameElement.style.color = 'yellow';
-                statusNameElement.style.color = 'yellow';
-                statusNameJaElement.style.color = 'yellow';
-                break;
-            case 4: // 위험
-                nicknameElement.style.color = 'red';
-                statusNameElement.style.color = 'red';
-                statusNameJaElement.style.color = 'red';
-                break;
-            default:
-                // 상태가 1일 경우 (평상시), 기본 상태로 유지
-                break;
-        }
+    // statusId에 따라 텍스트 색상 변경
+    switch (parseInt(statusId)) {
+        case 2: // 안전
+            nicknameElement.style.color = 'green';
+            statusNameElement.style.color = 'green';
+            statusNameJaElement.style.color = 'green';
+            break;
+        case 3: // 대피중
+            nicknameElement.style.color = 'yellow';
+            statusNameElement.style.color = 'yellow';
+            statusNameJaElement.style.color = 'yellow';
+            break;
+        case 4: // 위험
+            nicknameElement.style.color = 'red';
+            statusNameElement.style.color = 'red';
+            statusNameJaElement.style.color = 'red';
+            break;
+        default:
+            // 상태가 1일 경우 (평상시), 기본 상태로 유지
+            break;
+    }
 });
 
 

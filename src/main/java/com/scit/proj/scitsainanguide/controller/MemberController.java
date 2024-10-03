@@ -3,6 +3,7 @@ package com.scit.proj.scitsainanguide.controller;
 import com.scit.proj.scitsainanguide.domain.dto.MemberDTO;
 import com.scit.proj.scitsainanguide.security.AuthenticatedUser;
 import com.scit.proj.scitsainanguide.service.MemberService;
+import com.scit.proj.scitsainanguide.service.sse.SseEmitterService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ import java.util.Map;
 public class MemberController {
 
     private final MemberService memberService;
+    private final SseEmitterService sseEmitterService;
 
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -162,6 +164,9 @@ public class MemberController {
             , @RequestParam("duration") Integer hours) {
         String memberId = user.getUsername();
         memberService.changeMyStatus(memberId, statusId, hours);
+
+        // 내 상태 수정시 나를 즐겨찾기 해놓은 친구들에게 알림을 전송한다.
+        sseEmitterService.sendFriendStatusUpdateNotification(user.getId(), statusId);
         return ResponseEntity.ok().build();
     }
 
