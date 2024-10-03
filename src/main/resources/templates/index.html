@@ -60,6 +60,9 @@ id="indexHtml">
         let hoursLabel = /*[[#{main.myStatus.time.hoursLeft}]]*/ '시간';
         let minutesLabel = /*[[#{main.myStatus.time.minutesLeft}]]*/ '분';
         let secondsLabel = /*[[#{main.myStatus.time.secondsLeft}]]*/ '초';
+        let notViewed = /*[[#{main.myStatus.not.viewed}]]*/ '상태 변경 실패';
+        let notChanged = /*[[#{main.myStatus.not.changed}]]*/ '상태 변경 실패';
+        let notAvailable = /*[[#{main.myStatus.not.available}]]*/ '유효하지 않은 상태 아이디';
         <!-- 경로표시용 변수 -->
         let walkingRoot = /*[[#{map.walkingRoot}]]*/ '도보 경로 정보';
         let bicycleRoot = /*[[#{map.bicycleRoot}]]*/ '도보 경로 정보';
@@ -85,7 +88,7 @@ id="indexHtml">
             <br>
             <span th:text="#{load.site.text}">ページローディング中...</span>
             <br><br>
-            <h4 th:text="#{load.site.subtext}">내일을 위한 대비</h4>
+            <span th:text="#{load.site.subtext}">내일을 위한 대비</span>
         </h3>
 
     </div> <!-- end of custom-spinner -->

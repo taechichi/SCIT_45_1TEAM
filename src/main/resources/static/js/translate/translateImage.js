@@ -115,7 +115,7 @@ function requestTranslation(text, whatLan) {
             })
             .then(data => {
                 // 현재의 텍스트에 새 번역 결과를 추가하고 개행 문자를 추가
-                document.getElementById('translatedText').innerHTML += `${data.translatedText}<br>`;
+                document.getElementById('translatedText').innerHTML += `${data.translatedText}<br><br>`;
                 hideLoading(); // 번역 완료 후 로딩 종료
             })
             .catch(error => {

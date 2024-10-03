@@ -37,8 +37,8 @@ $(document).ready(function () {
                 hours = defaultValue;
             }
 
-            console.log('선택된 상태 ID(2:안전/3:도피중/4:긴급):', statusId);
-            console.log('상태 지속 시간 (ms):', hours);
+            // console.log('선택된 상태 ID(2:안전/3:도피중/4:긴급):', statusId);
+            // console.log('상태 지속 시간 (ms):', hours);
 
             // ajax 요청을 보냄
             $.ajax({
@@ -49,7 +49,8 @@ $(document).ready(function () {
                     myStatus(); // 상태 변경 후 최신 상태 다시 불러옴
                 },
                 error: function (error) {
-                    console.error('상태 변경 실패:', error);
+                    alert(notViewed);
+                    // console.error('상태 변경 실패:', error);
                 }
             });
 
@@ -113,7 +114,8 @@ $(document).ready(function () {
                 myStatus();
             })
             .catch(error => {
-                console.error('문제 발생:', error);
+                alert(notChanged);
+                //console.error('문제 발생:', error);
             });
     });
 
@@ -213,7 +215,7 @@ function myStatus() {
             }
         })
         .catch(error => {
-            console.error('상태 읽어오기 문제 발생:', error);
+            alert(notViewed);
         });
 }
 
@@ -233,7 +235,8 @@ function updateStatusColor(statusId) {
             profileImg.style.border = '6px solid red';
             break;
         default:
-            console.log("statusId 오류");
+            alert(notAvailable);
+            //console.log("statusId 오류");
     }
 }
 
