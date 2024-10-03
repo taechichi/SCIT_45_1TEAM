@@ -34,12 +34,13 @@
           <!-- 반복문으로 친구 프로필 사진 항목들 생성 -->
           <div th:each="friend : ${favoriteFriendList}" class="nav-link profile-picture-wrapper">
             <a href="#" data-toggle="modal" th:data-target="'#profileModal' + ${friend.memberId}">
+              <input type="hidden" th:value="${friend.memberId}"/>
               <div class="profile-picture-container">
                 <img class="img-profile rounded-circle" th:src="@{/member/download/{memberId}(memberId=${friend.memberId})}" alt="Profile Picture"/>
                 <!-- 회원의 상태를 정해진 색으로 표시 및 statusId 동적 설정 -->
                 <div class="status-indicator" th:attr="data-status-id=${friend.statusId}">
                   <!-- 상태에 따라 다른 배경색을 표시하는 if 문 추가 -->
-                  <div th:if="${friend.statusId == 1}" class="status-indicator"></div>
+                  <div th:if="${friend.statusId == 1}" class="status-indicator bg-gradient-dark"></div>
                   <div th:if="${friend.statusId == 2}" class="status-indicator bg-success"></div>
                   <div th:if="${friend.statusId == 3}" class="status-indicator bg-warning"></div>
                   <div th:if="${friend.statusId == 4}" class="status-indicator bg-gradient-danger"></div>
@@ -165,7 +166,7 @@
             <div class="dropdown-list-image mr-3">
               <img class="rounded-circle" th:src="@{/member/download/{senderId}(senderId=${message.senderId})}" alt="Profile Picture" />
               <!-- 회원의 상태를 정해진 색으로 표시 -->
-              <div th:if="${message.statusId == 1}" class="status-indicator"></div>
+              <div th:if="${message.statusId == 1}" class="status-indicator bg-gradient-dark"></div>
               <div th:if="${message.statusId == 2}" class="status-indicator bg-success"></div>
               <div th:if="${message.statusId == 3}" class="status-indicator bg-warning"></div>
               <div th:if="${message.statusId == 4}" class="status-indicator bg-gradient-danger"></div>

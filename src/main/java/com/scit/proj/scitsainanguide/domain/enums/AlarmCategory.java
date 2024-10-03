@@ -8,7 +8,7 @@ public enum AlarmCategory {
     MESSAGE_RECEIVE(1),
     FRIEND_REQUEST_RECEIVE(2),
     FRIEND_REQUEST_ACCEPT(3),
-    EMERGENCY(4),
+    FRIEND_STATUS_UPDATE(4),
     DEFAULT(0);
 
     private final int value;

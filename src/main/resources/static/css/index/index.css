@@ -491,16 +491,31 @@ ruby{
     margin-top: 20px;
 }
 
-/* 파일 첨부 버튼 스타일 */
-#writeModal .custom-file-upload {
+/* 기본 파일 첨부 버튼 숨김 */
+#files {
+    display: none;
+}
+
+/* label을 커스텀 파일 첨부 버튼처럼 보이게 */
+label[for="files"] {
     display: inline-block;
     padding: 10px 20px;
     border: solid 1px #007bff;
-    width: 300px;
     cursor: pointer;
     border-radius: 30px;
     color: #007bff;
     background-color: white;
+    text-align: center;
+}
+
+/* 파일 이름을 표시할 span 스타일 */
+#fileNameDisplay {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+    min-height: 20px; /* 최소 높이를 지정하여 보이게 만듦 */
+    width: 100%; /* 너비 지정 */
 }
 
 /* 버튼들 스타일링 */
@@ -515,10 +530,6 @@ ruby{
     border-radius: 5px;
 }
 
-/* 숨긴 파일 input */
-#writeModal #files {
-    display: none;
-}
 #writeModalPlaceTitle {
     font-size: 25px;
 }
@@ -533,4 +544,14 @@ ruby{
 #listHr {
     border: 1px solid #0056b3;
     width: 340px;
+}
+
+.boardDeleteBtn {
+    padding: 3px 14px;
+    border-radius: 30px;
+    background-color: white;
+    color: red;
+    border: solid 1px red;
+    margin-top: 14px;
+    cursor: pointer;
 }

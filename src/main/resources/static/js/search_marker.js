@@ -432,7 +432,7 @@ function getList(placeID, currentPage, pageSize, isFetching) {
                     }
                     //로그인 아이디 게시글 작성자 확인
                     if(boardItem.memberId === loggedInUserId){
-                        boardHtml += `<button onclick="deleteBoard(${boardId})">삭제</button>`;
+                        boardHtml += `<button class="boardDeleteBtn" onclick="deleteBoard(${boardId})">삭제</button>`;
                     }
                     boardHtml += `</div>`;
                 });
@@ -888,3 +888,23 @@ function calculateBicyclingRoute() {
         }
     });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('files').addEventListener('change', function() {
+        let fileInput = document.getElementById('files');
+        let fileNameDisplay = document.getElementById('fileNameDisplay');
+
+        console.log('파일 선택 이벤트 발생');
+
+        let fileNames = Array.from(fileInput.files).map(file => file.name);
+        console.log('선택된 파일:', fileNames);
+
+        if (fileNames.length > 0) {
+            fileNameDisplay.textContent = fileNames.join(', ');
+            console.log('파일명이 span에 표시되었습니다:', fileNames.join(', '));
+        } else {
+            fileNameDisplay.textContent = '';
+            console.log('선택된 파일이 없습니다.');
+        }
+    });
+});
