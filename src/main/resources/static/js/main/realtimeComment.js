@@ -1,5 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("DOMContentLoaded 호출됨.");
+    // === 페이징 인피티니 슈크롤 ===
+    let currentPage = 0;
+    const pageSize = 20;
+    let isLoading = false;
+
     // === 전역 변수 정의 ===
     let userLocation = "Unknown";
     let currentDate = new Date();

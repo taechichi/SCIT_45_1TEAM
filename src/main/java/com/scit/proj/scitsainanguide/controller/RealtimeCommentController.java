@@ -92,4 +92,14 @@ public class RealtimeCommentController {
 
         return ResponseEntity.ok("댓글이 성공적으로 저장되었습니다.");
     }
+
+
+
+
+    /*@GetMapping("/comments")
+    public List<RealtimeCommentDTO> getComments(
+            @RequestParam int page,
+            @RequestParam int size) {
+        return realtimeCommentService.findPaginationComments(page, size);
+    }*/
 }
