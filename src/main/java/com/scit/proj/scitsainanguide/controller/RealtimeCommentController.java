@@ -78,9 +78,9 @@ public class RealtimeCommentController {
         comment.setCreateDt(LocalDateTime.now(ZoneOffset.UTC));
         comment.setNickname(user.getNickname());
         realtimeCommentService.saveRealtimeComment(comment); // DB에 메시지 저장
-        List<RealtimeCommentDTO> comments = List.of(comment);
 
         // 연결된 모든 클라이언트에게 메시지 전송
+        List<RealtimeCommentDTO> comments = List.of(comment);
         for (SseEmitter emitter : emitters) {
             try {
                 emitter.send(comments);

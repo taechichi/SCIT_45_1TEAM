@@ -24,6 +24,8 @@ public class WebSecurityConfig {
             , "/thymeleaf"
             , "/scss/**"
             , "/vendor/**"
+            , "/comments/stream"
+            , "/comments"
             , "/**"         // 테스트를 위해 모든 경로를 열어놓음. 필요하다면 지워서 사용하세요.
     };
 
