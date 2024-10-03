@@ -223,7 +223,7 @@ function showInfoPanel(marker) {
             </div>
             <h3 id="panel-title">${placeName}</h3>
             <hr>
-            <p id="panel-adress">주소: ${placeAdress}</p>`;
+             <p id="panel-adress">${detailaddress} : ${placeAdress}</p>`;
 
         let infoPanel = document.getElementById("info-panel");
         let infoPart = document.getElementById("info_part");
