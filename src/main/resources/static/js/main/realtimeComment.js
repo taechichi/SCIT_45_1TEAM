@@ -27,6 +27,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const inputField = document.getElementById("commentInput");
     const commentListContainer = document.getElementById("commentListContainer");
 
+    // Thymleaf에서 렌더링된 placeholder 값과 안정화 문구 가져오기 (data-* 속성 사용)
+    const originalPlaceholder = inputField ? inputField.placeholder : "";  // 원래 placeholder 값
+    const originalPlaceholderStabilization = inputField ? inputField.getAttribute('data-stabilization') : "채팅창 안정화 중..."; // 안정화 중 placeholder 값
+
     // SSE 연결 시작
     startEventSource();
 
@@ -34,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // 초기 상태에서는 전송 버튼 및 입력창 비활성화
         sendButton.disabled = true;
         inputField.disabled = true;
-        inputField.placeholder = "채팅창 안정화 중...";  // 안내 문구 추가
+        inputField.placeholder = originalPlaceholderStabilization;  // 안정화 중 placeholder 값
 
 
         // 댓글 전송 버튼 이벤트 (버튼 클릭 또는 엔터키 입력 시)
@@ -79,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log("SSE 연결이 성공적으로 열렸습니다.");
                 sendButton.disabled = false;
                 inputField.disabled = false;
-                inputField.placeholder = "댓글 입력";  // 안내 문구 삭제
+                inputField.placeholder = originalPlaceholder;  // 안내 문구 삭제
                 commentList.innerHTML = ''; // 기존 댓글 목록 초기화
             };
 
@@ -102,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 eventSource = null; // SSE 연결을 닫음
                 sendButton.disabled = true;
                 inputField.disabled = true;
-                inputField.placeholder = "채팅창 안정화 중...";
+                inputField.placeholder = originalPlaceholderStabilization;
                 setTimeout(startEventSource, 2000);
             };
         }

@@ -11,7 +11,7 @@
         <!-- 댓글 입력 -->
         <div id="comment-input-section">
             <div th:if="${member.memberId}">
-                <input type="text" id="commentInput" th:placeholder="#{main.chat.commentInput.placeholder}">
+                <input type="text" id="commentInput" th:placeholder="#{main.chat.commentInput.placeholder}" th:attr="data-stabilization=#{main.chat.commentInput.stabilization}">
                 <button id="sendCommentButton" th:text="#{main.chat.sendButton}">댓글 보내기</button>
             </div>
             <div th:unless="${member.memberId}">
