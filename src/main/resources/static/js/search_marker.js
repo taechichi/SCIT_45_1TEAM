@@ -432,7 +432,7 @@ function getList(placeID, currentPage, pageSize, isFetching) {
                     }
                     //로그인 아이디 게시글 작성자 확인
                     if(boardItem.memberId === loggedInUserId){
-                        boardHtml += `<button class="boardDeleteBtn onclick="deleteBoard(${boardId})">삭제</button>`;
+                        boardHtml += `<button class="boardDeleteBtn" onclick="deleteBoard(${boardId})">삭제</button>`;
                     }
                     boardHtml += `</div>`;
                 });
