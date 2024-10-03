@@ -24,6 +24,7 @@ let favImg;
 let board;
 let loggedInUserId;
 
+
 window.addEventListener('load', initMap);
 // 페이지가 로드된 후 DOM 접근
 window.onload = function() {
@@ -33,10 +34,8 @@ window.onload = function() {
     if (loginMemberInput && loginMemberInput.value) {
         // 로그인된 사용자
         loggedInUserId = loginMemberInput.value;
-        console.log(`로그인된 사용자 ID: ${loggedInUserId}`);
     } else {
         // 비로그인 상태
-        console.log('로그인되지 않은 상태입니다.');
         loggedInUserId = null; // 혹은 다른 기본값 설정 가능
     }
 };
@@ -71,8 +70,6 @@ function searchPlaceByPlaceId(placeId) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
             //url 접속시 마커생성
             createMarker(map, place, true, "shareHospital");
-        } else {
-            console.error('Place details request failed');
         }
     });
 }
@@ -86,12 +83,7 @@ function searchShelterByPlaceId(placeId) {
             if (place) {
                 // 데이터를 기반으로 대피소 위치에 마커 생성
                 createMarker(map, place, true, "shareShelter");
-            } else {
-                console.error('Shelter details not found');
             }
-        })
-        .catch(error => {
-            console.error('Error fetching shelter details:', error);
         });
 }
 
@@ -200,8 +192,6 @@ function geocodeLatLng(location, callback){
             } else {
                 localAddress = "No results found";
             }
-        } else {
-            alert('Geocoder failed due to: ' + status);
         }
         callback(localAddress);
     });
@@ -243,9 +233,16 @@ function showInfoPanel(marker) {
             favMarkerCheck(currentMarker.placeId);
         }
         board.innerHTML = '';
+
         // 게시글 목록 초기 로드
         getList(placeID, currentPage, pageSize, isFetching);
         currentPage++;
+
+        // // 스크롤이 없으면 페이지 추가 로드 (초기 로드 이후에 실행)
+        //     if (infoPanel.scrollHeight <= infoPanel.clientHeight && !isFetching) {
+        //         getList(placeID, currentPage, pageSize, isFetching);
+        //         currentPage++;
+        //     }
 
         // 스크롤 이벤트 추가
         const infoPanelElement = document.getElementById('info-panel');
@@ -255,8 +252,10 @@ function showInfoPanel(marker) {
                 currentPage++;
             }
         });
+
     });
 }
+
 
 
 //마커배열을 확인해 마커들의 bound(경계값을 생성)
@@ -290,7 +289,6 @@ function searchNearbyHospitals() {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
             // 기존 마커 제거
             delMarker();
-            alert(results[0].name);
 
             // 검색된 병원 정보 마커로 표시
             results.forEach(place => {
@@ -298,8 +296,6 @@ function searchNearbyHospitals() {
                 markers.push(marker);
             });
             calculateBoundsForMarkers(markers);  // 마커들로 경계 설정
-        } else {
-            console.error('병원 검색에 실패했습니다:', status);
         }
     });
 }
@@ -327,17 +323,11 @@ function fetchNearbyShelters() {
             if (data && data.length > 0) {
                 // 대피소 데이터가 있으면 지도에 표시
                 data.forEach(place => {
-                    // console.log("장소 확인데이터",place);
                     let marker = createMarker(map, place,false,"dbShelter"); // 대피소 마커 생성 함수
                     markers.push(marker);
                     calculateBoundsForMarkers(markers);
                 });
-            } else {
-                console.log('500m 내 대피소가 없습니다.');
             }
-        })
-        .catch(error => {
-            console.error('대피소 데이터를 불러오는 중 오류 발생:', error);
         });
 }
 
@@ -345,34 +335,14 @@ function fetchNearbyShelters() {
 function favMarker(placeID) {
     fetch('/addFavorite/' + encodeURIComponent(placeID), {
         method: 'POST'
-    })
-        .then(response => {
-            if (response.ok) {
-                console.log('즐겨찾기에 추가되었습니다.');
-            } else {
-                console.error('즐겨찾기 추가에 실패했습니다.');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    });
 }
 
 //즐겨찾기 삭제
 function favMarkerRemove(placeID) {
     fetch('/removeFavorite/' + encodeURIComponent(placeID), {
         method: 'POST'
-    })
-        .then(response => {
-            if (response.ok) {
-                console.log('즐겨찾기가 삭제되었습니다..');
-            } else {
-                console.error('즐겨찾기 삭제에 실패했습니다.');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    });
 }
 //즐겨찾기 확인
 function favMarkerCheck(placeID){
@@ -384,16 +354,11 @@ function favMarkerCheck(placeID){
         .then(isFavorite => {
             if (isFavorite) {
                 // 이미 즐겨찾기에 추가된 경우
-                console.log("check:fav");
                 favImg.src = '/img/map/yellowStar.png';
             } else {
                 // 즐겨찾기에 추가되지 않은 경우
-                console.log("check:not fav");
                 favImg.src = '/img/map/whiteStar.png';
             }
-        })
-        .catch(error => {
-            console.error('즐겨찾기 확인 중 오류 발생:', error);
         });
 }
 
@@ -407,8 +372,6 @@ function getList(placeID, currentPage, pageSize, isFetching) {
     })
         .then(response => response.json())
         .then(boardList => {
-            console.log(boardList);
-
             if (boardList && boardList.length > 0) {
                 let boardHtml = '';
                 boardList.forEach(boardItem => {
@@ -422,7 +385,7 @@ function getList(placeID, currentPage, pageSize, isFetching) {
                     <hr id="listHr">
                     <div class="board">
                         <p id="content-${boardItem.boardId}" class="board-content">${truncatedContents}</p>
-                        ${isTruncated ? `<a href="#" id="toggle-${boardItem.boardId}" class="board-more" onclick="toggleContent(${boardItem.boardId}, '${boardItem.contents}')">더보기</a>` : ''}
+                        ${isTruncated ? `<a href="#" id="toggle-${boardItem.boardId}" class="board-more" onclick="toggleContent(${boardItem.boardId}, '${boardItem.contents}')">${checkToggle1}</a>` : ''}
                     `;
                     // 사진이 있는 경우
                     if (boardItem.pictures && boardItem.pictures.length > 0) {
@@ -432,7 +395,7 @@ function getList(placeID, currentPage, pageSize, isFetching) {
                     }
                     //로그인 아이디 게시글 작성자 확인
                     if(boardItem.memberId === loggedInUserId){
-                        boardHtml += `<button class="boardDeleteBtn" onclick="deleteBoard(${boardId})">삭제</button>`;
+                        boardHtml += `<button class="boardDeleteBtn" onclick="deleteBoard(${boardId})">${boardDelte}</button>`;
                     }
                     boardHtml += `</div>`;
                 });
@@ -440,7 +403,6 @@ function getList(placeID, currentPage, pageSize, isFetching) {
                 board.innerHTML += boardHtml;  // 게시글 추가
             }
         })
-        .catch(error => console.error('오류 발생:', error))
         .finally(() => {
             isFetching = false;  // 데이터 로딩 완료
         });
@@ -451,35 +413,59 @@ function toggleContent(boardId, fullContent) {
     const contentElement = document.getElementById(`content-${boardId}`);
     const toggleElement = document.getElementById(`toggle-${boardId}`);
 
-    if (toggleElement.innerText === '더보기') {
+
+    if (toggleElement.innerText ===checkToggle1) {
         contentElement.innerText = fullContent;
-        toggleElement.innerText = '접기';
+        toggleElement.innerText = checkToggle2;
     } else {
         contentElement.innerText = fullContent.substring(0, 60) + '...';
-        toggleElement.innerText = '더보기';
+        toggleElement.innerText = checkToggle1;
     }
 }
 
 // 삭제 버튼 클릭 시 deleteYn을 true로 바꾸는 함수
 function deleteBoard(boardId) {
     if (!boardId || boardId === 'undefined') {
-        console.error('Invalid boardId:', boardId);
         return;
     }
-
     fetch(`/board/delete/${boardId}`, {
         method: 'POST'
-    })
-        .then(response => {
-            if (response.ok) {
-                alert('게시글이 삭제되었습니다.');
-                location.reload(); // 페이지를 새로고침해서 변경된 목록을 다시 로드
-            } else {
-                alert('삭제에 실패했습니다.');
-            }
-        })
-        .catch(error => console.error('오류 발생:', error));
+    }).then(response => {
+        if (response.ok) {
+            board.innerHTML = '';  // 기존 게시글 목록을 비움
+
+            // 게시글 목록 다시 로드
+            let currentPage = 0;
+            const pageSize = 10;
+            let isFetching = false;
+            let placeID = currentMarker.placeId;
+
+            getList(placeID, currentPage, pageSize, isFetching);
+            currentPage++;  // 페이지 넘버를 1 증가시켜 다음 페이지를 불러올 수 있게 설정
+        }
+    });
 }
+
+// // 수정 버튼 클릭시 수정 하는 함수
+// function updateBoard(boardId) {
+//     if (!boardId || boardId === 'undefined') {
+//         console.error('Invalid boardId:', boardId);
+//         return;
+//     }
+//
+//     fetch(`/board/delete/${boardId}`, {
+//         method: 'POST'
+//     })
+//         .then(response => {
+//             if (response.ok) {
+//                 alert('업데이트');
+//                 location.reload(); // 페이지를 새로고침해서 변경된 목록을 다시 로드
+//             } else {
+//                 alert('업데이트에 실패했습니다.');
+//             }
+//         })
+//         .catch(error => console.error('오류 발생:', error));
+// }
 
 
 
@@ -596,7 +582,6 @@ function initMap() {
             if (places.length == 0) {                   //places.length는 검색결과로 반환된 장소의 수
                 return;                                 //검색장소가 0개 일 경우 return을 통해 아래 함수는 실행이 안된다.
             }
-            alert("result"+places[0].name)              //검색장소의 첫번째로 나오는 장소 알림
 
             //기존 마커 제거
             delMarker();
@@ -605,7 +590,6 @@ function initMap() {
             const bounds = new google.maps.LatLngBounds();              //LatLngBounds는 지도의 경계를 얻는 객체 bounds 초기화
             places.forEach((place) => {                                                 //places배열을 place로
                 if (!place.geometry || !place.geometry.location) {                            //만약 장소관련 정보가 없으면 return
-                    console.log("Returned place contains no geometry");
                     return;
                 }
 
@@ -667,12 +651,10 @@ function initMap() {
 
             // hash 기반 url 생성 - 인코딩된 데이터를 포함
             shareUrl = `${window.location.origin}/#${encodedData}`;
-            alert(shareUrl);
+            alert("공유경로: "+shareUrl);
 
             // URL을 클립보드에 복사
             navigator.clipboard.writeText(shareUrl);
-        } else {
-            alert("No marker selected!");
         }
     });
 
@@ -894,17 +876,13 @@ document.addEventListener('DOMContentLoaded', function() {
         let fileInput = document.getElementById('files');
         let fileNameDisplay = document.getElementById('fileNameDisplay');
 
-        console.log('파일 선택 이벤트 발생');
 
         let fileNames = Array.from(fileInput.files).map(file => file.name);
-        console.log('선택된 파일:', fileNames);
 
         if (fileNames.length > 0) {
             fileNameDisplay.textContent = fileNames.join(', ');
-            console.log('파일명이 span에 표시되었습니다:', fileNames.join(', '));
         } else {
             fileNameDisplay.textContent = '';
-            console.log('선택된 파일이 없습니다.');
         }
     });
 });
