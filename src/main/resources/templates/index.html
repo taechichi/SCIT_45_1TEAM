@@ -86,11 +86,11 @@ id="indexHtml">
             <div class="icon chat-sharing"></div>
             <div class="icon translation-service"></div>
         </div>
-        <h3 style="position: relative;">
-            <span class="furigana"> サ イ ガ イ ド</span> <!-- 후리가나 추가 -->
-            <br>
-            <span th:text="#{load.site.text}">ページローディング中...</span>
-            <br><br>
+        <h3 id="loadingDiv">
+            <span class="furigana" th:text="#{load.site.hurigana}">サ イ ガ イ ド</span><br>
+
+            <span th:text="#{load.site.text}">ページローディング中...</span><br><br>
+
             <span th:text="#{load.site.subtext}">내일을 위한 대비</span>
         </h3>
 
