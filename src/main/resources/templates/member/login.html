@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -22,19 +23,15 @@
 
 <!-- Custom styles for this template-->
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
-    <!--<style>
-      /* 이미지가 포함된 div의 스타일 */
-      .bg-login-image {
-        background: url('/img/pompom3.jpg') no-repeat center center;
-        background-size: cover; /* 이미지를 요소 크기에 맞게 조정 */
-        height: 100%; /* 부모 요소에 맞게 높이 설정 */
+    <style>
+      .loginImg{
+        margin: 48px 20px 0px 40px;
+        width: 450px;
       }
-
-      /* 버튼을 왼쪽으로 20px 이동 */
-      #btnLogin {
-        margin-left: 20px; /* 버튼을 왼쪽으로 20px 이동 */
+      #btnLogin{
+        margin: 0; !important;
       }
-    </style>-->
+    </style>
 </head>
 
 <body class="bg-gradient-info">
@@ -47,6 +44,7 @@
           <!-- Nested Row within Card Body -->
           <div class="row">
             <div class="col-lg-6 d-none d-lg-block bg-login-image">
+              <img class="loginImg" th:src="@{/img/SAIGAIDOblue2.png}" alt="loginImg"/>
             </div>
             <div class="col-lg-6">
               <div class="p-5">
