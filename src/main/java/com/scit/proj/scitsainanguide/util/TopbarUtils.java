@@ -53,6 +53,10 @@ public class TopbarUtils {
             List<MemberDTO> friendDTOList = myFriendService.selectMyFavoriteList(memberId);
             modelAndView.addObject("favoriteFriendList", friendDTOList);
 
+            // 나의 친구들의 모든 정보 세팅
+            List<MemberDTO> allFriendDTOList = myFriendService.selectMyFriendList(memberId);
+            modelAndView.addObject("friendList", allFriendDTOList);
+
             // 내가 읽지않은 알람 목록 정보 세팅
             SelectAlarmRequestDTO alarmRequestDTO = new SelectAlarmRequestDTO();
             alarmRequestDTO.setMemberId(memberId);

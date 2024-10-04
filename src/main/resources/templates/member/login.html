@@ -1,37 +1,49 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no"
+  />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
 
-    <title>SB Admin 2 - Login</title>
+  <title>SB Admin 2 - Login</title>
 
-    <!-- Custom fonts for this template-->
-    <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
-    <link rel="stylesheet" th:href="@{/css/register/login.css}" />
-<link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet"
-/>
+  <!-- Custom fonts for this template-->
+  <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
+  <link rel="stylesheet" th:href="@{/css/register/login.css}" />
+  <link
+          href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet"
+  />
 
-<!-- Custom styles for this template-->
-    <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
-    <style>
-      .loginImg{
-        margin: 48px 20px 0px 40px;
-        width: 450px;
-      }
-      #btnLogin{
-        margin: 0; !important;
-      }
-    </style>
+  <!-- Custom styles for this template-->
+  <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
+  <style>
+    #btnLogin{
+      margin: 0 !important;
+    }
+    .card {
+      max-width: 600px; /* 카드의 최대 너비 설정 */
+      min-height: 450px; /* 카드의 최소 높이 설정 */
+      margin: auto; /* 카드 중앙 배치 */
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* 테두리 그림자 */
+      border-radius: 10px; /* 모서리 둥글게 */
+    }
+    .card-body {
+      padding: 2rem; /* 카드 안쪽 여백 */
+    }
+    .bg-gradient-info {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh; /* 전체 화면 높이에 맞춤 */
+    }
+  </style>
 </head>
 
 <body class="bg-gradient-info">
@@ -42,11 +54,8 @@
       <div class="card o-hidden border-0 shadow-lg my-5">
         <div class="card-body p-0">
           <!-- Nested Row within Card Body -->
-          <div class="row">
-            <div class="col-lg-6 d-none d-lg-block bg-login-image">
-              <img class="loginImg" th:src="@{/img/SAIGAIDOblue2.png}" alt="loginImg"/>
-            </div>
-            <div class="col-lg-6">
+          <div class="row justify-content-center">
+            <div class="col-lg-8">
               <div class="p-5">
                 <div class="text-center">
                   <h1 class="h4 text-gray-900 mb-4">환영합니다!</h1>

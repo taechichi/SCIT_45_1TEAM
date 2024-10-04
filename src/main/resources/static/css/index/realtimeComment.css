@@ -71,7 +71,7 @@
     padding: 5px;
     border: 1px solid #ccc;
     font-size: 13px;
-    flex-grow: 1;  /* 입력창이 더 많은 공간을 차지하게 설정 */
+    flex-grow: 2;  /* 입력창이 더 많은 공간을 차지하게 설정 */
     box-sizing: border-box;
     /*margin-right: 5px;
     padding: 5px;
@@ -87,7 +87,7 @@
     color: white;
     border: none;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px;
     white-space: nowrap;
     flex-shrink: 0; /* 버튼 크기가 줄지 않도록 설정 */
     min-width: 60px;

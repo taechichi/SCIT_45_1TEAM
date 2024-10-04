@@ -49,6 +49,8 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
+
+
     @Override
     public Page<FriendDTO> selectMyFriendList(SearchRequestDTO dto, String memberId) {
         Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPageSize());
@@ -264,6 +266,40 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
                 .where(member.memberId.eq(memberId))
                 .fetchOne()
         );
+    }
+
+
+    @Override
+    public List<MemberDTO> selectMyFriendList(String memberId) {
+        BooleanBuilder whereClause = new BooleanBuilder();
+        whereClause.and(friend.memberId.eq(memberId))
+                .and(friend.friendYn.eq(true))
+                .and(friend.friend.withdraw.eq(false))
+                .and(friend.friend.adminYn.eq(false));
+
+        List<FriendEntity> friendEntityList = queryFactory.selectFrom(friend)
+                .where(whereClause)
+                .fetch();
+
+        List<String> friendIdList = friendEntityList.stream()
+                .map(FriendEntity::getFriendId)
+                .toList();
+
+        return queryFactory.select(
+                        Projections.constructor(MemberDTO.class,
+                                member.memberId,
+                                member.nickname,
+                                member.fileName,
+                                member.status.statusId,
+                                member.status.statusName,
+                                member.status.statusNameJa,
+                                member.lastStUpdateDt,
+                                member.stMessage
+                        )
+                )
+                .from(member)
+                .where(member.memberId.in(friendIdList))
+                .fetch();
     }
 
     @Override
