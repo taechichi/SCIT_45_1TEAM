@@ -26,6 +26,10 @@ h5{
     color: #999; /* 색상 조정 (선택사항) */
 }
 
+#loadingDiv{
+    position: relative;
+}
+
 .custom-spinner {
     text-align: center;
 }

@@ -348,7 +348,7 @@ function updateMessageDropdown(message) {
     $(".dropdown-item.text-center.small.text-gray-500").attr("href", "/my/message");
 }
 
-// 알림 아이콘 배경 동적으로 적용
+// 알림 아이콘 배경  동적으로 적용
 function getIconBgClass(categoryId) {
     if (categoryId === 1) {
         return "bg-primary";
