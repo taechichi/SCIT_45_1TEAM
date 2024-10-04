@@ -1,14 +1,43 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // === 페이징 인피티니 슈크롤 ===
-    let currentPage = 0;
-    const pageSize = 20;
-    let isLoading = false;
-
     // === 전역 변수 정의 ===
     let userLocation = "Unknown";
     let currentDate = new Date();
     currentDate.setHours(currentDate.getHours() + 9); // 동경시간 보정
     let connectionTime = currentDate.toISOString();
+
+    // ==== 도시 정보 추출 api 코드 ====
+    // 외부 API를 통해 사용자의 위치 정보 얻기 (ipinfo.io 예시)
+    // API 쓸라면 주석 해제
+    fetch('https://ipinfo.io/json?token=8024395341b3f3')
+        .then(response => response.json())
+        .then(data => {
+            userLocation = `${data.region}_${data.city}`;   // 도시 정보 추출
+            console.log("User location: ", userLocation);
+        })
+        .catch(error => {
+            console.error("Error fetching location: ", error);
+            userLocation = "Unknown";   // 위치 정보가 없을 때 기본값
+        });
+
+    // ==== 친구 정보 가져오기 ====
+    // HTML에서 숨겨진 친구 데이터를 가져와서 friendList 배열을 생성
+    const friendList = [];
+    document.querySelectorAll('input[id^="friend"]').forEach(friendInput => {
+        const friendId = friendInput.value;
+        const nickname = document.getElementById(`nickname${friendId}`).value;
+        const statusMessage = document.getElementById(`statusMessage${friendId}`).value;
+        const statusName = document.getElementById(`statusName${friendId}`).value;
+
+        // friendList 배열에 친구 정보 추가
+        friendList.push({
+            memberId: friendId,
+            nickname: nickname,
+            stMessage: statusMessage,
+            statusName: statusName,
+        });
+    });
+
+    console.log(friendList);
 
     // ==== 로그인된 사용자 닉네임과 ID 가져오기 ====
     const loginMemberIdElement = document.getElementById('loginMemberId');
@@ -63,20 +92,6 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
         console.log("로그인되지 않은 사용자. 댓글 보지만, 전송은 못하지롱.")
     }
-/*
-    // 댓글 전송 버튼 이벤트 (버튼 클릭 또는 엔터키 입력 시)
-    inputField.addEventListener("keydown", function (event) {
-        if (event.key === "Enter") {
-            event.preventDefault(); // 기본 엔터 동작 방지
-            sendMessage();  // 엔터키로도 전송
-        }
-    });
-
-    if (sendButton && nickname) {
-        sendButton.addEventListener("click", function () {
-            sendMessage();  // 전송 버튼으로도 전송
-        });
-    }*/
 
     // ======== 함수 정의 영역 =========
 
@@ -202,39 +217,22 @@ document.addEventListener("DOMContentLoaded", function () {
     // 프로필 모달을 생성하는 함수
     function createProfileModal(comment) {
         const isCurrentUser = (comment.memberId === memberId);
-        const isFriend = checkIfFriend(comment.memberId);
+        const friendData = friendList.find(friend => friend.memberId === comment.memberId);
+        const isFriend = !!friendData; // friendData가 존재하면 true, 아니면 false
 
-        // friendList에서 해당 친구의 정보를 가져옴
-        const friendNicknameElement = document.getElementById(`nickname${comment.memberId}`);
-        const friendStatusMessageElement = document.getElementById(`statusMessage${comment.memberId}`);
-        const friendStatusNameElement = document.getElementById(`statusName${comment.memberId}`);
+        // 로그인 여부를 확인
+        const isLoggedIn = memberId !== "";
 
-        // friendList에 정보가 있다면, 그 값을 사용
-        let friendNickname = comment.nickname;
-        let friendStatusMessage = comment.stMessage;
-        let friendStatusName = "No status";
+        // friendList에서 상태 이름을 가져옴 (친구인 경우에만)
+        const statusName = friendData ? friendData.statusName : null;
 
-        if (friendNicknameElement) {
-            friendNickname = friendNicknameElement.value;
-        }
-        if (friendStatusMessageElement) {
-            friendStatusMessage = friendStatusMessageElement.value;
-        }
-        if (friendStatusNameElement) {
-            friendStatusName = friendStatusNameElement.value;
-        }
-
-        // 조건에 따라 다른 모달 HTML 생성
-        let modalHtml ='';
-
-        // 1. 내 자신의 프로필 클릭한 경우
-        if(isCurrentUser) {
-            modalHtml = `
+        // 모달 HTML 생성
+        const modalHtml = `
             <div class="modal fade" id="profileModal${comment.memberId}" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="profileModalLabel">${friendNickname}</h5>
+                            <h5 class="modal-title" id="profileModalLabel">${comment.nickname}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -243,7 +241,20 @@ document.addEventListener("DOMContentLoaded", function () {
                             <div class="profile-picture-container">
                                 <img class="img-profile rounded-circle img-64" src="/member/download/${comment.memberId}" alt="Profile Picture"/>
                             </div>
-                            <p><strong>상태 메시지:</strong> ${friendStatusMessage ? friendStatusMessage : 'No status message'}</p>
+                            ${isCurrentUser ? `
+                                <p><strong>상태 메시지:</strong> ${comment.stMessage ? comment.stMessage : 'No status message'}</p>
+                            ` : `
+                                ${isLoggedIn ? `
+                                    <div class="modal-links">
+                                        <a href="/my/message/write">쪽지 보내기</a>
+                                    </div>
+                                    <p><strong>마지막 상태 업데이트:</strong> ${statusName ? statusName : 'No status'}</p>
+                                    <p><strong>상태 메시지:</strong> ${comment.stMessage ? comment.stMessage : 'No status message'}</p>
+                                    ${(!isFriend) ? `<button class="btn btn-primary friend-add-btn" data-friend-id="${comment.memberId}">친구 추가</button>` : ''}
+                                ` : `
+                                    <p><strong>상태 메시지:</strong> ${comment.stMessage ? comment.stMessage : 'No status message'}</p>
+                                `}
+                            `}
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
@@ -252,77 +263,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
             </div>
         `;
-        }
-
-        // 2. 친구가 아닌 경우
-        else if(!isFriend) {
-            modalHtml = `
-            <div class="modal fade" id="profileModal${comment.memberId}" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="profileModalLabel">${friendNickname}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="profile-picture-container">
-                                <img class="img-profile rounded-circle img-64" src="/member/download/${comment.memberId}" alt="Profile Picture"/>
-                            </div>
-                            <p><strong>상태 메시지:</strong> ${friendStatusMessage ? friendStatusMessage : 'No status message'}</p>
-                            <button class="btn btn-primary friend-add-btn" data-friend-id="${comment.memberId}">친구 추가</button>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-        }
-
-        // 3. 친구인 경우
-        else if(isFriend) {
-            modalHtml = `
-            <div class="modal fade" id="profileModal${comment.memberId}" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="profileModalLabel">${friendNickname}</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="profile-picture-container">
-                                <img class="img-profile rounded-circle img-64" src="/member/download/${comment.memberId}" alt="Profile Picture"/>
-                            </div>
-                            <div class="modal-links">
-                                <a href="/my/message/write">쪽지 보내기</a>
-                            </div>
-                            <p><strong>마지막 상태 업데이트:</strong> ${friendStatusName ? friendStatusName : 'No status'}</p>
-                            <p><strong>상태 메시지:</strong> ${friendStatusMessage ? friendStatusMessage : 'No status message'}</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-        }
 
         // 모달 HTML을 body에 추가
         document.body.insertAdjacentHTML('beforeend', modalHtml);
 
-        // 친구 추가 버튼에 이벤트 리스너 추가
-        document.querySelectorAll('.friend-add-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const friendId = this.getAttribute('data-friend-id');
-                addFriend(friendId);
+        // 친구 추가 버튼에 이벤트 리스너 추가 (로그인된 상태에서만 추가)
+        if (memberId !== "") {
+            document.querySelectorAll('.friend-add-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const friendId = this.getAttribute('data-friend-id');
+                    addFriend(friendId);
+                });
             });
-        });
+        }
     }
 
     // 친구 판별 함수
