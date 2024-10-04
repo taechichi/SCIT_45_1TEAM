@@ -19,7 +19,7 @@
         <!-- Divider -->
         <hr class="sidebar-divider">
 
-        <div sec:authorize="isAuthenticated()">
+        <div sec:authorize="isAuthenticated() and principal.adminYn == true">
 
             <!-- Heading -->
             <div class="sidebar-heading">
