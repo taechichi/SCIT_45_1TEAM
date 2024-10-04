@@ -101,6 +101,8 @@ id="indexHtml">
             <div id="wrapper">
                 <input id="loginMemberId" type="hidden" th:value="${member.memberId}" />
                 <input id="loginNickname" type="hidden" th:value="${member.nickname}" />
+                <input id="loginStMessage" type="hidden" th:value="${member.stMessage}">
+
                 <!-- Sidebar -->
                 <div th:replace="~{fragments/menu :: menu}"></div>
                 <!-- End of Sidebar -->
