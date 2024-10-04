@@ -45,6 +45,7 @@ public class MarkerFavoritesService {
         Optional<HospitalEntity> hospitalEntityOptional = hospitalRepository.findById(placeId);
         Optional<ShelterEntity> shelterEntityOptional= Optional.empty();
 
+        // Optional이 true 일 경우
         if(hospitalEntityOptional.isPresent()) {
             HospitalEntity hospitalEntity = hospitalEntityOptional.get();
             markerFavoritesEntity = MarkerFavoritesEntity.builder()
@@ -69,18 +70,22 @@ public class MarkerFavoritesService {
             log.debug("markerFavoritesEntity가 null이어서 저장하지 않았습니다.");
         }
     }
+
     //즐겨찾기 여부 확인
     public boolean isFavorite(String memberId, String placeId) {
-        // 먼저 병원 ID로 검색
-        boolean isHospitalFavorite = markerFavoritesJPARepository.existsByMemberIdAndHospitalId(memberId, placeId);
+        log.debug("체크 place 값:{}", placeId);
 
-        if (isHospitalFavorite) {
-            return true;  // 병원이 즐겨찾기에 있는 경우 true 반환
+        // 병원 ID 테이블에서 먼저 존재하는지 확인
+        if (hospitalRepository.findById(placeId).isPresent()) {
+            // 병원 ID로 검색
+            return markerFavoritesJPARepository.existsByMemberIdAndHospitalId(memberId, placeId);
         }
-
-        // 병원이 아닌 경우 쉘터 ID로 검색
+        // 쉘터 ID로 검색
         return markerFavoritesJPARepository.existsByMemberIdAndShelterId(memberId, placeId);
     }
+
+
+
 
     public void removeFavorite(String memberId, String placeId) {
         // 병원 ID로 먼저 삭제 시도

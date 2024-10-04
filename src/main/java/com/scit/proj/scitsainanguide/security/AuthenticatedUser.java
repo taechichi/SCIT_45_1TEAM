@@ -19,6 +19,7 @@ public class AuthenticatedUser implements UserDetails {
 	private String id;
 	private String password;
 	private String nickname;
+	private boolean adminYn;
 	private Collection<? extends GrantedAuthority> authorities;
 	private boolean enabled;
 
