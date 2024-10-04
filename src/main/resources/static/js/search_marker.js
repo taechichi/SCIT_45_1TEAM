@@ -24,6 +24,13 @@ let favImg;
 let board;
 let loggedInUserId;
 
+// getList를 위한 객체
+const boardState = {
+    isFetching: false,
+    currentPage: 0,
+    currentPlaceID: '',
+    pageSize: 10
+};
 
 window.addEventListener('load', initMap);
 // 페이지가 로드된 후 DOM 접근
@@ -38,6 +45,14 @@ window.onload = function() {
         // 비로그인 상태
         loggedInUserId = null; // 혹은 다른 기본값 설정 가능
     }
+
+    const infoPanelElement = document.getElementById('info-panel');
+    infoPanelElement.addEventListener('scroll', function() {
+        if (infoPanelElement.scrollTop + infoPanelElement.clientHeight >= infoPanelElement.scrollHeight - 100 && !boardState.isFetching) {
+            getList(boardState.currentPlaceID, boardState.currentPage, boardState.pageSize);
+            boardState.currentPage++;
+        }
+    });
 };
 
 // 해시 부분에서 인코딩된 placeId와 type을 디코딩
@@ -145,9 +160,18 @@ function createMarker(map, place, visible=false, type = "none"){
                 map: map,
                 position: place.geometry.location,
                 title: place.name,
-                placePhoto: place.photos ? place.photos[0].getUrl() : ""
+                placePhoto: place.photos ? place.photos[0 ].getUrl() : "/img/map/noImageAvailable.jpg"
             };
     }
+    if (type === "shareShelter" || type === "shareHospital") {
+        markerOption.icon = {
+            url: '/img/shareMarker.png', // 사용자 정의 아이콘 URL
+            scaledSize: new google.maps.Size(30, 45), // 아이콘의 크기 조정
+            origin: new google.maps.Point(0, 0), // 아이콘의 원점
+            anchor: new google.maps.Point(25, 50), // 아이콘의 앵커 포인트
+        };
+    }
+
     let marker = new google.maps.Marker(markerOption);
 
     switch (type) {
@@ -202,9 +226,6 @@ function showInfoPanel(marker) {
     let placeName = marker.title;
     let photoUrl = marker.placePhoto;
     let placeID = marker.placeId;
-    let currentPage = 0;
-    const pageSize = 10;
-    let isFetching = false;
 
     geocodeLatLng(marker.position, function(placeAdress) {
         let placeInfo = `
@@ -213,7 +234,7 @@ function showInfoPanel(marker) {
             </div>
             <h3 id="panel-title">${placeName}</h3>
             <hr>
-             <p id="panel-adress">${detailaddress} : ${placeAdress}</p>`;
+             <p id="panel-adress">${detailAddress} : ${placeAdress}</p>`;
 
         let infoPanel = document.getElementById("info-panel");
         let infoPart = document.getElementById("info_part");
@@ -229,32 +250,22 @@ function showInfoPanel(marker) {
         const writeLink = document.getElementById('writeLink');
         if(writeLink){
             writeLink.setAttribute('data-target', '#writeModal');
-            // writeLink.setAttribute('href', `/board/write/${placeID}`);
             favMarkerCheck(currentMarker.placeId);
         }
+
+        // 상태 업데이트
+        boardState.currentPlaceID = placeID;
+        boardState.currentPage = 0;
+
+        // 게시글 목록 초기화
         board.innerHTML = '';
 
-        // 게시글 목록 초기 로드
-        getList(placeID, currentPage, pageSize, isFetching);
-        currentPage++;
-
-        // // 스크롤이 없으면 페이지 추가 로드 (초기 로드 이후에 실행)
-        //     if (infoPanel.scrollHeight <= infoPanel.clientHeight && !isFetching) {
-        //         getList(placeID, currentPage, pageSize, isFetching);
-        //         currentPage++;
-        //     }
-
-        // 스크롤 이벤트 추가
-        const infoPanelElement = document.getElementById('info-panel');
-        infoPanelElement.addEventListener('scroll', function() {
-            if (infoPanelElement.scrollTop + infoPanelElement.clientHeight >= infoPanelElement.scrollHeight - 100 && !isFetching) {
-                getList(placeID, currentPage, pageSize, isFetching);
-                currentPage++;
-            }
-        });
-
+        // 게시글 초기 로드
+        getList(boardState.currentPlaceID, boardState.currentPage, boardState.pageSize);
+        boardState.currentPage++;
     });
 }
+
 
 
 
@@ -363,9 +374,9 @@ function favMarkerCheck(placeID){
 }
 
 // 게시글 목록 불러오기
-function getList(placeID, currentPage, pageSize, isFetching) {
-    if (isFetching) return;  // 이미 데이터 요청 중이면 중단
-    isFetching = true;
+function getList(placeID, currentPage, pageSize) {
+    if (boardState.isFetching) return;  // 이미 요청 중이면 중단
+    boardState.isFetching = true;
 
     fetch(`/board/list/${encodeURIComponent(placeID)}?page=${currentPage}&size=${pageSize}`, {
         method: 'GET'
@@ -380,22 +391,28 @@ function getList(placeID, currentPage, pageSize, isFetching) {
                     let contents = boardItem.contents;
                     let truncatedContents = contents.length > 60 ? contents.substring(0, 60) + '...' : contents;
                     let isTruncated = contents.length > 60;
+                    let createDate= new Date(boardItem.createDt);   //문자열을 Date 형식으로
+                    let boardTime = timeAgo(createDate);
 
                     boardHtml += `
-                    <hr id="listHr">
-                    <div class="board">
-                        <p id="content-${boardItem.boardId}" class="board-content">${truncatedContents}</p>
-                        ${isTruncated ? `<a href="#" id="toggle-${boardItem.boardId}" class="board-more" onclick="toggleContent(${boardItem.boardId}, '${boardItem.contents}')">${checkToggle1}</a>` : ''}
-                    `;
+                <hr id="listHr">
+                <div class="board-user"><img class="img-profile rounded-circle" src="/member/download/${boardItem.memberId}" alt="Profile Picture">
+                <span class="board-userName">${boardItem.memberId}</span>
+                <span class = "board-createTime">${boardTime}</span>
+                </div>
+                <div class="board">
+                    <span id="content-${boardItem.boardId}" class="board-content">${truncatedContents}</span>
+                    ${isTruncated ? `<a href="#" id="toggle-${boardItem.boardId}" class="board-more" onclick="toggleContent(${boardItem.boardId}, '${boardItem.contents}')">${checkToggle1}</a>` : ''}
+                `;
                     // 사진이 있는 경우
                     if (boardItem.pictures && boardItem.pictures.length > 0) {
                         boardItem.pictures.forEach(picture => {
                             boardHtml += `<img src="${picture.path}" class="board-image" alt="${picture.oriFilename}" loading="lazy" width="100"><br>`;
                         });
                     }
-                    //로그인 아이디 게시글 작성자 확인
+                    // 로그인 아이디 게시글 작성자 확인
                     if(boardItem.memberId === loggedInUserId){
-                        boardHtml += `<button class="boardDeleteBtn" onclick="deleteBoard(${boardId})">${boardDelte}</button>`;
+                        boardHtml += `<button class="boardDeleteBtn" onclick="deleteBoard(${boardId})">${boardDelete}</button>`;
                     }
                     boardHtml += `</div>`;
                 });
@@ -404,9 +421,10 @@ function getList(placeID, currentPage, pageSize, isFetching) {
             }
         })
         .finally(() => {
-            isFetching = false;  // 데이터 로딩 완료
+            boardState.isFetching = false;  // 데이터 로딩 완료
         });
 }
+
 
 // 글 더보기/접기 기능
 function toggleContent(boardId, fullContent) {
@@ -467,6 +485,32 @@ function deleteBoard(boardId) {
 //         .catch(error => console.error('오류 발생:', error));
 // }
 
+// 작성시간 계산 함수
+function timeAgo(createDate) {
+    const now = new Date();
+    const timeDiff = now - createDate; // 시간 차이 (밀리초)
+
+    const seconds = Math.floor(timeDiff / 1000);
+    const minutes = Math.floor(timeDiff / (1000 * 60));
+    const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+    const months = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30));
+    const years = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 365));
+
+    if (years > 0) {
+        return `${years}${yearsBoard}`;
+    } else if (months > 0) {
+        return `${months}${monthsBoard}`;
+    } else if (days > 0) {
+        return `${days}${daysBoard}`;
+    } else if (hours > 0) {
+        return `${hours}${hoursBoard}`;
+    } else if (minutes > 0) {
+        return `${minutes}${minutesBoard}`;
+    } else {
+        return `${seconds}${secondsBoard}`;
+    }
+}
 
 
 //맵 생성
