@@ -12,6 +12,13 @@
     <link rel="stylesheet" th:href="@{/css/topbar.css}">
     <link rel="stylesheet" th:href="@{/css/index/index.css}">
     <link rel="stylesheet" th:href="@{/css/myMarkerFavorites.css}">
+    <script th:inline="javascript">
+        let updateNicknameSuccessMessage = /*[[#{my.favorite.nickname.update.success}]]*/ '닉네임이 성공적으로 업데이트되었습니다.';
+        let updateNicknameErrorMessage = /*[[#{my.favorite.nickname.update.error}]]*/ '닉네임 업데이트 중 오류가 발생했습니다.';
+        let nicknamePromptMessage = /*[[#{my.favorite.nickname.prompt.message}]]*/ '새로운 닉네임을 입력하세요:';
+        let confirmNicknameUpdateMessage = /*[[#{my.favorite.nickname.confirm.update}]]*/ '닉네임을 수정하시겠습니까?\n현재 닉네임: ';
+        let confirmNicknameRegistrationMessage = /*[[#{my.favorite.nickname.confirm.registration}]]*/ '새로운 닉네임을 지으시겠습니까?';
+    </script>
 </head>
 
 <body id="page-top">
