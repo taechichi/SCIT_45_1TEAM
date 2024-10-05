@@ -169,26 +169,35 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // 댓글 목록을 다시 그리는 함수
+    // 댓글 목록을 그리는 함수
     function renderComments(comments) {
         comments.forEach(comment => {
             const li = document.createElement("li");
             li.classList.add("chat-comment");
             li.setAttribute("data-created-at", comment.createDt); // 댓글 생성 시간 설정
 
-            // 이미지 태그 추가
-            const img = document.createElement("img");
-            img.classList.add("img-profile", "rounded-circle");
-            img.src = `/member/download/${comment.memberId}`; // 서버에서 닉네임으로 이미지를 받아옴
-            img.alt = "Profile Picture";
+            // 자신이 쓴 댓글인지 확인
+            const itSelf = (comment.memberId === memberId);
+            if(itSelf) {
+                li.classList.add("self");
+            }
 
+            // 이미지 태그 추가 (자신의 메시지가 아닐 때만)
+            if (!itSelf) {
+                const img = document.createElement("img");
+                img.classList.add("img-profile", "rounded-circle");
+                img.src = `/member/download/${comment.memberId}`; // 서버에서 닉네임으로 이미지를 받아옴
+                img.alt = "Profile Picture";
 
-            // 프로필 이미지에 모달을 연결
-            const imgWrapper = document.createElement("a");
-            imgWrapper.href = "#";
-            imgWrapper.setAttribute("data-toggle", "modal");
-            imgWrapper.setAttribute("data-target", `#profileModal${comment.memberId}`);
-            imgWrapper.appendChild(img);
+                // 프로필 이미지에 모달을 연결
+                const imgWrapper = document.createElement("a");
+                imgWrapper.href = "#";
+                imgWrapper.setAttribute("data-toggle", "modal");
+                imgWrapper.setAttribute("data-target", `#profileModal${comment.memberId}`);
+                imgWrapper.appendChild(img);
+
+                li.appendChild(imgWrapper);
+            }
 
             // 댓글 내용 추가
             const commentContent = document.createElement("div");
@@ -203,9 +212,13 @@ document.addEventListener("DOMContentLoaded", function () {
             const minutes = kstTime.getMinutes().toString().padStart(2, '0');
             const formattedTime = `${hours}:${minutes}`;
 
-            commentContent.innerHTML = `(${comment.location})<br>[${comment.nickname}]<br>${comment.contents} <br><small class="comment-time">${formattedTime}</small>`;
+            // 댓글 생성
+            commentContent.innerHTML = `
+                    <small>(${comment.location})</small>
+                    <small>[${comment.nickname}]</small>
+                    ${comment.contents}<br>
+                    <small class="comment-time">${formattedTime}</small>`;
 
-            li.appendChild(imgWrapper);
             li.appendChild(commentContent);
             commentList.appendChild(li);
             
