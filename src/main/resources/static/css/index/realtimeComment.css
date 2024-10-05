@@ -31,6 +31,15 @@
     margin: 0;
 }
 
+.login-notice {
+    width: 100%; /* 부모 요소의 너비를 100%로 설정 */
+    text-align: center; /* 텍스트를 가운데로 정렬 */
+}
+
+#notLoggingChatInputMessage {
+    display: inline-block; /* 텍스트가 가운데 정렬되도록 인라인 블록 요소로 변경 */
+}
+
 /* 댓글 항목 */
 .chat-comment {
     display: flex;
@@ -60,62 +69,96 @@
     padding: 5px;
     background-color: #f9f9f9;
     border-top: 1px solid #ddd;
-    width: 100%;  /* 채팅창의 폭과 동일하게 설정 */
+    width: 100%;
     box-sizing: border-box;
-    justify-content: flex-start;
+    gap: 10px;  /* 입력창과 버튼 사이의 간격 */
+
+    /*display: flex;
+    align-items: center;
+    padding: 5px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #ddd;
+    width: 100%;  !* 채팅창 전체 폭에 맞춤 *!
+    box-sizing: border-box;*/
+
+    /*display: flex;
+    align-items: center;
+    padding: 5px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #ddd;
+    width: 100%;  !* 채팅창의 폭과 동일하게 설정 *!
+    box-sizing: border-box;
+    justify-content: flex-start;*/
 }
 
 /* 댓글 입력창 - input 부분 */
 #comment-input-section input {
-    margin-right: 5px; /* 버튼과의 간격을 좀 더 넓힘 */
     padding: 5px;
     border: 1px solid #ccc;
     font-size: 13px;
-    flex-grow: 2;  /* 입력창이 더 많은 공간을 차지하게 설정 */
     box-sizing: border-box;
-    /*margin-right: 5px;
+    height: 30px;
+    width: 224px;  /* 버튼의 크기를 제외한 나머지 영역을 입력창이 차지 */
+
+    /* 버튼의 너비를 제외한 영역 차지 */
+    /*margin-right: 10px; !* 버튼과의 간격 *!
+    padding: 5px; !* 입력창 높이를 더 줄임 *!
+    border: 1px solid #ccc;
+    font-size: 13px;
+    flex-grow: 1;  !* 입력창이 가능한 공간을 많이 차지하게 설정 *!
+    box-sizing: border-box;
+    height: 30px; !* 입력창 높이 고정 설정 *!*/
+
+    /*margin-right: 10px; !* 버튼과의 간격 *!
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    flex-grow: 1;  !* 입력창이 가능한 공간을 많이 차지하게 설정 *!
+    width: calc(100% - 120px); !* 버튼의 크기를 제외한 나머지 영역을 입력칸이 차지 *!
+    box-sizing: border-box;*/
+
+    /*margin-right: 5px; !* 버튼과의 간격을 좀 더 넓힘 *!
     padding: 5px;
     border: 1px solid #ccc;
-    font-size: 12px;
-    flex-grow: 1;*/
+    font-size: 13px;
+    flex-grow: 2;  !* 입력창이 더 많은 공간을 차지하게 설정 *!
+    box-sizing: border-box;*/
 }
 
 /* 댓글 입력창 - button 부분 */
 #comment-input-section button {
-    padding: 4px 9px;
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    height: 30px;
+    width: 60px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+
+    /*padding: 10px 20px;  !* 버튼 크기와 패딩을 늘림 *!
     background-color: #4CAF50;
     color: white;
     border: none;
     cursor: pointer;
     font-size: 14px;
     white-space: nowrap;
-    flex-shrink: 0; /* 버튼 크기가 줄지 않도록 설정 */
-    min-width: 60px;
-    width: auto;
-    /*padding: 5px 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 12px;
-    white-space: nowrap;*/
-}
+    flex-shrink: 0; !* 버튼 크기가 줄어들지 않도록 설정 *!
+    width: 100px; !* 버튼의 고정된 너비 설정 *!
+    box-sizing: border-box;*/
 
-#sendCommentButton {
+    /*padding: 4px 9px;
     background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 4px 9px;
     cursor: pointer;
+    font-size: 14px;
     white-space: nowrap;
-    flex-shrink: 0;  /* 버튼 크기가 줄지 않게 설정 */
-    width: auto;
-    min-width: 90px;
-    /*background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;*/
+    flex-shrink: 0; !* 버튼 크기가 줄지 않도록 설정 *!
+    min-width: 60px;
+    width: auto;*/
 }
 
 #sendCommentButton:hover {
