@@ -73,8 +73,7 @@
         <div class="form-group">
             <section class="model-15" id="withdrawSection" th:field="*{withdraw}">
                 <div class="checkbox">
-                    <input type="checkbox" id="withdrawCheckbox"/>
-                    <label></label>
+                   <span th:text="#{my.info.delete.user.alert2}"> : </span> <input type="checkbox" id="withdrawCheckbox"/>
                 </div>
             </section>
         </div>
@@ -112,19 +111,19 @@
 <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script th:inline="javascript">
     let messages = {
-        empty: /*[[${'my.info.error.msg.empty'}]]*/ '비밀번호를 입력해 주세요.',
-        length: /*[[${'my.info.error.msg.length'}]]*/ '비밀번호는 8자 이상 20자 미만이어야 합니다.',
-        special: /*[[${'my.info.error.msg.special'}]]*/ '비밀번호는 특수문자를 포함해야 합니다.'
+        empty: /*[[#{'my.info.error.msg.empty'}]]*/ '비밀번호를 입력해 주세요.',
+        length: /*[[#{'my.info.error.msg.length'}]]*/ '비밀번호는 8자 이상 20자 미만이어야 합니다.',
+        special: /*[[#{'my.info.error.msg.special'}]]*/ '비밀번호는 특수문자를 포함해야 합니다.'
     };
     let fileMessages = {
-        sizeError: /*[[${'my.info.file.error.size'}]]*/ '프로필 사진은 5MB를 초과할 수 없습니다.',
-        formatError: /*[[${'my.info.file.error.format'}]]*/ '허용된 파일 형식이 아닙니다. (.jpg, .jpeg, .png)'
+        sizeError: /*[[#{'my.info.file.error.size'}]]*/ '프로필 사진은 5MB를 초과할 수 없습니다.',
+        formatError: /*[[#{'my.info.file.error.format'}]]*/ '허용된 파일 형식이 아닙니다. (.jpg, .jpeg, .png)'
     };
     let passwordMessages = {
-        empty: /*[[${'my.info.password.empty'}]]*/ '비밀번호를 입력하세요.',
-        match: /*[[${'my.info.password.match'}]]*/ '비밀번호가 일치합니다.',
-        notMatch: /*[[${'my.info.password.not.match'}]]*/ '비밀번호가 일치하지 않습니다.',
-        error: /*[[${'my.info.password.error'}]]*/ '오류가 발생했습니다. 다시 시도하세요.'
+        empty: /*[[#{'my.info.password.empty'}]]*/ '비밀번호를 입력하세요.',
+        match: /*[[#{'my.info.password.match'}]]*/ '비밀번호가 일치합니다.',
+        notMatch: /*[[#{'my.info.password.not.match'}]]*/ '비밀번호가 일치하지 않습니다.',
+        error: /*[[#{'my.info.password.error'}]]*/ '오류가 발생했습니다. 다시 시도하세요.'
     };
 </script>
 </body>
