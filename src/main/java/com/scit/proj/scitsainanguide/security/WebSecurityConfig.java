@@ -26,41 +26,41 @@ public class WebSecurityConfig {
             , "/vendor/**"
             , "/comments/stream"
             , "/comments"
-            , "/**"         // 테스트를 위해 모든 경로를 열어놓음. 필요하다면 지워서 사용하세요.
+            //, "/**"         // 테스트를 위해 모든 경로를 열어놓음. 필요하다면 지워서 사용하세요.
     };
 
     @Bean
     protected SecurityFilterChain config(HttpSecurity http) throws Exception {
         http
-            //요청에 대한 권한 설정
-            .authorizeHttpRequests(author -> author
-                .requestMatchers(PUBLIC_URLS).permitAll()   //모두 접근 허용
-                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // 관리자 권한 체크
-                .anyRequest().authenticated()               //그 외의 모든 요청은 인증 필요
-            )
-            //HTTP Basic 인증을 사용하도록 설정
-            .httpBasic(Customizer.withDefaults())
-            //폼 로그인 설정
-            .formLogin(formLogin -> formLogin
-                    .loginPage("/member/login")                //로그인폼 페이지 경로
-                    .usernameParameter("memberId")                //폼의 ID 파라미터 이름
-                    .passwordParameter("password")          //폼의 비밀번호 파라미터 이름
-                    .loginProcessingUrl("/member/login")           //로그인폼 제출하여 처리할 경로
-                    .defaultSuccessUrl("/")                 //로그인 성공 시 이동할 경로
-                    .permitAll()                            //로그인 페이지는 모두 접근 허용
-            )
-            //로그아웃 설정
-            .logout(logout -> logout
-                    .logoutUrl("/member/logout")                   //로그아웃 처리 경로
-                    .logoutSuccessUrl("/")                  //로그아웃 성공 시 이동할 경로
-            );
+                .authorizeHttpRequests(author -> author
+                        .requestMatchers(PUBLIC_URLS).permitAll()
+                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .httpBasic(Customizer.withDefaults())
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/member/login")
+                        .usernameParameter("memberId")
+                        .passwordParameter("password")
+                        .loginProcessingUrl("/member/login")
+                        .defaultSuccessUrl("/")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/member/logout")
+                        .logoutSuccessUrl("/")
+                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/")  // 403 에러 시 메인 화면으로 리다이렉트
+                );
 
         http
-            .cors(AbstractHttpConfigurer::disable)
-            .csrf(AbstractHttpConfigurer::disable);
+                .cors(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
+
 
     //비밀번호 암호화를 위한 인코더를 빈으로 등록, 빈은 객체를 생성해서 메모리에 올려두는 것
     @Bean
@@ -69,3 +69,4 @@ public class WebSecurityConfig {
     }
 
 }
+
