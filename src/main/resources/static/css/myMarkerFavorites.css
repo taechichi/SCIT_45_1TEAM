@@ -159,3 +159,16 @@ table th:first-child, /* 첫 번째 열 헤더 */
 table td:first-child { /* 첫 번째 열 데이터 */
     width: 150px; /* 너비를 150px로 설정 (원하는 값으로 변경 가능) */
 }
+
+
+#error-message {
+    color: red;
+}
+
+#success-message {
+    color: #4CAF50;
+}
+
+#marker-favorite-table {
+    text-align: center;
+}

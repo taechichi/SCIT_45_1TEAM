@@ -58,8 +58,8 @@ $(document).ready(function () {
         let currentNickname = $(this).text();
         //console.log('닉네임 클릭됨:', 'favoriteId:', favoriteId, '현재 닉네임:', currentNickname);
 
-        if (confirm(`닉네임을 수정하시겠습니까?\n현재 닉네임: ${currentNickname}`)) {
-            let newNickname = prompt('새로운 닉네임을 입력하세요:', currentNickname);
+        if (confirm(confirmNicknameUpdateMessage + currentNickname)) {
+            let newNickname = prompt(nicknamePromptMessage, currentNickname);
             if (newNickname !== null) {
                 updateNickname(favoriteId, newNickname);
             }
@@ -71,12 +71,20 @@ $(document).ready(function () {
         event.preventDefault(); // 기본 링크 클릭 동작 방지
         let favoriteId = $(this).closest('tr').find('input[name="favoriteId"]').val();
 
-        if (confirm('새로운 닉네임을 지으시겠습니까?')) {
-            let newNickname = prompt('새로운 닉네임을 입력하세요:');
+        if (confirm(confirmNicknameRegistrationMessage)) {
+            let newNickname = prompt(nicknamePromptMessage);
             if (newNickname) {
                 updateNickname(favoriteId, newNickname);
             }
         }
+    });
+
+    document.getElementById('selectAll').addEventListener('change', function () {
+        // selectAll 체크박스가 변경될 때마다
+        let checkboxes = document.querySelectorAll('input[name="favoriteId"]'); // 모든 체크박스 선택
+        checkboxes.forEach(function(checkbox) {
+            checkbox.checked = document.getElementById('selectAll').checked; // 모든 체크박스 상태를 selectAll의 상태로 설정
+        });
     });
 
     // 닉네임 수정/등록을 서버로 전달하는 함수
@@ -92,11 +100,11 @@ $(document).ready(function () {
             success: function (response) {
                 //console.log('닉네임 업데이트 성공:', response);
                 fetchMarkers();
-                alert('닉네임이 성공적으로 업데이트되었습니다.');
+                alert(updateNicknameSuccessMessage);
             },
             error: function (error) {
                 //console.log('닉네임 업데이트 오류:', error);
-                alert('닉네임 업데이트 중 오류가 발생했습니다.');
+                alert(updateNicknameErrorMessage);
             }
         });
     }

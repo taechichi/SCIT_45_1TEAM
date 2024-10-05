@@ -2,17 +2,23 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-
     <meta charset="UTF-8">
     <link rel="icon" type="image/x-icon" th:href="@{/img/icon8.png}">
     <title>[ scitSainanGuide.html]</title>
-        <!-- 라이브러리 CSS -->
-        <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
-        <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
-        <!-- 커스텀 CSS -->
-        <link rel="stylesheet" th:href="@{/css/topbar.css}">
-        <link rel="stylesheet" th:href="@{/css/index/index.css}">
-        <link rel="stylesheet" th:href="@{/css/myMarkerFavorites.css}">
+    <!-- 라이브러리 CSS -->
+    <link rel="stylesheet" th:href="@{/css/fontawesome/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
+    <!-- 커스텀 CSS -->
+    <link rel="stylesheet" th:href="@{/css/topbar.css}">
+    <link rel="stylesheet" th:href="@{/css/index/index.css}">
+    <link rel="stylesheet" th:href="@{/css/myMarkerFavorites.css}">
+    <script th:inline="javascript">
+        let updateNicknameSuccessMessage = /*[[#{my.favorite.nickname.update.success}]]*/ '닉네임이 성공적으로 업데이트되었습니다.';
+        let updateNicknameErrorMessage = /*[[#{my.favorite.nickname.update.error}]]*/ '닉네임 업데이트 중 오류가 발생했습니다.';
+        let nicknamePromptMessage = /*[[#{my.favorite.nickname.prompt.message}]]*/ '새로운 닉네임을 입력하세요:';
+        let confirmNicknameUpdateMessage = /*[[#{my.favorite.nickname.confirm.update}]]*/ '닉네임을 수정하시겠습니까?\n현재 닉네임: ';
+        let confirmNicknameRegistrationMessage = /*[[#{my.favorite.nickname.confirm.registration}]]*/ '새로운 닉네임을 지으시겠습니까?';
+    </script>
 </head>
 
 <body id="page-top">
@@ -25,22 +31,16 @@
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
-
         <!-- Main Content -->
         <div id="content">
-
             <!-- topbar -->
             <div th:replace="~{fragments/topbar :: topbar}"></div>
             <!-- End of topbar -->
-
             <!-- Begin Page Content -->
-
             <h4 class="page-title" th:text="#{my.favorite.place}">내가 즐겨찾기 한 장소</h4>
-
             <div>
                 <!-- 현재 접속한 사람의 정보 -->
             </div>
-
             <div>
                 <!-- 검색 폼 -->
                 <div class="searchForm-container">
@@ -66,23 +66,20 @@
 
                 <!-- 즐겨찾기 데이터 표시하는 공간 전체를 form으로 감싸 삭제할 수 있도록 함 -->
                 <form th:action="@{/my/myMarkerFavorites/delete}" method="post" id="deleteForm">
-                        <button type="submit" class="unfavorite-button" th:text="#{my.favorite.delete}">즐겨찾기 삭제</button>
+                    <button type="submit" class="unfavorite-button" th:text="#{my.favorite.delete}">즐겨찾기 삭제</button>
 
-
-
-                    <!-- list 출력 id는 'tsh0828'인 경우로 한정해서 작성했습니다. (test용)-->
                     <!-- 삭제 성공 실패 출력하는 공간 -->
-                    <div th:if="${errorMessage}" style="color: red;">
+                    <div id="error-message" th:if="${errorMessage}" >
                         <p th:text="${errorMessage}"></p>
                     </div>
 
-                    <div th:if="${successMessage}" style="color: green;">
+                    <div id="success-message" th:if="${successMessage}" >
                         <p th:text="${successMessage}"></p>
                     </div>
                     <!-- 삭제 성공 실패 출력하는 공간 -->
 
-            <!-- 즐겨찾기 마커 데이터 출력하는 공간 -->
-                    <table style="text-align: center">
+                    <!-- 즐겨찾기 마커 데이터 출력하는 공간 -->
+                    <table id="marker-favorite-table" >
                         <colgroup>
                             <col class="col-select">
                             <col class="col-name">
@@ -90,33 +87,33 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th th:text="#{my.favorite.marker}">즐겨찾기</th>
+                            <th><input type="checkbox" id="selectAll"></th>
                             <th th:text="#{my.favorite.nameof}">이름</th>
                             <th th:text="#{my.favorite.hors}">병원/대피소</th>
                         </tr>
                         </thead>
                         <tbody id="markerTableBody">
-                        <tr th:each="marker : ${pageData.content}">
-                            <td> <input type="checkbox" name="favoriteId" th:value="${marker.favoriteId}"></td>
-                            <td>
-            <span th:if="${marker.nickname != null and !marker.nickname.isEmpty()}">
-                <a th:text="${marker.nickname}" class="nickname-exists"></a>
-                <a>(</a>
-                <a th:text="${marker.name}"></a>
-                <a>)</a>
-            </span>
-                                <span th:if="${marker.nickname == null or marker.nickname.isEmpty()}">
-                <a th:text="${marker.name}" class="nickname-missing"></a>
-            </span>
-                            </td>
-                            <td>
-                                <span th:if="${marker.hospitalId != null}" th:text="#{my.favorite.hospital}">병원</span>
-                                <span th:if="${marker.hospitalId == null}" th:text="#{my.favorite.shelter}">대피소</span>
-                            </td>
-                        </tr>
+                            <tr th:each="marker : ${pageData.content}">
+                                <td> <input type="checkbox" name="favoriteId" th:value="${marker.favoriteId}"></td>
+                                <td>
+                                    <span th:if="${marker.nickname != null and !marker.nickname.isEmpty()}">
+                                        <a th:text="${marker.nickname}" class="nickname-exists"></a>
+                                        <a>(</a>
+                                        <a th:text="${marker.name}"></a>
+                                        <a>)</a>
+                                    </span>
+                                    <span th:if="${marker.nickname == null or marker.nickname.isEmpty()}">
+                                        <a th:text="${marker.name}" class="nickname-missing"></a>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span th:if="${marker.hospitalId != null}" th:text="#{my.favorite.hospital}">병원</span>
+                                    <span th:if="${marker.hospitalId == null}" th:text="#{my.favorite.shelter}">대피소</span>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
-        </form>
+                </form>
                 <!-- pagination 부분 -->
                 <div th:replace="~{fragments/pagination :: pagination}"></div>
             </div>
