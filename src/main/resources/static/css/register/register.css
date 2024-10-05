@@ -1,7 +1,8 @@
 
 .error {
-    color: red;
-    font-size: 0.9em;
+    color: red !important;
+    font-size: 0.9em !important;
+    width: 300px !important;
 }
 .valid {
     color: #317873;
