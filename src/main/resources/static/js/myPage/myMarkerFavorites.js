@@ -79,6 +79,14 @@ $(document).ready(function () {
         }
     });
 
+    document.getElementById('selectAll').addEventListener('change', function () {
+        // selectAll 체크박스가 변경될 때마다
+        let checkboxes = document.querySelectorAll('input[name="favoriteId"]'); // 모든 체크박스 선택
+        checkboxes.forEach(function(checkbox) {
+            checkbox.checked = document.getElementById('selectAll').checked; // 모든 체크박스 상태를 selectAll의 상태로 설정
+        });
+    });
+
     // 닉네임 수정/등록을 서버로 전달하는 함수
     function updateNickname(favoriteId, newNickname) {
         //console.log('닉네임 업데이트 요청:', 'favoriteId:', favoriteId, '새 닉네임:', newNickname);
