@@ -105,14 +105,7 @@ public class MarkerFavoritesService {
     }
 
 
-    // tsh0828의 마커 냅다 가져오는 코드
-    // 나중에 ID 받는걸로 수정 해야함.
-    public Page<MarkerFavoritesDTO> viewAllFavoritesMarkerTest(SearchRequestDTO dto) {
-        return markerFavoritesRepository.selectMarkerFavoritesList(dto, "tsh0828");
-    }
-
-    // tsh0828의 마커 냅다 가져오긴하는데 검색하거나 필터 사용해서 가져오는 사비스
-    // 나중에 ID 받는걸로 수정 해야함.
+    // 즐겨찾기 필터 검색 페이징된 list
     public Page<MarkerFavoritesDTO> selectMarkerFavoritesFilterAndSearchList(SearchRequestDTO dto, String userId) {
         log.debug("Service_SearchRequestDTO: {}", dto);
         return markerFavoritesRepository.selectMarkerFavoritesBySearchAndFilter(dto, userId);
