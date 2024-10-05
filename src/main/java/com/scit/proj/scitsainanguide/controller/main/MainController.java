@@ -20,6 +20,7 @@ public class MainController {
     @GetMapping
     public ModelAndView index(HttpServletRequest request) {
         ModelAndView modelAndView = (ModelAndView) request.getAttribute("modelAndView");
+        modelAndView.addObject("isMainPage", request.getRequestURI().equals("/"));
         modelAndView.setViewName("index");
         return modelAndView;
     }

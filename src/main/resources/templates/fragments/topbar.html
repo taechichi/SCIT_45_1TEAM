@@ -12,7 +12,8 @@
     </button>-->
 
     <!-- Topbar Search -->
-    <form id ="search_form"
+    <form id="search_form"
+          th:if="${isMainPage}"
           class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
       <div class="input-group">
         <input type="text" class="form-control bg-light border-0 small" th:attr="placeholder=#{index.search.placeholder}"
@@ -267,23 +268,26 @@
     </ul>
     <!-- 로그인이 되어 있지 않은 경우 버튼을 표시 -->
     <th:block sec:authorize="not isAuthenticated()">
-      <!-- 언어 설정 변경 -->
-      <li class="nav-item dropdown no-arrow mx-1 abc">
-        <!-- 일본어가 설정된 경우 -->
-        <a th:if="${session.lang == 'ja'}" th:href="@{/language(lang='ko')}">
-          <img class="flagJa" th:src="@{/img/ja.png}" alt="한국어" />
-        </a>
+      <div id="right-fixed-container">
+        <!-- 언어 설정 변경 -->
+        <li id="language-dropdown" class="nav-item dropdown no-arrow mx-1 abc">
+          <!-- 일본어가 설정된 경우 -->
+          <a th:if="${session.lang == 'ja'}" th:href="@{/language(lang='ko')}">
+            <img class="flagJa" th:src="@{/img/ja.png}" alt="한국어" />
+          </a>
 
-        <!-- 일본어가 설정되지 않은 경우 -->
-        <a th:if="${session.lang != 'ja'}" th:href="@{/language(lang='ja')}">
-          <img class="flagKo" th:src="@{/img/ko.png}" alt="日本語" />
+          <!-- 일본어가 설정되지 않은 경우 -->
+          <a th:if="${session.lang != 'ja'}" th:href="@{/language(lang='ja')}">
+            <img class="flagKo" th:src="@{/img/ko.png}" alt="日本語" />
+          </a>
+        </li>
+
+        <a href="/member/login" id="login-button">
+          <button class="btn btn-primary btn-jittery">
+            Login
+          </button>
         </a>
-      </li>
-      <a href="/member/login">
-        <button class="btn btn-primary btn-jittery">
-          Login
-        </button>
-      </a>
+      </div>
     </th:block>
   </nav>
 </div>
