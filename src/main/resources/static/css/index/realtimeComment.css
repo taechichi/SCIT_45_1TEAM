@@ -118,6 +118,23 @@
     flex-direction: column;
 }
 
+/* ================ 채팅창 클릭 후 모달 css 설정들 ================ */
+/*.modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center; !* 가운데 정렬 *!
+}
+
+.friend-add-btn {
+    display: block;
+    margin: 0 auto; !* 버튼을 중앙에 정렬 *!
+    width: 150px; !* 버튼의 너비를 조정할 수 있음 *!
+}
+
+.mt-3 {
+    margin-top: 1rem;
+}*/
+
 /* ======================================================================================= */
 
 /* 댓글 입력창 */

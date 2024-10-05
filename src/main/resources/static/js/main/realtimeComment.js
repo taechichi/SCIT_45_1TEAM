@@ -242,7 +242,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // 모달 HTML 생성
         const modalHtml = `
             <div class="modal fade" id="profileModal${comment.memberId}" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog modal-dialog-centered" role="document"> <!-- modal-dialog-centered로 중앙 정렬 -->
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="profileModalLabel">${comment.nickname}</h5>
@@ -250,7 +250,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body text-center"> <!-- text-center로 가운데 정렬 -->
                             <div class="profile-picture-container">
                                 <img class="img-profile rounded-circle img-64" src="/member/download/${comment.memberId}" alt="Profile Picture"/>
                             </div>
@@ -258,12 +258,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <p><strong>상태 메시지:</strong> ${comment.stMessage ? comment.stMessage : 'No status message'}</p>
                             ` : `
                                 ${isLoggedIn ? `
-                                    <div class="modal-links">
-                                        <a href="/my/message/write">쪽지 보내기</a>
-                                    </div>
-                                    <p><strong>마지막 상태 업데이트:</strong> ${statusName ? statusName : 'No status'}</p>
-                                    <p><strong>상태 메시지:</strong> ${comment.stMessage ? comment.stMessage : 'No status message'}</p>
-                                    ${(!isFriend) ? `<button class="btn btn-primary friend-add-btn" data-friend-id="${comment.memberId}">친구 추가</button>` : ''}
+                                    <!-- 친구 추가 버튼을 중앙에 위치 -->
+                                    ${!isFriend ? `
+                                        <button class="btn btn-primary friend-add-btn mt-3" data-friend-id="${comment.memberId}">친구 추가</button>
+                                        <p class="mt-3"><strong>상태 메시지:</strong> ${comment.stMessage ? comment.stMessage : 'No status message'}</p>
+                                    ` : `
+                                        <div class="modal-links">
+                                            <a href="/my/message/write">쪽지 보내기</a>
+                                        </div>
+                                        <p><strong>마지막 상태 업데이트:</strong> ${statusName ? statusName : 'No status'}</p>
+                                        <p><strong>상태 메시지:</strong> ${comment.stMessage ? comment.stMessage : 'No status message'}</p>
+                                    `}
                                 ` : `
                                     <p><strong>상태 메시지:</strong> ${comment.stMessage ? comment.stMessage : 'No status message'}</p>
                                 `}
