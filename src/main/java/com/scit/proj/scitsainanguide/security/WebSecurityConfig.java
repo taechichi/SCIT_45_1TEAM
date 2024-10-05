@@ -35,6 +35,7 @@ public class WebSecurityConfig {
             //요청에 대한 권한 설정
             .authorizeHttpRequests(author -> author
                 .requestMatchers(PUBLIC_URLS).permitAll()   //모두 접근 허용
+                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // 관리자 권한 체크
                 .anyRequest().authenticated()               //그 외의 모든 요청은 인증 필요
             )
             //HTTP Basic 인증을 사용하도록 설정
