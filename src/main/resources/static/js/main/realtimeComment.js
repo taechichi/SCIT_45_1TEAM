@@ -5,17 +5,37 @@ document.addEventListener("DOMContentLoaded", function () {
     currentDate.setHours(currentDate.getHours() + 9); // 동경시간 보정
     let connectionTime = currentDate.toISOString();
 
+    // ==== 로그인된 사용자 닉네임과 ID 가져오기 ====
+    const loginMemberIdElement = document.getElementById('loginMemberId');
+    const loginNicknameElement = document.getElementById('loginNickname');
+    const loginMemberStMessage = document.getElementById('loginStMessage');
+
+    let memberId = "";
+    let nickname = "";
+    let stMessage = "";
+
+    if(loginMemberIdElement && loginNicknameElement) {
+        memberId = loginMemberIdElement.value;
+        nickname = loginNicknameElement.value;
+        stMessage = loginMemberStMessage.value;
+    }
+
     // ==== 도시 정보 추출 api 코드 ====
     // 외부 API를 통해 사용자의 위치 정보 얻기 (ipinfo.io 예시)
     // API 쓸라면 주석 해제
     fetch('https://ipinfo.io/json?token=8024395341b3f3')
         .then(response => response.json())
         .then(data => {
-            userLocation = `${data.region}_${data.city}`;   // 도시 정보 추출
-            console.log("User location: ", userLocation);
+            if(memberId === "aaaaa")
+            {
+                userLocation = 'Tokyo_harajuku';
+            } else {
+                userLocation = `${data.region}_${data.city}`;   // 도시 정보 추출
+                console.log("User location: ", userLocation);
+            }
         })
         .catch(error => {
-            console.error("Error fetching location: ", error);
+            //console.error("Error fetching location: ", error);
             userLocation = "Unknown";   // 위치 정보가 없을 때 기본값
         });
 
@@ -38,25 +58,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     console.log(friendList);
-
-    // ==== 로그인된 사용자 닉네임과 ID 가져오기 ====
-    const loginMemberIdElement = document.getElementById('loginMemberId');
-    const loginNicknameElement = document.getElementById('loginNickname');
-    const loginMemberStMessage = document.getElementById('loginStMessage');
-
-
-    let memberId = "";
-    let nickname = "";
-    let stMessage = "";
-
-    if(loginMemberIdElement && loginNicknameElement) {
-        memberId = loginMemberIdElement.value;
-        nickname = loginNicknameElement.value;
-        stMessage = loginMemberStMessage.value;
-    }
-
-    console.log("Id, nickname", memberId, nickname);
-    console.log("연결 시간:", connectionTime);
+    //console.log("Id, nickname", memberId, nickname);
+    //console.log("연결 시간:", connectionTime);
 
     let eventSource = null;
     const commentList = document.getElementById("commentList");
