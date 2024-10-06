@@ -15,8 +15,8 @@
     <script th:inline="javascript">
         let updateNicknameSuccessMessage = /*[[#{my.favorite.nickname.update.success}]]*/ '닉네임이 성공적으로 업데이트되었습니다.';
         let updateNicknameErrorMessage = /*[[#{my.favorite.nickname.update.error}]]*/ '닉네임 업데이트 중 오류가 발생했습니다.';
-        let nicknamePromptMessage = /*[[#{my.favorite.nickname.prompt.message}]]*/ '새로운 닉네임을 입력하세요:';
-        let confirmNicknameUpdateMessage = /*[[#{my.favorite.nickname.confirm.update}]]*/ '닉네임을 수정하시겠습니까?\n현재 닉네임: ';
+        let nicknamePromptMessage = /*[[#{my.favorite.nickname.prompt.message}]]*/ '새로운 닉네임을 입력하세요';
+        let confirmNicknameUpdateMessage = /*[[#{my.favorite.nickname.confirm.update}]]*/ '닉네임을 수정하시겠습니까?\n현재 닉네임';
         let confirmNicknameRegistrationMessage = /*[[#{my.favorite.nickname.confirm.registration}]]*/ '새로운 닉네임을 지으시겠습니까?';
     </script>
 </head>
@@ -130,14 +130,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="customAlertModalLabel">알림</h5>
+                <h5 class="modal-title" id="customAlertModalLabel" th:text="#{my.favorite.notification}">알림</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="customAlertModalBody">
                 <!-- 메시지가 여기에 삽입됩니다 -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="confirmModalBtn">확인</button> <!-- 확인 버튼만 남김 -->
+                <button type="button" class="btn btn-primary" id="confirmModalBtn" th:text="#{my.favorite.confirm}">확인</button> <!-- 확인 버튼만 남김 -->
             </div>
         </div>
     </div>
@@ -149,16 +149,16 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="promptNicknameModalLabel">닉네임 입력</h5>
+                <h5 class="modal-title" id="promptNicknameModalLabel" th:text="#{my.favorite.nickname.title}">닉네임 입력</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <label for="newNicknameInput">새 닉네임을 입력하세요:</label>
+                <label for="newNicknameInput" th:text="#{my.favorite.nickname.prompt.message}">새 닉네임을 입력하세요</label>
                 <input type="text" id="newNicknameInput" class="form-control">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="cancelNicknameBtn" data-bs-dismiss="modal">취소</button>
-                <button type="button" class="btn btn-primary" id="submitNicknameBtn">확인</button> <!-- 확인 버튼 -->
+                <button type="button" class="btn btn-secondary" id="cancelNicknameBtn" data-bs-dismiss="modal" th:text="#{my.favorite.cancel}">취소</button>
+                <button type="button" class="btn btn-primary" id="submitNicknameBtn" th:text="#{my.favorite.confirm}">확인</button> <!-- 확인 버튼 -->
             </div>
         </div>
     </div>
