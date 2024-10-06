@@ -45,12 +45,52 @@ window.onload = function() {
         // 비로그인 상태
         loggedInUserId = null; // 혹은 다른 기본값 설정 가능
     }
-
+    // 무한 스크롤 이벤트
     const infoPanelElement = document.getElementById('info-panel');
     infoPanelElement.addEventListener('scroll', function() {
         if (infoPanelElement.scrollTop + infoPanelElement.clientHeight >= infoPanelElement.scrollHeight - 100 && !boardState.isFetching) {
             getList(boardState.currentPlaceID, boardState.currentPage, boardState.pageSize);
             boardState.currentPage++;
+        }
+    });
+
+    const maxFileSize = 10 * 1024 * 1024;  // 10MB
+    const maxFiles = 4;  // 최대 4개의 파일
+    const fileInput = document.getElementById('files');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+    // 파일 선택 시 유효성 검사 및 파일 이름 표시
+    fileInput.addEventListener('change', function() {
+        let files = fileInput.files;
+        let fileNames = [];
+        let totalSize = 0;
+
+        // 파일 개수 검사
+        if (files.length > maxFiles) {
+            alert(`최대 ${maxFiles}개의 파일만 업로드할 수 있습니다.`);
+            fileInput.value = '';  // 입력값 초기화
+            fileNameDisplay.textContent = '';  // 파일 이름 표시 초기화
+            return;
+        }
+
+        // 파일 크기 및 개별 파일 크기 검사
+        for (let i = 0; i < files.length; i++) {
+            totalSize += files[i].size;
+
+            if (files[i].size > maxFileSize) {
+                alert(`파일 "${files[i].name}"의 크기가 10MB를 초과했습니다.`);
+                fileInput.value = '';  // 입력값 초기화
+                fileNameDisplay.textContent = '';  // 파일 이름 표시 초기화
+                return;
+            }
+        }
+
+        // 파일 이름 표시
+        fileNames = Array.from(files).map(file => file.name);
+        if (fileNames.length > 0) {
+            fileNameDisplay.textContent = fileNames.join(', ');
+        } else {
+            fileNameDisplay.textContent = '';
         }
     });
 };
@@ -406,13 +446,18 @@ function getList(placeID, currentPage, pageSize) {
                 `;
                     // 사진이 있는 경우
                     if (boardItem.pictures && boardItem.pictures.length > 0) {
+                        boardHtml += `<div class="board-image-container images-${boardItem.pictures.length}">`;
+
                         boardItem.pictures.forEach(picture => {
-                            boardHtml += `<img src="${picture.path}" class="board-image" alt="${picture.oriFilename}" loading="lazy" width="100"><br>`;
+                            boardHtml += `<img src="${picture.path}" class="board-image" alt="${picture.oriFilename}" loading="lazy">`;
                         });
+
+                        boardHtml += `</div>`;
                     }
+
                     // 로그인 아이디 게시글 작성자 확인
                     if(boardItem.memberId === loggedInUserId){
-                        boardHtml += `<button class="boardDeleteBtn" onclick="deleteBoard(${boardId})">${boardDelete}</button>`;
+                        boardHtml += `<br><button class="boardDeleteBtn" onclick="deleteBoard(${boardId})">${boardDelete}</button>`;
                     }
                     boardHtml += `</div>`;
                 });

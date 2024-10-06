@@ -53,3 +53,23 @@
 .request-list-btn:hover {
     background-color: rgba(40, 167, 69, 0.1); /* hover 시 배경색 추가 */
 }
+
+/* 페이징 영역 스타일 */
+#navigator {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#navigator a {
+    margin: 0 5px;
+    padding: 10px 15px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: #4e73df;
+    border-radius: 4px;
+}
+
+#navigator a:hover {
+    background-color: #ddd;
+}

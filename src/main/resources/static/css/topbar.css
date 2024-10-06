@@ -134,4 +134,15 @@
     padding: 0; /* 기본 padding 제거 */
 }
 
+#right-fixed-container {
+    position: fixed;
+    right: 20px; /* 오른쪽에서 20px 떨어진 위치 */
+    display: flex; /* 수평 배치 */
+    align-items: center; /* 요소들을 수직 가운데 정렬 */
+    z-index: 1000; /* 다른 요소 위에 위치 */
+}
+
+#language-dropdown {
+    margin-right: 10px; /* 언어 설정과 로그인 버튼 사이 여백 */
+}
 

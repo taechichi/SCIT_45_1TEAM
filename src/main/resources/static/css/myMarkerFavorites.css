@@ -173,7 +173,6 @@ table td:first-child { /* 첫 번째 열 데이터 */
     text-align: center;
 }
 
-/* ========================================== */
 /* 모달 창 관련 CSS */
 .modal-content {
     border-radius: 10px;
@@ -188,4 +187,24 @@ table td:first-child { /* 첫 번째 열 데이터 */
 
 .modal-footer {
     background-color: #f1f1f1; /* 푸터 배경색 */
+}
+
+/* 페이징 영역 스타일 */
+#navigator {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#navigator a {
+    margin: 0 5px;
+    padding: 10px 15px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: #4e73df;
+    border-radius: 4px;
+}
+
+#navigator a:hover {
+    background-color: #ddd;
 }

@@ -120,3 +120,22 @@
     background-color: #1C39BB;
     color: white;
 }
+/* 페이징 영역 스타일 */
+#navigator {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#navigator a {
+    margin: 0 5px;
+    padding: 10px 15px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: #4e73df;
+    border-radius: 4px;
+}
+
+#navigator a:hover {
+    background-color: #ddd;
+}
