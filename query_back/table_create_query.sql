@@ -20,7 +20,7 @@ CREATE TABLE member
     withdraw          TINYINT(1) NOT NULL DEFAULT 0,
     last_login_dt     TIMESTAMP NULL,
     last_st_update_dt TIMESTAMP NULL,
-    file_name         VARCHAR(50)  NOT NULL,
+    file_name         VARCHAR(200)  NOT NULL,
     st_message        VARCHAR(50) NULL,
     end_time          TIMESTAMP NULL,
     PRIMARY KEY (member_id),
