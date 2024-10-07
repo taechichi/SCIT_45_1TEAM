@@ -29,7 +29,7 @@ const boardState = {
     isFetching: false,
     currentPage: 0,
     currentPlaceID: '',
-    pageSize: 10
+    pageSize: 5
 };
 
 window.addEventListener('load', initMap);
@@ -509,7 +509,7 @@ function deleteBoard(boardId) {
 
             // 게시글 목록 다시 로드
             let currentPage = 0;
-            const pageSize = 10;
+            const pageSize = 5;
             let isFetching = false;
             let placeID = currentMarker.placeId;
 
