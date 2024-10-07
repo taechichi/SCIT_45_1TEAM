@@ -56,9 +56,9 @@
                   <div class="modal-header">
                     <h5 class="modal-title" id="profileModalLabel">
                       <!-- 헤더 고유한 id를 사용 -->
-                      <span id="headerNickname" th:text="${friend.nickname}"></span><span th:text="#{friend.status.span}"></span>
-                      <span id="headerStatusName" th:if="${session.lang != 'ja'}" th:text="${friend.statusName}">Status</span>
-                      <span id="headerStatusNameJa" th:if="${session.lang == 'ja'}" th:text="${friend.statusNameJa}">Status</span>
+                      <span class="headerNickname" th:text="${friend.nickname}"></span><span th:text="#{friend.status.span}"></span>
+                      <span class="headerStatusName" th:if="${session.lang != 'ja'}" th:text="${friend.statusName}">Status</span>
+                      <span class="headerStatusNameJa" th:if="${session.lang == 'ja'}" th:text="${friend.statusNameJa}">Status</span>
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
@@ -76,7 +76,7 @@
 
                     <!-- 회원 정보 -->
                     <p><strong th:text="#{friend.last.update.strong}"></strong> <span id="modalLastUpdate" th:text="*{#temporals.format(friend.lastStUpdateDt, 'yyyy.MM.dd HH:mm')}">No update available</span></p>
-                    <p><strong th:text="#{friend.status.message.strong}"></strong> <span id="modalStMessage" th:text="${friend.stMessage}">No status message</span></p>
+                    <p><strong th:text="#{friend.status.message.strong}"></strong> <span class="modalStMessage" th:text="${friend.stMessage}">No status message</span></p>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{board.button.close}">닫기</button>

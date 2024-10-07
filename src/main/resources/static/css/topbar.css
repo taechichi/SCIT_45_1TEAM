@@ -145,4 +145,7 @@
 #language-dropdown {
     margin-right: 10px; /* 언어 설정과 로그인 버튼 사이 여백 */
 }
+.modalStMessage {
+    white-space: pre-wrap; /* 줄바꿈이 인식되도록 설정 */
+}
 

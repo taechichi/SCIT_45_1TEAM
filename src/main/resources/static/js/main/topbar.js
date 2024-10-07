@@ -401,9 +401,9 @@ function updateCnt($badgeCounter) {
 document.querySelectorAll('.nav-link.profile-picture-wrapper').forEach(function(friendElement) {
     let statusIndicator = friendElement.querySelector('.status-indicator');
     let statusId = statusIndicator.getAttribute('data-status-id');
-    let nicknameElement = friendElement.querySelector('#headerNickname');
-    let statusNameElement = friendElement.querySelector('#headerStatusName');
-    let statusNameJaElement = friendElement.querySelector('#headerStatusNameJa');
+    let nicknameElement = friendElement.querySelector('.headerNickname');
+    let statusNameElement = friendElement.querySelector('.headerStatusName');
+    let statusNameJaElement = friendElement.querySelector('.headerStatusNameJa');
 
     // statusId에 따라 텍스트 색상 변경
     switch (parseInt(statusId)) {
@@ -426,6 +426,24 @@ document.querySelectorAll('.nav-link.profile-picture-wrapper').forEach(function(
             // 상태가 1일 경우 (평상시), 기본 상태로 유지
             break;
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // 상태 메시지를 불러오는 모든 요소를 선택 (클래스 기반)
+        const modalStMessages = document.querySelectorAll('.modalStMessage');
+
+        if (modalStMessages.length > 0) {
+            modalStMessages.forEach((modalStMessage) => {
+                // 상태 메시지 내용을 가져옴
+                const statusMessage = modalStMessage.textContent.trim();
+
+                // 줄바꿈(\n)을 <br>로 변환
+                const formattedMessage = statusMessage.replace(/\\n/g, '<br/>');
+
+                // 변환된 메시지를 HTML로 설정
+                modalStMessage.innerHTML = formattedMessage;
+            });
+        }
+    });
 });
 
 
