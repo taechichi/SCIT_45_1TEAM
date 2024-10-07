@@ -59,6 +59,9 @@ window.onload = function() {
     const fileInput = document.getElementById('files');
     const fileNameDisplay = document.getElementById('fileNameDisplay');
 
+    // 허용할 이미지 파일 형식
+    const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
     // 파일 선택 시 유효성 검사 및 파일 이름 표시
     fileInput.addEventListener('change', function() {
         let files = fileInput.files;
@@ -67,7 +70,7 @@ window.onload = function() {
 
         // 파일 개수 검사
         if (files.length > maxFiles) {
-            alert(`최대 ${maxFiles}개의 파일만 업로드할 수 있습니다.`);
+            alert(`${alertMax} ${maxFiles}${alertFileCount}`);
             fileInput.value = '';  // 입력값 초기화
             fileNameDisplay.textContent = '';  // 파일 이름 표시 초기화
             return;
@@ -77,8 +80,17 @@ window.onload = function() {
         for (let i = 0; i < files.length; i++) {
             totalSize += files[i].size;
 
+            // 파일 형식 검사
+            if (!allowedFileTypes.includes(files[i].type)) {
+                alert(`"${files[i].name}"${alertFileType}`);
+                fileInput.value = '';  // 입력값 초기화
+                fileNameDisplay.textContent = '';  // 파일 이름 표시 초기화
+                return;
+            }
+
+            // 파일 크기 검사
             if (files[i].size > maxFileSize) {
-                alert(`파일 "${files[i].name}"의 크기가 10MB를 초과했습니다.`);
+                alert(`${alertFile} "${files[i].name}"${alertFileSize}`);
                 fileInput.value = '';  // 입력값 초기화
                 fileNameDisplay.textContent = '';  // 파일 이름 표시 초기화
                 return;
@@ -305,8 +317,6 @@ function showInfoPanel(marker) {
         boardState.currentPage++;
     });
 }
-
-
 
 
 //마커배열을 확인해 마커들의 bound(경계값을 생성)
@@ -740,7 +750,7 @@ function initMap() {
 
             // hash 기반 url 생성 - 인코딩된 데이터를 포함
             shareUrl = `${window.location.origin}/#${encodedData}`;
-            alert("공유경로: "+shareUrl);
+            alert(`${alertShare}: `+shareUrl);
 
             // URL을 클립보드에 복사
             navigator.clipboard.writeText(shareUrl);
