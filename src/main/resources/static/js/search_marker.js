@@ -750,7 +750,7 @@ function initMap() {
 
             // hash 기반 url 생성 - 인코딩된 데이터를 포함
             shareUrl = `${window.location.origin}/#${encodedData}`;
-            alert(`${alertShare}: `+shareUrl);
+            alert(`${alertShare}`);
 
             // URL을 클립보드에 복사
             navigator.clipboard.writeText(shareUrl);
