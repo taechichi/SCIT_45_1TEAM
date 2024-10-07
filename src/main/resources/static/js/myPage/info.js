@@ -22,7 +22,6 @@ $(document).ready(function () {
 
         if (password.trim() === '') {
             $('#password').removeAttr('name'); // 비밀번호 필드가 비어 있으면 폼에서 제거
-            errorMessage = messages.empty;
         } else {
             if (password.length < 8 || password.length >= 20) {
                 errorMessage = messages.length;

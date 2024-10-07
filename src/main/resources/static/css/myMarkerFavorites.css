@@ -159,3 +159,52 @@ table th:first-child, /* 첫 번째 열 헤더 */
 table td:first-child { /* 첫 번째 열 데이터 */
     width: 150px; /* 너비를 150px로 설정 (원하는 값으로 변경 가능) */
 }
+
+
+#error-message {
+    color: red;
+}
+
+#success-message {
+    color: #4CAF50;
+}
+
+#marker-favorite-table {
+    text-align: center;
+}
+
+/* 모달 창 관련 CSS */
+.modal-content {
+    border-radius: 10px;
+    background-color: #f8f9fa; /* 모달 배경색 */
+    border: 2px solid #4e73df; /* 테두리 색 */
+}
+
+.modal-header {
+    background-color: #4e73df; /* 헤더 배경색 */
+    color: white; /* 헤더 텍스트 색 */
+}
+
+.modal-footer {
+    background-color: #f1f1f1; /* 푸터 배경색 */
+}
+
+/* 페이징 영역 스타일 */
+#navigator {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#navigator a {
+    margin: 0 5px;
+    padding: 10px 15px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    color: #4e73df;
+    border-radius: 4px;
+}
+
+#navigator a:hover {
+    background-color: #ddd;
+}

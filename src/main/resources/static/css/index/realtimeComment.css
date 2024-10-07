@@ -2,7 +2,7 @@
 #realtime_comment {
     position: absolute;
     top: 70px;
-    left: 0px;
+    left: 0;
     width: 300px;
     height: 635px;
     background-color: white;
@@ -31,12 +31,78 @@
     margin: 0;
 }
 
+.login-notice {
+    width: 100%; /* 부모 요소의 너비를 100%로 설정 */
+    text-align: center; /* 텍스트를 가운데로 정렬 */
+}
+
+#notLoggingChatInputMessage {
+    display: inline-block; /* 텍스트가 가운데 정렬되도록 인라인 블록 요소로 변경 */
+}
+/* ======================================================================================= */
+
 /* 댓글 항목 */
 .chat-comment {
+    margin: 10px 0;
     display: flex;
+    align-items: flex-start;
+
+    /*display: flex;
     align-items: center;
     margin-bottom: 10px;
-    gap: 10px; /* 이미지와 텍스트 사이의 간격 */
+    gap: 10px; !* 이미지와 텍스트 사이의 간격 *!*/
+}
+
+.comment-content {
+    background-color: #f1f0f0;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 60%;
+    position: relative;
+}
+.comment-content:before {
+    content: none;
+    position: absolute;
+    top: 10px;
+    left: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent #f1f0f0 transparent transparent;
+}
+
+/* 자신의 채팅 말풍선 스타일 (오른쪽 정렬) */
+.chat-comment.self {
+    justify-content: flex-end;
+}
+
+.chat-comment.self .comment-content {
+    background-color: #dcf8c6;
+    text-align: right;
+    max-width: 60%;
+    position: relative;
+    /* 오른쪽 정렬 시 왼쪽 마진 추가 */
+    margin-left: 40px; /* 이미지 공간을 대체 */
+
+    /*background-color: #dcf8c6;
+    text-align: right;*/
+}
+
+.chat-comment.self .comment-content:before {
+    content: none;
+    position: absolute;
+    top: 10px;
+    right: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent transparent #dcf8c6;
+}
+
+/* 프로필 이미지 스타일 */
+.img-profile {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    border-radius: 50%;
 }
 
 /* 프로필 이미지 */
@@ -52,6 +118,24 @@
     flex-direction: column;
 }
 
+/* ================ 채팅창 클릭 후 모달 css 설정들 ================ */
+/*.modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center; !* 가운데 정렬 *!
+}
+
+.friend-add-btn {
+    display: block;
+    margin: 0 auto; !* 버튼을 중앙에 정렬 *!
+    width: 150px; !* 버튼의 너비를 조정할 수 있음 *!
+}
+
+.mt-3 {
+    margin-top: 1rem;
+}*/
+
+/* ======================================================================================= */
 
 /* 댓글 입력창 */
 #comment-input-section {
@@ -60,67 +144,40 @@
     padding: 5px;
     background-color: #f9f9f9;
     border-top: 1px solid #ddd;
-    width: 100%;  /* 채팅창의 폭과 동일하게 설정 */
+    width: 100%;
     box-sizing: border-box;
-    justify-content: flex-start;
+    gap: 10px;  /* 입력창과 버튼 사이의 간격 */
 }
 
 /* 댓글 입력창 - input 부분 */
 #comment-input-section input {
-    margin-right: 5px; /* 버튼과의 간격을 좀 더 넓힘 */
     padding: 5px;
     border: 1px solid #ccc;
     font-size: 13px;
-    flex-grow: 2;  /* 입력창이 더 많은 공간을 차지하게 설정 */
     box-sizing: border-box;
-    /*margin-right: 5px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    font-size: 12px;
-    flex-grow: 1;*/
+    height: 30px;
+    width: 224px;  /* 버튼의 크기를 제외한 나머지 영역을 입력창이 차지 */
 }
 
 /* 댓글 입력창 - button 부분 */
 #comment-input-section button {
-    padding: 4px 9px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    white-space: nowrap;
-    flex-shrink: 0; /* 버튼 크기가 줄지 않도록 설정 */
-    min-width: 60px;
-    width: auto;
-    /*padding: 5px 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 12px;
-    white-space: nowrap;*/
-}
-
-#sendCommentButton {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 4px 9px;
-    cursor: pointer;
-    white-space: nowrap;
-    flex-shrink: 0;  /* 버튼 크기가 줄지 않게 설정 */
-    width: auto;
-    min-width: 90px;
-    /*background-color: #4CAF50;
-    color: white;
-    border: none;
     padding: 5px 10px;
-    cursor: pointer;*/
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    height: 30px;
+    width: 60px;
+    flex-shrink: 0;
+    box-sizing: border-box;
 }
 
 #sendCommentButton:hover {
     background-color: #45a049;
 }
+
+/* ======================================================================================= */
 
 #toggleCommentButton {
     position: absolute;
@@ -158,4 +215,4 @@
     }
 }
 
-/* ========================================================================== */
+/* ======================================================================================= */

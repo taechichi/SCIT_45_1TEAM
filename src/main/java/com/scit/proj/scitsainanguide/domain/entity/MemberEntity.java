@@ -47,7 +47,7 @@ public class MemberEntity {
     @Column(name = "last_st_update_dt")
     private LocalDateTime lastStUpdateDt;
 
-    @Column(name = "file_name", nullable = false, length = 50)
+    @Column(name = "file_name", nullable = false, length = 200)
     private String fileName;
 
     @Column(name = "st_message", length = 50)

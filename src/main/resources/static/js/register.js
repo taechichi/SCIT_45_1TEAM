@@ -1,9 +1,17 @@
 $(document).ready(function () {
     // 비밀번호 표시/숨기기 기능
-    $('.password-toggle-icon').on('mousedown', function () {
-        $('#password').attr('type', 'text');
-    }).on('mouseup mouseleave', function () {
-        $('#password').attr('type', 'password');
+    $('.password-toggle-icon').on('click', function () {
+        let passwordInput = $('#password');
+        let icon = $(this);
+
+        // 현재 비밀번호 입력의 타입이 "password"인 경우
+        if (passwordInput.attr('type') === 'password') {
+            passwordInput.attr('type', 'text'); // 비밀번호를 보여줌
+            icon.attr('src', '/img/eyes.jpg'); // 눈 아이콘으로 변경
+        } else {
+            passwordInput.attr('type', 'password'); // 비밀번호를 숨김
+            icon.attr('src', '/img/hide_eye.ico'); // 눈 가린 아이콘으로 변경
+        }
     });
 
     // 비밀번호 유효성 검사

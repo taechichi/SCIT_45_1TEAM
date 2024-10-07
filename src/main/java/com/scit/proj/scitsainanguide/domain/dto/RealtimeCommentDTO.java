@@ -19,5 +19,6 @@ public class RealtimeCommentDTO {
     private String location;
     private String contents;
     private String stMessage;
+    private String statusName;
     private LocalDateTime createDt;
 }

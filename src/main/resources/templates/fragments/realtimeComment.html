@@ -13,8 +13,8 @@
                 <input type="text" id="commentInput" th:placeholder="#{main.chat.commentInput.placeholder}" th:attr="data-stabilization=#{main.chat.commentInput.stabilization}">
                 <button id="sendCommentButton" th:text="#{main.chat.sendButton}">댓글 보내기</button>
             </div>
-            <div th:unless="${member.memberId}">
-                <a th:text="#{main.chat.needLogin}"> 댓글을 작성하시려면 로그인하세요. </a>
+            <div class="login-notice" th:unless="${member.memberId}">
+                <a id="notLoggingChatInputMessage" th:text="#{main.chat.needLogin}"> 댓글을 작성하시려면 로그인하세요. </a>
             </div>
         </div>
     </div>
@@ -24,7 +24,6 @@
         <input type="hidden" th:id="'nickname' + ${friend.memberId}" th:value="${friend.nickname}"/>
         <input type="hidden" th:id="'statusMessage' + ${friend.memberId}" th:value="${friend.stMessage}"/>
         <input type="hidden" th:id="'statusName' + ${friend.memberId}" th:value="${friend.statusName}"/>
-        <input type="hidden" th:id="'statusNameJa' + ${friend.memberId}" th:value="${friend.statusNameJa}"/>
     </div>
 
     <!-- 열고 닫을 버튼 -->
