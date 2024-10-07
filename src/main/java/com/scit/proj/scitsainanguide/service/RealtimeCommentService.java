@@ -5,7 +5,7 @@ import com.scit.proj.scitsainanguide.domain.dto.SearchRequestDTO;
 import com.scit.proj.scitsainanguide.domain.entity.RealtimeCommentEntity;
 import com.scit.proj.scitsainanguide.repository.RealtimeCommentJpaRepository;
 import com.scit.proj.scitsainanguide.repository.RealtimeCommentRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

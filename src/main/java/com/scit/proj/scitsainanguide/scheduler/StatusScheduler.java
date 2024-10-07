@@ -4,7 +4,7 @@ import com.scit.proj.scitsainanguide.domain.entity.MemberEntity;
 import com.scit.proj.scitsainanguide.domain.entity.StatusEntity;
 import com.scit.proj.scitsainanguide.repository.MemberJpaRepository;
 import com.scit.proj.scitsainanguide.repository.StatusJpaRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
