@@ -29,6 +29,20 @@ document.addEventListener("DOMContentLoaded", function () {
             if(memberId === "aaaaa")
             {
                 userLocation = 'Tokyo_harajuku';
+            } else if (memberId === "test1") {
+                userLocation = '서울 강남구';
+            } else if (memberId === "test2") {
+                userLocation = '東京 渋谷';
+            } else if (memberId === "test3") {
+                userLocation = '東京 新宿';
+            } else if (memberId === "test4") {
+                userLocation = '東京 浅草';
+            } else if (memberId === "test5") {
+                userLocation = '東京 原宿';
+            } else if (memberId === "test6") {
+                userLocation = '東京 銀座';
+            } else if(memberId === "test7") {
+                userLocation = '東京 池袋 ';
             } else {
                 userLocation = `${data.region}_${data.city}`;   // 도시 정보 추출
                 console.log("User location: ", userLocation);
