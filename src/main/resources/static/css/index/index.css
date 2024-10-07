@@ -316,7 +316,7 @@ ruby{
 }
 
 .route-button {
-    width: 150px; /* 너비 조절 */
+    width: 170px; /* 너비 조절 */
     height: 30px; /* 높이 조절 */
     border-radius: 5px; /* 위쪽 모서리 둥글게 */
     font-size: 16px;
