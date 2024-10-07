@@ -278,7 +278,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <!-- 친구 추가 버튼을 중앙에 위치 -->
                                     ${!isFriend ? `
                                         <button class="btn btn-primary friend-add-btn mt-3" data-friend-id="${comment.memberId}">친구 추가</button>
-                                        <p class="mt-3"><strong>상태 메시지:</strong> ${comment.stMessage ? comment.stMessage : 'No status message'}</p>
+                                        <p class="mt-3">
+                                            <div class="text-left"> <!-- 새 div로 감싸서 좌측 정렬 -->
+                                                <strong>상태 메시지:</strong>
+                                                <pre>${comment.stMessage ? comment.stMessage : 'No status message'}</pre>
+                                            </div>
+                                        </p>
                                     ` : `
                                         <div class="modal-links">
                                             <a href="/my/message/write">쪽지 보내기</a>

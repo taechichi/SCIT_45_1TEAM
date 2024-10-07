@@ -118,6 +118,11 @@
     flex-direction: column;
 }
 
+.modal-body .text-left pre {
+    text-align: left;
+    white-space: pre-wrap; /* 줄 바꿈을 자동으로 적용 */
+}
+
 /* ================ 채팅창 클릭 후 모달 css 설정들 ================ */
 /*.modal-body {
     display: flex;
