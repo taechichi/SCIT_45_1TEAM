@@ -18,6 +18,8 @@ public class WebSecurityConfig {
             , "/member/register"//로그인 없이 접근할 수 있는 페이지
             , "/member/login"
             , "/member/idCheck"
+            , "/board/list/**"
+            , "/api/**"
             , "/img/**"			//와일드카드 사용, 스테틱 아래 파일은 전부 허용
             , "/css/**"
             , "/js/**"
