@@ -173,6 +173,22 @@ table td:first-child { /* 첫 번째 열 데이터 */
     text-align: center;
 }
 
+/* 모달 창 관련 CSS */
+.modal-content {
+    border-radius: 10px;
+    background-color: #f8f9fa; /* 모달 배경색 */
+    border: 2px solid #4e73df; /* 테두리 색 */
+}
+
+.modal-header {
+    background-color: #4e73df; /* 헤더 배경색 */
+    color: white; /* 헤더 텍스트 색 */
+}
+
+.modal-footer {
+    background-color: #f1f1f1; /* 푸터 배경색 */
+}
+
 /* 페이징 영역 스타일 */
 #navigator {
     display: flex;

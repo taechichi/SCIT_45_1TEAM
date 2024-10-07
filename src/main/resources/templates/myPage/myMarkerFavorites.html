@@ -10,13 +10,15 @@
     <link rel="stylesheet" th:href="@{/css/sb-admin-2.css}">
     <!-- 커스텀 CSS -->
     <link rel="stylesheet" th:href="@{/css/topbar.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/index/index.css}">
     <link rel="stylesheet" th:href="@{/css/myMarkerFavorites.css}">
     <script th:inline="javascript">
         let updateNicknameSuccessMessage = /*[[#{my.favorite.nickname.update.success}]]*/ '닉네임이 성공적으로 업데이트되었습니다.';
         let updateNicknameErrorMessage = /*[[#{my.favorite.nickname.update.error}]]*/ '닉네임 업데이트 중 오류가 발생했습니다.';
-        let nicknamePromptMessage = /*[[#{my.favorite.nickname.prompt.message}]]*/ '새로운 닉네임을 입력하세요:';
-        let confirmNicknameUpdateMessage = /*[[#{my.favorite.nickname.confirm.update}]]*/ '닉네임을 수정하시겠습니까?\n현재 닉네임: ';
+        let nicknamePromptMessage = /*[[#{my.favorite.nickname.prompt.message}]]*/ '새로운 닉네임을 입력하세요';
+        let confirmNicknameUpdateMessage = /*[[#{my.favorite.nickname.confirm.update}]]*/ '닉네임을 수정하시겠습니까?\n현재 닉네임';
         let confirmNicknameRegistrationMessage = /*[[#{my.favorite.nickname.confirm.registration}]]*/ '새로운 닉네임을 지으시겠습니까?';
     </script>
 </head>
@@ -119,50 +121,89 @@
             </div>
         </div>
         <!-- End of Main Content -->
-
     </div>
     <!-- End of Content Wrapper -->
-
 </div>
 <!-- End of Page Wrapper -->
+<!-- 모달 HTML: 페이지 하단에 추가 -->
 
-<!-- JavaScript 내 Thymeleaf(HTML에서만 정상 동작) 표현식은 서버에서 렌더링된 후 클라이언트로 전달되어야 함
+<!-- 알림 모달 -->
+<div class="modal fade" id="customAlertModal" tabindex="-1" aria-labelledby="customAlertModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="customAlertModalLabel" th:text="#{my.favorite.notification}">알림</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="customAlertModalBody">
+                <!-- 메시지가 여기에 삽입됩니다 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirmModalBtn" th:text="#{my.favorite.confirm}">확인</button> <!-- 확인 버튼만 남김 -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 닉네임 입력 모달 -->
+<div class="modal fade" id="promptNicknameModal" tabindex="-1" aria-labelledby="promptNicknameModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="promptNicknameModalLabel" th:text="#{my.favorite.nickname.title}">닉네임 입력</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label for="newNicknameInput" th:text="#{my.favorite.nickname.prompt.message}">새 닉네임을 입력하세요</label>
+                <input type="text" id="newNicknameInput" class="form-control">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelNicknameBtn" data-bs-dismiss="modal" th:text="#{my.favorite.cancel}">취소</button>
+                <button type="button" class="btn btn-primary" id="submitNicknameBtn" th:text="#{my.favorite.confirm}">확인</button> <!-- 확인 버튼 -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <!-- JavaScript 내 Thymeleaf(HTML에서만 정상 동작) 표현식은 서버에서 렌더링된 후 클라이언트로 전달되어야 함
       동적으로 추가되는 요소에 대해 JS로 국제화 th:text를 추가하기 위해서는, 반드시 th:inline="javascript"
       형식을 사용해야 Thymeleaf 구문이 JavaScript 내부에서 정상적으로 해석되고, JS 내에서 타임리프 사용 가능
       서버에서 Thymeleaf 표현식을 처리한 후, 그 값을 JavaScript 변수로 전달! JS에서는 ${변수} 형태로 사용 -->
-<script th:inline="javascript">
-    <!-- 상태용변수 -->
-    let expiredMessage = /*[[#{main.myStatus.expiredTime}]]*/ '만료된 기본 메시지';
-    let remainingMessage = /*[[#{main.myStatus.time.remaining}]]*/ '남은 시간:';
-    let hoursLabel = /*[[#{main.myStatus.time.hoursLeft}]]*/ '시간';
-    let minutesLabel = /*[[#{main.myStatus.time.minutesLeft}]]*/ '분';
-    let secondsLabel = /*[[#{main.myStatus.time.secondsLeft}]]*/ '초';
-    <!-- 경로표시용 변수 -->
-    let walkingRoot = /*[[#{map.walkingRoot}]]*/ '도보 경로 정보';
-    let bicycleRoot = /*[[#{map.bicycleRoot}]]*/ '도보 경로 정보';
-    let distanceLabel = /*[[#{map.distance}]]*/ '거리:';
-    let durationLabel = /*[[#{map.duration}]]*/ '소요 시간:';
-</script>
+    <script th:inline="javascript">
+        <!-- 상태용변수 -->
+        let expiredMessage = /*[[#{main.myStatus.expiredTime}]]*/ '만료된 기본 메시지';
+        let remainingMessage = /*[[#{main.myStatus.time.remaining}]]*/ '남은 시간:';
+        let hoursLabel = /*[[#{main.myStatus.time.hoursLeft}]]*/ '시간';
+        let minutesLabel = /*[[#{main.myStatus.time.minutesLeft}]]*/ '분';
+        let secondsLabel = /*[[#{main.myStatus.time.secondsLeft}]]*/ '초';
+        <!-- 경로표시용 변수 -->
+        let walkingRoot = /*[[#{map.walkingRoot}]]*/ '도보 경로 정보';
+        let bicycleRoot = /*[[#{map.bicycleRoot}]]*/ '도보 경로 정보';
+        let distanceLabel = /*[[#{map.distance}]]*/ '거리:';
+        let durationLabel = /*[[#{map.duration}]]*/ '소요 시간:';
+    </script>
 
-<div th:replace="~{fragments/logoutModal :: logoutModel}"></div>
+    <div th:replace="~{fragments/logoutModal :: logoutModel}"></div>
 
-<!-- 페이징 기능을 위한 js -->
-<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+    <!-- 페이징 기능을 위한 js -->
+    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
 
-<!-- Bootstrap JavaScript 로딩 -->
-<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <!-- Bootstrap JavaScript 로딩 -->
+    <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
-<!-- jQuery Easing Plugin 로딩 -->
-<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+    <!-- jQuery Easing Plugin 로딩 -->
+    <script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
 
-<!-- sb-admin-2.js 로딩 -->
-<script th:src="@{/js/sb-admin-2.js}"></script>
+    <!-- sb-admin-2.js 로딩 -->
+    <script th:src="@{/js/sb-admin-2.js}"></script>
 
-<!-- topbar.js 로딩 -->
-<script th:src="@{/js/main/topbar.js}"></script>
+    <!-- topbar.js 로딩 -->
+    <script th:src="@{/js/main/topbar.js}"></script>
 
-<!-- 기타 스크립트 로딩 -->
-<script th:src="@{/js/paging.js}"></script>
-<script th:src="@{/js/myPage/myMarkerFavorites.js}"></script>
+    <!-- 기타 스크립트 로딩 -->
+    <script th:src="@{/js/paging.js}"></script>
+    <script th:src="@{/js/myPage/myMarkerFavorites.js}"></script>
 </body>
 </html>
