@@ -28,6 +28,7 @@ h5{
 
 #loadingDiv{
     position: relative;
+    font-weight: bolder;
 }
 
 .custom-spinner {
