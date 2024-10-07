@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 userLocation = '東京 池袋 ';
             } else {
                 userLocation = `${data.region}_${data.city}`;   // 도시 정보 추출
-                console.log("User location: ", userLocation);
+                // console.log("User location: ", userLocation);
             }
         })
         .catch(error => {
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    console.log(friendList);
+    // console.log(friendList);
     //console.log("Id, nickname", memberId, nickname);
     //console.log("연결 시간:", connectionTime);
 
@@ -107,20 +107,20 @@ document.addEventListener("DOMContentLoaded", function () {
             sendMessage();  // 전송 버튼으로도 전송
         });
     } else {
-        console.log("로그인되지 않은 사용자. 댓글 보지만, 전송은 못하지롱.")
+        // console.log("로그인되지 않은 사용자. 댓글 보지만, 전송은 못하지롱.")
     }
 
     // ======== 함수 정의 영역 =========
 
     // SSE 연결 시작하는 함수
     function startEventSource() {
-        console.log("startEventSource 호출됨."); // 이 로그 추가
+        // console.log("startEventSource 호출됨."); // 이 로그 추가
         if (!eventSource) {
             eventSource = new EventSource(`/comments/stream?since=${connectionTime}`);
-            console.log("SSE 연결 설정됨");
+            // console.log("SSE 연결 설정됨");
 
             eventSource.onopen = function () {
-                console.log("SSE 연결이 성공적으로 열렸습니다.");
+                // console.log("SSE 연결이 성공적으로 열렸습니다.");
                 sendButton.disabled = false;
                 inputField.disabled = false;
                 inputField.placeholder = originalPlaceholder;  // 안내 문구 삭제
@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             eventSource.onmessage = function (event) {
                 const comments = JSON.parse(event.data); // 서버에서 받은 데이터를 JSON 형식으로 파싱
-                console.log("받은 댓글 데이터:", comments);
+                // console.log("받은 댓글 데이터:", comments);
                 const isAtBottom = commentListContainer.scrollTop + commentListContainer.clientHeight >= commentListContainer.scrollHeight;
 
                 // 전체 댓글 다시 그리기
@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
             };
 
             eventSource.onerror = function (event) {
-                console.error("SSE 연결에서 오류가 발생했습니다.", event);
+                // console.error("SSE 연결에서 오류가 발생했습니다.", event);
                 eventSource.close();
                 eventSource = null; // SSE 연결을 닫음
                 sendButton.disabled = true;
@@ -173,15 +173,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
             }).then(response => {
                 if (response.ok) {
-                    console.log("댓글 전송 완료");
+                    // console.log("댓글 전송 완료");
                     inputField.value = ""; // 입력 필드 초기화
                     commentListContainer.scrollTop = commentListContainer.scrollHeight;
                     updateCommentTimes();   // 채팅을 입력할 때 시간 업데이트
                 } else {
-                    console.log(`댓글 전송 실패: 상태코드 ${response.status}`);
+                    // console.log(`댓글 전송 실패: 상태코드 ${response.status}`);
                 }
             }).catch(error => {
-                console.log("댓글 전송 실패: ", error);
+                // console.log("댓글 전송 실패: ", error);
             });
         }
     }
@@ -327,7 +327,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 친구 추가 버튼 동작
     function addFriend(friendId) {
-        console.log("friendId:", friendId);
+        // console.log("friendId:", friendId);
         fetch(`/my/friend/${friendId}`, {
             method: 'POST',
             headers: {
@@ -347,7 +347,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // 시간 차이를 계산하는 함수
     function formatToTime(createDt) {
         const createdTime = new Date(createDt);
-        console.log("KST로 변환된 시간:", createdTime);
+        // console.log("KST로 변환된 시간:", createdTime);
         const hours = createdTime.getHours().toString().padStart(2, "0");       // 2자리로 맞춤
         const minutes = createdTime.getMinutes().toString().padStart(2, "0");   // 2자리로 맞춤
 
