@@ -468,6 +468,7 @@ function getList(placeID, currentPage, pageSize) {
                     // 로그인 아이디 게시글 작성자 확인
                     if(boardItem.memberId === loggedInUserId){
                         boardHtml += `<br><button class="boardDeleteBtn" onclick="deleteBoard(${boardId})">${boardDelete}</button>`;
+                        boardHtml += `<button class="boardUpdateBtn" onclick="updateBoard(${boardId})">수정</button>`;
                     }
                     boardHtml += `</div>`;
                 });
@@ -519,26 +520,10 @@ function deleteBoard(boardId) {
     });
 }
 
-// // 수정 버튼 클릭시 수정 하는 함수
-// function updateBoard(boardId) {
-//     if (!boardId || boardId === 'undefined') {
-//         console.error('Invalid boardId:', boardId);
-//         return;
-//     }
-//
-//     fetch(`/board/delete/${boardId}`, {
-//         method: 'POST'
-//     })
-//         .then(response => {
-//             if (response.ok) {
-//                 alert('업데이트');
-//                 location.reload(); // 페이지를 새로고침해서 변경된 목록을 다시 로드
-//             } else {
-//                 alert('업데이트에 실패했습니다.');
-//             }
-//         })
-//         .catch(error => console.error('오류 발생:', error));
-// }
+// 수정 버튼 클릭시 수정 하는 함수
+function updateBoard(boardId) {
+  window.location.href=`/board/update/${boardId}`;
+}
 
 // 작성시간 계산 함수
 function timeAgo(createDate) {
