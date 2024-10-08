@@ -398,35 +398,6 @@ function updateCnt($badgeCounter) {
     $badgeCounter.text(cnt + 1);
 }
 
-document.querySelectorAll('.nav-link.profile-picture-wrapper').forEach(function(friendElement) {
-    let statusIndicator = friendElement.querySelector('.status-indicator');
-    let statusId = statusIndicator.getAttribute('data-status-id');
-    let nicknameElement = friendElement.querySelector('.headerNickname');
-    let statusNameElement = friendElement.querySelector('.headerStatusName');
-    let statusNameJaElement = friendElement.querySelector('.headerStatusNameJa');
-
-    // statusId에 따라 텍스트 색상 변경
-    switch (parseInt(statusId)) {
-        case 2: // 안전
-            nicknameElement.style.color = 'green';
-            statusNameElement.style.color = 'green';
-            statusNameJaElement.style.color = 'green';
-            break;
-        case 3: // 대피중
-            nicknameElement.style.color = 'yellow';
-            statusNameElement.style.color = 'yellow';
-            statusNameJaElement.style.color = 'yellow';
-            break;
-        case 4: // 위험
-            nicknameElement.style.color = 'red';
-            statusNameElement.style.color = 'red';
-            statusNameJaElement.style.color = 'red';
-            break;
-        default:
-            // 상태가 1일 경우 (평상시), 기본 상태로 유지
-            break;
-    }
-
     document.addEventListener("DOMContentLoaded", function() {
         // 상태 메시지를 불러오는 모든 요소를 선택 (클래스 기반)
         const modalStMessages = document.querySelectorAll('.modalStMessage');
@@ -443,7 +414,47 @@ document.querySelectorAll('.nav-link.profile-picture-wrapper').forEach(function(
                 modalStMessage.innerHTML = formattedMessage;
             });
         }
-    });
-});
+            // 모든 profile-modal 클래스를 가진 모달을 선택
+            document.querySelectorAll('.profile-modal').forEach(function(modalElement) {
+                // 모달 자체에서 data-status-id 속성 가져오기
+                let statusId = modalElement.getAttribute('data-status-id');
+                let nicknameElement = modalElement.querySelector('.headerNickname');
+                let statusNameElement = modalElement.querySelector('.headerStatusName');
+                let statusNameJaElement = modalElement.querySelector('.headerStatusNameJa');
+                let closeButton = modalElement.querySelector('.modal-footer button');
 
-
+                // 상태에 따라 텍스트 색상 및 버튼 배경색 변경
+                switch (parseInt(statusId)) {
+                    case 1:
+                        nicknameElement.style.color = 'black';
+                        statusNameElement && (statusNameElement.style.color = 'black');
+                        statusNameJaElement && (statusNameJaElement.style.color = 'black');
+                        closeButton.style.backgroundColor = 'black';  // 버튼 배경색 설정
+                        break;
+                    case 2:
+                        nicknameElement.style.color = 'green';
+                        statusNameElement && (statusNameElement.style.color = 'green');
+                        statusNameJaElement && (statusNameJaElement.style.color = 'green');
+                        closeButton.style.backgroundColor = 'green';  // 버튼 배경색 설정
+                        break;
+                    case 3:
+                        nicknameElement.style.color = 'yellow';
+                        statusNameElement && (statusNameElement.style.color = 'yellow');
+                        statusNameJaElement && (statusNameJaElement.style.color = 'yellow');
+                        closeButton.style.backgroundColor = 'yellow';  // 버튼 배경색 설정
+                        break;
+                    case 4:
+                        nicknameElement.style.color = 'red';
+                        statusNameElement && (statusNameElement.style.color = 'red');
+                        statusNameJaElement && (statusNameJaElement.style.color = 'red');
+                        closeButton.style.backgroundColor = 'red';  // 버튼 배경색 설정
+                        break;
+                    default:
+                        nicknameElement.style.color = 'black';
+                        statusNameElement && (statusNameElement.style.color = 'black');
+                        statusNameJaElement && (statusNameJaElement.style.color = 'black');
+                        closeButton.style.backgroundColor = 'black';  // 버튼 배경색 설정
+                        break;
+                }
+            });
+        });
