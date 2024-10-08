@@ -74,7 +74,13 @@ $(document).ready(function () {
         // DIV 숨기고 텍스트박스와 저장 버튼, 입력 글자수 보이기
         statusMessageDiv.style.display = 'none';
         statusMessageInputDiv.style.display = 'block';
+        statusMessageInput.style.display = 'block';
         saveButton.style.visibility = 'visible'; // 저장 버튼 보이기
+
+        // 현재 입력된 문자의 수를 계산
+        let charCountValue = statusMessageInput.value.length;
+        // 화면에 문자 수와 최대 문자 수를 업데이트
+        charCount.textContent = `${charCountValue}/200 ${char}`;
         charCount.style.visibility = 'visible'; // 문자 수 보이기
     });
 
@@ -109,7 +115,7 @@ $(document).ready(function () {
                 statusMessageDiv.textContent = newStatusMessage;
                 statusMessageDiv.style.display = 'block';
                 statusMessageInput.style.display = 'none';
-                saveButton.style.display = 'none';
+                saveButton.style.visibility = 'hidden';
                 charCount.style.visibility = 'hidden';
                 myStatus();
             })
