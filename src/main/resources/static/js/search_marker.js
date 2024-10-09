@@ -522,7 +522,19 @@ function deleteBoard(boardId) {
 
 // 수정 버튼 클릭시 수정 하는 함수
 function updateBoard(boardId) {
-  window.location.href=`/board/update/${boardId}`;
+    fetch(`/board/update/${boardId}`)
+        .then(response => response.json())
+        .then(boardDTO => {
+            // 게시글 수정 데이터를 모달에 채움
+            document.getElementById('boardId').value = boardDTO.boardId;
+            document.getElementById('contents').value = boardDTO.contents;
+            document.getElementById('placeId').value = boardDTO.placeId;
+            document.getElementById('writeModalPlaceTitle').innerText = boardDTO.title;
+            $('#writeModal').modal('show');  // 모달 표시
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
 
 // 작성시간 계산 함수

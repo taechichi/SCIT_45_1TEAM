@@ -33,49 +33,43 @@ public class BoardService {
     private final BoardPictureRepository boardPictureRepository;
 
     public void write(MarkerBoardDTO boardDTO, MultipartFile[] files) throws IOException {
-
-        log.debug("받은 파일의 수:{}",files.length);
         MemberEntity memberEntity = memberJpaRepository.findById(boardDTO.getMemberId())
                 .orElseThrow(() -> new EntityNotFoundException("회원아이디가 없습니다."));
 
-
         String placeId = boardDTO.getPlaceId();
-        MarkerBoardEntity markerBoardEntity = null;
-        Optional<HospitalEntity> hospitalEntityOptional = hospitalRepository.findById(placeId);
-        Optional<ShelterEntity> shelterEntityOptional= Optional.empty();
+        MarkerBoardEntity markerBoardEntity;
 
+        // boardId가 있을 경우 수정, 없을 경우 새로 생성
+        if (boardDTO.getBoardId() != null) {
+            // 수정인 경우 기존 엔티티를 가져와 업데이트
+            markerBoardEntity = boardJPARepository.findById(boardDTO.getBoardId())
+                    .orElseThrow(() -> new EntityNotFoundException("해당 게시글을 찾을 수 없습니다."));
+            markerBoardEntity.setContents(boardDTO.getContents());
+            markerBoardEntity.setDeleteYn(false);
+        } else {
+            // 새 글인 경우 새 엔티티 생성
+            markerBoardEntity = new MarkerBoardEntity();
+            markerBoardEntity.setMemberId(memberEntity.getMemberId());
+            markerBoardEntity.setContents(boardDTO.getContents());
+            markerBoardEntity.setDeleteYn(false);
 
-        if(hospitalEntityOptional.isPresent()) {
-            HospitalEntity hospitalEntity = hospitalEntityOptional.get();
-            markerBoardEntity = MarkerBoardEntity.builder()
-                    .memberId(memberEntity.getMemberId())
-                    .hospital(hospitalEntity)
-                    .contents(boardDTO.getContents())
-                    .deleteYn(false)
-                    .build();
-        }else{
-            shelterEntityOptional = shelterRepository.findById(Integer.valueOf(placeId));
-            if(shelterEntityOptional.isPresent()){
-                ShelterEntity shelterEntity = shelterEntityOptional.get();
-                markerBoardEntity = MarkerBoardEntity.builder()
-                        .memberId(memberEntity.getMemberId())
-                        .shelter(shelterEntity)
-                        .contents(boardDTO.getContents())
-                        .deleteYn(false)
-                        .build();
-            }else{
-                log.debug("일치하는 ID가 없습니다.");
+            // 병원이나 대피소와 연결
+            Optional<HospitalEntity> hospitalEntityOptional = hospitalRepository.findById(placeId);
+            if (hospitalEntityOptional.isPresent()) {
+                markerBoardEntity.setHospital(hospitalEntityOptional.get());
+            } else {
+                Optional<ShelterEntity> shelterEntityOptional = shelterRepository.findById(Integer.valueOf(placeId));
+                shelterEntityOptional.ifPresent(markerBoardEntity::setShelter);
             }
         }
-        log.debug("저장되는 엔티티 : {}", markerBoardEntity);
+
+        // 게시글 저장
         boardJPARepository.save(markerBoardEntity);
 
         // 파일 처리 및 저장
         if (files != null && files.length > 0) {
             for (MultipartFile file : files) {
-                log.debug("처리 중인 파일: {}", file.getOriginalFilename());
-                String newFilename = fileManagerService.saveFile(file);  // 파일 저장 처리
-
+                String newFilename = fileManagerService.saveFile(file);
                 if (newFilename != null) {
                     BoardPictureEntity pictureEntity = BoardPictureEntity.builder()
                             .board(markerBoardEntity)
@@ -88,6 +82,7 @@ public class BoardService {
             }
         }
     }
+
 
     public List<MarkerBoardDTO> findByPlaceIdWithPaging(String placeId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);

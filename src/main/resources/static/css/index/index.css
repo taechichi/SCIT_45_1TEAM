@@ -590,6 +590,7 @@ label[for="files"] {
 .board-createTime{
     color:lightslategray;
     font-size: 12px;
+    margin-left: 10px;
 }
 
 .board-image-container {
