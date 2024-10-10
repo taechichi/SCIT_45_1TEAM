@@ -36,29 +36,29 @@ public class BoardController {
         int maxFileCount = 4;
         long maxFileSize = 10 * 1024 * 1024;  // 10MB
 
-//        // 파일 개수 검사
-//        if (files.length > maxFileCount) {
-//            // 파일 개수 초과 시 처리 (다시 작성 페이지로 리다이렉트)
-//            log.warn("파일 개수 초과: {}개 파일을 업로드하려고 했습니다.", files.length);
-//            return "redirect:/board/writeForm?error=tooManyFiles"; // 에러 메시지와 함께 리다이렉트
-//        }
-//
-//        // 파일 크기 검사
-//        for (MultipartFile file : files) {
-//            if (file.getSize() > maxFileSize) {
-//                // 파일 크기 초과 시 처리
-//                log.warn("파일 크기 초과: {} 파일의 크기가 10MB를 초과했습니다.", file.getOriginalFilename());
-//                return "redirect:/board/writeForm?error=fileSizeExceeded"; // 에러 메시지와 함께 리다이렉트
-//            }
-//        }
-//
-//        try {
-//            // 파일 및 게시글 저장 로직
-//            boardService.write(boardDTO, files);
-//        } catch (Exception e) {
-//            log.error("파일 저장 중 오류 발생", e);
-//            return "redirect:/board/writeForm?error=saveFailed"; // 저장 실패 시 에러 처리
-//        }
+        // 파일 개수 검사
+        if (files.length > maxFileCount) {
+            // 파일 개수 초과 시 처리 (다시 작성 페이지로 리다이렉트)
+            log.warn("파일 개수 초과: {}개 파일을 업로드하려고 했습니다.", files.length);
+            return "redirect:/"; // 에러 메시지와 함께 리다이렉트
+        }
+
+        // 파일 크기 검사
+        for (MultipartFile file : files) {
+            if (file.getSize() > maxFileSize) {
+                // 파일 크기 초과 시 처리
+                log.warn("파일 크기 초과: {} 파일의 크기가 10MB를 초과했습니다.", file.getOriginalFilename());
+                return "redirect:/"; // 에러 메시지와 함께 리다이렉트
+            }
+        }
+
+        try {
+            // 파일 및 게시글 저장 로직
+            boardService.write(boardDTO, files);
+        } catch (Exception e) {
+            log.error("파일 저장 중 오류 발생", e);
+            return "redirect:/"; // 저장 실패 시 에러 처리
+        }
         boardService.write(boardDTO, files);
         return "redirect:/"; // 성공적으로 저장되었을 때 리다이렉트
     }

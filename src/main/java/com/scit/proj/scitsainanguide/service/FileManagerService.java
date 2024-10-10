@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,13 +51,10 @@ public class FileManagerService {
     }
 
     // 파일 삭제
-    public boolean deleteFile(String filename) {
-        Path filePath = Paths.get(uploadDir, filename);
-        try {
-            return Files.deleteIfExists(filePath); // 파일이 존재하면 삭제
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+    public void deleteFile(String filename) {
+        File file = new File("/uploads/" + filename);
+        if (file.exists()) {
+            file.delete();  // 파일 삭제 시 반환 값을 무시
         }
     }
 }

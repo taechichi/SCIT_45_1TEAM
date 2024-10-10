@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface BoardPictureRepository extends JpaRepository<BoardPictureEntity,Integer> {
     List<BoardPictureEntity> findByBoard_BoardId(Integer boardId);
+    List<BoardPictureEntity> findByBoardBoardId(Integer boardId);
 }

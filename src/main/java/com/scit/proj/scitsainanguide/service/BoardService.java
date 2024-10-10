@@ -46,6 +46,13 @@ public class BoardService {
                     .orElseThrow(() -> new EntityNotFoundException("해당 게시글을 찾을 수 없습니다."));
             markerBoardEntity.setContents(boardDTO.getContents());
             markerBoardEntity.setDeleteYn(false);
+
+            // 기존 파일 삭제 처리
+            List<BoardPictureEntity> existingPictures = boardPictureRepository.findByBoardBoardId(markerBoardEntity.getBoardId());
+            for (BoardPictureEntity picture : existingPictures) {
+                boardPictureRepository.delete(picture);  // DB에서 파일 정보 삭제
+                fileManagerService.deleteFile(picture.getNewFilename());  // 실제 파일 삭제
+            }
         } else {
             // 새 글인 경우 새 엔티티 생성
             markerBoardEntity = new MarkerBoardEntity();
