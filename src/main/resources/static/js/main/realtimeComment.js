@@ -272,32 +272,32 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <img class="img-profile rounded-circle img-64" src="/member/download/${comment.memberId}" alt="Profile Picture"/>
                             </div>
                             ${isCurrentUser ? `
-                                <p><strong>상태 메시지:</strong> ${comment.stMessage ? comment.stMessage : 'No status message'}</p>
+                                <p><strong>${statusMessageLabel}</strong> ${comment.stMessage ? comment.stMessage : 'No status message'}</p>
                             ` : `
                                 ${isLoggedIn ? `
                                     <!-- 친구 추가 버튼을 중앙에 위치 -->
                                     ${!isFriend ? `
-                                        <button class="btn btn-primary friend-add-btn mt-3" data-friend-id="${comment.memberId}">친구 추가</button>
+                                        <button class="btn btn-primary friend-add-btn mt-3" data-friend-id="${comment.memberId}">${friendAddButtonLabel}</button>
                                         <p class="mt-3">
                                             <div class="text-left"> <!-- 새 div로 감싸서 좌측 정렬 -->
-                                                <strong>상태 메시지:</strong>
+                                                <strong>${statusMessageLabel}</strong>
                                                 <pre>${comment.stMessage ? comment.stMessage : 'No status message'}</pre>
                                             </div>
                                         </p>
                                     ` : `
                                         <div class="modal-links">
-                                            <a href="/my/message/write">쪽지 보내기</a>
+                                            <a href="/my/message/write">${sendMessageLabel}</a>
                                         </div>
-                                        <p><strong>마지막 상태 업데이트:</strong> ${statusName ? statusName : 'No status'}</p>
-                                        <p><strong>상태 메시지:</strong> ${comment.stMessage ? comment.stMessage : 'No status message'}</p>
+                                        <p><strong>${lastStatusUpdateLabel}</strong> ${statusName ? statusName : 'No status'}</p>
+                                        <p><strong>${statusMessageLabel}</strong> ${comment.stMessage ? comment.stMessage : 'No status message'}</p>
                                     `}
                                 ` : `
-                                    <p><strong>상태 메시지:</strong> ${comment.stMessage ? comment.stMessage : 'No status message'}</p>
+                                    <p><strong>${statusMessageLabel}</strong> ${comment.stMessage ? comment.stMessage : 'No status message'}</p>
                                 `}
                             `}
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">${closeButtonLabel}</button>
                         </div>
                     </div>
                 </div>
