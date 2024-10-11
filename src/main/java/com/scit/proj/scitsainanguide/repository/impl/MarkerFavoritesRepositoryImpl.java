@@ -158,14 +158,12 @@ public class MarkerFavoritesRepositoryImpl implements MarkerFavoritesRepository 
         if(isSortByDistance) {
             NumberTemplate<Double> distanceExpression = Expressions.numberTemplate(
                     Double.class,
-                    "({0} * cos(radians({1})) * cos(radians({2}))) + ({3} * cos(radians({1})) * sin(radians({2}))) + sin(radians({1})) * sin(radians({4}))",
-                    Math.cos(Math.toRadians(dto.getLatitude())),
+                    "POWER(({0} - {1}), 2) + POWER(({2} - {3}), 2)",
+                    dto.getLatitude(),
                     latitudeExpression,
-                    longitudeExpression,
-                    Math.sin(Math.toRadians(dto.getLatitude())),
-                    latitudeExpression
+                    dto.getLongitude(),
+                    longitudeExpression
             );
-
             sortBy = distanceExpression.asc();
         }
 

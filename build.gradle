@@ -49,6 +49,8 @@ dependencies {
     implementation 'com.google.cloud:google-cloud-speech'
     // 번역
     implementation 'com.google.cloud:google-cloud-translate:2.0.0'
+    implementation 'io.perfmark:perfmark-api:0.24.0' // gRPC 버전에 맞는 버전을 사용하세요
+
     // Google Cloud Vision API 의존성 추가
     implementation 'com.google.cloud:google-cloud-vision:3.15.0'
 
