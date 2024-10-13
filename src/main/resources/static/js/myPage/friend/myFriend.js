@@ -7,7 +7,7 @@ $(document).ready(function(){
 function updateFavorite(){
     let relationId = $(this).data('id');
     let favoriteYn = $(this).data('favorite');
-    let flagMessage = favoriteYn ? '즐겨찾기 해제 하시겠습니까?' : '즐겨찾기 추가 하시겠습니까?';
+    let flagMessage = favoriteYn ? 'お気に入りを解除しますか。' : 'お気に入りを追加しますか。';
     let flag = confirm(flagMessage);
 
     if(flag){
@@ -16,9 +16,9 @@ function updateFavorite(){
             type: 'PATCH',
             success: function() {
                 if(favoriteYn){
-                    alert('즐겨찾기 해제가 성공적으로 되었습니다.');
+                    alert('お気に入りの解除が正常に完了しました。');
                 } else {
-                    alert('즐겨찾기 추가가 성공적으로 되었습니다.');
+                    alert('お気に入りの追加が正常に完了しました。');
                 }
                 location.reload(); // 수정 후 페이지를 새로고침하거나 테이블을 업데이트
             },
