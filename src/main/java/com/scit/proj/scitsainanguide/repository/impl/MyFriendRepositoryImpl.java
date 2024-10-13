@@ -100,18 +100,18 @@ public class MyFriendRepositoryImpl implements MyFriendRepository {
         Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPageSize());
 
         BooleanBuilder whereClause = new BooleanBuilder();
-        whereClause.and(friend.memberId.eq(memberId))
+        whereClause.and(friend.friendId.eq(memberId))
                 .and(friend.friendYn.eq(false))
-                .and(friend.friend.withdraw.eq(false))
-                .and(friend.friend.adminYn.eq(false));
+                .and(friend.member.withdraw.eq(false))
+                .and(friend.member.adminYn.eq(false));
 
         // 쿼리 실행
         List<FriendDTO> friendRequestDTOList = queryFactory.select(
                         Projections.constructor(FriendDTO.class,
                                 friend.relationId,
-                                friend.friendId,
-                                friend.friend.nickname,
-                                friend.friend.nationality,
+                                friend.memberId,
+                                friend.member.nickname,
+                                friend.member.nationality,
                                 friend.requestDt
                         )
                 ).from(friend)
